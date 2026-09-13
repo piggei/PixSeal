@@ -610,3 +610,41 @@ Keep prototype-2 as the current non-normative v4 candidate and continue Build24 
 a production v4 codec or freeze interoperability yet. The next independent tests are blind rotation/affine/
 perspective geometry, combined degradation and then a separate real v4 print-camera/scanner corpus.
 
+
+
+## build25 — prototype-2 geometric survivability with known mapping
+
+**Question.** Does the Build24 pilot remain an absolute-origin signal after the geometric channel, before spending effort on blind geometry search?
+
+**Method.** Add a projective pilot sampler that receives a canonical-to-observed homography independently of pilot scoring. Evaluate 16 fixed transforms (rotation, anisotropic scale, shear, perspective, combined rotation/scale/shear, 75% scale, JPEG/blur/noise after perspective, and crop combinations) on a synthetic background and on both local originals. For each positive, evaluate the correspondingly transformed unmarked image as a negative control. Require correct origin plus a predeclared 0.10 positive-minus-negative margin separation.
+
+**Result.** 16/16 synthetic and 32/32 local-image cases select origin `(0,0)`. Synthetic minimum positive margin 0.531955. Local minimum positive margin 0.322069; maximum negative margin 0.067786; minimum observed separation 0.258085.
+
+**Decision.** Keep prototype-2. Do not freeze it yet. The evidence now supports moving to bounded blind pilot-assisted geometry estimation; it does not justify a production threshold, v4 encoder promotion or authentication claim.
+
+## build26 — blind geometry proposal from repeated v4 data-plane structure
+
+### Question
+
+Can the Build25 pilot survive the removal of the supplied homography without turning the pilot into an unbounded brute-force geometry oracle?
+
+### Initial negative result
+
+A first bounded search ranked thousands of angle/scale/shear/perspective hypotheses directly with pilot correlation. It worked on synthetic images but did not generalize reliably to the local photographic backgrounds: small scale quantization errors could destroy the DCT phase, while unrelated geometries could win locally on image content. Lowering thresholds was rejected.
+
+### Revised hypothesis
+
+The v4 tile already repeats spatially. Geometry can therefore be proposed from key-independent self-consistency of corresponding **data-plane positions** across repeated tiles without knowing their symbols. The pilot can then do the job it was designed for: absolute origin and candidate validation.
+
+### Method
+
+Sample 64 deterministic non-pilot residues. For each candidate homography, compare weighted DCT signs at homologous positions of adjacent repeated tiles. Use the repeat score plus only a weak canvas-dimension prior to retain a small bank. Evaluate pilot phase on central tile rows, then validate survivors on held-out corner repetitions. Search rotation/scale/shear/perspective deterministically and cap the synthetic regression at 6400 evaluated repeat hypotheses per image.
+
+### Result
+
+The revised search recovers the complete synthetic Build26 family and the representative local-corpus cases. In particular, the previously failing `PJ_piccolo` combined-perspective case now recovers the declared 9.3 degree, 1.08/0.92, 0.030/0.015 transform exactly with origin `(0,0)` and pilot margin 0.425713. The data-repeat proposal score is unchanged if every pilot sign is inverted, confirming that proposal does not depend on pilot symbols.
+
+### Decision
+
+Accept Build26 as the first bounded blind pilot-assisted geometry checkpoint, but do not freeze the pilot or call the problem solved. The next independent problem is unknown placement/crop/translation and eventually physical print-camera geometry. Keep payload/header/ECC/HMAC out of geometry proposal and validation.
+

@@ -633,6 +633,14 @@ uses a 37×32 tile and reserves 64 blocks for a public absolute pilot. This rais
 Under v3-like framing/ECC arithmetic this preserves the 16/32/64-byte ceilings and profile
 redundancy. Format v4 is not implemented in build22.
 
+## v0.3.0-build25 — geometric pilot qualification
+
+Build25 keeps Format v3 frozen and tests whether `prototype-2-search-p64` survives geometric resampling once an independent mapping is available. The new projective pilot sampler reads canonical 8x8 carrier blocks through a supplied homography, so rotation, anisotropic scale, shear and perspective do not need to be rectified into a temporary image first. This remains geometry evidence only; it has no payload or authentication role.
+
+A fixed 16-case matrix covers two arbitrary rotations, two anisotropic scales, X/Y shear, two perspective shapes, rotation+scale, rotation+shear, rotated 75% resize, perspective+JPEG/blur/noise and perspective+crop with/without JPEG. All synthetic cases and all 32 local-image cases recover cyclic origin `(0,0)`. The weakest local positive runner-up margin is 0.322069; the corresponding negative-control margin is 0.063984.
+
+This closes the "does the pilot survive known geometric distortion?" question for the current development matrix. It does **not** close blind geometry recovery and does not freeze prototype-2. The next branch must use the pilot itself to score bounded geometry hypotheses without payload/header/HMAC oracles.
+
 ## v0.3.0-build24 — reproducible v4 pilot qualification begins
 
 Build24 leaves the frozen Format-v3 core unchanged and turns the Build23 pilot idea into a reproducible
@@ -671,4 +679,12 @@ No v4 carrier can yet be emitted or decoded by the CLI. The provisional v4 geome
 its exhaustive toroidal audit finds no perfect non-zero cyclic alias, maximum shifted-mask overlap 8/64 and
 maximum wrong-shift signed correlation 5/64. These numbers are frozen only as build23 prototype regressions,
 not as a final Format-v4 interoperability contract.
+
+## v0.3.0-build26 — bounded blind v4 geometry proposal + pilot validation
+
+Build26 removes the independently supplied homography used by Build25 for a bounded auto-framed research case. The new coarse stage uses only self-consistency of repeated v4 **data-plane coordinates**: corresponding DCT observations in adjacent 37x32 tile repetitions should agree when the candidate geometry is correct. The actual data symbols are never known or scored, pilot signs are excluded from this stage, and no payload/key/header/ECC/HMAC evidence is available.
+
+A deterministic rotation/affine/shear/mild-perspective family is searched with canvas dimensions as a weak public prior. The repeat-consistency stage keeps a small geometry bank. Only then does `prototype-2-search-p64` rank sub-block translations on central tile rows; final selection is performed again on held-out corner pilot repetitions. This preserves proposal/validation separation instead of turning pilot correlation into an authentication oracle.
+
+The synthetic matrix recovers the declared geometry families within the Build26 corner-error bound, including 9.3 degree + 1.08/0.92 anisotropic scale + 0.030/0.015 perspective. Both local originals also recover the representative rotate-scale and combined-perspective cases with correct origin. The search remains experimental and assumes known canonical extent plus auto-framed transforms; arbitrary crop/translation and the real print-camera problem remain future work.
 

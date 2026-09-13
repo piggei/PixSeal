@@ -168,19 +168,18 @@ and `CHANGELOG.md`.
 - [x] Expand pilot optimization beyond prototype-1 with a reproducible fixed-seed joint mask/sign search,
       sign refinement, exhaustive cyclic metrics and partial-visibility qualification; build24 selects the
       non-normative `prototype-2-search-p64` candidate.
-- [ ] Extend Build24 synthetic-channel qualification from the initial JPEG/blur/noise/gamma/resize/aligned-crop
-      matrix to arbitrary rotation, anisotropic scaling, shear, mild perspective and combined transformations.
+- [x] Extend the synthetic-channel qualification to arbitrary rotation, anisotropic scaling, shear, mild perspective, crop and combined transformations with independently supplied geometry; Build25 adds 16 deterministic cases plus the same matrix on the local originals.
 - [ ] Decide and document the v4 framing/version marker before implementing a real encoder.
 - [ ] Decide whether v4 retains Hamming(7,4) or adopts a stronger ECC after apples-to-apples pilot tests.
 - [ ] Implement an **experimental-only** v4 encoder behind an explicit format/version switch; never silently
       change the default v3 encoder.
 - [x] Implement an experimental pilot-only detector for an already-resolved 8/6/4-pixel lattice; it reports
       absolute cyclic origin, score, runner-up and margin without payload/HMAC evidence.
-- [ ] Generalize the pilot-only detector so the pilot itself participates in blind rotation/affine/perspective
-      geometry recovery rather than assuming the pixel lattice is already resolved.
-- [ ] Complete synthetic v4 qualification for the full JPEG/resize/crop/rotation/affine/perspective/blur/gamma/
-      noise/combined matrix. Build24 already covers JPEG, exact resize, aligned crop, blur, gamma and noise with
-      unmarked negative controls, but the geometric half of the matrix remains open.
+- [x] Generalize the pilot-only detector to a first bounded blind rotation/affine/shear/mild-perspective recovery path: Build26 uses repeated data-plane self-consistency for coarse proposal, then public-pilot ranking and held-out pilot validation.
+- [x] Complete the first synthetic v4 image-channel matrix for JPEG/resize/crop/rotation/affine/perspective/blur/gamma/noise/combined transformations. Build24 covers the aligned photometric/sampling half; Build25 covers the geometric half with known homographies and unmarked controls.
+- [x] Generalize Build25 from known geometry to **bounded blind pilot-assisted geometry estimation** for auto-framed transforms, with deterministic repeat-based proposal and explicit runner-up/negative-control telemetry (Build26).
+- [ ] Extend Build26 to arbitrary crop/translation and unknown carrier placement without using payload/header/HMAC evidence.
+- [ ] Replace the current known canonical-extent assumption with a coarse tile/lattice extent estimator suitable for physical captures before pilot ranking.
 - [ ] Create a separate private v4 print-camera/scanner corpus by re-embedding and reprinting; do not treat the
       existing v3 photographs as v4 evidence.
 - [ ] Promote v4 only after physical pilot detection beats negative controls and a valid HMAC-authenticated

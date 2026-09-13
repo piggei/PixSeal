@@ -226,3 +226,44 @@ The next steps must be completed in order:
 6. create a new v4 physical corpus by embedding/printing the v4 carrier;
 7. require HMAC-authenticated physical recovery before any production promotion.
 
+
+
+## Build25 known-geometry qualification
+
+Build25 keeps `prototype-2-search-p64` non-normative and tests a prerequisite for blind physical decoding: once a correct canonical-to-observed homography is supplied independently, the pilot must still identify the correct absolute cyclic origin after geometric resampling. The projective pilot sampler reads canonical 8x8 DCT blocks directly through that mapping and reports the same score/runner-up/margin telemetry as the aligned detector.
+
+The fixed matrix has 16 cases covering arbitrary rotation, anisotropic scale, X/Y shear, mild perspective, rotation+scale, rotation+shear, rotated 75% resize, perspective plus JPEG/blur/noise, and perspective+crop with/without JPEG. All synthetic cases recover `(0,0)`. The two local originals contribute 32 additional transformed-carrier cases and all recover `(0,0)` as well. The weakest local positive margin is 0.322069 (`PJ_piccolo`, combined perspective+blur), while that case's unmarked control has margin 0.063984.
+
+A development-only separation floor of 0.10 between positive and matching negative-control margins is enforced to prevent a trivially ambiguous "correct" winner. This is deliberately **not** a normative pilot-detection threshold. Build25 therefore establishes geometric survivability, not blind geometry discovery. The next design gate is a bounded pilot-assisted rotation/affine/perspective search that preserves runner-up evidence and never uses payload/HMAC as an oracle.
+
+## Build26 bounded blind geometry qualification
+
+Build26 removes Build25's supplied-homography assumption for a deliberately bounded, auto-framed experiment. The search follows the intended v4 dependency order rather than asking the pilot to brute-force every projective parameter:
+
+```text
+observed image
+  -> public repeated-tile geometry proposal (no symbol knowledge)
+  -> small bounded candidate bank
+  -> public pilot ranking on central repetitions
+  -> held-out pilot validation on corner repetitions
+  -> absolute cyclic origin
+```
+
+### Coarse proposal observable
+
+The current synthetic v4 carrier repeats the same 37x32 data plane spatially. Build26 samples 64 deterministic **non-pilot** residues and compares DCT-sign evidence at homologous positions of adjacent repeated tiles. Only self-consistency is used: the expected data sign is never consulted. Flipping every pilot sign leaves this proposal score bit-for-bit unchanged. The canvas dimensions are allowed only as a weak public prior for scale/inset enumeration.
+
+### Bounded family
+
+The current development bank covers approximately +/-20 degrees rotation, anisotropic scale, X/Y shear up to +/-10 degrees and mild top/bottom perspective insets up to 0.06. Perspective families use a coarse 0.25-degree repeat scan followed by local refinement; pilot evidence is only spent on the repeat-ranked survivors. Current regression cases require <=6400 repeat hypotheses per image.
+
+### Evidence separation
+
+Data-repeat evidence proposes geometry. Central-row pilot samples rank the small proposal bank and optimize sub-block translation. The final winner is rescored on held-out corner pilot repetitions; the repeat score and central pilot score are not reused as the validation objective. Payload/header/CRC/ECC/key/HMAC are absent throughout.
+
+### Build26 result and limit
+
+The synthetic matrix recovers rotation, anisotropic rotation+scale, X/Y shear, mild perspective, combined perspective+anisotropic scale and combined rotation+shear within the declared corner-error bound. Both local originals recover the representative rotate-scale and combined-perspective cases with cyclic origin `(0,0)`.
+
+This is still not a production/physical decoder. Build26 assumes the canonical carrier extent is known and the transform is auto-framed. Arbitrary crop/translation, unknown carrier placement, print-camera acquisition, v4 framing/version identification, ECC and authenticated payload decoding remain open. Prototype-2 therefore remains non-normative.
+

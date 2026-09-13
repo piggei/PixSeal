@@ -47,6 +47,10 @@ row v4-foundation-test RESEARCH source 'isolated build23 provisional v4 pilot/da
 row v4-pilot-search-test RESEARCH source 'Build24 reproducible joint pilot search + partial-visibility qualification'
 row v4-pilot-channel-test RESEARCH source 'Build24 pilot-only synthetic image-channel qualification'
 row v4-pilot-corpus-test RESEARCH pics 'Build24 pilot-only qualification on local original images'
+row v4-pilot-geometry-test RESEARCH source 'Build25 known-geometry rotation/affine/perspective pilot qualification'
+row v4-pilot-geometry-corpus-test RESEARCH pics 'Build25 known-geometry pilot qualification on local originals'
+row v4-pilot-blind-geometry-test RESEARCH source 'Build26 bounded blind geometry via repeat proposal + pilot validation'
+row v4-pilot-blind-geometry-corpus-test RESEARCH pics 'Build26 blind pilot-assisted geometry on local originals'
 row smooth-phase-test RESEARCH source 'bounded smooth phase-field regressions'
 row geometry-test RESEARCH pics 'strict rotation/combined geometry suite; corpus-sensitive'
 row affine-test RESEARCH pics 'strict axis-aligned affine suite; corpus-sensitive'
@@ -63,6 +67,6 @@ row extreme-test QUALIFICATION pics 'progressive resize/crop limit map; non-stri
 row test-unit COMPATIBILITY source 'complete go test ./... suite'
 row test AGGREGATE source+pics 'build + test-unit + image round-trips'
 row all AGGREGATE source+pics 'test + baseline transformation suite'
-row all-test AGGREGATE source+pics '35-target qualification matrix with final summary'
+row all-test AGGREGATE source+pics '39-target qualification matrix with final summary'
 
 printf '\nTip: use make <target>. For all-test, optionally set ALL_TEST_REPORT=path/to/report.txt.\n'

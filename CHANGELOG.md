@@ -1,5 +1,25 @@
 # Changelog
 
+## v0.3.0-build26 — 2026-09-13
+
+- Add an isolated bounded blind Format-v4 geometry search without modifying the frozen v3 core or production APIs.
+- Add a key/payload/pilot-symbol-independent coarse proposal observable based on DCT-sign self-consistency at homologous data-plane positions of repeated 37x32 tiles.
+- Use a three-stage evidence split: data-repeat geometry proposal, central-row public-pilot ranking, then held-out corner-pilot validation.
+- Cover rotation, anisotropic scale, X/Y shear, mild perspective and combined projective/affine cases with explicit wrong-origin/negative-control telemetry.
+- Bound the current synthetic search to <=6400 evaluated repeat hypotheses per positive/negative image and preserve deterministic behavior.
+- Add local-corpus blind tests for rotation+anisotropic-scale and combined perspective on both development originals.
+- Keep `prototype-2-search-p64` non-normative; arbitrary crop/translation, physical v4 acquisition, framing/version marker, ECC and payload encoder remain open.
+
+## v0.3.0-build25 — 2026-09-13
+
+- Keep the five-file Format-v3 core byte-for-byte frozen; no production encoder/decoder or CLI behavior changes.
+- Add a known-geometry projective pilot sampler that measures prototype-2 after a separately supplied canonical-to-observed homography. This deliberately tests pilot survivability without claiming blind geometry recovery.
+- Add a 16-case deterministic geometry matrix covering +12.3/-17 degree rotation, 110x90/90x110 anisotropic scale, X/Y shear, two mild perspective shapes, rotation+anisotropic scale, rotation+shear, 75% rotated resize, perspective combined with JPEG/blur/noise, and perspective+crop with/without JPEG.
+- Require correct cyclic origin and a predeclared 0.10 positive-vs-negative runner-up-margin separation floor for the Build25 qualification tests; this is a development gate, not a normative decoder acceptance threshold.
+- Add the same known-geometry matrix to the opt-in local original-image corpus. All 32 image/case combinations pass. The weakest positive margin is 0.322069 on PJ_piccolo under the combined perspective+blur case; its negative-control margin is 0.063984, leaving 0.258085 separation.
+- Add `v4-pilot-geometry-test` and `v4-pilot-geometry-corpus-test`; `all-test` now contains 37 targets.
+- Prototype-2 remains non-normative. Build25 establishes geometric-channel survivability given a correct mapping; the next open problem is blind pilot-assisted geometry estimation before any pilot freeze or real v4 payload encoder.
+
 ## v0.3.0-build24 — 2026-09-13
 
 - Keep the five-file Format-v3 core byte-for-byte frozen and continue all v4 work in isolated experimental files.

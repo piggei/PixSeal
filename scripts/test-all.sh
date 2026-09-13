@@ -8,7 +8,7 @@ if [[ -n "$REPORT" ]]; then
     exec > >(tee "$REPORT") 2>&1
 fi
 
-default_targets="version-check vet release-unit v3-freeze-check test-images deep-test extreme-test research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test smooth-phase-test geometry-test affine-test composition-test lattice-test perspective-test core-target-check"
+default_targets="version-check vet release-unit v3-freeze-check test-images deep-test extreme-test research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test smooth-phase-test geometry-test affine-test composition-test lattice-test perspective-test core-target-check"
 read -r -a targets <<< "${ALL_TEST_TARGETS:-$default_targets}"
 if (( ${#targets[@]} == 0 )); then
     echo "error: ALL_TEST_TARGETS resolved to an empty list" >&2
@@ -45,6 +45,10 @@ label_for() {
         v4-pilot-search-test) echo "Format-v4 Build24 pilot search/partial visibility" ;;
         v4-pilot-channel-test) echo "Format-v4 Build24 synthetic pilot image channel" ;;
         v4-pilot-corpus-test) echo "Format-v4 Build24 local image pilot corpus" ;;
+        v4-pilot-geometry-test) echo "Format-v4 Build25 known-geometry pilot channel" ;;
+        v4-pilot-geometry-corpus-test) echo "Format-v4 Build25 known-geometry local corpus" ;;
+        v4-pilot-blind-geometry-test) echo "Format-v4 Build26 blind pilot-assisted geometry" ;;
+        v4-pilot-blind-geometry-corpus-test) echo "Format-v4 Build26 blind geometry local corpus" ;;
         smooth-phase-test) echo "v0.3 bounded smooth phase field" ;;
         geometry-test) echo "rotation/combined geometry" ;;
         affine-test) echo "axis-aligned affine" ;;
@@ -58,7 +62,7 @@ label_for() {
 
 release_targets=(version-check vet release-unit v3-freeze-check test-images core-target-check)
 qualification_targets=(deep-test extreme-test)
-research_targets=(research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test smooth-phase-test geometry-test affine-test composition-test lattice-test perspective-test)
+research_targets=(research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test smooth-phase-test geometry-test affine-test composition-test lattice-test perspective-test)
 
 in_list() {
     local needle="$1"; shift

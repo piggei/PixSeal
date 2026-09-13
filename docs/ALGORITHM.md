@@ -1262,3 +1262,27 @@ runner-up score/margin only as geometry evidence.
 Neither mechanism is reachable from production `EmbedWithInfo` / `ExtractWithInfo`; HMAC-only authentication
 semantics remain unchanged for Format v3.
 
+
+
+## 45. v0.3.0-build25 known-geometry v4 pilot sampling (non-normative)
+
+For each canonical 8x8 block, Build25 maps its 64 sample coordinates through a supplied homography into the observed image and evaluates the same DCT coefficient-difference observable used by the carrier. Samples are accumulated by the 37x32 residue class, then every cyclic origin is scored against the public 64-sign pilot. Correct score, best wrong score, margin, visible-pilot count and sample count remain diagnostic telemetry.
+
+This reverses no security boundary: the homography is supplied independently for the qualification experiment, the pilot is public, and no payload/header/CRC/key/HMAC evidence participates. The test therefore isolates whether geometric interpolation destroys absolute-origin observability before a blind geometry estimator is implemented.
+
+## 46. v0.3.0-build26 blind v4 geometry proposal (non-normative)
+
+Build26 adds an experimental three-stage geometry path that remains disconnected from production v3 APIs. Let `T=(37,32)` be the provisional v4 tile in blocks and let `D` be a fixed subset of 64 non-pilot tile residues. For a candidate canonical-to-observed homography `H`, the coarse stage samples the DCT observable at the same residue `d in D` in adjacent tile repetitions. If the two observed values are `a_d` and `b_d`, the current weighted repeat score is proportional to
+
+```text
+sum_d sign(a_d * b_d) * min(|a_d|, |b_d|)
+------------------------------------------------
+             sum_d min(|a_d|, |b_d|)
+```
+
+No expected symbol value appears in this score. Pilot coordinates are excluded and pilot signs are not read. The score therefore measures periodic self-consistency rather than payload correctness.
+
+A deterministic bounded family supplies rotation, anisotropic scale, X/Y shear and mild top/bottom perspective hypotheses. Canvas dimensions are used only as a weak public geometric prior. The highest repeat-consistency candidates form a small beam. For each survivor, a +/-4-pixel sub-block translation bank is ranked against the public prototype-2 pilot using central tile rows. The best few are locally refined. Final geometry/origin selection is recomputed on held-out corner tile repetitions using pilot score/runner-up/margin; repeat score and central-row pilot score are proposal evidence only.
+
+This experiment assumes known canonical carrier extent and auto-framed transforms. It is not yet the physical decoder, does not solve arbitrary crop/placement, and has no framing/ECC/payload/HMAC semantics.
+

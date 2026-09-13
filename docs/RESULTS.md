@@ -939,3 +939,29 @@ JPEG-82, blur-1, noise-4, gamma-1.15, exact resize-75, resize-50 and aligned-cro
 No threshold is promoted from this two-image development corpus. Rotation/affine/perspective/combined tests and
 real v4 print/scan evidence remain open, so prototype-2 is not yet a normative Format-v4 pilot.
 
+
+
+## v0.3.0-build25 v4 known-geometry qualification — 2026-09-13
+
+`prototype-2-search-p64` recovered cyclic origin `(0,0)` in all 16 deterministic synthetic geometry cases and all 32 cases across the two local original images. The synthetic matrix minimum positive runner-up margin was 0.531955; the maximum matching unmarked-control margin was 0.020642. On the local originals, the weakest positive margin was 0.322069 (`PJ_piccolo`, combined perspective+blur), the maximum negative-control margin was 0.067786, and the weakest positive-minus-negative separation was 0.258085.
+
+The Build25 regression floor is 0.10 positive-minus-negative margin separation. It is a development gate only and must not be reused as a production acceptance threshold without independent calibration. No Format-v3 frozen file changed and no v4 payload encoder/decoder exists yet.
+
+## v0.3.0-build26 bounded blind v4 geometry qualification — 2026-09-13
+
+Build26 introduces a pilot-assisted geometry search with three separated evidence stages: repeated data-plane self-consistency for proposal, central-row pilot ranking, and held-out corner-pilot validation. The coarse repeat score uses only non-pilot coordinates and is invariant to the pilot sign sequence.
+
+Representative synthetic recoveries include:
+
+| case | recovered geometry | origin | corner error | pilot margin |
+|---|---|---:|---:|---:|
+| rotate 7.4 deg | ~7.45 deg | (0,0) | 0.00058 | 0.577991 |
+| rotate+scale | 11.2 deg, 1.07/0.93 | (0,0) | 0.00000 | 0.595496 |
+| perspective | ~0 deg, 0.035/0.010 | (0,0) | 0.00075 | 0.592342 |
+| combined perspective | 9.35 deg, 1.08/0.92, 0.030/0.015 | (0,0) | 0.00057 | 0.559796 |
+| combined shear | -8.75 deg, shearX 6.0 | (0,0) | 0.00055 | 0.567819 |
+
+The local corpus gate uses two representative compound cases per source. `PJ_piccolo.png` recovers 11.2 deg + 1.07/0.93 exactly with margin 0.520953, and the combined 9.3 deg + 1.08/0.92 + 0.030/0.015 perspective case exactly with margin 0.425713; corresponding unmarked blind-search margins are 0.094881 and 0.083961. `PJ_lingua.PNG` also recovers both declared geometries and origin `(0,0)`. These are development observations, not production thresholds.
+
+The current search assumes known canonical extent and auto-framed transforms and is bounded to <=6400 repeat hypotheses in the synthetic gate. No v3 frozen-core file changes and no v4 payload/HMAC path exists.
+

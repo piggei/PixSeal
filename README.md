@@ -7,7 +7,7 @@ hiding short authenticated messages inside images. It embeds protected payload
 bits in luminance DCT coefficients while trying to keep the visual change small
 under normal viewing conditions.
 
-Current development snapshot: **v0.3.0-build24**.
+Current development snapshot: **v0.3.0-build26**.
 
 Stable release baseline: **v0.2.0**.
 
@@ -25,15 +25,35 @@ negative control to justify another threshold or voting round. Future v3 work is
 maintenance/regression only unless genuinely new independent evidence appears.
 
 Build23 began an isolated experimental **Format v4** branch with an intentional
-public absolute pilot. Build24 adds reproducible pilot search, partial-visibility
-qualification and the first pilot-only synthetic image-channel tests. Nothing in the
-v4 branch is yet normative or used by the production encoder/decoder.
+public absolute pilot. Build24 added reproducible pilot search, partial-visibility
+qualification and the first pilot-only synthetic image-channel tests. Build25 extends
+that work through rotation, affine/shear, perspective, crop and combined distortions
+with geometry supplied independently. Build26 adds the first bounded blind geometry
+search: repeated data-plane self-consistency proposes coarse geometry and the public
+pilot ranks/validates the surviving hypotheses. Nothing in the v4 branch is yet
+normative or used by the production encoder/decoder.
 
 Project history and future work are kept in [`HISTORY.md`](HISTORY.md) and
 [`TODO.md`](TODO.md). Release-facing changes are in [`CHANGELOG.md`](CHANGELOG.md).
 The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.md)
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
+
+## What v0.3.0-build26 adds
+
+Build26 removes the known-homography assumption from the previous pilot experiment for an **auto-framed, bounded rotation/affine/mild-perspective search**. Geometry proposal is deliberately separated from pilot evidence: 64 deterministic data-plane coordinates are sampled at homologous positions of adjacent repeated 37x32 tiles, and only their self-consistency is scored. The data symbols themselves, pilot signs, payload, key, header, ECC and HMAC are never consulted. A small repeat-ranked bank is then scored by the public pilot on central tile rows and finally validated on held-out corner repetitions.
+
+The synthetic Build26 matrix covers positive/negative rotation, anisotropic rotation+scale, X/Y shear, mild perspective, rotation+perspective+anisotropic scale, and rotation+shear. Correct geometry remains bounded to at most 6,400 evaluated repeat hypotheses in the current tests. The local corpus adds representative rotation+anisotropic-scale and combined-perspective cases on both development originals; all recover origin `(0,0)` and the intended geometry to the declared corner-error bound.
+
+Build26 is **not** a general physical decoder yet. It assumes the canonical carrier extent is known and the transformed image is auto-framed; arbitrary crop/translation, print-camera acquisition, format framing/version negotiation, ECC choice and a real v4 payload encoder remain open. `prototype-2-search-p64` remains non-normative.
+
+## What v0.3.0-build25 adds
+
+Build25 asks a narrower question before attempting blind recovery: **if the correct projective mapping is known, does the public v4 pilot still identify the absolute cyclic origin after realistic geometric resampling?** A new experimental projective pilot sampler evaluates DCT evidence through a supplied homography while remaining completely disconnected from payload, key and HMAC evidence.
+
+The deterministic synthetic matrix covers 16 cases: arbitrary rotation, anisotropic scale, X/Y shear, mild perspective, rotation+scale, rotation+shear, rotated 75% resize, perspective combined with JPEG/blur/noise, and perspective+crop with/without JPEG. All cases recover origin `(0,0)`. The same matrix is applied to the two local development originals, for 32 additional image/case observations; all recover the correct origin. The weakest local positive margin is **0.322069**, versus **0.063984** on the corresponding unmarked control.
+
+Build25 uses a predeclared **0.10 positive-minus-negative margin separation floor** only as a development regression gate. It is not a decoder acceptance threshold and does not authenticate anything. Prototype-2 therefore remains non-normative: Build25 demonstrates pilot survivability under a correct geometric mapping, but blind pilot-assisted estimation of that mapping remains open.
 
 ## What v0.3.0-build24 adds
 

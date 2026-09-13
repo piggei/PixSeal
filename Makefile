@@ -47,7 +47,7 @@ ALL_TEST_TARGETS ?=
 ALL_TEST_STRICT ?=1
 GO_SOURCES := $(shell find cmd internal watermark -type f -name '*.go')
 
-.PHONY: test-list private-corpus-manifest print-scan-test build test test-unit release-unit v3-freeze-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
+.PHONY: test-list private-corpus-manifest print-scan-test build test test-unit release-unit v3-freeze-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
 
 # Print a categorized index of all test/check targets without running them.
 test-list:
@@ -175,6 +175,30 @@ v4-pilot-corpus-test:
 	@echo "Running Build24 experimental Format-v4 pilot corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
 		go test ./watermark -run '^TestExperimentalV4PilotCorpus$$' -count=1 -v
+
+# Build25 known-geometry pilot qualification. Geometry is supplied independently
+# so this isolates whether prototype-2 survives the transformed image channel.
+v4-pilot-geometry-test:
+	@echo "Running Build25 Format-v4 known-geometry pilot qualification..."
+	@go test ./watermark -run '^TestExperimentalV4Prototype2KnownGeometryQualification$$' -count=1 -v
+
+# Optional Build25 known-geometry qualification on the local original-image corpus.
+v4-pilot-geometry-corpus-test:
+	@echo "Running Build25 Format-v4 known-geometry local corpus qualification..."
+	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+		go test ./watermark -run '^TestExperimentalV4PilotGeometryCorpus$$' -count=1 -v
+
+# Build26 bounded blind geometry recovery. Repeated data-plane self-consistency
+# proposes geometry without data symbols; the public pilot ranks and validates.
+v4-pilot-blind-geometry-test:
+	@echo "Running Build26 Format-v4 blind pilot-assisted geometry qualification..."
+	@go test ./watermark -run '^TestExperimentalV4(Prototype2BlindGeometryQualification|DataRepeatProposalIsPilotSymbolIndependent)$$' -count=1 -v
+
+# Optional Build26 blind-geometry qualification on the local original-image corpus.
+v4-pilot-blind-geometry-corpus-test:
+	@echo "Running Build26 Format-v4 blind geometry local corpus qualification..."
+	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+		go test ./watermark -run '^TestExperimentalV4BlindGeometryCorpus$$' -count=1 -v
 
 smooth-phase-test:
 	@echo "Running v0.3 bounded smooth phase-field regressions..."

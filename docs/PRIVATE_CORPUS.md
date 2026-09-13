@@ -92,3 +92,8 @@ metrics, but source ZIPs/evidence ZIPs should not include the image files themse
 physical-corpus requirement. After a real experimental v4 payload encoder is available, create new embedded
 originals, print them and acquire separate smartphone/scanner samples under a v4-specific manifest.
 
+
+
+### Build25 local-original geometry note
+
+Build25 reuses the local original images only as backgrounds for synthetic v4 pilot/data-plane carriers and deterministic geometric transforms. The originals and transformed derivatives remain local and must not be included in source/evidence archives. Evidence may contain only textual metrics/logs. These experiments are not physical v4 print-camera evidence.
