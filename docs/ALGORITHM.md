@@ -1286,3 +1286,63 @@ A deterministic bounded family supplies rotation, anisotropic scale, X/Y shear a
 
 This experiment assumes known canonical carrier extent and auto-framed transforms. It is not yet the physical decoder, does not solve arbitrary crop/placement, and has no framing/ECC/payload/HMAC semantics.
 
+
+
+## 47. v0.3.0-build27 unknown-placement pilot search (non-normative)
+
+Build27 assumes a canonical-to-full-frame homography `H_g` has been estimated independently. The unknown observed placement is represented by an image-space translation
+
+```text
+H(t_x,t_y) = T(t_x,t_y) H_g
+```
+
+where `T` is a 2D translation. If the full transformed extent is `(W_f,H_f)` and the observed extent is `(W_o,H_o)`, the bounded search interval for each axis is derived from the sign of `W_o-W_f` / `H_o-H_f`: a smaller observed frame permits negative crop translations, while a larger observed frame permits positive padded-canvas placement. A small fixed guard absorbs integer rounding; ranges wider than the Build27 research cap are rejected rather than searched unboundedly.
+
+The 64 public pilot positions are partitioned by ordered pilot index. Even indices form proposal set `P0`; odd indices form validation set `P1`. For a translation hypothesis, every visible repeated pilot sample in `P0` contributes
+
+```text
+score_0 = sum s_i * dct_i / sum |dct_i|
+```
+
+where `s_i` is the public pilot sign and `dct_i` is the observed DCT differential through `H(t_x,t_y)`. A coarse 4-pixel translation grid is ranked by `score_0`, then a bounded integer-pixel neighbourhood around the strongest proposals is reevaluated. Final ordering uses only held-out `score_1` from `P1`; proposal evidence can only break an exact validation tie.
+
+A final complete-pilot projective read verifies that the selected mapping restores canonical cyclic origin `(0,0)`. This full-pilot check is qualification evidence, not authentication. Whole-tile-equivalent translations are allowed to tie because the carrier repeats the same 37x32 tile. Payload/header/CRC/ECC/key/HMAC are absent from every Build27 placement decision.
+
+Build27 therefore establishes `known geometry + unknown placement`, not `unknown geometry + unknown placement`. The latter remains a separate research gate.
+
+
+## 48. v0.3.0-build28 joint blind affine+crop search (non-normative)
+
+Build28 removes both the supplied-affine-geometry assumption of Build27 and the auto-framed placement assumption of Build26 for a bounded affine family. The unknowns are rotation `theta`, anisotropic scales `s_x,s_y`, and a negative image-space translation caused by arbitrary crop. Shear and projective terms are held at zero in this checkpoint.
+
+### 48.1 Structural geometry observable
+
+For a candidate affine mapping `H`, each sampled canonical 8x8 block is projectively resampled and reduced to the same carrier differential used by the embedder,
+
+```text
+d = DCT(2,3) - DCT(3,2)
+```
+
+but geometry scoring uses only `|d|`; no expected bit or pilot sign is consulted. Natural texture can have high absolute DCT energy, so Build28 evaluates a 4x4 set of sub-block phases and scores **phase contrast** as
+
+```text
+max_phase(trimmed_mean(|d|)) - median_phase(trimmed_mean(|d|)).
+```
+
+The wide bank samples 32 distributed blocks per hypothesis over a bounded `[-12,+12]` degree range and anisotropic scales. Mid refinement uses 64 blocks. Full refinement uses 256 blocks. Finally, only the last two structural basins receive a compact coupled `(theta,s_x,s_y)` grid; this avoids the local-axis failure observed with coordinate descent while keeping the global search bounded. Pilot symbols are absent from all four geometry stages.
+
+### 48.2 Placement and evidence separation
+
+After the single structural winner is fixed, Build28 invokes the Build27 placement search. Pilot partition 0 proposes crop translation on a coarse-to-fine pixel grid. Pilot partition 1 is disjoint and supplies held-out placement validation. Only after that mapping is fixed does the complete public pilot compute cyclic origin, score, runner-up and margin. Payload/header/CRC/ECC/key/HMAC are not available to the search.
+
+The retained regression budget counts geometry parameter hypotheses plus placement hypotheses and is capped at 260000 in the synthetic/local Build28 gates. Current cases are about 69k hypotheses. This count is a development budget, not a format constant.
+
+### 48.3 Scope limit
+
+Build28 establishes joint `rotation + anisotropic scale + negative crop/translation`. It does not yet establish joint shear, projective/perspective recovery, positive padded-canvas placement, unknown physical carrier extent or a v4 payload decoder. Those remain separate gates before `prototype-2-search-p64` can be considered for normative freeze.
+
+## 49. Implementation language, portability and frontend boundary
+
+PixSeal uses Go intentionally so the algorithmic core can remain one qualified codebase across multiple operating-system targets. The qualification harness runs `make core-target-check`, which cross-compiles the reusable `watermark` package for Linux/amd64, Windows/amd64, Android/arm64 and iOS/arm64. Desktop CLI binaries are separate from mobile application packaging; successful core cross-compilation does not claim that an Android or iOS GUI application already exists.
+
+The planned product architecture keeps frontend/UI code outside the watermark core. A future graphical interface, with priority on smartphone/tablet use, can therefore call the same Go implementation used by the CLI rather than reimplementing embedding/decoding logic per platform. Camera/gallery integration, mobile bindings, permissions and UX remain future platform work.

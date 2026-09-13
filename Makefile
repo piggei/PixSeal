@@ -47,7 +47,7 @@ ALL_TEST_TARGETS ?=
 ALL_TEST_STRICT ?=1
 GO_SOURCES := $(shell find cmd internal watermark -type f -name '*.go')
 
-.PHONY: test-list private-corpus-manifest print-scan-test build test test-unit release-unit v3-freeze-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
+.PHONY: test-list private-corpus-manifest print-scan-test build test test-unit release-unit v3-freeze-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
 
 # Print a categorized index of all test/check targets without running them.
 test-list:
@@ -199,6 +199,32 @@ v4-pilot-blind-geometry-corpus-test:
 	@echo "Running Build26 Format-v4 blind geometry local corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
 		go test ./watermark -run '^TestExperimentalV4BlindGeometryCorpus$$' -count=1 -v
+
+# Build27 unknown crop/translation/placement qualification with geometry supplied
+# independently. Pilot half A proposes placement; disjoint pilot half B validates.
+v4-pilot-placement-test:
+	@echo "Running Build27 Format-v4 unknown-placement qualification..."
+	@go test ./watermark -run '^TestExperimentalV4(Prototype2UnknownPlacementQualification|PlacementWrongGeometryDoesNotMasqueradeAsPlacement)$$' -count=1 -v
+
+# Optional Build27 placement qualification on the local original-image corpus.
+v4-pilot-placement-corpus-test:
+	@echo "Running Build27 Format-v4 unknown-placement local corpus qualification..."
+	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+		go test ./watermark -run '^TestExperimentalV4PlacementCorpus$$' -count=1 -v
+
+# Build28 joint affine + unknown negative-crop qualification. Geometry is
+# selected only from public, sign-independent DCT phase contrast; the pilot is
+# exposed only after geometry is fixed, through the qualified Build27 placement
+# proposal/held-out validation split.
+v4-pilot-joint-affine-test:
+	@echo "Running Build28 Format-v4 joint blind affine+crop qualification..."
+	@go test ./watermark -run '^TestExperimentalV4(Prototype2JointAffineCropQualification|JointAffineStructuralProposalIsPilotSymbolIndependent)$$' -count=1 -v
+
+# Optional Build28 joint affine+crop qualification on the local originals.
+v4-pilot-joint-affine-corpus-test:
+	@echo "Running Build28 Format-v4 joint blind affine+crop local corpus qualification..."
+	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+		go test ./watermark -run '^TestExperimentalV4JointAffineCropCorpus$$' -count=1 -v
 
 smooth-phase-test:
 	@echo "Running v0.3 bounded smooth phase-field regressions..."

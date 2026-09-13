@@ -51,6 +51,10 @@ row v4-pilot-geometry-test RESEARCH source 'Build25 known-geometry rotation/affi
 row v4-pilot-geometry-corpus-test RESEARCH pics 'Build25 known-geometry pilot qualification on local originals'
 row v4-pilot-blind-geometry-test RESEARCH source 'Build26 bounded blind geometry via repeat proposal + pilot validation'
 row v4-pilot-blind-geometry-corpus-test RESEARCH pics 'Build26 blind pilot-assisted geometry on local originals'
+row v4-pilot-placement-test RESEARCH source 'Build27 unknown crop/translation/placement with independently supplied geometry'
+row v4-pilot-placement-corpus-test RESEARCH pics 'Build27 unknown-placement qualification on local originals'
+row v4-pilot-joint-affine-test RESEARCH source 'Build28 joint blind rotation+anisotropic-scale plus unknown crop/translation'
+row v4-pilot-joint-affine-corpus-test RESEARCH pics 'Build28 joint blind affine+crop qualification on local originals'
 row smooth-phase-test RESEARCH source 'bounded smooth phase-field regressions'
 row geometry-test RESEARCH pics 'strict rotation/combined geometry suite; corpus-sensitive'
 row affine-test RESEARCH pics 'strict axis-aligned affine suite; corpus-sensitive'
@@ -67,6 +71,6 @@ row extreme-test QUALIFICATION pics 'progressive resize/crop limit map; non-stri
 row test-unit COMPATIBILITY source 'complete go test ./... suite'
 row test AGGREGATE source+pics 'build + test-unit + image round-trips'
 row all AGGREGATE source+pics 'test + baseline transformation suite'
-row all-test AGGREGATE source+pics '39-target qualification matrix with final summary'
+row all-test AGGREGATE source+pics '43-target qualification matrix with final summary'
 
 printf '\nTip: use make <target>. For all-test, optionally set ALL_TEST_REPORT=path/to/report.txt.\n'

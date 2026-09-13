@@ -648,3 +648,51 @@ The revised search recovers the complete synthetic Build26 family and the repres
 
 Accept Build26 as the first bounded blind pilot-assisted geometry checkpoint, but do not freeze the pilot or call the problem solved. The next independent problem is unknown placement/crop/translation and eventually physical print-camera geometry. Keep payload/header/ECC/HMAC out of geometry proposal and validation.
 
+
+
+## build27 — isolate crop/translation placement before joint blind recovery
+
+### Hypothesis
+
+Once Build26 has shown that the public pilot can rank bounded geometry hypotheses, the next unknown should be isolated rather than folded immediately into a larger brute force. If the geometric mapping is correct but crop/translation is unknown, the public pilot should recover placement without payload/header/HMAC evidence.
+
+### Method
+
+Supply the canonical-to-full-frame geometry but withhold the crop or padded-canvas translation. Derive a finite translation interval from the difference between full transformed extent and observed extent. Pilot indices `i mod 2 = 0` propose placement on a 4-pixel grid and integer refinement; indices `i mod 2 = 1` validate the shortlist. Require finite scores, bounded hypothesis count, full-pilot recovery under the selected mapping, matching unmarked controls, and a deliberately wrong-geometry control.
+
+Do **not** require a placement runner-up gap: because tiles repeat, translations differing by a full tile can be equivalent and forcing one to win would manufacture confidence from an unobservable quantity.
+
+### Result
+
+All synthetic crop/pad cases pass, including mild perspective and a deeper crop. Both local originals pass the representative crop and padded-perspective cases. The wrong-geometry control is strongly separated from the correct transform.
+
+### Decision
+
+Accept placement recovery as independently qualified for Build27, but keep `prototype-2-search-p64` non-normative. The next experiment must combine a crop-tolerant coarse lattice/extent proposal with placement and pilot validation. Do not call Build27 a fully blind decoder and do not introduce payload/ECC/HMAC evidence to bridge the remaining gap.
+
+
+## build28 — joint blind affine geometry plus unknown crop
+
+### Question
+
+Can the geometry and placement problems qualified separately in Build26/27 be solved in the same bounded search on both synthetic and photographic backgrounds without using pilot symbols to choose geometry?
+
+### Rejected paths
+
+A repeat-only global proposal under crop was too narrow in angle/scale and became texture-sensitive on `PJ_piccolo.png`. A sparse absolute-DCT bank produced false photographic maxima. Coordinate-wise final refinement also stalled at a nearby `scaleY~0.915` basin even after the correct positive-angle family reached the final shortlist. Lowering pilot/validation floors was explicitly rejected.
+
+### Retained method
+
+Use absolute DCT carrier differential and **phase contrast** as a public structural observable. Search angle at 0.25-degree coarse spacing with bounded anisotropic scales; refine the best angle basins with 64 and then 256 distributed blocks. Apply one compact coupled angle/scale grid only to the final two structural candidates. The coupled step moves `PJ_piccolo.png` to approximately 11.25 degrees / 1.0675 / 0.93 and makes it the highest structural candidate.
+
+Do not use pilot partition 0 to select between geometry basins. Once the DCT winner is fixed, run the unchanged Build27 placement search: partition 0 proposes crop translation, partition 1 validates, and full pilot scoring checks cyclic origin.
+
+### Result
+
+Both synthetic cases pass within ~69k total hypotheses. Both local originals pass the representative 11.2 degree / 1.07/0.93 + crop case. `PJ_piccolo.png` reaches held-out validation 0.781974, full-pilot margin 0.410485 and origin `(0,0)`; `PJ_lingua.PNG` reaches 0.812461 / 0.432900 and `(0,0)`. Matching unmarked images remain well separated.
+
+### Decision
+
+Accept Build28 as the first joint blind **affine+negative-crop** checkpoint. Keep prototype-2 non-normative. Do not infer that projective crop or padded-canvas geometry is solved: perspective breaks the simple translation/phase relation used by the affine structural proposal, and positive placement expands the search differently. Those become the next explicit research gates before pilot freeze and v4 codec implementation.
+
+Also document the product architecture decision: Go is retained partly for one cross-platform core (Linux/Windows/Android/iOS), and a future GUI—especially mobile—is planned over that same core.

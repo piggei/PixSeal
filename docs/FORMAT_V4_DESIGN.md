@@ -267,3 +267,25 @@ The synthetic matrix recovers rotation, anisotropic rotation+scale, X/Y shear, m
 
 This is still not a production/physical decoder. Build26 assumes the canonical carrier extent is known and the transform is auto-framed. Arbitrary crop/translation, unknown carrier placement, print-camera acquisition, v4 framing/version identification, ECC and authenticated payload decoding remain open. Prototype-2 therefore remains non-normative.
 
+
+
+## Build27 unknown-placement qualification
+
+Build27 keeps `prototype-2-search-p64` unchanged and isolates crop/translation from geometry. With the geometric warp supplied independently, the public pilot recovers non-block-aligned crop offsets and padded-canvas placement on the synthetic matrix and both local development originals. Proposal and validation use disjoint pilot-symbol halves; payload and HMAC remain absent.
+
+Because the v4 tile repeats, absolute translation by complete tile periods is not necessarily observable or necessary. The useful state is a mapping that restores block phase and cyclic tile origin for subsequent data sampling. Build27 therefore does not promote a placement top-2 threshold.
+
+This checkpoint does **not** close blind physical geometry. The next gate is a crop/placement-tolerant coarse lattice/extent estimator followed by the Build27 placement/pilot validation path. Only after that joint synthetic qualification should the project decide whether prototype-2 is ready to freeze before implementing the v4 encoder.
+
+
+## Build28 joint affine+crop qualification
+
+Build28 combines unknown affine geometry and unknown negative crop placement in one bounded experiment. Geometry selection is now **pilot-symbol independent**: the search scores absolute DCT carrier differential energy and the contrast between sub-block phases, refines angle/X/Y scale hierarchically, and applies a compact coupled refinement only to the final two basins. The public pilot is not exposed until one geometry is fixed.
+
+The selected geometry then enters the Build27 split-pilot placement path. One pilot half proposes translation, the disjoint half validates it, and the complete pilot reports cyclic origin. Two deterministic synthetic cases and representative cases on both local originals recover origin `(0,0)` with matched-negative separation. `PJ_piccolo.png`, which defeated earlier crop-tolerant geometry proposals, now selects the positive ~11.25 degree / 1.0675 / 0.93 basin structurally before placement.
+
+This checkpoint is intentionally affine/crop-only. Projective crop is not equivalent to a constant canonical phase shift, so the affine proposal must not simply be generalized by adding perspective parameters to the same global search. Joint projective recovery, positive padded-canvas placement, shear+placement requalification and unknown physical extent remain required before pilot freeze.
+
+### Portability and planned UI
+
+The implementation remains in Go partly to preserve one portable algorithmic core. `core-target-check` cross-compiles that core for Linux, Windows, Android and iOS targets. A future GUI is planned, especially for mobile use, but it will be a frontend over the same qualified core rather than a separate watermark implementation.

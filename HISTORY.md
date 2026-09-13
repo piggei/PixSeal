@@ -688,3 +688,27 @@ A deterministic rotation/affine/shear/mild-perspective family is searched with c
 
 The synthetic matrix recovers the declared geometry families within the Build26 corner-error bound, including 9.3 degree + 1.08/0.92 anisotropic scale + 0.030/0.015 perspective. Both local originals also recover the representative rotate-scale and combined-perspective cases with correct origin. The search remains experimental and assumes known canonical extent plus auto-framed transforms; arbitrary crop/translation and the real print-camera problem remain future work.
 
+
+
+## v0.3.0-build27 — unknown crop/translation placement qualification
+
+Build27 deliberately does not combine every remaining unknown at once. Following the same staged method used by Build25/26, it freezes the geometry input for one experiment and asks whether the public v4 pilot can recover where the transformed carrier lies after arbitrary crop or padded-canvas placement.
+
+The search receives the canonical-to-full-frame homography and full transformed dimensions but no crop offset or canvas offset. Translation bounds follow from full-vs-observed extent and remain explicitly capped. Even-index pilot symbols propose placement on a coarse 4-pixel grid and integer refinement; odd-index symbols are held out for final validation. No payload, header, ECC, key or HMAC evidence participates.
+
+Synthetic qualification recovers the declared offsets for affine crop, combined-perspective crop, a deeper crop and two padded-canvas placements. The same representative crop/pad cases pass on `PJ_lingua.PNG` and `PJ_piccolo.png`. A one-degree wrong-geometry control drops validation from roughly 0.994 to 0.236, so placement search is not allowed to hide geometric error.
+
+Because v4 repeats tiles, translations separated by a complete tile can be observationally equivalent. Build27 therefore validates the recovered mapping by full-pilot canonical sampling instead of requiring a non-zero placement top-2 gap. The remaining research problem is **joint** crop-tolerant geometry/extent estimation plus placement; Build27 does not yet freeze the pilot or enable a v4 codec.
+
+
+## v0.3.0-build28 — first joint blind affine+crop recovery
+
+Build28 combines the previously separated Build26 geometry and Build27 placement problems for one deliberately bounded family: rotation, anisotropic scale and arbitrary **negative crop translation** are all unknown. Early prototypes tried to use repeated-tile consistency or sparse DCT energy as a single global selector. Those variants either overfit photographic texture or pruned the correct basin before the pilot could validate it; lowering thresholds was rejected.
+
+The retained path uses sign-independent absolute DCT carrier energy and 8-pixel phase contrast as the geometry observable. A hierarchical bank searches angle and X/Y scale, then 64- and 256-block refinements localize the strongest basins. The key correction was a compact **coupled** angle/scale search on only the last two basins: coordinate descent could leave `PJ_piccolo.png` at approximately `scaleY=0.915` although the correct `~0.93` basin was nearby. The coupled refinement raises the correct photographic basin to first place without using pilot symbols.
+
+After geometry is fixed, Build27 placement recovery is reused unchanged: even pilot indices propose translation, odd indices validate it, and the full pilot reports cyclic origin. Synthetic and both local-original gates recover `(0,0)` with bounded hypothesis counts and strong matched-negative separation. Geometry selection therefore remains structurally independent from the public pilot, while placement and origin use the pilot only after the affine mapping has been chosen.
+
+Build28 is not the final blind v4 decoder. Joint shear, projective/perspective geometry and positive padded-canvas placement are still separate work, as are unknown physical carrier extent, v4 framing/ECC, the payload encoder and fresh print-camera/scanner evidence.
+
+The project also records an architectural decision that had previously been implicit: Go is used in part to keep one reusable implementation compilable across Linux, Windows, Android and iOS targets. A future graphical frontend is planned, especially for mobile use, while the qualified Go core remains independent of UI technology.

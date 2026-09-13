@@ -7,7 +7,7 @@ hiding short authenticated messages inside images. It embeds protected payload
 bits in luminance DCT coefficients while trying to keep the visual change small
 under normal viewing conditions.
 
-Current development snapshot: **v0.3.0-build26**.
+Current development snapshot: **v0.3.0-build28**.
 
 Stable release baseline: **v0.2.0**.
 
@@ -30,14 +30,41 @@ qualification and the first pilot-only synthetic image-channel tests. Build25 ex
 that work through rotation, affine/shear, perspective, crop and combined distortions
 with geometry supplied independently. Build26 adds the first bounded blind geometry
 search: repeated data-plane self-consistency proposes coarse geometry and the public
-pilot ranks/validates the surviving hypotheses. Nothing in the v4 branch is yet
-normative or used by the production encoder/decoder.
+pilot ranks/validates the surviving hypotheses. Build27 then isolates the next
+problem: arbitrary crop/translation and padded-canvas placement with geometry supplied
+independently, using disjoint pilot halves for proposal and validation. Build28 closes
+the first **joint** blind affine+crop checkpoint: rotation, anisotropic scale and
+negative crop/translation are all unknown, geometry is selected from sign-independent
+DCT phase contrast, and only then is the public pilot exposed for placement and cyclic
+origin. Nothing in the v4 branch is yet normative or used by the production
+encoder/decoder.
 
 Project history and future work are kept in [`HISTORY.md`](HISTORY.md) and
 [`TODO.md`](TODO.md). Release-facing changes are in [`CHANGELOG.md`](CHANGELOG.md).
 The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.md)
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
+
+
+## What v0.3.0-build28 adds
+
+Build28 combines the two problems that Build26 and Build27 qualified separately for the **affine crop** family. The observed image is an arbitrary non-block-aligned crop of a carrier with unknown rotation and unknown anisotropic X/Y scale. Neither geometry nor crop translation is supplied to the search.
+
+The geometry stage is deliberately independent of pilot symbols and payload content. It measures the absolute DCT carrier observable `|DCT(2,3)-DCT(3,2)|` over many blocks and scores how sharply that energy concentrates at one 8-pixel sampling phase. A hierarchical bank searches a bounded `+/-12 degree` rotation range and anisotropic scales, then a compact **coupled** angle/scale refinement is applied only to the final structural basins. This coupled final stage was added because coordinate-wise refinement could remain trapped at a nearby scale on `PJ_piccolo.png` even though the correct basin was already present.
+
+Only after one geometry has been selected structurally does the already-qualified Build27 placement search run. Pilot half A proposes crop translation; disjoint pilot half B supplies held-out placement validation; the full public pilot then reports cyclic origin and margin. Header, payload, CRC, ECC, secret key and HMAC are absent from geometry and placement selection. On the synthetic matrix and both local development originals, the joint search restores origin `(0,0)` with clear matched-negative separation.
+
+Build28 intentionally qualifies **rotation + anisotropic scale + negative crop/translation** only. Joint shear, joint projective/perspective recovery and joint padded-canvas placement remain open even though those components are already qualified separately in Build26/27. `prototype-2-search-p64` therefore remains non-normative and no v4 payload encoder/decoder is enabled yet.
+
+## What v0.3.0-build27 adds
+
+Build27 isolates **unknown carrier placement** before attempting the harder joint geometry+placement problem. The experiment receives the canonical-to-full-frame rotation/scale/shear/projective mapping, but it is not told where that transformed carrier lies in the observed image. The observed image may be an arbitrary non-block-aligned crop or a larger padded canvas with the carrier shifted inside it.
+
+The search remains public and key-independent. Pilot symbols with even indices propose a bounded translation on a 4-pixel grid followed by integer-pixel refinement; the disjoint odd-index pilot symbols validate the surviving placements. Payload, header, CRC, ECC, key and HMAC are absent. Search bounds are derived only from the known full transformed extent versus the observed extent and are capped so the experiment cannot silently become an unbounded image scan. Whole-tile-equivalent translations are treated as expected equivalences rather than false ambiguity because every v4 tile repeats the same pilot/data layout.
+
+The synthetic matrix covers arbitrary crop, deeper crop, padded-canvas placement, affine geometry and mild perspective. The two local development originals also pass representative crop and padded-perspective cases. A deliberately wrong geometry loses strongly even after placement optimization, confirming that the placement search does not mask geometric error.
+
+Build27 is **not** the final blind physical decoder. Geometry is still supplied independently for this placement qualification. The next gate is a crop/placement-tolerant coarse lattice/extent estimator that can feed geometry and placement jointly before the pilot is frozen. `prototype-2-search-p64` therefore remains non-normative.
 
 ## What v0.3.0-build26 adds
 
@@ -692,6 +719,12 @@ in `make all-test`. Additional images in `original pics/` remain useful and are
 reported, but a content-specific robustness miss no longer rewrites the meaning
 of the release baseline. Very large/undimensionable inputs are consistently
 SKIPped by bounded geometry suites instead of being reported as decoder errors.
+
+## Why Go, portability and the planned GUI
+
+Go is an intentional architectural choice for PixSeal, not only an implementation convenience. The project keeps the steganography/watermarking engine in a reusable Go package so the same core can be compiled for multiple operating-system/CPU targets instead of maintaining separate algorithm implementations. `make core-target-check` currently verifies compilation of that reusable core for **Linux/amd64, Windows/amd64, Android/arm64 and iOS/arm64** on every qualification run. `make build-all` also emits desktop CLI binaries for the supported desktop targets.
+
+On mobile platforms the long-term goal is not to expose a command-line workflow to normal users. A separate graphical frontend is planned, with particular emphasis on **smartphone/tablet use**: choose or capture an image, embed/extract a message, and present the result and diagnostics without requiring shell commands. The GUI is intentionally kept outside the algorithmic core so desktop CLI tools, future Android/iOS applications and other frontends can share the same Go implementation and qualification corpus. Mobile packaging, platform permissions, camera/gallery integration and final UI technology are future product work; current Android/iOS checks validate core portability rather than claiming a finished mobile application.
 
 ## Build
 

@@ -1,5 +1,27 @@
 # Changelog
 
+## v0.3.0-build28 — 2026-09-13
+
+- Add the first bounded **joint blind affine+crop** Format-v4 search: rotation, anisotropic scale and negative crop/translation are unknown in the same experiment.
+- Keep geometry proposal independent of pilot signs, payload, key and HMAC by using absolute DCT carrier energy plus 8-pixel phase contrast.
+- Add hierarchical coarse/mid/full geometry search and a compact coupled angle/scale refinement only on the final two structural basins; this fixes the `PJ_piccolo.png` scale-coupling failure without loosening acceptance floors.
+- Select geometry before exposing pilot symbols; reuse the Build27 split-pilot placement proposal/held-out validation path only after geometry is fixed.
+- Qualify two synthetic joint-affine crop cases and one representative joint case on each local development original, all with cyclic origin `(0,0)` and matched-negative separation.
+- Add `v4-pilot-joint-affine-test` and `v4-pilot-joint-affine-corpus-test`; `all-test` now contains 43 targets.
+- Document why Go was selected for a single portable core and record the future GUI/mobile-app direction; `core-target-check` continues to cover Linux, Windows, Android and iOS targets.
+- Keep joint shear, joint projective/perspective and joint padded-canvas placement explicitly open; `prototype-2-search-p64` remains non-normative and no v4 payload codec is enabled.
+
+## v0.3.0-build27 — 2026-09-13
+
+- Add an isolated Format-v4 unknown-placement search while preserving the frozen v3 core and non-normative `prototype-2-search-p64`.
+- Qualify arbitrary non-block-aligned crop and padded-canvas carrier placement with the geometric transform supplied independently.
+- Split the public 64-symbol pilot into disjoint proposal/validation halves so placement ranking does not reuse the same pilot symbols for acceptance.
+- Derive bounded translation ranges from the known full transformed extent versus observed extent; use a 4-pixel proposal grid followed by integer-pixel refinement.
+- Treat whole-tile-equivalent translations as expected periodic equivalence rather than requiring an artificial top-2 placement gap.
+- Add negative controls and a wrong-geometry control showing placement optimization cannot compensate for a materially incorrect transform.
+- Add local-corpus placement qualification on both development originals; local images remain excluded from source/evidence archives.
+- Add `v4-pilot-placement-test` and `v4-pilot-placement-corpus-test`; `all-test` now contains 41 targets.
+
 ## v0.3.0-build26 — 2026-09-13
 
 - Add an isolated bounded blind Format-v4 geometry search without modifying the frozen v3 core or production APIs.

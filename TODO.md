@@ -142,6 +142,9 @@ and `CHANGELOG.md`.
 
 ## Future platform work
 
+- [x] Document Go as an intentional portability choice: one reusable core is cross-compiled by `core-target-check` for Linux/amd64, Windows/amd64, Android/arm64 and iOS/arm64.
+- [ ] Design and implement a graphical frontend over the reusable Go core, prioritizing smartphone/tablet workflows (camera/gallery selection, embed/extract and clear result/diagnostic presentation).
+- [ ] Decide the Android/iOS packaging/binding strategy and platform-specific camera/gallery/file permissions without duplicating the watermark algorithm outside the Go core.
 - [ ] Run the no-clobber CLI regressions on a real Windows host when convenient;
       v0.2.0 qualification already includes Windows/amd64 cross-compilation.
 - [ ] Decide explicit EXIF Orientation normalization policy.
@@ -178,7 +181,10 @@ and `CHANGELOG.md`.
 - [x] Generalize the pilot-only detector to a first bounded blind rotation/affine/shear/mild-perspective recovery path: Build26 uses repeated data-plane self-consistency for coarse proposal, then public-pilot ranking and held-out pilot validation.
 - [x] Complete the first synthetic v4 image-channel matrix for JPEG/resize/crop/rotation/affine/perspective/blur/gamma/noise/combined transformations. Build24 covers the aligned photometric/sampling half; Build25 covers the geometric half with known homographies and unmarked controls.
 - [x] Generalize Build25 from known geometry to **bounded blind pilot-assisted geometry estimation** for auto-framed transforms, with deterministic repeat-based proposal and explicit runner-up/negative-control telemetry (Build26).
-- [ ] Extend Build26 to arbitrary crop/translation and unknown carrier placement without using payload/header/HMAC evidence.
+- [x] Qualify arbitrary crop/translation and padded-canvas placement with geometry supplied independently; Build27 uses disjoint pilot halves and no payload/header/HMAC evidence.
+- [x] Combine blind affine geometry with Build27 placement under arbitrary negative crop: Build28 jointly recovers rotation, anisotropic scale and crop/translation with structural-only geometry selection and split-pilot placement validation.
+- [ ] Extend the Build28 joint search to **projective/perspective** geometry under unknown crop; do not reuse the affine translation-invariance assumption where projective crop changes canonical phase.
+- [ ] Extend the joint search to positive padded-canvas placement and re-qualify shear jointly with placement before considering the pilot frozen.
 - [ ] Replace the current known canonical-extent assumption with a coarse tile/lattice extent estimator suitable for physical captures before pilot ranking.
 - [ ] Create a separate private v4 print-camera/scanner corpus by re-embedding and reprinting; do not treat the
       existing v3 photographs as v4 evidence.

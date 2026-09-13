@@ -965,3 +965,52 @@ The local corpus gate uses two representative compound cases per source. `PJ_pic
 
 The current search assumes known canonical extent and auto-framed transforms and is bounded to <=6400 repeat hypotheses in the synthetic gate. No v3 frozen-core file changes and no v4 payload/HMAC path exists.
 
+
+
+## v0.3.0-build27 unknown-placement qualification — 2026-09-13
+
+Build27 keeps geometry supplied independently and removes only the placement assumption. The deterministic synthetic placement suite currently reports:
+
+| case | recovered shift | marked validation | matching negative | notes |
+|---|---:|---:|---:|---|
+| rotate+scale arbitrary crop | (-113,-77) | 0.994367 | 0.100612 | exact non-block-aligned crop |
+| combined perspective arbitrary crop | (-101,-69) | 0.980152 | 0.192472 | exact crop under projective warp |
+| rotate+scale deep crop | (-171,-119) | 1.000000 | 0.094531 | substantially reduced visible carrier |
+| rotate+scale padded placement | (73,40) | 0.986240 | 0.221759 | one-pixel-equivalent padded solution |
+| perspective padded placement | (57,35) | 0.990739 | 0.176874 | exact padded placement |
+
+The padded rotate+scale result can differ by one pixel from the synthetic insertion while still producing an essentially identical validated carrier mapping; complete pilot validation remains the deciding diagnostic. Placement top-2 gaps are intentionally not acceptance criteria because whole-tile-equivalent placements are expected for a periodic carrier.
+
+The local original-image corpus reports:
+
+| image | case | recovered shift | marked validation | negative validation |
+|---|---|---:|---:|---:|
+| PJ_lingua.PNG | rotate+scale crop | (-117,-83) | 0.981501 | 0.301624 |
+| PJ_lingua.PNG | combined perspective padded | (67,43) | 0.982102 | 0.324639 |
+| PJ_piccolo.png | rotate+scale crop | (-117,-83) | 0.932792 | 0.231024 |
+| PJ_piccolo.png | combined perspective padded | (67,43) | 0.953116 | 0.266898 |
+
+A wrong-geometry control (true affine geometry plus +1 degree error) remains available to the placement optimizer but reaches only 0.236030 validation versus 0.994367 for the correct geometry. This supports the staged conclusion: the pilot can recover unknown placement once geometry is sufficiently correct, but Build27 does not yet solve geometry and placement jointly.
+
+
+## v0.3.0-build28 joint blind affine+crop qualification — 2026-09-13
+
+Build28 combines unknown rotation/anisotropic scale with unknown negative crop translation. Geometry is selected only from sign-independent DCT phase contrast; the pilot enters after geometry selection through Build27 placement proposal/validation.
+
+Synthetic results:
+
+| case | recovered affine | recovered shift | validation | full pilot margin | matched-negative validation | corner error | hypotheses |
+|---|---|---:|---:|---:|---:|---:|---:|
+| rotate+scale+crop | ~11.25 deg, 1.070/0.9325 | (-113,-78) | 0.975547 | 0.585616 | -0.120030 | 0.00102 | 69574 |
+| negative rotate+scale+crop | ~-7.30 deg, 1.030/0.9675 | (-90,-63) | 0.881391 | 0.507172 | 0.005611 | 0.00135 | 68989 |
+
+Local development originals:
+
+| image | recovered affine | recovered shift | validation | full pilot margin | matched-negative validation | corner error | hypotheses |
+|---|---|---:|---:|---:|---:|---:|---:|
+| PJ_lingua.PNG | ~11.20 deg, 1.070/0.935 | (-118,-85) | 0.812461 | 0.432900 | 0.032305 | 0.00189 | 69818 |
+| PJ_piccolo.png | ~11.25 deg, 1.0675/0.930 | (-116,-83) | 0.781974 | 0.410485 | -0.136843 | 0.00102 | 69881 |
+
+Negative partition scores may be below zero because the signed public-pilot correlation is not clamped; they are not probabilities. All positive cases recover cyclic origin `(0,0)`. The regression floors remain 0.50 held-out validation for the local corpus, 0.15 positive-minus-matched-negative validation separation, 0.15 local full-pilot margin, and 0.015 local corner-error ratio.
+
+Build28 does not qualify joint projective/perspective or positive padded-canvas geometry, and it does not freeze the pilot or add a v4 payload/HMAC path.
