@@ -1,0 +1,7 @@
+# PixSeal Format-v3 frozen core reference — v0.3.0-build23
+# Update only after an intentional v3 maintenance decision and full v3 requalification.
+09be0449b2fc7da4806ad0d8242771d29a635fa5dda2b81b5ef6c9eb2ba7d16a  watermark/watermark.go
+a58b02cb49bca6c4a57052dd5ddd3383de4541be048d03ad3993efce322f4899  watermark/v3.go
+267b30b4650527e1e772071c3403cc49e991476bc866f3827a972c9e0518ce03  watermark/decoder.go
+0fe63e7200afd9c82a0bb13c166514e81811eef73261dfd450ef02997a413fbd  watermark/geometry.go
+162aacf5fb9b8d6fddea2b5bea85224ac19af4a6cdedfcb6e2d452525a714600  watermark/profile.go

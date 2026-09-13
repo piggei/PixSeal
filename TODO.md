@@ -82,9 +82,13 @@ and `CHANGELOG.md`.
       cycle anchor. Build19 shows repetition-only fields are non-persistent across 16 trials;
       build20 shows unguided pairwise registration prefers top-1 continuously but gives 0/9
       integer-cycle agreement on every ambiguous physical case, so neither route is promoted.
-- [ ] Find a genuinely **absolute key-independent cycle reference** from the existing v3
-      signal/geometry, or prove that Format v3 lacks enough asymmetry for absolute cycle
-      identification. Do not use known header/HMAC to choose the reference.
+- [x] Audit the existing v3 public structure for an **absolute key-independent cycle reference**.
+      Build21 finds weak but real repetition-topology asymmetry in robust/balanced, no repetition
+      anchor in capacity, and Hamming vertical aliases (exact for capacity). The audited mechanisms
+      therefore do not provide uniform absolute cycle observability.
+- [x] Decide the v3 absolute-cycle branch: build22 physical topology observability does not separate
+      scanner 002 from useful acquisitions, so no further threshold/voting round is justified; preserve
+      v3 as the frozen compatibility baseline and move new origin work to experimental Format v4.
 - [ ] Test whether a jointly regularized spatial model can improve several acquisitions
       from blind controls without per-cell oracle freedom; do not increase HMAC slots or
       model order unless cross-validation improves out-of-sample controls.
@@ -98,7 +102,8 @@ and `CHANGELOG.md`.
 
 - [x] Clarify that the physical acquisition files are private but the test key `Piccotti` is intentionally public/reproducible; keep it as the Makefile/script default and ignore both acquisition directories.
 - [x] Add a Git-ignored local SHA-256 corpus manifest target and canonical `.jpg` smartphone names.
-- [ ] Re-run build20 on the complete six-image physical corpus; the current corpus still contains only four acquisitions (the two bicycle photographs are absent).
+- [ ] Optionally complete the historical six-image v3 corpus if the missing bicycle captures become available;
+      treat this as archival comparison data, not a prerequisite for v4 development.
 
 - [x] Provide a private full-resolution smartphone regression target that never
       ships the corpus, SKIPs when absent and PASSes only on valid v3 HMAC.
@@ -107,17 +112,21 @@ and `CHANGELOG.md`.
       phase-aware refinement and build4 separates the fundamental scale from
       supported aliases/harmonics.
 - [x] Test integer-cycle stability across 8 deterministic coded-bit-group partitions / 16 held-out directions; all three ambiguous physical cases produce a different complete field in every trial, so repetition-only repartition/voting is not a viable promotion path on the current corpus.
-- [ ] Design a genuinely independent integer-cycle anchor (geometric/spectral/gradient or other physical-channel evidence) before any further unwrap promotion.
-- [ ] **IN PROGRESS:** Recover a valid Format-v3 HMAC from the frontal photograph.
-- [ ] Recover a valid Format-v3 HMAC from the inclined photograph.
-- [ ] Quantify signal survival more strongly than key-known header scores; those
-      scores are affected by bounded multiple testing and are not detection.
+- [x] Test an independent image-domain cycle anchor (build20) and audit existing Format-v3 structural observability (build21); neither yields a uniform safe absolute-cycle gate.
+- [x] Close the v3 absolute-cycle promotion branch after build22: the held-out physical topology probe
+      is measurable but non-discriminative against scanner 002. Keep Format v3 frozen and require new
+      absolute-origin work to use the isolated experimental v4 branch.
+- [x] Close the current v3 physical research checkpoint **without** authenticated recovery: no supplied
+      smartphone/scanner acquisition produced a valid v3 HMAC, and build22 negative-control evidence
+      does not justify further cycle-threshold tuning. Preserve this as an explicit unresolved v3 limit.
+- [ ] Revisit v3 physical recovery only if a genuinely independent observable, new acquisition regime or
+      clear implementation bug appears; do not resume by retuning existing topology/cross-fit evidence.
 - [x] Add known-header protected-bit/ECC diagnostics without using the hidden
       payload as an oracle.
 - [x] Add a small deterministic photometric-normalization bank only after
       geometry/phase refinement shows it is needed.
-- [ ] Add controlled synthetic camera-channel stages: perspective, non-integer
-      resampling, blur, gamma/illumination variation, JPEG recompression and noise.
+- [ ] Move controlled synthetic camera-channel expansion to the v4 branch first; use v3 only as a frozen
+      comparison baseline unless the experiment is explicitly format-agnostic.
 - [x] Exercise a frozen build on a new held-out print-camera pair; build6 recovers
       the projective path on the previously boundary-blocked frontal case without
       photo-specific tuning.
@@ -128,7 +137,8 @@ and `CHANGELOG.md`.
 - [x] Bound diagnostic authentication on scanner-sized inputs; build8 reduces both
       supplied 34.8 MP scans from >120 s to about 10--11 s without changing the
       production extractor.
-- [ ] Add more independently printed/acquired material before changing Format v3.
+- [x] Do not change Format v3 on the current physical evidence; new print/acquisition work now belongs to
+      a separately embedded/printed v4 corpus, with v3 retained as a comparison baseline.
 
 ## Future platform work
 
@@ -137,3 +147,41 @@ and `CHANGELOG.md`.
 - [ ] Decide explicit EXIF Orientation normalization policy.
 - [ ] Decide ICC/color-management preservation policy.
 - [ ] Consider tiled/lazy pixel access to reduce peak memory on very large images.
+
+## Format v3 closure / maintenance
+
+- [x] Freeze the qualified v3 interoperability baseline after build22; keep golden encoder fingerprints,
+      profiles, Hamming/whitening/HMAC rules and production extraction behavior unchanged. Protect the five
+      core source files with `docs/V3_FROZEN_CORE_SHA256.txt` / `make v3-freeze-check`.
+- [x] Record the final absolute-cycle research conclusion and negative-control evidence in
+      `docs/V3_FINAL_STATUS.md`.
+- [ ] Keep the historical v3 geometry/affine research failures visible; optimize runtime only if behavior
+      and qualification counts remain unchanged.
+- [ ] Re-run the frozen v3 qualification matrix when shared core utilities change for v4 work.
+- [ ] Do not add new v3 HMAC slots, topology thresholds or cycle voting without genuinely independent evidence.
+
+## Format v4 experimental branch
+
+- [x] Quantify the 37×32 / 64-public-pilot / 1120-data layout without reducing v3-like payload ceilings.
+- [x] Add build23 prototype foundations completely isolated from production v3 encode/decode.
+- [x] Add a provisional spatially stratified, sign-balanced 64-pilot candidate and exhaustive cyclic-alias tests.
+- [x] Expand pilot optimization beyond prototype-1 with a reproducible fixed-seed joint mask/sign search,
+      sign refinement, exhaustive cyclic metrics and partial-visibility qualification; build24 selects the
+      non-normative `prototype-2-search-p64` candidate.
+- [ ] Extend Build24 synthetic-channel qualification from the initial JPEG/blur/noise/gamma/resize/aligned-crop
+      matrix to arbitrary rotation, anisotropic scaling, shear, mild perspective and combined transformations.
+- [ ] Decide and document the v4 framing/version marker before implementing a real encoder.
+- [ ] Decide whether v4 retains Hamming(7,4) or adopts a stronger ECC after apples-to-apples pilot tests.
+- [ ] Implement an **experimental-only** v4 encoder behind an explicit format/version switch; never silently
+      change the default v3 encoder.
+- [x] Implement an experimental pilot-only detector for an already-resolved 8/6/4-pixel lattice; it reports
+      absolute cyclic origin, score, runner-up and margin without payload/HMAC evidence.
+- [ ] Generalize the pilot-only detector so the pilot itself participates in blind rotation/affine/perspective
+      geometry recovery rather than assuming the pixel lattice is already resolved.
+- [ ] Complete synthetic v4 qualification for the full JPEG/resize/crop/rotation/affine/perspective/blur/gamma/
+      noise/combined matrix. Build24 already covers JPEG, exact resize, aligned crop, blur, gamma and noise with
+      unmarked negative controls, but the geometric half of the matrix remains open.
+- [ ] Create a separate private v4 print-camera/scanner corpus by re-embedding and reprinting; do not treat the
+      existing v3 photographs as v4 evidence.
+- [ ] Promote v4 only after physical pilot detection beats negative controls and a valid HMAC-authenticated
+      payload is recovered. Pilot confidence alone must never authenticate.

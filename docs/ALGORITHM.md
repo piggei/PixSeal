@@ -1140,3 +1140,125 @@ anchor. Rounded-cycle agreement is also reported after integer gauge alignment.
 The anchor is structurally independent of repetition grouping and never reads key, expected
 Format-v3 bits, payload, CRC or HMAC. It is research telemetry only and cannot change the
 production decoder or diagnostic HMAC candidate budget.
+
+
+## 40. v0.3.0-build21 Format-v3 structural observability audit (non-normative)
+
+Build21 adds no decoding rule. It analyzes the frozen public layout for every unit integer
+cycle shift `(dx,dy) in {-1,0,+1}^2 \ {(0,0)}`.
+
+For a concrete profile, define the key-independent equality graph
+
+```text
+E = {(p,q) : v3CodeIndex(p) == v3CodeIndex(q), p < q}
+```
+
+and `T_dx,dy(E)` as the same graph after a toroidal block-origin shift. The audit reports
+
+```text
+pair_overlap = |E intersection T(E)| / |E|
+pair_gap     = 1 - pair_overlap
+```
+
+for robust and balanced. Capacity has no repeated coded-bit positions, hence `E` is empty and
+this mechanism carries no absolute-origin information.
+
+The second audit path generates deterministic valid Hamming(7,4) protected bit vectors, maps
+them into the 35x32 tile with the real `v3CodeIndex`, applies a wrong unit origin, reconstructs
+the coded vector with the same hard aggregation/tie rule as `readV3ProtectedFrame`, and measures
+non-zero syndrome fraction. This is key-independent because Hamming parity is imposed after
+whitening: the whitened data bits are unknown, but every correct 7-bit word is still a valid
+Hamming codeword.
+
+For pure code-index permutations the audit additionally checks an exact condition: every target
+word must map to one complete source word while preserving Hamming bit role 0..6. Such a shift is
+an exact syndrome-invariant alias for every valid codeword, not merely the finite synthetic
+sample.
+
+Build21 reports these quantities in top-level `format_observability`. They never participate in
+geometry ranking, unwrap acceptance, sampling, smooth resampling, full decode or HMAC. The audit
+exists to distinguish an algorithmic failure from a format-observability limit.
+
+
+## 41. v0.3.0-build22 held-out physical topology observability (non-normative)
+
+Build21's static pair-overlap gap is not itself physical evidence. Build22 evaluates that weak
+structure on the selected best ambiguous image candidate without key/header/HMAC information.
+For each profile in `{robust, balanced}` and each non-zero unit shift `(dx,dy)`, let `P` be the
+canonical repetition-pair set and `T_d(P)` its translated set. Define:
+
+- `C = P ∩ T_d(P)` — shared registration edges;
+- `E = P \ T_d(P)` — held-out canonical-exclusive edges.
+
+Only `C` is used to register two phase hypotheses separated by `(dx,dy)`. Registration maximizes
+the minimum common-edge score of the two phases so neither hypothesis can win during registration.
+Only after registration is `E` scored at both phases. The same construction is repeated locally
+for each 3×3 spatial cell. Exported evidence includes aggregate held-out delta, per-cell delta,
+effect size/z-like statistic, majority direction consistency and the modal winning absolute phase
+across all eight unit-shift comparisons.
+
+The probe is intentionally diagnostic-only. It does not change exact unwrap, smooth fitting,
+sampling, candidate ordering or HMAC attempts.
+
+Physical build22 result: the useful inclined smartphone case does not yield a uniquely recurring
+phase (mean profile modal fraction 0.3125), and scanner 002 negative control is more stable by the
+same metric (0.4375). Therefore the weak v3 topology asymmetry is observable as a local correlation
+effect but not as a safe absolute-cycle decision signal.
+
+## 42. Format-v4 absolute-pilot design study (non-normative)
+
+Build22 adds no v4 codec. It only evaluates tile/pilot budgets under an explicit comparison model:
+v3 framing overhead (16 bytes total) and Hamming(7,4), or 14 carrier positions per source byte.
+Three candidates are reported:
+
+- 35×32 + 64 pilot: no geometry growth, but comparable max payload falls to 59 bytes;
+- **37×32 + 64 pilot**: 1184 total positions, 64 pilot + 1120 data, max payload remains 64 bytes;
+- 38×32 + 96 pilot: stronger pilot budget with 8.6% geometry-area growth.
+
+The 37×32/64-pilot design is the current prototype recommendation. Its purpose is to make absolute
+origin a first-class public signal rather than an accidental consequence of payload redundancy.
+A final pilot mask/sign sequence must be selected for low cyclic autocorrelation and spatial
+dispersion, then frozen and tested independently. Pilot confidence remains geometry evidence only;
+HMAC remains the sole payload authentication mechanism.
+
+## 43. v0.3.0-build23 v3 closure and experimental v4 foundation (non-normative)
+
+Build23 makes no algorithmic change to Format v3. The qualified build22 physical-topology result closes
+the v3 absolute-cycle research branch because the held-out residual is not discriminative against scanner
+002. All v3 production algorithms and exact diagnostic rollback remain unchanged.
+
+The experimental v4 foundation is intentionally separate. Its current tile is 37×32 blocks. Sixty-four
+positions are reserved for a public absolute pilot and the remaining 1120 positions are enumerated
+row-major as the provisional data plane. Prototype-1 uses one pilot per 8×8 spatial stratum and a balanced
+32/32 sign sequence. For a non-zero cyclic shift `(dx,dy)`, build23 computes:
+
+```text
+overlap(dx,dy) = number of pilot-mask positions overlapping after the shift
+correlation(dx,dy) = sum s(p) * s(p + shift) over overlapping pilot positions
+```
+
+The exhaustive 37×32 toroidal audit excludes `(0,0)` and verifies no perfect alias. Prototype-1 has
+`max overlap = 8` and `max |correlation| = 5`. These are structural design metrics only; they neither
+select geometry nor authenticate anything. No production API reads these constants in build23.
+
+## 44. v0.3.0-build24 pilot-search and pilot-only channel experiment (non-normative)
+
+Build24 still defines no interoperable Format-v4 payload codec. It adds two isolated research mechanisms.
+
+First, a deterministic candidate search explores the public 37x32/64-pilot layout. Stage 1 generates one pilot
+coordinate inside each of 64 spatial strata and an exactly balanced sign sequence; fixed-seed bounded search
+selects by maximum cyclic mask overlap, maximum absolute wrong-shift sign correlation and worst contiguous-crop
+margins. Stage 2 fixes the winning mask and searches additional balanced sign sequences. The current winner is
+`prototype-2-search-p64` with max overlap 7 and max wrong correlation 4. Candidate identity is the SHA-256 of
+tile geometry followed by ordered pilot positions/signs.
+
+Second, `experimentalV4RenderSyntheticCarrier` fills pilot positions with the public pilot signs and every data
+position with deterministic pseudo-random +/-1 symbols, then uses the existing DCT block embed primitive. This
+models strong data-plane interference but does not construct a frame, perform ECC/whitening or authenticate a
+message. `experimentalV4DetectPilotGrid` assumes a known 8/6/4-pixel DCT lattice, aggregates observed DCT margins
+by 37x32 residue and scores all 1184 cyclic origins as normalized signed pilot correlation. It returns best and
+runner-up score/margin only as geometry evidence.
+
+Neither mechanism is reachable from production `EmbedWithInfo` / `ExtractWithInfo`; HMAC-only authentication
+semantics remain unchanged for Format v3.
+

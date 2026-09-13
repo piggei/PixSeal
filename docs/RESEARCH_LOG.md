@@ -458,3 +458,155 @@ the repetition held-out preference; scanner002 negative control also prefers top
 Conclusion: pairwise registration contains continuous relative-shape information but is not an
 absolute integer-cycle anchor on the current corpus. No unwrap, HMAC, encoder or format rule is
 changed.
+
+
+## build21 — Format-v3 key-independent observability audit
+
+### Question
+
+After build19 rejected repetition repartition/voting and build20 rejected unguided pairwise
+registration as an absolute cycle anchor, is the remaining failure primarily a solver problem,
+or does frozen Format v3 expose only weak/non-uniform absolute-origin information?
+
+### Frozen audit
+
+No physical threshold is tuned. For all three concrete profiles and all eight unit block shifts,
+measure two public key-independent mechanisms:
+
+1. repetition-pair topology overlap induced only by `v3CodeIndex`;
+2. Hamming syndrome survival on deterministic valid whitened-bit codewords after the real wrong
+   tile-origin mapping and hard aggregation.
+
+No key, magic/header expectation, payload, CRC or HMAC is used. No audit result can alter decode.
+
+### Result
+
+Robust and balanced do have a unique repetition topology, but the nearest horizontal unit alias
+retains ~94% of the pair graph and the vertical alias retains ~92%. Capacity has no repetition
+pairs. Hamming parity is strong against most horizontal/diagonal shifts but has a vertical blind
+spot: capacity ±1 vertical is an exact whole-word permutation symmetry; robust is zero-syndrome
+on the deterministic probe; balanced is only weakly separated vertically.
+
+### Decision
+
+Do not add another threshold around existing repetition/pairwise evidence. The frozen format is
+not uniformly observable under the audited absolute-cycle mechanisms. Keep Format v3 frozen for
+v0.3 research, and make the next design decision explicit: either derive a stronger physical
+model from independent image evidence, or design a future format revision with an intentional
+absolute-origin/asymmetry pilot. Any format revision must remain separate from the v3 corpus and
+production decoder baseline.
+
+
+## build22 — held-out physical topology observability and v4 decision branch
+
+### Hypothesis
+
+Build21 found a small but real robust/balanced repetition-topology asymmetry. If that 5–8% residual
+survives print-camera noise, it may provide an absolute origin signal once the 92–94% shared pair
+evidence is removed from the decision score.
+
+### Predeclared experiment
+
+For each unit shift, split repetition edges into shared registration edges and canonical-exclusive
+held-out edges. Shared edges register two phase hypotheses separated by exactly the tested shift;
+registration maximizes the weaker of their two shared-edge scores. The held-out edges then score
+A versus B globally and in every complete 3×3 spatial cell. No key, header, payload, CRC or HMAC
+participates, and the result cannot alter decode.
+
+### Result
+
+The signal is measurable, but winner phases are not stable enough to identify a unique origin.
+Inclined smartphone mean modal phase fraction is 0.3125; scanner 001 and scanner 002 are both
+0.4375. Mean cell directional consistency is 0.6944, 0.7292 and 0.6597 respectively. Scanner 002
+therefore remains fatal to promotion: a negative control can look more phase-stable than the target
+smartphone acquisition. No HMAC authenticates.
+
+### Decision
+
+Reject another v3 threshold/weighting round. The remaining v3 asymmetry is too weak and too
+non-specific on the current physical corpus. Preserve the probe as evidence, but do not use it to
+steer exact unwrap or sampling.
+
+In parallel, begin a serious Format-v4 branch. The first quantified candidate is a 37×32 tile with
+64 public absolute-pilot positions and 1120 data positions. This preserves v3-like payload ceilings
+while increasing minimum tile area only 5.7%. Before implementation, optimize/freeze a pilot mask
+and sign sequence and define promotion tests against physical negative controls.
+
+## build23 — close v3 absolute-cycle research, start isolated v4 foundation
+
+### Decision input
+
+The user-host build22 run confirmed both deterministic and physical development results. The 30-target
+qualification retained release baseline PASS and qualification corpus PASS. The held-out physical topology
+probe did not separate scanner 002 negative control from scanner 001 or the inclined smartphone image.
+Therefore another v3 topology threshold, vote or partition would not add independent information.
+
+### v3 decision
+
+Close the absolute-cycle branch. Keep v3 implemented, interoperable and regression-tested, but treat future
+changes as maintenance unless a genuinely independent observable is introduced. A five-file SHA-256 freeze
+manifest makes core drift explicit and reviewable. Preserve all negative results
+so future work does not rediscover the same repetition/pairwise aliases. HMAC remains the only physical PASS.
+
+### v4 foundation hypothesis
+
+An intentional sparse public pilot can remove the exact integer-cycle symmetry while preserving all 1120 v3-like
+data positions if the tile expands from 35×32 to 37×32. Before implementing a codec, test whether a concrete
+pilot can satisfy structural invariants with low wrong-shift overlap/correlation.
+
+### Prototype-1 result
+
+A deterministic stratified search family produced `prototype-1-stratified-p64`: one pilot in each 8×8 spatial
+stratum, 32 positive and 32 negative signs. Exhaustive 37×32 cyclic audit gives max overlap 8/64 and max absolute
+signed wrong-shift correlation 5/64, with no perfect alias. This is promising enough to support the architecture,
+but it is deliberately not frozen as Format v4. Partial-crop and simulated print-camera behavior remain untested.
+
+### Next experiment
+
+Search broader pilot mask/sign families with a predeclared multi-objective score including full-tile cyclic
+separation, crop survival and simulated print-camera degradation. Only after that should the project define a
+version marker and build an experimental v4 encoder/pilot-only detector.
+
+## build24 — reproducible pilot search, partial visibility and first image channel
+
+### Question
+
+Can Build23's 64-symbol public-pilot architecture be improved by a reproducible search, and does the resulting
+candidate still identify absolute origin after partial visibility and simple image-channel degradation without
+consulting payload, key, header, CRC or HMAC evidence?
+
+### Predeclared search
+
+Use one pilot per 8x8 spatial stratum and exact 32/32 sign balance. Stage 1 evaluates 200,000 fixed-seed joint
+coordinate/sign candidates. Candidates worse than prototype-1's 8-position maximum overlap or 5-symbol maximum
+wrong correlation are rejected before crop scoring. The retained family is ranked lexicographically by maximum
+overlap, maximum absolute wrong correlation, then worst contiguous margins from 16 toward 48 visible pilots.
+Stage 2 keeps the winning mask and evaluates 200,000 fixed-seed balanced sign sequences with the same correlation/
+crop objective. Candidate hashes, budgets and runner-up reports are retained.
+
+### Structural result
+
+`prototype-2-search-p64` (`858f74305ee9a9cbb59dd3fb6ab8afc6aaf8958e4f9f517711e2c52fc053b174`) improves
+prototype-1 from max overlap 8 to 7 and max absolute wrong correlation 5 to 4. No exact cyclic alias exists.
+Worst contiguous margins for 64/48/32/24/16 visible pilots are 60/43/28/20/12. Across 256 deterministic random
+subsets per visibility level, no wrong origin ties or beats the correct structural origin.
+
+### Initial image-domain experiment
+
+Render a synthetic carrier with prototype-2 pilot signs and deterministic pseudo-random data-plane signs using
+the real PixSeal DCT block embedding primitive. A pilot-only detector assumes the 8/6/4-pixel lattice is already
+resolved and scores every 37x32 cyclic origin. The deterministic test image recovers the correct origin after
+JPEG-82, blur, +/-4 noise, gamma 1.15, exact 75% and 50% resize and aligned crop. The unmarked negative control
+shows a small runner-up margin and is never interpreted as authenticated evidence.
+
+The two supplied local originals produce the correct origin in the same initial matrix. Their unmarked controls
+produce best scores 0.306699 / 0.232802 with margins 0.022743 / 0.003697, while marked transformed cases retain
+positive correct-origin margins (lowest observed initial local margin 0.381056). These figures are evidence only;
+no production threshold is selected from two images.
+
+### Decision
+
+Keep prototype-2 as the current non-normative v4 candidate and continue Build24 qualification. Do not implement
+a production v4 codec or freeze interoperability yet. The next independent tests are blind rotation/affine/
+perspective geometry, combined degradation and then a separate real v4 print-camera/scanner corpus.
+

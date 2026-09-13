@@ -814,3 +814,128 @@ All three ambiguous cases produce a lower continuous anchor objective for top-1,
 shares an integer-cycle cell with either top-1 or runner-up after gauge alignment. Scanner001
 contradicts the held-out repetition preference and scanner002 remains a negative control. The
 anchor is therefore not promoted. No physical payload authenticates.
+
+
+## v0.3.0-build21 Format-v3 observability checkpoint — 2026-09-12
+
+This checkpoint is format-static; it does not require a physical acquisition. Every one-block
+neighbor of the correct tile origin was audited under public repetition topology and Hamming
+validity.
+
+| profile | coded bits | repetition pairs | nearest pair gap | vertical pair gap | min synthetic syndrome | notable alias |
+|---|---:|---:|---:|---:|---:|---|
+| robust | 448 | 896 | 0.0580 | 0.0781 | **0.0000** | vertical ±1 zero-syndrome synthetic alias |
+| balanced | 672 | 448 | 0.0558 | 0.0781 | 0.0882 | vertical ±1 only weakly separated |
+| capacity | 1120 | 0 | 0 | n/a | **0.0000** | vertical ±1 exact Hamming-word permutation |
+
+For robust/balanced, a horizontal one-block shift preserves 94.20%/94.42% of the public
+repetition-pair graph; a vertical shift preserves 92.19%. Thus the repetition mapping is not
+mathematically invariant, but the absolute-origin signal is only a small residual difference
+that must survive print-camera noise and local geometry error.
+
+Hamming parity supplies a second key-independent observable because whitening occurs before ECC.
+Horizontal and diagonal unit shifts produce roughly 0.75--0.79 non-zero-syndrome fraction in the
+deterministic valid-frame probe. The vertical direction is structurally problematic: capacity
+maps complete Hamming words to complete Hamming words with the same bit roles, so syndrome cannot
+distinguish the shifted origin at all; robust also yields zero syndrome in the deterministic
+probe, while balanced rises only to about 0.088--0.093.
+
+The combined audited mechanisms therefore fail the `audited_unit_shifts_universally_separated`
+condition. This does not prove that no conceivable image-domain statistic can recover an origin,
+but it proves that the two strongest public structural mechanisms already present in Format v3
+are not a uniform absolute-cycle reference. No production behavior changes.
+
+
+## v0.3.0-build22 physical-topology checkpoint — 2026-09-12
+
+The build22 probe uses held-out topology-exclusive repetition edges after shared-edge-only phase
+registration. The frontal smartphone image remains exact-unwrap `not-applicable`, so no build22
+physical-topology attempt is made there.
+
+| case | topology ms* | profiles | shifts | mean modal winner phase | min modal | mean cell direction consistency | min direction consistency | mean abs cell delta | HMAC |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---|
+| foto stampa storta | 239 | 2 | 16 | **0.3125** | 0.2500 | 0.6944 | 0.5556 | 0.2731 | fail |
+| foto stampa | 0 | 0 | 0 | n/a | n/a | n/a | n/a | n/a | fail |
+| scanner 001 | 237 | 2 | 16 | **0.4375** | 0.3750 | 0.7292 | 0.5556 | 0.2514 | fail |
+| scanner 002 | 254 | 2 | 16 | **0.4375** | 0.3750 | 0.6597 | 0.5556 | 0.2125 | fail |
+
+\* development-container timings; qualification-host absolute timing must be measured separately.
+
+The central falsification is not that the held-out edge deltas are zero—they are not. It is that
+phase winner stability and cell consistency overlap strongly between the useful acquisition and
+the negative control. The residual topology asymmetry therefore does not provide a safe blind gate.
+
+### Format-v4 sizing result
+
+| candidate | tile | pilot | data | comparable max payload | area ratio vs v3 | ideal pilot random-wrong-phase z |
+|---|---:|---:|---:|---:|---:|---:|
+| compact | 35×32 | 64 | 1056 | 59 B | 1.0000 | 8.00 |
+| preserve-capacity | **37×32** | **64** | **1120** | **64 B** | **1.0571** | **8.00** |
+| strong-pilot | 38×32 | 96 | 1120 | 64 B | 1.0857 | 9.80 |
+
+The recommended prototype is 37×32/64 pilot because it adds a dedicated absolute reference without
+reducing current data positions. These figures are sizing evidence, not a Format-v4 specification
+or physical guarantee.
+
+## v0.3.0-build23 transition checkpoint — 2026-09-12
+
+Build23 is based on the user-host build22 qualification. That run completed all 30 targets with release
+baseline and qualification corpus PASS; only the historical experimental `geometry-test` and `affine-test`
+reported two failures each. `research-unit`, `physical-topology-test`, `v4-design-study-test`, composition,
+lattice, perspective and core portability all passed.
+
+The final build22 physical topology measurements were:
+
+| acquisition | modal phase mean | cell consistency mean | mean absolute cell delta |
+|---|---:|---:|---:|
+| inclined smartphone | 0.3125 | 0.6944 | 0.2731 |
+| scanner 001 | 0.4375 | 0.7292 | 0.2514 |
+| scanner 002 negative | 0.4375 | 0.6597 | 0.2125 |
+
+Because the negative control is not separated, build23 records v3 absolute-cycle research as closed rather
+than tuning another gate. No v3 physical HMAC has been recovered.
+
+Build23 also records and verifies the frozen v3 core SHA-256 baseline. Its new deterministic v4 result is the isolated prototype foundation. `prototype-1-stratified-p64`
+uses 64/1184 pilot positions, leaves 1120 data positions, is exactly sign-balanced and quadrant-balanced,
+and has no perfect non-zero cyclic alias. Exhaustive wrong-shift maxima are 8 overlapping pilot positions
+and absolute signed correlation 5. These metrics are regression anchors for prototype-1 only, not a final
+v4 specification or physical guarantee.
+
+## v0.3.0-build24 initial v4 pilot qualification — 2026-09-13
+
+### Structural comparison
+
+| candidate | max cyclic overlap | max wrong correlation | exact aliases | SHA-256 |
+|---|---:|---:|---:|---|
+| prototype-1-stratified-p64 | 8/64 | 5/64 | 0 | `99042fd9827e0606a92afaf088bd96009bdf1fc6040c2ae95905534a3d57ff4f` |
+| **prototype-2-search-p64** | **7/64** | **4/64** | **0** | `858f74305ee9a9cbb59dd3fb6ab8afc6aaf8958e4f9f517711e2c52fc053b174` |
+
+Build24 uses fixed seeds and 200,000 attempts in both the joint mask/sign stage and sign-refinement stage. The
+result is reproducible by `make v4-pilot-search-test`.
+
+### Partial visibility
+
+| visible pilots | worst contiguous margin | median contiguous margin | worst random margin | median random margin | random false origins |
+|---:|---:|---:|---:|---:|---:|
+| 64 | 60 | 60 | 60 | 60 | 0/256 |
+| 48 | 43 | 43.5 | 43 | 44 | 0/256 |
+| 32 | 28 | 28 | 27 | 28 | 0/256 |
+| 24 | 20 | 20 | 19 | 20 | 0/256 |
+| 16 | 12 | 13 | 11 | 13 | 0/256 |
+
+These are structural pilot-only margins, not authentication confidence.
+
+### Initial local image-channel qualification
+
+The synthetic v4 qualification carrier uses prototype-2 plus deterministic pseudo-random data-plane signs; it
+does not contain a payload/HMAC. Both supplied local originals selected the correct pilot origin in native,
+JPEG-82, blur-1, noise-4, gamma-1.15, exact resize-75, resize-50 and aligned-crop cases.
+
+| local source | unmarked best score | unmarked margin | lowest marked score in matrix | lowest marked margin in matrix | origin errors |
+|---|---:|---:|---:|---:|---:|
+| PJ_lingua.PNG | 0.306699 | 0.022743 | 0.985886 | 0.552488 | 0 |
+| PJ_piccolo.png | 0.232802 | 0.003697 | 0.790946 | 0.381056 | 0 |
+
+No threshold is promoted from this two-image development corpus. Rotation/affine/perspective/combined tests and
+real v4 print/scan evidence remain open, so prototype-2 is not yet a normative Format-v4 pilot.
+

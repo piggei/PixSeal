@@ -193,6 +193,8 @@ type DiagnosticReport struct {
 	AuthenticatedProfile                Profile                            `json:"authenticated_profile,omitempty"`
 	AuthenticationConfidence            float64                            `json:"authentication_confidence,omitempty"`
 	ProjectiveAuthentication            DiagnosticProjectiveAuthentication `json:"projective_authentication"`
+	FormatObservability                 DiagnosticFormatObservability      `json:"format_observability"`
+	FormatV4DesignStudy                 DiagnosticFormatV4DesignStudy      `json:"format_v4_design_study"`
 	Budgets                             DiagnosticBudgets                  `json:"budgets"`
 	Timings                             DiagnosticTimings                  `json:"timings"`
 	Note                                string                             `json:"note"`
@@ -237,7 +239,9 @@ func DiagnoseGeometry(src image.Image, key []byte, options DiagnosticOptions) (D
 		Width:                bounds.Dx(),
 		Height:               bounds.Dy(),
 		AuthenticationStatus: "not-requested",
-		Note:                 "lattice evidence is diagnostic only; only a valid Format v3 HMAC authenticates a payload",
+		FormatObservability:  diagnosticFormatObservabilityAudit(),
+		FormatV4DesignStudy:  diagnosticFormatV4DesignStudy(),
+		Note:                 "lattice evidence and Format-v4 design telemetry are diagnostic only; only a valid Format v3 HMAC authenticates a payload",
 	}
 	coarseCount := diagnosticCoarseCandidateCount()
 	refinedCount := diagnosticCoarseKeep * 3 * 3 * 3 * 3

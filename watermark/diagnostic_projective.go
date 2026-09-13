@@ -376,6 +376,17 @@ type DiagnosticProjectiveAuthentication struct {
 	PartitionStabilityAttempts                                     int                                      `json:"partition_stability_attempts"`
 	CycleAnchorMilliseconds                                        int64                                    `json:"cycle_anchor_ms"`
 	CycleAnchorAttempts                                            int                                      `json:"cycle_anchor_attempts"`
+	PhysicalTopologyMilliseconds                                   int64                                    `json:"physical_topology_ms"`
+	PhysicalTopologyAttempts                                       int                                      `json:"physical_topology_attempts"`
+	PhysicalTopologyObservability                                  DiagnosticPhysicalTopologyObservability  `json:"physical_topology_observability"`
+	PhysicalTopologyAvailable                                      bool                                     `json:"physical_topology_available"`
+	PhysicalTopologyProfiles                                       int                                      `json:"physical_topology_profiles_available"`
+	PhysicalTopologyAuditedShifts                                  int                                      `json:"physical_topology_audited_shifts"`
+	PhysicalTopologyMeanWinnerModalFraction                        float64                                  `json:"physical_topology_mean_winner_modal_phase_fraction"`
+	PhysicalTopologyMinimumWinnerModalFraction                     float64                                  `json:"physical_topology_minimum_winner_modal_phase_fraction"`
+	PhysicalTopologyMeanDirectionalConsistency                     float64                                  `json:"physical_topology_mean_directional_cell_consistency"`
+	PhysicalTopologyMinimumDirectionalConsistency                  float64                                  `json:"physical_topology_minimum_directional_cell_consistency"`
+	PhysicalTopologyMeanAbsoluteCellDelta                          float64                                  `json:"physical_topology_mean_absolute_cell_delta"`
 	ProbeResults                                                   []DiagnosticProjectiveProbeEvidence      `json:"probe_results,omitempty"`
 	RefinedResults                                                 []DiagnosticProjectiveRefinementEvidence `json:"refined_results,omitempty"`
 	PhaseRefinementAttempts                                        int                                      `json:"phase_refinement_attempts"`
@@ -894,6 +905,24 @@ func attemptDiagnosticProjectiveAuthentication(src image.Image, key []byte, esti
 					evidence.CycleAnchorMilliseconds += time.Since(anchorStarted).Milliseconds()
 					evidence.CycleAnchorAttempts++
 					diagnosticApplyCycleAnchorSpatialEvidence(spatial, cycleAnchor, context.cells)
+
+					// Build22 measures the weak Format-v3 repetition-topology
+					// asymmetry directly in the physical image. Registration uses only
+					// pair constraints shared by correct and unit-shifted hypotheses;
+					// mutually-exclusive pairs are held out for discrimination.
+					topologyStarted := time.Now()
+					topology := diagnosticPhysicalTopologyObservability(context.cells, context.aggregate)
+					evidence.PhysicalTopologyMilliseconds += time.Since(topologyStarted).Milliseconds()
+					evidence.PhysicalTopologyAttempts++
+					evidence.PhysicalTopologyObservability = topology
+					evidence.PhysicalTopologyAvailable = topology.Available
+					evidence.PhysicalTopologyProfiles = topology.ProfilesAvailable
+					evidence.PhysicalTopologyAuditedShifts = topology.AuditedShifts
+					evidence.PhysicalTopologyMeanWinnerModalFraction = topology.MeanWinnerModalFraction
+					evidence.PhysicalTopologyMinimumWinnerModalFraction = topology.MinimumWinnerModalFraction
+					evidence.PhysicalTopologyMeanDirectionalConsistency = topology.MeanDirectionalConsistency
+					evidence.PhysicalTopologyMinimumDirectionalConsistency = topology.MinimumDirectionalConsistency
+					evidence.PhysicalTopologyMeanAbsoluteCellDelta = topology.MeanAbsoluteCellDelta
 				}
 				break
 			}

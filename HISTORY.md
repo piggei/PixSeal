@@ -593,3 +593,82 @@ produced even one rounded-cycle agreement cell after gauge alignment (0/9 for bo
 Scanner 001 contradicted held-out repetition, while negative-control scanner 002 also preferred
 top-1. The observer is therefore retained only as relative-shape evidence; it is not promoted
 as a cycle anchor and no decoder/HMAC budget changed.
+
+
+## v0.3.0-build21 — Format-v3 observability audit
+
+Build21 stopped proposing another cycle solver and instead audited the information already
+present in the frozen public format. For each concrete profile it compared the repetition-pair
+graph under every unit block shift and passed deterministic valid Hamming codewords through the
+same wrong-origin tile mapping used by decoding.
+
+The audit shows that robust/balanced repetition topology is technically absolute but weak: the
+closest one-block shift preserves roughly 94% of expected equal-code-index pairs. Capacity has
+no repetition topology. Hamming parity supplies strong horizontal/diagonal discrimination, but
+vertical unit shifts expose aliases: robust is a zero-syndrome synthetic alias and capacity is
+an exact whole-word Hamming permutation alias; balanced is only weakly separated vertically.
+This explains why increasingly sophisticated unwrap solvers cannot manufacture a uniformly
+observable absolute cycle from the current signals. Build21 is diagnostic-only and leaves the
+format and production extractor untouched.
+
+
+## v0.3.0-build22 — physical topology observability + quantified v4 branch
+
+Build21 established that robust/balanced repetition topology is technically non-invariant but
+leaves only a 5–8% unit-shift gap. Build22 tests whether that residual survives the real image
+channel without reusing the evidence that chooses phase. For each unit shift, pair edges shared
+by both hypotheses register a symmetric phase pair; topology-exclusive edges are held out and
+select between the two phases.
+
+The physical signal exists but does not become a reliable absolute reference. The inclined
+smartphone case has only 0.3125 mean winner modal-phase fraction, while scanner 001 and scanner
+002 both reach 0.4375. Directional cell consistency is similarly overlapping (0.6944, 0.7292,
+0.6597). Scanner 002 therefore remains a decisive negative control: the new topology metric can
+look at least as stable on a failing acquisition as on the useful one. No decoder gate is added.
+
+Because the remaining v3 structural anchor is now both theoretically weak and empirically
+non-discriminative, build22 opens a formal Format-v4 design study. The preferred first prototype
+uses a 37×32 tile and reserves 64 blocks for a public absolute pilot. This raises tile area by
+5.7% and minimum carrier width from 280 to 296 pixels, while keeping exactly 1120 data positions.
+Under v3-like framing/ECC arithmetic this preserves the 16/32/64-byte ceilings and profile
+redundancy. Format v4 is not implemented in build22.
+
+## v0.3.0-build24 — reproducible v4 pilot qualification begins
+
+Build24 leaves the frozen Format-v3 core unchanged and turns the Build23 pilot idea into a reproducible
+qualification experiment. The search is deliberately bounded and replayable: a fixed-seed 200,000-candidate
+joint coordinate/sign stage explores one pilot per 8x8 spatial stratum, then a second fixed-seed 200,000-candidate
+balanced-sign refinement operates only on the winning mask. Every retained candidate has a SHA-256 identity.
+
+The resulting non-normative `prototype-2-search-p64` improves prototype-1's exhaustive 37x32 toroidal maxima
+from 8 to 7 overlapping pilot positions and from 5 to 4 absolute signed correlation, with zero exact non-zero
+cyclic aliases. Worst contiguous-crop margins for 64/48/32/24/16 visible pilots are 60/43/28/20/12 symbols;
+256 deterministic random subsets at each visibility level produce no false-origin tie or win.
+
+Build24 also adds the first image-domain pilot-only channel. A synthetic qualification carrier writes the
+candidate pilot and deterministic pseudo-random data-plane signs into the existing DCT coefficient pair, but
+it does not contain a payload, framing, ECC or HMAC. The detector assumes an already-resolved 8/6/4-pixel
+lattice and exhaustively scores all 1184 cyclic origins. Deterministic JPEG, blur, noise, gamma, resize and
+aligned-crop regressions recover the correct origin. The two local original images supplied for development
+also recover the correct origin across the same initial transform set; their unmarked forms remain controls.
+
+This is not a Format-v4 freeze. General rotation/affine/perspective geometry, combined degradation, framing,
+ECC selection and real print-camera/scanner v4 evidence are still open. Production v3 APIs and CLI behavior
+remain unchanged.
+
+## v0.3.0-build23 — v3 research closure + v4 experimental foundation
+
+Build23 records the project boundary reached after the qualified build22 experiment. Format v3 remains
+the only implemented/interoperable format and keeps its encoder, production decoder, profiles, whitening,
+Hamming mapping, HMAC semantics and golden fingerprints frozen. The absolute-cycle research line is closed
+because the remaining public topology asymmetry is not discriminative against scanner 002; additional
+thresholds, repartitioning or voting would reuse the same insufficient evidence.
+
+The build adds a dedicated v3 closure document and reclassifies future v3 work as maintenance/regression
+unless a genuinely independent source of information appears. It then starts a separate v4 prototype layer.
+No v4 carrier can yet be emitted or decoded by the CLI. The provisional v4 geometry is 37×32 blocks with
+64 public pilot positions and 1120 data positions. Prototype-1 is spatially stratified and sign-balanced;
+its exhaustive toroidal audit finds no perfect non-zero cyclic alias, maximum shifted-mask overlap 8/64 and
+maximum wrong-shift signed correlation 5/64. These numbers are frozen only as build23 prototype regressions,
+not as a final Format-v4 interoperability contract.
+

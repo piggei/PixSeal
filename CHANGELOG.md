@@ -1,5 +1,99 @@
 # Changelog
 
+## v0.3.0-build24 — 2026-09-13
+
+- Keep the five-file Format-v3 core byte-for-byte frozen and continue all v4 work in isolated experimental files.
+- Add a reproducible two-stage Build24 pilot search: 200,000 joint coordinate/sign candidates followed by
+  200,000 balanced-sign refinements on the winning mask, with fixed seeds, explicit budgets and candidate hashes.
+- Select non-normative `prototype-2-search-p64` (SHA-256
+  `858f74305ee9a9cbb59dd3fb6ab8afc6aaf8958e4f9f517711e2c52fc053b174`). Compared with prototype-1,
+  maximum cyclic mask overlap improves from 8 to 7 and maximum absolute wrong-shift correlation from 5 to 4.
+- Add partial-visibility qualification at 64/48/32/24/16 visible pilots, including exhaustive contiguous
+  8x8-stratum crops and 256 deterministic random subsets per level. Prototype-2 worst contiguous margins are
+  60/43/28/20/12 symbols; no random-subset false origin occurs in the qualification set.
+- Add an experimental synthetic v4 carrier renderer and pilot-only detector. These helpers embed a public pilot
+  plus deterministic pseudo-random data-plane signs solely for qualification; they do not encode a payload and
+  are not reachable from production `EmbedWithInfo`, `ExtractWithInfo` or the CLI.
+- Add deterministic image-channel regressions for JPEG, blur, noise, gamma, 75%/50% resize and aligned crop,
+  plus an opt-in local original-image corpus target. Both supplied local originals select the correct pilot
+  origin in every initial transform case; unmarked originals remain negative controls.
+- Add `v4-pilot-search-test`, `v4-pilot-channel-test` and `v4-pilot-corpus-test`; `all-test` now contains 35 targets.
+- Do not freeze the v4 pilot yet: arbitrary rotation, anisotropic/affine distortion, perspective, combined
+  transformations and real printed/scanned v4 acquisitions remain required before encoder promotion.
+
+## v0.3.0-build23 — 2026-09-12
+
+- Formally close the Format-v3 absolute-cycle research branch after build22 physical qualification;
+  v3 remains the frozen production/interoperability baseline and future work is regression/maintenance.
+- Add `docs/V3_FINAL_STATUS.md` with the final v3 baseline, physical-channel evidence, closure rationale,
+  non-goals and maintenance rules.
+- Start an isolated experimental Format-v4 foundation without wiring it into `EmbedWithInfo`,
+  `ExtractWithInfo`, CLI version selection or authentication.
+- Add provisional 37×32 / 64-pilot / 1120-data prototype constants and a deterministic 64-position,
+  sign-balanced pilot candidate selected from a stratified search family.
+- Add exhaustive structural pilot invariants: 64 unique pilot positions, 1120 non-pilot data positions,
+  32/32 sign balance, 16 pilots per quadrant, no perfect non-zero cyclic alias, maximum cyclic overlap
+  8/64 and maximum wrong-shift signed correlation 5/64 for prototype-1.
+- Add `v3-freeze-check` backed by `docs/V3_FROZEN_CORE_SHA256.txt`, plus `v4-foundation-test`;
+  extend `all-test` to 32 targets.
+- Update README, HISTORY, TODO, ALGORITHM, RESULTS, RESEARCH_LOG, PRIVATE_CORPUS and the v4 design study
+  so v3 closure and v4 experimental status are unambiguous.
+
+## v0.3.0-build22 — 2026-09-12
+
+Twenty-second print-acquisition research checkpoint. Format v3 and every production decoding rule
+remain frozen. This build measures build21's weak repetition-topology asymmetry in real image-domain
+margin grids and begins a quantified, non-normative Format-v4 absolute-pilot design study.
+
+### Added
+
+- `v3-image-domain-heldout-repetition-topology`: shared repetition edges register two unit-shifted
+  phase hypotheses; topology-exclusive edges are held out and used only for discrimination.
+- Per-shift aggregate/cell deltas, directional cell consistency and winner-phase stability.
+- `physical_topology_ms` / attempt counters and flattened summary telemetry.
+- `format_v4_design_study` with three pilot/tile sizing candidates.
+- `docs/FORMAT_V4_DESIGN.md`, including explicit performance/reliability goals and prototype gates.
+- `make physical-topology-test` and `make v4-design-study-test`; `make all-test` now contains 30 targets.
+
+### Research result
+
+- Inclined smartphone: winner modal-phase mean 0.3125, directional cell consistency 0.6944.
+- Scanner 001: 0.4375 / 0.7292.
+- Scanner 002 negative control: 0.4375 / 0.6597.
+- Frontal smartphone: exact unwrap remains not-applicable; physical topology probe is skipped.
+- The held-out topology signal is measurable but does not separate useful acquisition from the
+  negative control, so it is not promoted as an absolute-cycle gate.
+- The preferred v4 prototype is 37×32 with 64 public pilot blocks: +5.7% tile area, 1120 data
+  positions retained, current v3 capacity ceilings preserved under the comparison assumptions.
+- No v4 production path, HMAC budget or Format-v3 rule changes.
+
+## v0.3.0-build21 — 2026-09-12
+
+Twenty-first print-acquisition research checkpoint. Build20 decoding and cycle-anchor behavior
+remain frozen; this build audits whether public Format-v3 structure can theoretically break a
+one-block integer-cycle ambiguity without secret or oracle information.
+
+### Added
+
+- Static `v3-key-independent-structural-observability` report in `diagnose -json`.
+- Exhaustive unit-shift (`dx,dy in {-1,0,+1}` except zero) repetition-pair topology overlap for
+  all three v3 profiles.
+- Deterministic valid-Hamming-frame probe through the real tile mapping/hard aggregation path,
+  plus exact detection of pure code-index permutations that preserve whole Hamming words.
+- `make observability-audit-test`; `make all-test` now contains 28 targets.
+
+### Research result
+
+- Robust: 896 repetition pairs; nearest unit-shift pair-topology gap 0.0580. Vertical ±1 has
+  zero syndrome in the deterministic Hamming probe despite a non-invariant repetition graph.
+- Balanced: 448 repetition pairs; nearest gap 0.0558. Vertical ±1 remains only weakly separated
+  by Hamming syndrome (~0.088--0.093), while horizontal/diagonal shifts are near random-code
+  syndrome occupancy (~0.77--0.79).
+- Capacity: no repetition pairs. Vertical ±1 is an exact code-index permutation that preserves
+  Hamming word boundaries and bit roles, so Hamming syndrome is structurally invariant there.
+- The audited mechanisms therefore do not separate every unit-cycle shift for every profile.
+  No decoder, HMAC budget, encoder or Format-v3 rule changes.
+
 ## v0.3.0-build20 — 2026-09-12
 
 Twentieth print-acquisition research checkpoint. Build19 repetition-only conclusions remain

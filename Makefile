@@ -41,12 +41,13 @@ PRINT_CAMERA_DIR ?= print-camera private
 PRINT_CAMERA_KEY ?= Piccotti
 PRINT_CAMERA_TIMEOUT ?= 180
 PRINT_SCAN_DIR ?= print-scan private
+V4_PILOT_CORPUS_DIR ?= $(ORIGINAL_PICS_DIR)
 ALL_TEST_REPORT ?=
 ALL_TEST_TARGETS ?=
 ALL_TEST_STRICT ?=1
 GO_SOURCES := $(shell find cmd internal watermark -type f -name '*.go')
 
-.PHONY: test-list private-corpus-manifest print-scan-test build test test-unit release-unit research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
+.PHONY: test-list private-corpus-manifest print-scan-test build test test-unit release-unit v3-freeze-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
 
 # Print a categorized index of all test/check targets without running them.
 test-list:
@@ -79,6 +80,10 @@ release-unit:
 	@echo "Running release-gate Go tests..."
 	@go test ./cmd/pixseal ./internal/buildinfo -count=1
 	@go test ./watermark -run 'Test(V3EncoderGoldenFingerprint|StrengthRejectsNonFiniteValues|AnalyzerUsesSameWhiteAlphaFlatteningAsEncoder|WorkingImageLimitRejectsBeforePixelPlaneAllocation|WorkingImageLimitRejectsIntegerOverflow|IsotropicScaleSearchIsFixed|HammingCorrectsSingleBit|ProfileSelectionThresholds|ExplicitProfileCapacityErrors|V3ProfileRoundTrips|V3TransformsByProfile|V3AutoProfileExtraction|WrongKeyAndUnmarkedImageAreBounded|AnalyzeImageMatchesProfileMath|V3FrameIgnoresTrailingPaddingButAuthenticatesHeader|V3SyncPatternObservationCounts|V3TileMappingObservationCounts)$$' -count=1
+
+v3-freeze-check:
+	@echo "Checking frozen Format-v3 core hashes..."
+	@bash ./scripts/check-v3-frozen-core.sh
 
 
 # v0.3 bounded local-lattice diagnostic regressions. These are research tests and
@@ -136,6 +141,40 @@ stability-unwrap-test:
 cycle-anchor-test:
 	@echo "Running v0.3 independent cross-cell cycle-anchor regressions..."
 	@go test ./watermark -run '^TestDiagnosticCycleAnchor' -count=1
+
+observability-audit-test:
+	@echo "Running v0.3 Format-v3 key-independent observability audit regressions..."
+	@go test ./watermark -run '^TestDiagnosticFormatObservability' -count=1
+
+physical-topology-test:
+	@echo "Running v0.3 held-out physical repetition-topology observability regressions..."
+	@go test ./watermark -run '^TestDiagnosticPhysicalTopology' -count=1
+
+v4-design-study-test:
+	@echo "Running non-normative Format-v4 absolute-pilot design-study regressions..."
+	@go test ./watermark -run '^TestDiagnosticFormatV4DesignStudy' -count=1
+
+v4-foundation-test:
+	@echo "Running isolated experimental Format-v4 pilot-foundation regressions..."
+	@go test ./watermark -run 'TestExperimentalV4Prototype(FoundationInvariants|UsesOnePilotPerStratum)$$' -count=1
+
+# Build24 deterministic joint coordinate/sign search plus partial-visibility qualification.
+v4-pilot-search-test:
+	@echo "Running Build24 deterministic Format-v4 pilot search/qualification..."
+	@go test ./watermark -run '^TestExperimentalV4(Prototype2StructuralQualification|Prototype2ImprovesBuild23Baseline|Build24SearchReproducesPrototype2)$$' -count=1
+
+# Build24 image-domain pilot-only synthetic channel. This does not encode or
+# authenticate a payload and remains disconnected from production v3 APIs.
+v4-pilot-channel-test:
+	@echo "Running Build24 experimental Format-v4 pilot image-channel regressions..."
+	@go test ./watermark -run '^TestExperimentalV4Prototype2ImageDomainPilotChannel$$' -count=1
+
+# Optional local image-corpus pilot qualification. Source archives intentionally
+# omit the corpus; the target uses ORIGINAL_PICS_DIR by default when present.
+v4-pilot-corpus-test:
+	@echo "Running Build24 experimental Format-v4 pilot corpus qualification..."
+	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+		go test ./watermark -run '^TestExperimentalV4PilotCorpus$$' -count=1 -v
 
 smooth-phase-test:
 	@echo "Running v0.3 bounded smooth phase-field regressions..."

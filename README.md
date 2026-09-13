@@ -7,7 +7,7 @@ hiding short authenticated messages inside images. It embeds protected payload
 bits in luminance DCT coefficients while trying to keep the visual change small
 under normal viewing conditions.
 
-Current development snapshot: **v0.3.0-build20**.
+Current development snapshot: **v0.3.0-build24**.
 
 Stable release baseline: **v0.2.0**.
 
@@ -17,16 +17,48 @@ steganography for short messages. PixSeal does **not** claim statistical
 undetectability and has not undergone a professional cryptographic or
 steganalytic audit.
 
-Format v3 remains the interoperability baseline. Its on-image layout and
-deterministic encoder fingerprints are **frozen** during the first v0.3 research
-phase: the new work is decoder/diagnostic geometry only unless oracle evidence
-demonstrates that the physical channel destroys the v3 signal.
+Format v3 remains the implemented interoperability baseline. Its on-image layout,
+deterministic encoder fingerprints and production decoder are **frozen**. After builds
+16–22, the v0.3 absolute-cycle research on v3 is considered **closed**: the available
+public structure is measurable but not sufficiently discriminative on the physical
+negative control to justify another threshold or voting round. Future v3 work is
+maintenance/regression only unless genuinely new independent evidence appears.
+
+Build23 began an isolated experimental **Format v4** branch with an intentional
+public absolute pilot. Build24 adds reproducible pilot search, partial-visibility
+qualification and the first pilot-only synthetic image-channel tests. Nothing in the
+v4 branch is yet normative or used by the production encoder/decoder.
 
 Project history and future work are kept in [`HISTORY.md`](HISTORY.md) and
 [`TODO.md`](TODO.md). Release-facing changes are in [`CHANGELOG.md`](CHANGELOG.md).
 The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.md)
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
+
+## What v0.3.0-build24 adds
+
+Build24 is the first dedicated Format-v4 pilot qualification checkpoint. It keeps the five frozen v3 core
+files unchanged and searches the v4 pilot independently of payload, header, CRC, key and HMAC evidence.
+The bounded search uses fixed seeds and explicit 200,000-candidate budgets for both the joint mask/sign stage
+and the sign-refinement stage, so the result can be regenerated rather than accepted as an opaque constant.
+
+The current non-normative winner is `prototype-2-search-p64`, candidate SHA-256
+`858f74305ee9a9cbb59dd3fb6ab8afc6aaf8958e4f9f517711e2c52fc053b174`. Relative to the Build23 prototype,
+maximum cyclic mask overlap falls from **8 to 7** and maximum absolute wrong-shift signed correlation from
+**5 to 4**. Exhaustive contiguous partial-visibility tests retain worst correct-vs-wrong symbol margins of
+**60/43/28/20/12** with 64/48/32/24/16 visible pilots; deterministic random-subset qualification reports no
+false-origin ties/wins in the current 256-case-per-level set.
+
+Build24 also adds a pilot-only synthetic carrier and detector. The carrier embeds the public pilot plus a
+pseudo-random data plane so wrong-origin scoring sees realistic data interference, but it contains no message,
+frame, ECC or authentication tag. The initial image-channel suite recovers the correct origin after JPEG,
+small blur/noise/gamma changes, exact 75%/50% resize and aligned crop. The local `original pics` corpus can be
+run through the same experiment with `make v4-pilot-corpus-test`; those image files are not shipped in source
+archives.
+
+The pilot is **not frozen yet**. Rotation, affine/shear, perspective, combined print-camera-like degradation,
+version/framing design, ECC selection and real v4 print/scan acquisitions remain open before a functional v4
+payload encoder is promoted.
 
 ## What v0.2.0 provides
 
@@ -45,6 +77,90 @@ rotation, axis-aligned affine transforms, a fixed direct lattice-basis bank and
 two mild projective/keystone hypotheses. These are measured research
 capabilities, not universal guarantees. General homography estimation and the
 physical print-camera channel are outside v0.2.0 scope.
+
+## What v0.3.0-build23 adds
+
+Build23 is the transition checkpoint between the completed v3 absolute-cycle research and the
+experimental v4 branch. It does **not** change v3 embedding, extraction, search banks, Hamming,
+whitening, profiles, HMAC semantics or physical PASS criteria. Instead it makes the project state
+explicit and testable.
+
+For v3, build23 adds [`docs/V3_FINAL_STATUS.md`](docs/V3_FINAL_STATUS.md), which records the
+qualified baseline, the physical research outcome, the evidence that closes the absolute-cycle
+branch, and the rules for future maintenance. The final build22 host qualification remained
+`Release baseline: PASS` and `Qualification corpus: PASS`; only the historical experimental
+`geometry-test` and `affine-test` boundaries remained red. The build22 physical topology probe
+was non-discriminative: scanner 002 matched scanner 001 at 0.4375 mean modal phase fraction and
+was more stable than the inclined smartphone case (0.3125), so the residual v3 topology signal
+is preserved as evidence but not promoted.
+
+For v4, build23 adds a completely separate provisional pilot foundation in
+`watermark/experimental_v4.go`. The first candidate keeps the 37×32 / 64-pilot / 1120-data
+layout from build22, reserves exactly one pilot in each of 64 spatial strata, uses 32 `+1` and
+32 `-1` signs, and has no perfect non-zero cyclic alias. Exhaustive structural regression fixes
+the current prototype metrics at maximum cyclic mask overlap 8/64 and maximum wrong-shift signed
+correlation 5/64. These are **prototype metrics, not a Format-v4 specification and not a physical
+recovery guarantee**. `make v4-foundation-test` protects the isolation and invariants. `make v3-freeze-check` verifies
+`docs/V3_FROZEN_CORE_SHA256.txt`, making accidental v3 core drift visible. `make all-test` now
+contains 32 targets.
+
+## What v0.3.0-build22 adds
+
+Build22 keeps Format v3, its encoder, production extraction, exact unwrap, cross-fit,
+multi-partition stability and build20/21 diagnostics frozen. It performs the missing physical
+follow-up to build21: instead of asking only whether repetition topology is mathematically
+non-invariant, it measures whether that weak asymmetry is actually observable in the acquired
+margin grids.
+
+For every robust/balanced profile and every unit shift, the probe splits the repetition graph
+into a large **shared registration set** and a small **held-out exclusive set**. Shared edges
+alone register two phase hypotheses separated by the tested unit shift; the exclusive edges,
+which were not used for registration, choose between them. The report exports winner-phase
+stability, cell-direction consistency and absolute held-out effect size. The probe is
+key-independent, diagnostic-only and cannot change sampling, candidate ranking or HMAC attempts.
+
+On the current physical corpus the exclusive signal is measurable but not a safe absolute anchor.
+The inclined smartphone image has mean winner modal-phase fraction **0.3125** and mean directional
+cell consistency **0.6944**. Scanner 001 reaches **0.4375 / 0.7292** and the scanner-002 negative
+control reaches **0.4375 / 0.6597**. Because the negative control is at least as phase-stable as
+the useful smartphone case, the weak v3 topology residual cannot be promoted into a decode gate.
+The frontal photograph remains not-applicable and the probe is skipped.
+
+Build22 also starts a serious, still non-normative Format-v4 design branch. The current preferred
+prototype is a **37×32 block tile with 64 public absolute-pilot positions**: tile area grows only
+5.7% (minimum geometry 280×256 → 296×256 px), while 1120 data positions remain, preserving the
+current 16/32/64-byte payload ceilings and nominal profile redundancy under an apples-to-apples
+v3 framing/ECC assumption. See [`docs/FORMAT_V4_DESIGN.md`](docs/FORMAT_V4_DESIGN.md). No v4 encoder
+or decoder is enabled in build22. `make all-test` now contains 30 targets.
+
+## What v0.3.0-build21 adds
+
+Build21 keeps Format v3, the encoder, production extractor and every build20 decision rule
+frozen. It adds a **static key-independent observability audit** of the public Format-v3
+tile mapping. The audit asks a narrower question than the physical decoder: for the exact
+`{-1,0,+1}` block-cycle slips explored by the discrete unwrap, which public structural
+constraints actually change when the tile origin moves by one block?
+
+Two observables are audited without using a key, known header, payload, CRC or HMAC:
+
+- the profile-specific repetition-pair topology induced by `v3CodeIndex`; and
+- Hamming(7,4) word validity after applying the same wrong-origin tile mapping and hard
+  aggregation used by the decoder, measured with deterministic synthetic valid codewords.
+
+The result is mixed. `robust` and `balanced` have a mathematically non-invariant repetition
+pair graph, so Format v3 does contain some absolute-origin asymmetry in those profiles.
+However the nearest one-block alias preserves about **94.2--94.4%** of repetition pairs in X
+and **92.2%** in Y, leaving only a roughly **5.6--7.8%** structural gap before camera noise.
+`capacity` has no repetition pairs at all. Hamming structure strongly distinguishes most
+horizontal/diagonal unit shifts, but vertical `±1` is a synthetic zero-syndrome alias for
+`robust` and `capacity`; for `capacity` it is an exact whole-Hamming-word permutation.
+`balanced` breaks that alias only weakly (about 0.088--0.093 synthetic nonzero-syndrome
+fraction versus ~0.77--0.79 for typical horizontal/diagonal shifts).
+
+Therefore the current v3 format is **not uniformly cycle-observable across profiles and
+axes** under the audited key-independent mechanisms. Build21 does not add a new decoder gate:
+the audit is static telemetry and regression evidence only. `make observability-audit-test`
+protects these structural facts, and `make all-test` now contains 28 targets.
 
 ## What v0.3.0-build20 adds
 

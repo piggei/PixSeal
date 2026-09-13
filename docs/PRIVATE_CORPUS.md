@@ -59,3 +59,36 @@ private acquisition files remain excluded from source archives. The independent 
 anchor was evaluated on the same four available physical acquisitions; the two bicycle photos
 are still absent from the current corpus. A future production release must replace the default
 research key and will not distribute this private corpus.
+
+
+## Build21
+
+Build21 still uses the intentional public research key `Piccotti`; no acquisition file is added
+to the repository or source archive. The new Format-v3 observability audit is static and can run
+without the private corpus. Physical print-camera/scan tests remain useful only to confirm that
+adding this telemetry does not change the four existing diagnostic verdicts or HMAC behavior.
+The two bicycle photographs remain required for a complete six-image physical qualification.
+
+
+### Build22 note
+
+The held-out physical-topology probe and any future Format-v4 pilot prototype may be evaluated
+against the private acquisition corpus, but photographs/scans remain excluded from source/evidence
+archives. Format-v4 design telemetry is static and may be distributed; only derived numeric JSON/CSV
+evidence from private acquisitions may be packaged.
+
+## Format-v4 corpus separation
+
+The existing smartphone/scanner acquisitions are Format-v3 evidence only. They must not be reused as
+if they tested Format v4, because the printed carrier does not contain the v4 pilot. When an experimental
+v4 encoder exists, create a separate private v4 acquisition set by re-embedding, reprinting and reacquiring
+the carrier. Keep v3 and v4 manifests/directories distinct so a future result cannot mix formats.
+
+### Build24 local-original note
+
+The two `original pics` images used by `v4-pilot-corpus-test` are digital source images, not physical Format-v4
+acquisitions. Build24 may generate temporary synthetic pilot/data-plane carriers from them and report derived
+metrics, but source ZIPs/evidence ZIPs should not include the image files themselves. They do not satisfy the v4
+physical-corpus requirement. After a real experimental v4 payload encoder is available, create new embedded
+originals, print them and acquire separate smartphone/scanner samples under a v4-specific manifest.
+
