@@ -1014,3 +1014,17 @@ Local development originals:
 Negative partition scores may be below zero because the signed public-pilot correlation is not clamped; they are not probabilities. All positive cases recover cyclic origin `(0,0)`. The regression floors remain 0.50 held-out validation for the local corpus, 0.15 positive-minus-matched-negative validation separation, 0.15 local full-pilot margin, and 0.015 local corner-error ratio.
 
 Build28 does not qualify joint projective/perspective or positive padded-canvas geometry, and it does not freeze the pilot or add a v4 payload/HMAC path.
+
+## v0.3.0-build29 joint projective/padded qualification — 2026-09-14
+
+| case | expected outcome | validation | full pilot margin | origin | corner error | hypotheses |
+|---|---|---:|---:|---:|---:|---:|
+| synthetic projective+crop | ACCEPT | 0.554332 | 0.269007 | (0,0) | 0.00472 | 427982 |
+| synthetic affine+padded | ACCEPT | 0.986240 | 0.542529 | (0,0) | 0.00085 | 299613 |
+| PJ_lingua projective+crop | ACCEPT | 0.383955 | 0.179718 | (0,0) | 0.00878 | 429470 |
+| PJ_piccolo projective+crop | SAFE REJECT | 0.421398 | 0.118781 | (0,0) | not accepted | 426641 |
+| PJ_lingua affine+padded joint search | SAFE REJECT | 0.190152 | 0.029623 | (0,0) | not accepted | 302683 |
+| PJ_piccolo affine+padded joint search | SAFE REJECT | 0.373953 | 0.029185 | (20,22) | not accepted | 299134 |
+
+The padded `PJ_lingua` known-geometry control reaches validation 0.991263, score 0.988352, margin 0.553797 and origin `(0,0)`. This distinguishes the current joint-search limitation from loss of pilot signal. Projective and padded Build29 thresholds are development regression gates only; SAFE REJECT counts as the correct result for cases outside the currently qualified joint-search envelope.
+

@@ -1346,3 +1346,14 @@ Build28 establishes joint `rotation + anisotropic scale + negative crop/translat
 PixSeal uses Go intentionally so the algorithmic core can remain one qualified codebase across multiple operating-system targets. The qualification harness runs `make core-target-check`, which cross-compiles the reusable `watermark` package for Linux/amd64, Windows/amd64, Android/arm64 and iOS/arm64. Desktop CLI binaries are separate from mobile application packaging; successful core cross-compilation does not claim that an Android or iOS GUI application already exists.
 
 The planned product architecture keeps frontend/UI code outside the watermark core. A future graphical interface, with priority on smartphone/tablet use, can therefore call the same Go implementation used by the CLI rather than reimplementing embedding/decoding logic per platform. Camera/gallery integration, mobile bindings, permissions and UX remain future platform work.
+
+## 50. v0.3.0-build29 joint projective/padded search (non-normative)
+
+Build29 adds two bounded branches after Build28. The projective branch searches rotation, anisotropic scale and mild top/bottom horizontal inset while the observed carrier may be cropped. Public dimension constraints first reject geometries whose transformed extent cannot contain the observed crop or exceeds the declared crop budget. A structural DCT score produces a broad shortlist.
+
+For each retained geometry, the public pilot is split into two 32-symbol halves that are evaluated on the **same** local phase/origin hypothesis; the proposal score is the weaker half. This prevents two unrelated local maxima from being combined into artificial confidence. A full middle-row proposal, basin NMS and local refinement reduce the bank. Spatial top/bottom evidence ranks a small number of finalists, and only then does the Build27 placement search optimize translation. Final acceptance uses held-out placement validation, complete-pilot cyclic origin and complete-pilot margin. Payload/header/CRC/ECC/key/HMAC are not available anywhere in this search.
+
+The padded branch uses the same staged machinery with projective insets fixed to zero and a positive-placement extent constraint. Development acceptance floors are 0.35 validation / 0.15 full-pilot margin for projective and 0.55 / 0.20 for padded, always with absolute origin `(0,0)`. These constants are regression gates only. A SAFE REJECT is an expected successful outcome when the bounded joint search cannot establish geometry confidently.
+
+Current Build29 qualification accepts synthetic projective+crop, synthetic affine+padded placement and photographic `PJ_lingua` projective+crop. It deliberately rejects `PJ_piccolo` projective+crop and both photographic padded joint searches. This is safer than promoting a locally plausible but globally wrong geometry.
+

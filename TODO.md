@@ -183,7 +183,10 @@ and `CHANGELOG.md`.
 - [x] Generalize Build25 from known geometry to **bounded blind pilot-assisted geometry estimation** for auto-framed transforms, with deterministic repeat-based proposal and explicit runner-up/negative-control telemetry (Build26).
 - [x] Qualify arbitrary crop/translation and padded-canvas placement with geometry supplied independently; Build27 uses disjoint pilot halves and no payload/header/HMAC evidence.
 - [x] Combine blind affine geometry with Build27 placement under arbitrary negative crop: Build28 jointly recovers rotation, anisotropic scale and crop/translation with structural-only geometry selection and split-pilot placement validation.
-- [ ] Extend the Build28 joint search to **projective/perspective** geometry under unknown crop; do not reuse the affine translation-invariance assumption where projective crop changes canonical phase.
+- [x] Add a bounded Build29 joint **projective/perspective + crop** search with explicit ACCEPT/SAFE-REJECT gates; synthetic and `PJ_lingua` qualify, while the smaller `PJ_piccolo` case is intentionally rejected rather than falsely accepted.
+- [x] Add a bounded Build29 joint **affine + positive padded-canvas** search and qualify the synthetic case.
+- [ ] Improve photographic padded-canvas geometry ranking: both current local originals are SAFE REJECTED by the joint search; `PJ_lingua` retains a strong known-geometry pilot/placement control.
+- [ ] Improve projective ranking on small/low-redundancy carriers so `PJ_piccolo` can be accepted without weakening the Build29 margin gate.
 - [ ] Extend the joint search to positive padded-canvas placement and re-qualify shear jointly with placement before considering the pilot frozen.
 - [ ] Replace the current known canonical-extent assumption with a coarse tile/lattice extent estimator suitable for physical captures before pilot ranking.
 - [ ] Create a separate private v4 print-camera/scanner corpus by re-embedding and reprinting; do not treat the

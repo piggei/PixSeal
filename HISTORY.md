@@ -712,3 +712,12 @@ After geometry is fixed, Build27 placement recovery is reused unchanged: even pi
 Build28 is not the final blind v4 decoder. Joint shear, projective/perspective geometry and positive padded-canvas placement are still separate work, as are unknown physical carrier extent, v4 framing/ECC, the payload encoder and fresh print-camera/scanner evidence.
 
 The project also records an architectural decision that had previously been implicit: Go is used in part to keep one reusable implementation compilable across Linux, Windows, Android and iOS targets. A future graphical frontend is planned, especially for mobile use, while the qualified Go core remains independent of UI technology.
+
+## v0.3.0-build29 — bounded joint projective/padded search with safe rejection
+
+Build29 attacks the two composition problems left open by Build28: projective distortion plus unknown crop, and affine geometry plus positive padded placement. Several pilot-first and sparse-repeat prototypes were rejected because they either multiplied geometry by a full placement scan or overfit a single tile. A concrete indexing bug in an early single-tile probe (`y` derived with width 32 instead of 37) was found and removed during the investigation; none of those diagnostic probes enter the final source tree.
+
+The retained projective search keeps a bounded public structural bank, requires two pilot halves to agree on the same local phase/origin hypothesis, preserves geometric basin diversity, refines only a small set and then lets the qualified Build27 placement search evaluate the remaining candidates. Complete public-pilot margin and absolute origin are final development gates. This gives a synthetic projective+crop PASS and a photographic `PJ_lingua` PASS, while `PJ_piccolo` is deliberately rejected because its margin is only about 0.119.
+
+The padded affine branch passes the synthetic case exactly. Both photographic padded joint searches are currently rejected. A known-geometry `PJ_lingua` control reaches roughly 0.991 placement validation and 0.554 pilot margin, showing that the pilot channel remains strong and the open issue is geometry ranking. Build29 therefore treats safe rejection as a qualified outcome and explicitly refuses to lower thresholds to manufacture coverage. Prototype-2 remains non-normative and Format v3 remains frozen.
+

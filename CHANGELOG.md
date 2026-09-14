@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.3.0-build29 — 2026-09-14
+
+- Add bounded experimental joint **projective+crop** and **affine+padded-canvas** searches for Format v4.
+- Add explicit ACCEPT/SAFE-REJECT development gates based on held-out placement validation, complete public-pilot margin and absolute origin; no payload/key/ECC/HMAC evidence participates.
+- Qualify synthetic projective+crop and padded cases; qualify `PJ_lingua.PNG` projective+crop while intentionally SAFE REJECTING the smaller `PJ_piccolo.png` projective case and both photographic padded joint-search cases.
+- Add a known-geometry padded control showing that `PJ_lingua.PNG` retains a strong public-pilot channel even when the joint padded geometry ranking rejects.
+- Add `v4-pilot-joint-projective-test` and `v4-pilot-joint-projective-corpus-test`; the default all-test matrix grows from 43 to 45 targets.
+- Keep the frozen Format-v3 core and `prototype-2-search-p64` unchanged.
+
 ## v0.3.0-build28 — 2026-09-13
 
 - Add the first bounded **joint blind affine+crop** Format-v4 search: rotation, anisotropic scale and negative crop/translation are unknown in the same experiment.

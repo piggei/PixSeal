@@ -696,3 +696,18 @@ Both synthetic cases pass within ~69k total hypotheses. Both local originals pas
 Accept Build28 as the first joint blind **affine+negative-crop** checkpoint. Keep prototype-2 non-normative. Do not infer that projective crop or padded-canvas geometry is solved: perspective breaks the simple translation/phase relation used by the affine structural proposal, and positive placement expands the search differently. Those become the next explicit research gates before pilot freeze and v4 codec implementation.
 
 Also document the product architecture decision: Go is retained partly for one cross-platform core (Linux/Windows/Android/iOS), and a future GUI—especially mobile—is planned over that same core.
+
+## build29 — joint projective crop and padded placement
+
+### Question
+Can Build28/Build27 be composed when perspective and crop are both unknown, and when affine geometry must be recovered while the carrier is positively displaced inside a larger canvas?
+
+### Rejected paths
+A brute geometry×placement pilot search was too expensive. Sparse repeat-only pruning produced multiple-comparison false maxima. Single-tile pilot ranking overfit local content, and splitting the pilot into independent maxima allowed each half to choose a different false phase. A direct homography correction fitted from per-tile origin drift worsened corner error and was discarded. Threshold relaxation was not used.
+
+### Retained method
+Use dimensional feasibility + structural DCT to form a broad bank. Evaluate two 32-pilot halves on the same phase/origin hypothesis and rank by the weaker half. Preserve distinct geometric basins, refine only the shortlist, use spatial evidence to reduce the number of expensive placement searches, then run Build27 placement and complete-pilot absolute-origin/margin checks. Insets include the previously missing 0.015 half-step. Reuse a precomputed pixel plane so ranking thousands of candidates does not rebuild the image for every hypothesis.
+
+### Result and decision
+Synthetic projective+crop and affine+padded cases are accepted. `PJ_lingua` projective+crop is accepted with ~0.384 validation, ~0.180 margin and ~0.0088 corner error. `PJ_piccolo` projective reaches validation ~0.421 but margin only ~0.119 and is therefore SAFE REJECTED. Both photographic padded joint searches are SAFE REJECTED; a known-geometry `PJ_lingua` padded control reaches ~0.991 validation / ~0.554 margin, proving the channel remains available. Accept Build29 as a bounded composition/safe-rejection checkpoint, not as general projective/padded recovery, and keep prototype-2 non-normative.
+

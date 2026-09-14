@@ -289,3 +289,12 @@ This checkpoint is intentionally affine/crop-only. Projective crop is not equiva
 ### Portability and planned UI
 
 The implementation remains in Go partly to preserve one portable algorithmic core. `core-target-check` cross-compiles that core for Linux, Windows, Android and iOS targets. A future GUI is planned, especially for mobile use, but it will be a frontend over the same qualified core rather than a separate watermark implementation.
+
+## Build29 joint projective/padded qualification
+
+Build29 does not change the Format-v4 layout or `prototype-2-search-p64`; it studies decoder observability only. The public pilot may participate in geometry proposal because it is format metadata, but proposal and acceptance remain separated: bounded geometry/phase proposal first, Build27 placement validation next, then complete-pilot origin/margin. No authenticated payload evidence is allowed to select geometry.
+
+The important new policy is **safe rejection**. A weakly supported geometry is not considered a decode merely because one local pilot view correlates. Projective acceptance currently requires validation >=0.35, margin >=0.15 and origin `(0,0)`; padded acceptance requires >=0.55, >=0.20 and `(0,0)`. These are development values derived for regression stability, not normative thresholds.
+
+Results show that the present 64-pilot design still has useful signal under the new compositions: one photographic projective case qualifies and a known-geometry padded photographic control is very strong. The remaining failures are therefore search/ranking limitations, not evidence that the pilot pattern must be replaced. The pilot remains non-normative until broader physical and small-carrier evidence exists.
+

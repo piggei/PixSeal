@@ -7,7 +7,7 @@ hiding short authenticated messages inside images. It embeds protected payload
 bits in luminance DCT coefficients while trying to keep the visual change small
 under normal viewing conditions.
 
-Current development snapshot: **v0.3.0-build28**.
+Current development snapshot: **v0.3.0-build29**.
 
 Stable release baseline: **v0.2.0**.
 
@@ -36,7 +36,7 @@ independently, using disjoint pilot halves for proposal and validation. Build28 
 the first **joint** blind affine+crop checkpoint: rotation, anisotropic scale and
 negative crop/translation are all unknown, geometry is selected from sign-independent
 DCT phase contrast, and only then is the public pilot exposed for placement and cyclic
-origin. Nothing in the v4 branch is yet normative or used by the production
+origin. Build29 extends the joint search to bounded projective+crop and affine+padded-canvas cases, with explicit ACCEPT/SAFE-REJECT gates to prevent weak geometry from being promoted. Nothing in the v4 branch is yet normative or used by the production
 encoder/decoder.
 
 Project history and future work are kept in [`HISTORY.md`](HISTORY.md) and
@@ -45,6 +45,16 @@ The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
 
+
+## What v0.3.0-build29 adds
+
+Build29 extends the joint v4 research in two directions that Build28 intentionally left open: **mild projective geometry under unknown crop** and **affine geometry with positive padded-canvas placement**. The search remains bounded to the development domain (`+/-12 degrees`, bounded anisotropic scale and projective inset banks) and never consults payload, header, CRC, ECC, key material or HMAC. Public pilot evidence is allowed for proposal/ranking because the pilot is intentionally public; final acceptance additionally requires a complete-pilot absolute-origin/margin gate.
+
+The projective branch uses a public dimensional feasibility filter, structural DCT proposal, a two-half pilot consistency prefilter evaluated on the same phase/origin hypothesis, basin diversity, local refinement and then the already-qualified Build27 placement search on only a few finalists. The padded branch uses an analogous affine bank. Build29 introduces explicit development acceptance gates: projective requires placement validation >= 0.35, full-pilot margin >= 0.15 and origin `(0,0)`; padded requires validation >= 0.55, margin >= 0.20 and origin `(0,0)`. These are regression gates, not normative decoder thresholds.
+
+The synthetic projective+crop and affine+padded cases are accepted with low corner error. On the private photographic development corpus, `PJ_lingua.PNG` projective+crop is accepted, while `PJ_piccolo.png` is deliberately **SAFE REJECTED** because its full-pilot margin remains below the projective floor. The joint padded search is also SAFE REJECTED on both photographs; for `PJ_lingua.PNG`, a known-geometry control still reaches very strong placement/pilot scores, proving that the remaining limitation is the joint geometry ranking rather than loss of the public-pilot channel. Safe rejection is therefore part of the qualified behavior, not a failure to be hidden by looser thresholds.
+
+Build29 still does not freeze `prototype-2-search-p64`, does not implement a v4 payload/HMAC path, and does not claim general projective or padded-canvas recovery on all carrier sizes. The next gate is improving the photographic joint padded/projective ranking while preserving the current rejection behavior.
 
 ## What v0.3.0-build28 adds
 

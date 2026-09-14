@@ -55,6 +55,8 @@ row v4-pilot-placement-test RESEARCH source 'Build27 unknown crop/translation/pl
 row v4-pilot-placement-corpus-test RESEARCH pics 'Build27 unknown-placement qualification on local originals'
 row v4-pilot-joint-affine-test RESEARCH source 'Build28 joint blind rotation+anisotropic-scale plus unknown crop/translation'
 row v4-pilot-joint-affine-corpus-test RESEARCH pics 'Build28 joint blind affine+crop qualification on local originals'
+row v4-pilot-joint-projective-test RESEARCH source 'Build29 bounded joint projective+crop and affine+padded qualification; includes explicit acceptance gates'
+row v4-pilot-joint-projective-corpus-test RESEARCH pics 'Build29 local originals: qualified ACCEPT cases plus explicit SAFE REJECT cases'
 row smooth-phase-test RESEARCH source 'bounded smooth phase-field regressions'
 row geometry-test RESEARCH pics 'strict rotation/combined geometry suite; corpus-sensitive'
 row affine-test RESEARCH pics 'strict axis-aligned affine suite; corpus-sensitive'
@@ -71,6 +73,6 @@ row extreme-test QUALIFICATION pics 'progressive resize/crop limit map; non-stri
 row test-unit COMPATIBILITY source 'complete go test ./... suite'
 row test AGGREGATE source+pics 'build + test-unit + image round-trips'
 row all AGGREGATE source+pics 'test + baseline transformation suite'
-row all-test AGGREGATE source+pics '43-target qualification matrix with final summary'
+row all-test AGGREGATE source+pics '45-target qualification matrix with final summary'
 
 printf '\nTip: use make <target>. For all-test, optionally set ALL_TEST_REPORT=path/to/report.txt.\n'
