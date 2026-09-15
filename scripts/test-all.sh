@@ -8,7 +8,7 @@ if [[ -n "$REPORT" ]]; then
     exec > >(tee "$REPORT") 2>&1
 fi
 
-default_targets="version-check vet release-unit v3-freeze-check test-images deep-test extreme-test research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test smooth-phase-test geometry-test affine-test composition-test lattice-test perspective-test core-target-check"
+default_targets="version-check vet release-unit v3-freeze-check v4-pilot-lock-check corpus-manifest-check test-images deep-test extreme-test research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test geometry-test affine-test composition-test lattice-test perspective-test core-target-check"
 read -r -a targets <<< "${ALL_TEST_TARGETS:-$default_targets}"
 if (( ${#targets[@]} == 0 )); then
     echo "error: ALL_TEST_TARGETS resolved to an empty list" >&2
@@ -21,6 +21,8 @@ label_for() {
         vet) echo "go vet" ;;
         release-unit) echo "release-gate Go tests" ;;
         v3-freeze-check) echo "Format-v3 frozen core manifest" ;;
+        v4-pilot-lock-check) echo "Format-v4 Build30 pilot candidate identity lock" ;;
+        corpus-manifest-check) echo "Build32 active private corpus manifest" ;;
         test-images) echo "local image round-trip" ;;
         deep-test) echo "baseline transformations" ;;
         extreme-test) echo "progressive limits" ;;
@@ -55,6 +57,13 @@ label_for() {
         v4-pilot-joint-affine-corpus-test) echo "Format-v4 Build28 joint blind affine+crop local corpus" ;;
         v4-pilot-joint-projective-test) echo "Format-v4 Build29 joint projective+crop / padded placement" ;;
         v4-pilot-joint-projective-corpus-test) echo "Format-v4 Build29 joint projective/padded local corpus" ;;
+        v4-pilot-joint-projective-rank-diagnostic) echo "Format-v4 Build33 MQ projective ranking observability" ;;
+        v4-build34-projective-frame-corpus-test) echo "Format-v4 Build34 authenticated MQ projective recovery" ;;
+        v4-build35-projective-api-test) echo "Format-v4 Build35 projective API/CLI qualification" ;;
+        v4-build36-soft-channel-test) echo "Format-v4 Build36 soft-decision physical channel" ;;
+        v4-pilot-lock-corpus-test) echo "Format-v4 Build30 pilot lock known-mapping corpus audit" ;;
+        v4-frame-test) echo "Format-v4 Build31 experimental frame/encoder" ;;
+        v4-frame-corpus-test) echo "Format-v4 Build31 frame local corpus" ;;
         smooth-phase-test) echo "v0.3 bounded smooth phase field" ;;
         geometry-test) echo "rotation/combined geometry" ;;
         affine-test) echo "axis-aligned affine" ;;
@@ -66,9 +75,9 @@ label_for() {
     esac
 }
 
-release_targets=(version-check vet release-unit v3-freeze-check test-images core-target-check)
+release_targets=(version-check vet release-unit v3-freeze-check v4-pilot-lock-check corpus-manifest-check test-images core-target-check)
 qualification_targets=(deep-test extreme-test)
-research_targets=(research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test smooth-phase-test geometry-test affine-test composition-test lattice-test perspective-test)
+research_targets=(research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test geometry-test affine-test composition-test lattice-test perspective-test)
 
 in_list() {
     local needle="$1"; shift

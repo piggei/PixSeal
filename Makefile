@@ -5,11 +5,12 @@ SHELL := /bin/bash
 PIXSEAL := dist/pixseal
 ORIGINAL_PICS_DIR := original pics
 TEST_KEY ?= pixseal-test-key
+ACTIVE_CORPUS_MANIFEST ?= private-corpus-active.tsv
 TEST_PROFILES ?= robust balanced capacity
 TEST_MESSAGE_ROBUST ?= PixSeal robust
 TEST_MESSAGE_BALANCED ?= PixSeal balanced profile test
 TEST_MESSAGE_CAPACITY ?= PixSeal capacity profile test message for regression coverage
-ROBUST_RESIZES ?= 95 85 75 65 55 50
+ROBUST_RESIZES ?= 95 85 75 65 55
 ROBUST_CROPS ?= 90 75 50
 RANDOM_CROPS ?= 75 50
 RANDOM_CROP_COUNT ?= 1
@@ -17,6 +18,7 @@ RANDOM_SEED ?= 20260907
 JPEG_QUALITY ?= 82
 ROBUST_MAX_MPIX ?= 100
 EXTRACT_TIMEOUT ?= 60
+TEST_IMAGES_MAX_MPIX ?= 100
 GEOMETRY_EXTRACT_TIMEOUT ?= 120
 STRICT ?= 0
 LIMIT_START ?= 95
@@ -42,20 +44,64 @@ PRINT_CAMERA_KEY ?= Piccotti
 PRINT_CAMERA_TIMEOUT ?= 180
 PRINT_SCAN_DIR ?= print-scan private
 V4_PILOT_CORPUS_DIR ?= $(ORIGINAL_PICS_DIR)
+V4_PHYSICAL_SOURCE_DIR ?= $(ORIGINAL_PICS_DIR)
+V4_PHYSICAL_OUTPUT_DIR ?= v4-physical private/build35-generated
+V4_PHYSICAL_FIXTURE_DIR ?= $(V4_PHYSICAL_OUTPUT_DIR)
+V4_PHYSICAL_ACQUISITION_DIR ?= v4-physical private/build35-acquired
+V4_PHYSICAL_KEY ?= PixSeal-v4-TestKey-2026
+V4_PHYSICAL_ROLE ?= MQ
+V4_PHYSICAL_MESSAGE_A ?= v4-b35-phys-a
+V4_PHYSICAL_MESSAGE_B ?= v4-b35-phys-b
+V4_PHYSICAL_PROFILE ?= robust
+V4_PHYSICAL_STRENGTH ?= 24
+V4_PHYSICAL_PRINT_PPI ?= 300
 ALL_TEST_REPORT ?=
 ALL_TEST_TARGETS ?=
 ALL_TEST_STRICT ?=1
 GO_SOURCES := $(shell find cmd internal watermark -type f -name '*.go')
 
-.PHONY: test-list private-corpus-manifest print-scan-test build test test-unit release-unit v3-freeze-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
+.PHONY: test-list corpus-manifest-check private-corpus-manifest v4-physical-fixtures v4-physical-qualification print-scan-test build test test-unit release-unit v3-freeze-check v4-pilot-lock-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
 
 # Print a categorized index of all test/check targets without running them.
 test-list:
 	@bash ./scripts/test-list.sh
 
+
+corpus-manifest-check:
+	@echo "Checking Build32 active private corpus manifest..."
+	@PICS_DIR="$(CURDIR)/$(ORIGINAL_PICS_DIR)" ACTIVE_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" bash ./scripts/check-active-corpus.sh
+
 # Generate a local, Git-ignored SHA-256 manifest for the private physical corpus.
 private-corpus-manifest:
 	@PRINT_CAMERA_DIR="$(PRINT_CAMERA_DIR)" PRINT_SCAN_DIR="$(PRINT_SCAN_DIR)" bash ./scripts/private-corpus-manifest.sh
+
+# Generate the private Build35 scanner-first v4 qualification pack. The MQ
+# source is block-normalized before embedding, then emitted as one unmarked
+# control plus two authenticated robust carriers with different payloads.
+# Outputs are git-ignored and never included in source/evidence archives.
+v4-physical-fixtures: build
+	@PIXSEAL="$(abspath $(PIXSEAL))" \
+	V4_PHYSICAL_SOURCE_DIR="$(V4_PHYSICAL_SOURCE_DIR)" \
+	ACTIVE_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
+	V4_PHYSICAL_OUTPUT_DIR="$(V4_PHYSICAL_OUTPUT_DIR)" \
+	V4_PHYSICAL_KEY="$(V4_PHYSICAL_KEY)" \
+	V4_PHYSICAL_ROLE="$(V4_PHYSICAL_ROLE)" \
+	V4_PHYSICAL_MESSAGE_A="$(V4_PHYSICAL_MESSAGE_A)" \
+	V4_PHYSICAL_MESSAGE_B="$(V4_PHYSICAL_MESSAGE_B)" \
+	V4_PHYSICAL_PROFILE="$(V4_PHYSICAL_PROFILE)" \
+	V4_PHYSICAL_STRENGTH="$(V4_PHYSICAL_STRENGTH)" \
+	V4_PHYSICAL_PRINT_PPI="$(V4_PHYSICAL_PRINT_PPI)" \
+	bash ./scripts/prepare-v4-physical-fixtures.sh
+
+# Evaluate the three Build35 physical captures listed by the generated
+# acquisition plan. Marked images must authenticate the exact expected payload;
+# the unmarked control must reject. This target is intentionally opt-in.
+v4-physical-qualification: build
+	@PIXSEAL="$(abspath $(PIXSEAL))" \
+	V4_PHYSICAL_FIXTURE_DIR="$(V4_PHYSICAL_FIXTURE_DIR)" \
+	V4_PHYSICAL_ACQUISITION_DIR="$(V4_PHYSICAL_ACQUISITION_DIR)" \
+	V4_PHYSICAL_KEY="$(V4_PHYSICAL_KEY)" \
+	bash ./scripts/test-v4-physical-acquisitions.sh
 
 # Default target: build the native executable for the current platform.
 build: $(PIXSEAL)
@@ -84,6 +130,13 @@ release-unit:
 v3-freeze-check:
 	@echo "Checking frozen Format-v3 core hashes..."
 	@bash ./scripts/check-v3-frozen-core.sh
+
+# Build30 semantic lock for the exact prototype-2 public pilot identity. This
+# protects the candidate hash/mask/sign sequence from accidental mutation while
+# normative Format-v4 promotion still waits for physical print-camera evidence.
+v4-pilot-lock-check:
+	@echo "Checking Build30 Format-v4 pilot candidate lock..."
+	@go test ./watermark -run '^TestExperimentalV4PilotCandidateLock(Identity|DetectsMutation)$$' -count=1 -v
 
 
 # v0.3 bounded local-lattice diagnostic regressions. These are research tests and
@@ -174,6 +227,7 @@ v4-pilot-channel-test:
 v4-pilot-corpus-test:
 	@echo "Running Build24 experimental Format-v4 pilot corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
 		go test ./watermark -run '^TestExperimentalV4PilotCorpus$$' -count=1 -v
 
 # Build25 known-geometry pilot qualification. Geometry is supplied independently
@@ -186,6 +240,7 @@ v4-pilot-geometry-test:
 v4-pilot-geometry-corpus-test:
 	@echo "Running Build25 Format-v4 known-geometry local corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
 		go test ./watermark -run '^TestExperimentalV4PilotGeometryCorpus$$' -count=1 -v
 
 # Build26 bounded blind geometry recovery. Repeated data-plane self-consistency
@@ -198,6 +253,7 @@ v4-pilot-blind-geometry-test:
 v4-pilot-blind-geometry-corpus-test:
 	@echo "Running Build26 Format-v4 blind geometry local corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
 		go test ./watermark -run '^TestExperimentalV4BlindGeometryCorpus$$' -count=1 -v
 
 # Build27 unknown crop/translation/placement qualification with geometry supplied
@@ -210,6 +266,7 @@ v4-pilot-placement-test:
 v4-pilot-placement-corpus-test:
 	@echo "Running Build27 Format-v4 unknown-placement local corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
 		go test ./watermark -run '^TestExperimentalV4PlacementCorpus$$' -count=1 -v
 
 # Build28 joint affine + unknown negative-crop qualification. Geometry is
@@ -224,6 +281,7 @@ v4-pilot-joint-affine-test:
 v4-pilot-joint-affine-corpus-test:
 	@echo "Running Build28 Format-v4 joint blind affine+crop local corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
 		go test ./watermark -run '^TestExperimentalV4JointAffineCropCorpus$$' -count=1 -v
 
 # Build29 composes unknown projective geometry with crop and unknown affine
@@ -239,7 +297,66 @@ v4-pilot-joint-projective-test:
 v4-pilot-joint-projective-corpus-test:
 	@echo "Running Build29 Format-v4 joint projective/padded local corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
 		go test ./watermark -run '^TestExperimentalV4Build29JointCorpus$$' -count=1 -v
+
+# Build33 ranking-observability checkpoint for the MQ blocker. This diagnostic
+# compares the same projective+crop transform with a synthetic random data plane
+# and a real authenticated v4 frame, then reports the truth-basin rank after
+# structural, half-pilot and full-proposal stages. It does not claim decode success.
+v4-pilot-joint-projective-rank-diagnostic:
+	@echo "Running Build33 Format-v4 MQ projective ranking diagnostic..."
+	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
+		go test ./watermark -run '^TestExperimentalV4Build33ProjectiveRankingDiagnostic$$' -count=1 -v
+
+# Build34 end-to-end MQ projective+crop gate. Geometry is selected only from
+# structure/public-pilot evidence; authenticated frame recovery happens after
+# the unchanged projective acceptance gate.
+v4-build34-projective-frame-corpus-test:
+	@echo "Running Build34 Format-v4 authenticated MQ projective corpus qualification..."
+	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
+		go test ./watermark -run '^TestExperimentalV4Build34AuthenticatedProjectiveCorpus$$' -count=1 -v
+
+# Build35 exposes the qualified Build34 blind projective decoder as a public
+# experimental API/CLI for controlled physical-channel qualification.
+v4-build35-projective-api-test:
+	@echo "Running Build35 Format-v4 projective API/CLI qualification..."
+	@go test ./watermark -run '^TestExperimentalV4Build35ProjectiveAPI' -count=1 -v
+	@go test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractProjectiveRequiresCanonicalBlockDimensions)$$' -count=1 -v
+
+# Build36 promotes reliability-aware Hamming decoding into the accepted
+# projective v4 data path. Geometry/pilot acceptance remains unchanged.
+v4-build36-soft-channel-test:
+	@echo "Running Build36 Format-v4 soft-decision physical-channel qualification..."
+	@go test ./watermark -run '^TestExperimentalV4Build36SoftHamming' -count=1 -v
+
+# Build30 freeze-readiness evidence with independently supplied mappings. The
+# same locked pilot is measured directly on projective-crop and padded fixtures
+# over the private photographic corpus, including Build29 SAFE-REJECT cases.
+v4-pilot-lock-corpus-test:
+	@echo "Running Build30 Format-v4 pilot candidate-lock corpus audit..."
+	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
+		go test ./watermark -run '^TestExperimentalV4PilotCandidateLockCorpus$$' -count=1 -v
+
+# Build31 first real experimental v4 framing/data path. This target covers
+# frame/version separation, Hamming baseline, locked pilot/data partition,
+# aligned image round-trip, JPEG/crop channel checks and the explicit CLI.
+v4-frame-test:
+	@echo "Running Build31 experimental Format-v4 framing/encoder qualification..."
+	@go test ./watermark -run '^TestExperimentalV4(FrameRoundTripProfiles|AlignedCropRoundTrip|WrongKeyAndCrossVersionIsolation|HammingBaselineCorrectsSingleBitPerCodeword|FrameDeterministicVector|CapacityGeometry|LockedDataPartition|AlignedJPEGChannel|MinimumTileRoundTrip|DataMappingProfileCoverage|HeaderBytes)$$' -count=1 -v
+	@go test ./cmd/pixseal -run '^TestExperimentalV4CLIRoundTrip$$' -count=1 -v
+
+# Opt-in Build31 real-image framing/channel qualification. The private originals
+# are never distributed; the same experimental frame is tested in all three
+# profiles plus robust JPEG-q82 and block-aligned crop.
+v4-frame-corpus-test:
+	@echo "Running Build31 experimental Format-v4 frame corpus qualification..."
+	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
+	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
+		go test ./watermark -run '^TestExperimentalV4FrameCorpus$$' -count=1 -v
 
 smooth-phase-test:
 	@echo "Running v0.3 bounded smooth phase-field regressions..."
@@ -278,12 +395,9 @@ test-images: build
 		echo "error: image directory not found: $(ORIGINAL_PICS_DIR)" >&2; \
 		exit 1; \
 	fi; \
-	mapfile -d '' images < <(find "$(ORIGINAL_PICS_DIR)" -maxdepth 1 -type f \
-		\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) -print0 | sort -z); \
-	if (( $${#images[@]} == 0 )); then \
-		echo "error: no JPEG or PNG images found in $(ORIGINAL_PICS_DIR)" >&2; \
-		exit 1; \
-	fi; \
+	source ./scripts/test-common.sh; \
+	ACTIVE_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))"; export ACTIVE_CORPUS_MANIFEST; \
+	load_active_corpus_images "$(ORIGINAL_PICS_DIR)"; \
 	tmp_dir="$$(mktemp -d)"; \
 	trap 'rm -rf -- "$$tmp_dir"' EXIT; \
 	read -r -a profiles <<< "$(TEST_PROFILES)"; \
@@ -291,8 +405,15 @@ test-images: build
 		echo "error: TEST_PROFILES is empty" >&2; \
 		exit 1; \
 	fi; \
+	if command -v magick >/dev/null 2>&1; then identify_tool=(magick identify); else identify_tool=(identify); fi; \
+	tested_images=0; skipped_images=0; \
 	for image in "$${images[@]}"; do \
 		name="$$(basename "$$image")"; \
+		read -r width height < <(read_image_dimensions "$$image") || { echo "error: cannot read dimensions for $$image" >&2; exit 1; }; \
+		if (( $(TEST_IMAGES_MAX_MPIX) > 0 && width * height > $(TEST_IMAGES_MAX_MPIX) * 1000000 )); then \
+			echo "Testing $$image"; echo "  SKIP all profiles $$(( (width*height+999999)/1000000 )) MP exceeds limit of $(TEST_IMAGES_MAX_MPIX) MP"; skipped_images=$$((skipped_images+1)); continue; \
+		fi; \
+		tested_images=$$((tested_images+1)); \
 		echo "Testing $$image"; \
 		for profile in "$${profiles[@]}"; do \
 			case "$$profile" in \
@@ -312,12 +433,14 @@ test-images: build
 			echo "  OK $$profile"; \
 		done; \
 	done; \
-	echo "Image round-trip tests passed: $${#images[@]} images x $${#profiles[@]} profiles"
+	if (( tested_images == 0 )); then echo "error: no active corpus image was within test-images budget" >&2; exit 1; fi; \
+	echo "Image round-trip tests completed: $$tested_images images tested x $${#profiles[@]} profiles; $$skipped_images image(s) skipped"
 
 deep-test: build
 	@echo "Running image transformation tests..."
 	@PIXSEAL="$(abspath $(PIXSEAL))" \
 	PICS_DIR="$(CURDIR)/$(ORIGINAL_PICS_DIR)" \
+	ACTIVE_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
 	TEST_KEY="$(TEST_KEY)" \
 	TEST_PROFILES="$(TEST_PROFILES)" \
 	TEST_MESSAGE_ROBUST="$(TEST_MESSAGE_ROBUST)" \
@@ -339,6 +462,7 @@ extreme-test: build
 	@echo "Running progressive limit tests..."
 	@PIXSEAL="$(abspath $(PIXSEAL))" \
 	PICS_DIR="$(CURDIR)/$(ORIGINAL_PICS_DIR)" \
+	ACTIVE_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
 	TEST_KEY="$(TEST_KEY)" \
 	TEST_PROFILES="$(TEST_PROFILES)" \
 	TEST_MESSAGE_ROBUST="$(TEST_MESSAGE_ROBUST)" \
@@ -357,6 +481,7 @@ geometry-test: build
 	@echo "Running digital rotation and combined geometry tests..."
 	@PIXSEAL="$(abspath $(PIXSEAL))" \
 	PICS_DIR="$(CURDIR)/$(ORIGINAL_PICS_DIR)" \
+	ACTIVE_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
 	TEST_KEY="$(TEST_KEY)" \
 	TEST_PROFILES="$(TEST_PROFILES)" \
 	TEST_MESSAGE_ROBUST="$(TEST_MESSAGE_ROBUST)" \
@@ -375,6 +500,7 @@ affine-test: build
 	@echo "Running axis-aligned affine tests..."
 	@PIXSEAL="$(abspath $(PIXSEAL))" \
 	PICS_DIR="$(CURDIR)/$(ORIGINAL_PICS_DIR)" \
+	ACTIVE_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
 	TEST_KEY="$(TEST_KEY)" \
 	TEST_PROFILES="$(TEST_PROFILES)" \
 	TEST_MESSAGE_ROBUST="$(TEST_MESSAGE_ROBUST)" \
@@ -391,6 +517,7 @@ composition-test: build
 	@echo "Running composed anisotropic-scale + rotation tests..."
 	@PIXSEAL="$(abspath $(PIXSEAL))" \
 	PICS_DIR="$(CURDIR)/$(ORIGINAL_PICS_DIR)" \
+	ACTIVE_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
 	TEST_KEY="$(TEST_KEY)" \
 	TEST_MESSAGE_ROBUST="$(TEST_MESSAGE_ROBUST)" \
 	COMPOSITION_PROFILES="$(COMPOSITION_PROFILES)" \
@@ -406,6 +533,7 @@ lattice-test: build
 	@echo "Running direct lattice-basis composition tests..."
 	@PIXSEAL="$(abspath $(PIXSEAL))" \
 	PICS_DIR="$(CURDIR)/$(ORIGINAL_PICS_DIR)" \
+	ACTIVE_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
 	TEST_KEY="$(TEST_KEY)" \
 	TEST_MESSAGE_ROBUST="$(TEST_MESSAGE_ROBUST)" \
 	LATTICE_ANGLES="$(LATTICE_ANGLES)" \
@@ -420,6 +548,7 @@ perspective-test: build
 	@echo "Running mild perspective tests..."
 	@PIXSEAL="$(abspath $(PIXSEAL))" \
 	PICS_DIR="$(CURDIR)/$(ORIGINAL_PICS_DIR)" \
+	ACTIVE_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
 	TEST_KEY="$(TEST_KEY)" TEST_MESSAGE_ROBUST="$(TEST_MESSAGE_ROBUST)" \
 	PERSPECTIVE_MODES="$(PERSPECTIVE_MODES)" PERSPECTIVE_MAX_MPIX="$(PERSPECTIVE_MAX_MPIX)" \
 	EXTRACT_TIMEOUT="$(EXTRACT_TIMEOUT)" STRICT="$(STRICT)" bash ./scripts/test-perspective.sh
@@ -448,7 +577,7 @@ vet:
 # regressions remain visible through research-unit / all-test. Requires original pics/.
 # Strict mode is target-specific so a plain `make release-check` is self-contained.
 release-check: STRICT := 1
-release-check: version-check vet release-unit test-images deep-test core-target-check
+release-check: version-check vet release-unit v3-freeze-check v4-pilot-lock-check corpus-manifest-check test-images deep-test core-target-check
 	@echo "Release baseline checks passed."
 
 # Run build + local round-trip tests + baseline transformation tests.

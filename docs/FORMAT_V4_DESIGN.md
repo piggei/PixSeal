@@ -1,7 +1,7 @@
 # Format v4 design study — absolute pilot branch
 
-Status: **experimental, non-normative design branch**. Sizing was first quantified in v0.3.0-build22; build23 adds the first isolated prototype pilot foundation.
-Format v3 remains frozen and is still the only implemented/interoperable format.
+Status: **experimental, non-normative design branch**. Sizing was first quantified in v0.3.0-build22; build23 added the isolated pilot foundation, and Build31 adds the first explicit experimental v4 frame/encoder.
+Format v3 remains the frozen production/interoperability baseline. Build31 v4 carriers are research artifacts and may still change before normative promotion.
 
 ## Why consider v4 now
 
@@ -162,7 +162,7 @@ The hard family constraints remain 64 unique positions, one position in every 8x
 and 32 negative signs, 1120 remaining data positions and zero exact non-zero cyclic aliases. Stage 1 admits only
 candidates no worse than prototype-1's global overlap/correlation baseline before evaluating crop margins.
 
-The current winner is **non-normative** `prototype-2-search-p64`:
+The current winner is `prototype-2-search-p64`. As of Build30 its exact identity is **development-locked but still non-normative**:
 
 ```text
 candidate SHA-256                 858f74305ee9a9cbb59dd3fb6ab8afc6aaf8958e4f9f517711e2c52fc053b174
@@ -298,3 +298,29 @@ The important new policy is **safe rejection**. A weakly supported geometry is n
 
 Results show that the present 64-pilot design still has useful signal under the new compositions: one photographic projective case qualifies and a known-geometry padded photographic control is very strong. The remaining failures are therefore search/ranking limitations, not evidence that the pilot pattern must be replaced. The pilot remains non-normative until broader physical and small-carrier evidence exists.
 
+
+
+## Build30 pilot candidate lock and normative-freeze boundary
+
+Build30 keeps the 37×32 / 64-pilot / 1120-data layout unchanged and does not alter `prototype-2-search-p64`. The candidate identity is now **development-locked** at SHA-256 `858f74305ee9a9cbb59dd3fb6ab8afc6aaf8958e4f9f517711e2c52fc053b174`. `v4-pilot-lock-check` recomputes this semantic identity and the core cyclic invariants, so later decoder work cannot silently change the public mask/sign sequence.
+
+The lock is supported by a Build30 known-mapping corpus audit. For the same projective-crop and affine-padded fixtures used in Build29, the exact mapping is supplied directly and the public pilot alone is scored. Both development originals retain marked score >= 0.928412, marked margin >= 0.484086 and origin `(0,0)`; matching unmarked controls remain <= 0.010553 margin. This includes Build29 SAFE-REJECT cases and therefore separates **pilot survivability** from **geometry/placement search coverage**.
+
+This is not yet a normative Format-v4 pilot declaration. The missing gate is physical v4 print-camera/scanner evidence from an actual v4 encoder. Until that exists, the lock prevents accidental mutation but does not create an interoperability promise. Decoder search, confidence thresholds, framing/version marker, data mapping, ECC, whitening/interleaving, payload layout and authentication framing remain experimental. See `docs/V4_PILOT_CANDIDATE_LOCK.md` for the exact contract and mutation policy.
+
+
+## Build31 first authenticated v4 framing candidate
+
+Build31 is the first checkpoint that writes the locked public pilot **and** a real authenticated payload into the same carrier. It deliberately does not redesign ECC at the same time. The three profile frame sizes remain 32/48/80 bytes and Hamming(7,4) remains the protected-bit baseline so pilot/framing behavior can be compared directly with the frozen v3 arithmetic. This is not a final ECC decision.
+
+The public pre-key marker is the development-locked `prototype-2-search-p64` pilot. Once data is sampled with a key, the authenticated frame distinguishes v4 and profile with bytes `0x41`, `0x42`, `0x43`. Whitening uses `pixseal-whiten-v4`; HMAC uses the domain `pixseal-frame-v4 || 0x00` before the authenticated frame prefix. This prevents a v4 protected bitstream from being interpreted as a v3 frame under the same key.
+
+The exact 64 prototype-2 pilot positions are removed from the 1184-position tile. The remaining positions, in ascending row-major order, are data ordinals 0..1119. For coded length `C`, ordinal `d` maps to `(251*d) mod C`. This gives 2/3 observations per robust coded bit, 1/2 per balanced bit and exactly one per capacity bit. A Build31 regression covers the full 64+1120 partition so a historical prototype-1 helper cannot accidentally leak a pilot block into the data plane.
+
+The first aligned decoder follows the intended dependency order:
+
+```text
+public pilot -> cyclic origin -> data-only aggregation -> Hamming -> v4 dewhitening -> version/profile parse -> HMAC -> CRC consistency
+```
+
+Only HMAC produces success. Build31 does not yet connect Build29 blind projective/placement search to this authenticated decoder. The purpose of `v4-embed` is now also practical: it can create the separately embedded v4 images needed for the first real print-camera/scanner corpus. See `docs/V4_BUILD31_FRAME.md` for the exact experimental layout and deterministic vector.

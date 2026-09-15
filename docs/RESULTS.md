@@ -1028,3 +1028,90 @@ Build28 does not qualify joint projective/perspective or positive padded-canvas 
 
 The padded `PJ_lingua` known-geometry control reaches validation 0.991263, score 0.988352, margin 0.553797 and origin `(0,0)`. This distinguishes the current joint-search limitation from loss of pilot signal. Projective and padded Build29 thresholds are development regression gates only; SAFE REJECT counts as the correct result for cases outside the currently qualified joint-search envelope.
 
+
+
+## v0.3.0-build30 pilot candidate-lock audit — 2026-09-14
+
+Build30 does not change the pilot and does not widen Build29 ACCEPT thresholds. It adds a semantic identity lock plus a known-mapping corpus audit designed to answer whether current SAFE REJECT cases indicate a weak pilot or a weak search.
+
+Locked identity: `prototype-2-search-p64` / `858f74305ee9a9cbb59dd3fb6ab8afc6aaf8958e4f9f517711e2c52fc053b174`.
+
+| carrier class | known mapping | marked score | marked margin | negative margin | origin |
+|---|---|---:|---:|---:|---:|
+| large local original | projective + crop | 0.986195 | 0.559445 | 0.007237 | (0,0) |
+| large local original | affine + padded | 0.988352 | 0.553797 | 0.000598 | (0,0) |
+| smaller local original | projective + crop | 0.928412 | 0.490432 | 0.010553 | (0,0) |
+| smaller local original | affine + padded | 0.932220 | 0.484086 | 0.010305 | (0,0) |
+
+Development gates for this audit are score >= 0.85, margin >= 0.40, marked-minus-negative margin separation >= 0.40, negative margin <= 0.08 and origin `(0,0)`. These are freeze-readiness regression floors, not decoder acceptance thresholds.
+
+The smaller padded case is decisive: Build29's bounded placement/joint search SAFE REJECTS it, but the exact mapping exposes a strong pilot. The unresolved padded/projective cases therefore remain decoder search problems. A fully translation-invariant 64-phase DCT ranking experiment was also tested and rejected because natural photographic texture still dominated the structural score.
+
+Build30 locks the candidate identity for continued development but does **not** promote it to normative Format v4. Physical v4 print-camera/scanner qualification is still absent.
+
+## Build31 — first real v4 frame/encoder digital qualification
+
+Build31 keeps the locked pilot unchanged and adds the first authenticated data plane. The unit qualification passes all three profiles, wrong-key rejection, v3/v4 parser separation, Hamming single-error correction, exact pilot/data partition, deterministic frame vector, minimum 296x256 capacity round-trip, JPEG-q82 robust recovery and block-aligned crop origin recovery.
+
+Private development-original results with strength 24:
+
+| image class | profile/channel | pilot score | pilot margin | authenticated |
+|---|---|---:|---:|---|
+| larger original | robust native | 1.000000 | 0.597052 | yes |
+| larger original | robust JPEG q82 | 1.000000 | 0.597329 | yes |
+| larger original | robust aligned crop | 1.000000 | 0.622984 | yes |
+| larger original | balanced native | 1.000000 | 0.595112 | yes |
+| larger original | capacity native | 1.000000 | 0.523919 | yes |
+| smaller original | robust native | 0.993618 | 0.590285 | yes |
+| smaller original | robust JPEG q82 | 0.990079 | 0.594082 | yes |
+| smaller original | robust aligned crop | 0.991861 | 0.595633 | yes |
+| smaller original | balanced native | 0.993618 | 0.604494 | yes |
+| smaller original | capacity native | 0.993618 | 0.550018 | yes |
+
+Every listed result includes a valid v4 HMAC; pilot score is telemetry, not the success criterion. The existing original-image corpus is still a **digital** development corpus. Physical qualification requires new paper/scanner/smartphone captures of carriers produced by Build31 `v4-embed`.
+
+Build31 does not claim that Hamming(7,4) is the final v4 ECC and does not yet connect the blind Build29 geometry search to payload decoding.
+
+
+## Build32 corpus reset
+
+Active corpus: LQ/MQ/HQ only, manifest-verified. LQ deep baseline is 33/33 PASS at the revised 55% common resize floor. MQ robust/balanced completed without failure and MQ capacity independently passes all 11 baseline transformations. Build31 v4 frame tests on LQ/MQ pass native, JPEG q82 and aligned crop in all profiles; HQ remains a manifest-verified 200.5 MP physical-fixture source and is skipped by bounded Go corpus tests before decode.
+
+## Build33 MQ joint-projective ranking observability
+
+Build33 adds a controlled truth-basin diagnostic for the Build29 projective+crop transform on the active MQ carrier. The same source image and transform are tested with two different marked data planes: the historical deterministic random-data carrier and a real authenticated Format-v4 robust frame carrying `v4-b33-auth`.
+
+On the Build33 development host, the first near-truth basin ranks as follows:
+
+| Carrier | structural top-5000 | half-pilot prefilter | full proposal (after top-2000 prefilter retention) |
+| --- | ---: | ---: | ---: |
+| random data plane | 1 / 5000 | 98 / 5000 | 22 / 2000 |
+| authenticated v4 frame | 1 / 5000 | 35 / 5000 | 2 / 2000 |
+
+The structural stage therefore already contains a strong near-truth basin in both cases. The ordering changes materially when public-pilot proposal evidence is introduced, showing that the current joint ranking is sensitive to which repeated 1120-position data plane happens to surround the 64 fixed pilot positions. This does **not** mean the pilot itself is weak: Build32 known-mapping controls remain strong. It means candidate preservation/refinement cannot be validated on only one data-plane realization.
+
+Exploratory translation-aware and beam-ranking variants were deliberately rejected when they turned one of the two MQ carriers green while selecting a false basin on the other. Those variants are not part of Build33. The next accepted decoder change must preserve/identify the correct basin on both carriers, keep matched negatives rejected, and only then proceed to v4 data sampling/HMAC authentication.
+
+## Build34 MQ projective + authenticated frame result
+
+Build34 turns the Build33 MQ observability result into an end-to-end authenticated decode. On the active MQ carrier under the fixed Build29 transform (angle 9.3 deg, scale 1.08x0.92, top/bottom inset 0.030/0.015 and asymmetric crop), the blind search recovers the exact parameter family, canonical origin `(0,0)` and approximately 0.001 normalized corner error. The corpus regression authenticates both `v4-b34-auth` and `v4-b34-alt` with the public test key after geometry has already been accepted. Typical held-out validation is 0.86-0.88 and pilot margin about 0.43.
+
+The LQ carrier remains a SAFE REJECT and the legacy v3 research-limit reds are not reclassified. The v3 frozen core, pilot lock, tile geometry, data partition, frame/HMAC domains, Hamming baseline and Build29 acceptance thresholds are unchanged.
+
+## Build35 physical-qualification readiness
+
+Build35 does not claim new physical-channel performance yet. Its purpose is to make the next measurement reproducible after Build34 closed the active MQ blind projective+crop/HMAC blocker.
+
+The preceding projective checkpoint is consistently identified as **Build34**. The Build34 corpus result remains unchanged: the MQ projective case is accepted with canonical origin `(0,0)`, validation about 0.873, score about 0.741, margin about 0.459 and ~0.001 normalized corner error; two independent robust v4 payloads authenticate after geometry acceptance.
+
+Build35 exports that path through `ExperimentalV4ExtractProjective` / `v4-extract-projective` and adds a source-only API/CLI qualification target. It also defines a private scanner-first physical pack from the active MQ source: one unmarked control plus two robust/strength-24 carriers (`v4-b35-phys-a`, `v4-b35-phys-b`) using the public development key. The generated manifest freezes carrier dimensions and SHA-256; an acquisition plan freezes expected scan names and payload outcomes.
+
+No physical PASS is recorded in this document until both marked paper scans recover their exact HMAC-authenticated payloads and the control rejects. The initial scanner gate is kept separate from later smartphone capture so channel degradation can be attributed rather than conflated.
+
+## Build36 physical-channel result
+
+- Real Build35 paper corpus acquired: control + two marked MQ prints.
+- Primary usable scanner mode: 600-dpi color JPEG.
+- Blind Build35 geometry: control REJECT; marked A/B SAFE-REJECT — physical blind qualification still open.
+- Reference-assisted geometry diagnostic: marked A and marked B both recover exact v4 payloads and pass HMAC with Build36 soft Hamming.
+- Interpretation: physical signal/ECC capacity is sufficient; blind scanner registration is the active blocker. No reprint or strength/ECC change is justified yet.

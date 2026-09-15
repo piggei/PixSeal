@@ -19,13 +19,29 @@ import (
 
 func TestSubcommandHelpReturnsFlagErrHelp(t *testing.T) {
 	for name, fn := range map[string]func([]string) error{
-		"embed": embed, "extract": extract, "capacity": capacity, "analyze": analyze, "diagnose": diagnose,
+		"embed": embed, "extract": extract, "v4-embed": v4Embed, "v4-extract": v4Extract, "v4-extract-projective": v4ExtractProjective, "capacity": capacity, "analyze": analyze, "diagnose": diagnose,
 	} {
 		t.Run(name, func(t *testing.T) {
 			if err := fn([]string{"-help"}); !errors.Is(err, flag.ErrHelp) {
 				t.Fatalf("%s -help error = %v; want flag.ErrHelp", name, err)
 			}
 		})
+	}
+}
+
+func TestV4ExtractProjectiveRequiresCanonicalBlockDimensions(t *testing.T) {
+	for _, tc := range []struct {
+		w, h string
+	}{
+		{"1635", "1632"},
+		{"1632", "1635"},
+		{"288", "1632"},
+		{"1632", "248"},
+	} {
+		err := v4ExtractProjective([]string{"-in", "does-not-matter.png", "-key", "12345678", "-width", tc.w, "-height", tc.h})
+		if err == nil || !strings.Contains(err.Error(), "divisible by 8") {
+			t.Fatalf("dimensions %sx%s error=%v", tc.w, tc.h, err)
+		}
 	}
 }
 
@@ -359,4 +375,35 @@ func captureStdout(t *testing.T, fn func() error) string {
 		t.Fatalf("captured command failed: %v", callErr)
 	}
 	return string(data)
+}
+
+func TestExperimentalV4CLIRoundTrip(t *testing.T) {
+	dir := t.TempDir()
+	carrier := filepath.Join(dir, "carrier.png")
+	sealed := filepath.Join(dir, "sealed-v4.png")
+	img := image.NewNRGBA(image.Rect(0, 0, 592, 512))
+	for y := 0; y < img.Bounds().Dy(); y++ {
+		for x := 0; x < img.Bounds().Dx(); x++ {
+			img.SetNRGBA(x, y, color.NRGBA{R: uint8(x * 3), G: uint8(y * 5), B: uint8(x + y*2), A: 255})
+		}
+	}
+	if err := writePNGAtomic(carrier, img, true); err != nil {
+		t.Fatal(err)
+	}
+	message := "Build31 CLI v4"
+	out := captureStdout(t, func() error {
+		return v4Embed([]string{"-in", carrier, "-out", sealed, "-key", "Piccotti", "-message", message, "-profile", "robust"})
+	})
+	if !strings.Contains(out, "EXPERIMENTAL v4") || !strings.Contains(out, "prototype-2-search-p64") {
+		t.Fatalf("unexpected v4-embed output: %q", out)
+	}
+	got := captureStdout(t, func() error {
+		return v4Extract([]string{"-in", sealed, "-key", "Piccotti", "-raw"})
+	})
+	if got != message {
+		t.Fatalf("v4 raw extracted payload=%q, want %q", got, message)
+	}
+	if _, err := os.Stat(sealed); err != nil {
+		t.Fatalf("v4 carrier missing: %v", err)
+	}
 }

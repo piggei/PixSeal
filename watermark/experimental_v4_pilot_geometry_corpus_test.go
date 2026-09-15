@@ -6,8 +6,6 @@ import (
 	_ "image/png"
 	"os"
 	"path/filepath"
-	"sort"
-	"strings"
 	"testing"
 )
 
@@ -15,28 +13,7 @@ import (
 // qualification matrix to every local original image. Source releases omit
 // this corpus; the test is opt-in through PIXSEAL_V4_CORPUS_DIR.
 func TestExperimentalV4PilotGeometryCorpus(t *testing.T) {
-	directory := os.Getenv("PIXSEAL_V4_CORPUS_DIR")
-	if directory == "" {
-		t.Skip("set PIXSEAL_V4_CORPUS_DIR to run the local experimental v4 geometry corpus")
-	}
-	entries, err := os.ReadDir(directory)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var paths []string
-	for _, entry := range entries {
-		if entry.IsDir() {
-			continue
-		}
-		name := strings.ToLower(entry.Name())
-		if strings.HasSuffix(name, ".png") || strings.HasSuffix(name, ".jpg") || strings.HasSuffix(name, ".jpeg") {
-			paths = append(paths, filepath.Join(directory, entry.Name()))
-		}
-	}
-	sort.Strings(paths)
-	if len(paths) == 0 {
-		t.Fatal("no PNG/JPEG files found in experimental v4 pilot geometry corpus")
-	}
+	paths := experimentalV4ActiveCorpusPaths(t)
 
 	candidate := experimentalV4Prototype2Candidate()
 	for _, path := range paths {

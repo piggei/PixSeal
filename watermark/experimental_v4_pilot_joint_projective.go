@@ -369,7 +369,7 @@ func experimentalV4JointProjectiveRefine(plane *pixelPlane, candidate experiment
 	return best
 }
 
-func experimentalV4JointProjectiveSearch(img image.Image, candidate experimentalV4PilotCandidate, canonicalWidth, canonicalHeight int) experimentalV4JointProjectiveResult {
+func experimentalV4JointProjectiveSearchBuild29(img image.Image, candidate experimentalV4PilotCandidate, canonicalWidth, canonicalHeight int) experimentalV4JointProjectiveResult {
 	if img == nil {
 		return experimentalV4JointProjectiveResult{}
 	}
@@ -450,6 +450,94 @@ func experimentalV4JointProjectiveSearch(img image.Image, candidate experimental
 	}
 	best.hypothesesEvaluated = hyp
 	return best
+}
+
+func experimentalV4Build34DistinctStructuralAnchors(structural []experimentalV4JointProjectiveCandidate, limit int) []experimentalV4JointProjectiveCandidate {
+	out := make([]experimentalV4JointProjectiveCandidate, 0, limit)
+	for _, q := range structural {
+		near := false
+		for _, a := range out {
+			if experimentalV4ProjectiveBasinNear(q.params, a.params) {
+				near = true
+				break
+			}
+		}
+		if near {
+			continue
+		}
+		out = append(out, q)
+		if len(out) >= limit {
+			break
+		}
+	}
+	return out
+}
+
+func experimentalV4JointProjectiveSearchBuild34(img image.Image, candidate experimentalV4PilotCandidate, canonicalWidth, canonicalHeight int) experimentalV4JointProjectiveResult {
+	if img == nil {
+		return experimentalV4JointProjectiveResult{}
+	}
+	plane := newPixelPlane(img)
+	obsW, obsH := img.Bounds().Dx(), img.Bounds().Dy()
+	structural, hyp := experimentalV4JointProjectiveStructuralBank(plane, canonicalWidth, canonicalHeight, obsW, obsH)
+	if len(structural) == 0 {
+		return experimentalV4JointProjectiveResult{hypothesesEvaluated: hyp}
+	}
+	anchors := experimentalV4Build34DistinctStructuralAnchors(structural, 2)
+	best := experimentalV4JointProjectiveCandidate{proposal: math.Inf(-1)}
+	for _, anchor := range anchors {
+		local := experimentalV4Build34LocalNeighborhood(anchor)
+		for i := range local {
+			local[i].structural = experimentalV4JointAffinePhaseContrast(plane, canonicalWidth, canonicalHeight, local[i].params, 16)
+			hyp++
+		}
+		sort.Slice(local, func(i, j int) bool { return local[i].structural > local[j].structural })
+		if len(local) > 64 {
+			local = local[:64]
+		}
+		for _, seed := range local {
+			q := experimentalV4Build34CenteredProposal(plane, candidate, canonicalWidth, canonicalHeight, obsW, obsH, seed.params)
+			hyp += 9
+			q.structural = seed.structural
+			if q.proposal > best.proposal {
+				best = q
+			}
+		}
+	}
+	if math.IsInf(best.proposal, -1) {
+		return experimentalV4JointProjectiveResult{hypothesesEvaluated: hyp}
+	}
+	canonH := experimentalV4Build34CanonicalizeOrigin(best.h, best.originX, best.originY)
+	detection := experimentalV4DetectPilotProjective(img, candidate, canonicalWidth, canonicalHeight, canonH)
+	validation, vis := experimentalV4PilotFixedOriginRowsPlane(plane, candidate, canonicalWidth, canonicalHeight, canonH, 0, 0, false)
+	placement := experimentalV4PlacementResult{
+		available:           !math.IsInf(validation, -1) && vis >= 48,
+		h:                   canonH,
+		proposalScore:       best.proposal,
+		validationScore:     validation,
+		visibleValidation:   vis,
+		hypothesesEvaluated: hyp,
+	}
+	return experimentalV4JointProjectiveResult{
+		available:           placement.available,
+		params:              best.params,
+		placement:           placement,
+		detection:           detection,
+		proposalObjective:   best.proposal,
+		geometryValidation:  validation,
+		structuralScore:     best.structural,
+		hypothesesEvaluated: hyp,
+	}
+}
+
+func experimentalV4JointProjectiveSearch(img image.Image, candidate experimentalV4PilotCandidate, canonicalWidth, canonicalHeight int) experimentalV4JointProjectiveResult {
+	// Build34 applies only when at least four complete v4 tiles are available in
+	// both axes. Smaller carriers keep the frozen Build29 research behavior and
+	// its conservative SAFE-REJECT boundary.
+	if canonicalWidth/blockSize/experimentalV4TileWidthBlocks >= 4 && canonicalHeight/blockSize/experimentalV4TileHeightBlocks >= 4 {
+		return experimentalV4JointProjectiveSearchBuild34(img, candidate, canonicalWidth, canonicalHeight)
+	}
+	return experimentalV4JointProjectiveSearchBuild29(img, candidate, canonicalWidth, canonicalHeight)
 }
 
 type experimentalV4ProjectiveLocalResult struct {
@@ -746,4 +834,115 @@ func experimentalV4Build29ProjectiveAccepted(r experimentalV4JointProjectiveResu
 
 func experimentalV4Build29PaddedAccepted(r experimentalV4JointPaddedResult) bool {
 	return r.available && r.detection.Available && r.placement.validationScore >= experimentalV4Build29MinPaddedValidation && r.detection.Margin >= experimentalV4Build29MinPaddedMargin && r.detection.OriginXBlocks == 0 && r.detection.OriginYBlocks == 0
+}
+
+// Build34 helpers. These keep geometry proposal key-independent and data-plane
+// agnostic: only the public pilot and image structure participate before the
+// final authenticated frame decode.
+func experimentalV4Build34CanonicalizeOrigin(h homography, originX, originY int) homography {
+	if originX == 0 && originY == 0 {
+		return h
+	}
+	// Detection origin (ox,oy) means that pilot residue (px,py) is currently
+	// observed when sampling canonical residue (px-ox,py-oy). Move the canonical
+	// coordinate system by that many blocks so the same physical samples become
+	// origin (0,0). This is a right-side/domain translation, unlike placement.
+	domain := homography{h: [9]float64{1, 0, -float64(originX * blockSize), 0, 1, -float64(originY * blockSize), 0, 0, 1}}
+	return experimentalV4BlindMultiplyHomography(h, domain)
+}
+
+func experimentalV4Build34InteriorRowsScore(plane *pixelPlane, candidate experimentalV4PilotCandidate, canonicalWidth, canonicalHeight int, h homography, originX, originY int) (float64, int) {
+	bw, bh := canonicalWidth/blockSize, canonicalHeight/blockSize
+	tilesX := bw / experimentalV4TileWidthBlocks
+	tilesY := bh / experimentalV4TileHeightBlocks
+	if tilesX < 1 || tilesY < 3 {
+		return math.Inf(-1), 0
+	}
+	num, den := 0.0, 0.0
+	visible := 0
+	for ty := 1; ty < tilesY-1; ty++ {
+		for tx := 0; tx < tilesX; tx++ {
+			baseX := tx * experimentalV4TileWidthBlocks
+			baseY := ty * experimentalV4TileHeightBlocks
+			for i, pos := range candidate.positions {
+				px, py := pos%experimentalV4TileWidthBlocks, pos/experimentalV4TileWidthBlocks
+				rx := positiveMod(px-originX, experimentalV4TileWidthBlocks)
+				ry := positiveMod(py-originY, experimentalV4TileHeightBlocks)
+				v, ok := readProjectiveBlockValue(plane, h, (baseX+rx)*blockSize, (baseY+ry)*blockSize, blockSize)
+				if !ok {
+					continue
+				}
+				visible++
+				num += float64(candidate.signs[i]) * v
+				den += math.Abs(v)
+			}
+		}
+	}
+	if den <= 0 {
+		return math.Inf(-1), visible
+	}
+	return num / den, visible
+}
+
+func experimentalV4Build34CenteredProposal(plane *pixelPlane, candidate experimentalV4PilotCandidate, canonicalWidth, canonicalHeight, obsW, obsH int, p experimentalV4BlindGeometryParams) experimentalV4JointProjectiveCandidate {
+	base, fw, fh := experimentalV4BlindHomography(canonicalWidth, canonicalHeight, p)
+	cx, cy := experimentalV4JointProjectiveCenteredShift(fw, fh, obsW, obsH)
+	phases := [][2]float64{{0, 0}, {-2, 0}, {2, 0}, {0, -2}, {0, 2}, {-4, 0}, {4, 0}, {0, -4}, {0, 4}}
+	best := experimentalV4JointProjectiveCandidate{params: p, proposal: math.Inf(-1), fullW: fw, fullH: fh}
+	bw, bh := canonicalWidth/blockSize, canonicalHeight/blockSize
+	startX := ((bw - experimentalV4TileWidthBlocks) / 2 / experimentalV4TileWidthBlocks) * experimentalV4TileWidthBlocks
+	startY := ((bh - experimentalV4TileHeightBlocks) / 2 / experimentalV4TileHeightBlocks) * experimentalV4TileHeightBlocks
+	for _, ph := range phases {
+		h := experimentalV4PlacementShiftHomography(base, cx+ph[0], cy+ph[1])
+		d := experimentalV4DetectPilotSingleTilePlane(plane, candidate, startX, startY, h)
+		if !d.Available || d.VisiblePilotPositions < 48 {
+			continue
+		}
+		interior, vis := experimentalV4Build34InteriorRowsScore(plane, candidate, canonicalWidth, canonicalHeight, h, d.OriginXBlocks, d.OriginYBlocks)
+		if vis < 48 || math.IsInf(interior, -1) {
+			continue
+		}
+		objective := math.Min(d.Score, interior)
+		if objective > best.proposal {
+			best.proposal = objective
+			best.h = h
+			best.originX, best.originY = d.OriginXBlocks, d.OriginYBlocks
+		}
+	}
+	return best
+}
+
+func experimentalV4Build34LocalNeighborhood(anchor experimentalV4JointProjectiveCandidate) []experimentalV4JointProjectiveCandidate {
+	dA := []float64{-0.3, 0, 0.3}
+	dSX := []float64{-0.03, 0, 0.03}
+	dSY := []float64{-0.01, -0.005, 0, 0.005, 0.01}
+	dI := []float64{-0.015, 0, 0.015}
+	out := make([]experimentalV4JointProjectiveCandidate, 0, 243)
+	seen := map[[5]int]bool{}
+	for _, da := range dA {
+		for _, dsx := range dSX {
+			for _, dsy := range dSY {
+				for _, dt := range dI {
+					for _, db := range dI {
+						p := anchor.params
+						p.angleDeg += da
+						p.scaleX += dsx
+						p.scaleY += dsy
+						p.topInset += dt
+						p.bottomInset += db
+						if p.scaleX < .90 || p.scaleX > 1.18 || p.scaleY < .82 || p.scaleY > 1.08 || p.topInset < 0 || p.topInset > .075 || p.bottomInset < 0 || p.bottomInset > .075 {
+							continue
+						}
+						key := [5]int{int(math.Round(p.angleDeg * 10)), int(math.Round(p.scaleX * 1000)), int(math.Round(p.scaleY * 1000)), int(math.Round(p.topInset * 1000)), int(math.Round(p.bottomInset * 1000))}
+						if seen[key] {
+							continue
+						}
+						seen[key] = true
+						out = append(out, experimentalV4JointProjectiveCandidate{params: p})
+					}
+				}
+			}
+		}
+	}
+	return out
 }

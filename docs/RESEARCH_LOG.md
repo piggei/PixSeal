@@ -711,3 +711,70 @@ Use dimensional feasibility + structural DCT to form a broad bank. Evaluate two 
 ### Result and decision
 Synthetic projective+crop and affine+padded cases are accepted. `PJ_lingua` projective+crop is accepted with ~0.384 validation, ~0.180 margin and ~0.0088 corner error. `PJ_piccolo` projective reaches validation ~0.421 but margin only ~0.119 and is therefore SAFE REJECTED. Both photographic padded joint searches are SAFE REJECTED; a known-geometry `PJ_lingua` padded control reaches ~0.991 validation / ~0.554 margin, proving the channel remains available. Accept Build29 as a bounded composition/safe-rejection checkpoint, not as general projective/padded recovery, and keep prototype-2 non-normative.
 
+
+
+## build30 — pilot lock readiness, not normative promotion
+
+### Question
+After Build29, are the remaining SAFE REJECT cases evidence that `prototype-2-search-p64` itself should still be replaceable, or are they decoder geometry/placement limitations? Is there enough evidence to protect the candidate from accidental mutation without prematurely declaring a normative v4 format?
+
+### Rejected padded-ranking variant
+A natural hypothesis was that Build28/29 DCT geometry ranking failed under positive padding because the phase bank sampled only even sub-block offsets while the padded fixture has an odd residual phase. A diagnostic variant scanned all 64 8×8 sub-block phases. It does expose the odd phase, but at 16/32-block support the true photographic geometry is still overwhelmed by natural texture; at higher support the cost rises without producing a robust global ordering. Do not add this bank and do not relax Build29 gates.
+
+### Isolation experiment
+Bypass geometry and placement search entirely. For each private development original, render the existing Build29 projective-crop and affine-padded marked/control fixtures and pass the exact known mapping directly to the public pilot detector. If a Build29 SAFE REJECT is caused by a weak pilot, the marked score/margin should also collapse under the true mapping.
+
+### Result
+All four marked observations recover origin `(0,0)`. Scores are 0.986195 / 0.988352 on the larger original and 0.928412 / 0.932220 on the smaller original. Margins are 0.559445 / 0.553797 and 0.490432 / 0.484086 respectively. Matching unmarked margins are 0.007237 / 0.000598 / 0.010553 / 0.010305. Thus even the small padded case retains a strong pilot under the true mapping although the Build29 placement/joint search cannot recover it.
+
+### Decision
+Lock the exact candidate identity (`858f74305ee9a9cbb59dd3fb6ab8afc6aaf8958e4f9f517711e2c52fc053b174`) against accidental mutation and add an explicit source check plus local known-mapping corpus gate. **Do not call this a normative pilot freeze.** The physical print-camera/scanner channel is central to PixSeal and has not yet been tested with a real v4 encoder. Normative promotion waits for that evidence; a physical pilot failure must result in a new candidate/version rather than mutation of the Build30 lock.
+
+## build31 — first authenticated v4 frame and encoder
+
+**Question.** Can the locked public pilot be combined with a real authenticated data plane without changing v3, losing the 16/32/64-byte comparison ceilings, or creating an accidental pilot/data overlap?
+
+**Design.** Keep prototype-2 exactly as locked in Build30. Remove its 64 positions from the 37x32 tile and enumerate the remaining 1120 positions row-major. Retain 32/48/80-byte profile frames and Hamming(7,4) as a controlled baseline. Use authenticated header bytes `0x41/0x42/0x43`, whitening domain `pixseal-whiten-v4`, and HMAC domain `pixseal-frame-v4 || 0x00`. Keep stable v3 APIs and commands unchanged; expose only explicit `v4-embed` and aligned `v4-extract` research commands.
+
+**Implementation finding.** The historical helper `experimentalV4PrototypeDataPositions()` still belongs to Build23 prototype-1. Reusing it with the locked prototype-2 immediately triggers a data-position mapping failure because the two pilot masks differ. Do not edit that historical helper: Build31 adds a prototype-2-locked partition and an exhaustive 1184-position regression so every tile position is exactly pilot or data.
+
+**Result.** All three profiles authenticate on a synthetic carrier and on both private development originals. Robust also authenticates after JPEG q82 and a block-aligned crop; the crop pilot recovers the expected cyclic origin. The minimum 296x256 single tile authenticates a capacity payload. Wrong key fails, v3 and v4 frames reject each other, and a deterministic frame/protected-bit vector is fixed for Build31 regression.
+
+**Decision.** Accept Build31 as the first functional **experimental** v4 codec. Do not promote its Hamming choice or frame vector to normative status yet. Do not connect HMAC outcome to geometry selection. Use this exact encoder to create a new private v4 print-camera/scanner corpus; normative pilot promotion requires HMAC-authenticated physical recovery, not pilot-only correlation.
+
+
+### Build32 — corpus governance before physical v4 qualification
+
+The prior directory-discovery behavior allowed newly added originals to change legacy research suites implicitly. Build32 replaces that with an explicit LQ/MQ/HQ manifest and SHA verification. No pilot/frame/encoder algorithm change was made. LQ exposed a real capacity boundary at 50% resize, so the common baseline moved to 55% while the exploratory limit suite retains 50% and lower points. The next evidence source is physical print/scan/phone acquisition using the new v4 test key.
+
+## 2026-09-15 — Build33 MQ joint-projective ranking observability
+
+Build32 exposed one architectural Format-v4 blocker that must be kept separate from the four legacy/LQ research reds: the MQ joint projective+crop search SAFE REJECTS despite very strong known-mapping pilot evidence. Build33 therefore starts with observability rather than another wider brute-force bank.
+
+A new diagnostic recreates the exact Build29 MQ transform and tracks the known true/near-true basin through the structural bank, half-pilot prefilter and full-proposal ranking. The experiment is repeated with both the historical random synthetic data plane and a real authenticated robust v4 carrier (`v4-b33-auth`, strength 24, key `PixSeal-v4-TestKey-2026`). Payload/header/CRC/HMAC are never consulted for geometry ranking.
+
+Exploratory local variants tested while preparing this checkpoint included translation-aware sparse pilot ranking, three-region spatial proposal/check/held-out scoring, a coupled evolutionary beam over geometry+translation, and a half-pilot-only beam. Some variants recovered the correct basin on one MQ data plane (including the authenticated carrier) but promoted a convincing false basin on the other. They are therefore rejected rather than merged. This is evidence that a green result on one carrier is insufficient and that Build33 must explicitly control data-plane sensitivity and basin diversity.
+
+The next decoder change should be evaluated against both MQ carriers and matched negatives. The success criterion remains correct blind geometry and placement first, followed by data sampling and a valid Format-v4 HMAC. LQ SAFE REJECT remains acceptable; lowering Build29 floors is not an option.
+
+## 2026-09-15 — Build34 authenticated MQ projective recovery
+
+Build33 showed that the correct MQ basin was already structurally observable but was destabilized by the centered pilot proposal. Build34 identifies the concrete phase defect: the former 0/+-4 pixel phase cross skipped a strong +/-2 pixel alignment. The accepted design keeps two distinct structural anchors, searches a bounded coupled local geometry neighborhood, retains candidates by public structural evidence, then ranks only with the public pilot over interior tile rows using 0/+-2/+-4 pixel centered phases. Top/bottom tile rows are not consulted until one geometry is committed.
+
+Non-zero cyclic origin is canonicalized by a domain-side block translation of the homography and must then re-detect as origin `(0,0)` under the unchanged acceptance gate. Only after acceptance are the 1120 data positions sampled and decoded through Hamming, whitening, frame parsing, CRC and HMAC. On the active MQ carrier, two robust payloads with the public test key recover exactly with corner error about 0.001, validation about 0.86-0.88 and pilot margin about 0.43. LQ remains on the Build29 path and SAFE REJECTS.
+
+## 2026-09-15 — Build35 physical qualification handoff
+
+Build34 closes the active MQ digital blocker strongly enough that further decoder tuning without new evidence would risk overfitting the synthetic/corpus transform. Build35 therefore freezes that behavior for the next experiment and makes the physical test itself reproducible.
+
+The preceding checkpoint is Build34 throughout source, test names and documentation. Build35 preserves that result unchanged while preparing the physical gate.
+
+For controlled physical work, Build35 exports the Build34 joint-projective/HMAC path as `ExperimentalV4ExtractProjective` and `v4-extract-projective`. Canonical pre-print dimensions are explicit inputs. Geometry still uses only public structural/pilot evidence and the unchanged Build29 floors; payload/header/CRC/key/HMAC are unavailable until after geometry acceptance.
+
+The first physical campaign is intentionally scanner-first and uses the active MQ source only. The generated pack contains one unmarked control and two marked robust/strength-24 carriers with distinct payloads. Printing and scanning both target 300 ppi/dpi at actual size, and scans are cropped only to the artwork edges. This isolates the paper/printer/scanner channel before adding free-camera scale, framing, lens and perspective variables. A physical PASS requires exact HMAC recovery of both marked payloads and rejection of the control; pilot-only evidence remains diagnostic.
+
+## Build36 — first v4 physical scanner channel
+
+The Build35 paper pack was acquired on an office scanner whose color path outputs JPEG. The useful corpus is the 600-dpi JPEG set; PDF/PPT export modes were inspected but contained lower-quality embedded raster data. Blind Build35 projective recovery SAFE-REJECTs the control as expected but also rejects marked A/B due geometry ranking.
+
+A private reference-assisted registration diagnostic isolates geometry from channel capacity. Under independently supplied geometry, both marked scans recover their exact authenticated payloads with deterministic soft Hamming decoding. This is not a blind PASS and cannot promote the pilot, but it demonstrates that strength 24 and the existing v4 Hamming/frame/HMAC path survive the real print/scan/JPEG channel. Build36 therefore promotes soft Hamming only after geometry acceptance and leaves encoder/format thresholds untouched.

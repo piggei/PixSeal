@@ -8,8 +8,11 @@
 /original pics/
 /print-camera private/
 /print-scan private/
+/private-fixtures/
+/v4-physical private/
 /private-corpus-manifest.sha256
-/.pixseal-private.env
+*private*/
+/internal/
 
 # Test and coverage artifacts
 coverage.out
@@ -26,3 +29,5 @@ Thumbs.db
 
 # Local comparative test reports
 /reports/
+
+/v4-physical private/

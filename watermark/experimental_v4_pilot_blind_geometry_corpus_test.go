@@ -6,8 +6,6 @@ import (
 	_ "image/png"
 	"os"
 	"path/filepath"
-	"sort"
-	"strings"
 	"testing"
 )
 
@@ -15,28 +13,7 @@ import (
 // matrix on every local original. The source archive intentionally omits these
 // images; PIXSEAL_V4_CORPUS_DIR enables the private/local qualification.
 func TestExperimentalV4BlindGeometryCorpus(t *testing.T) {
-	directory := os.Getenv("PIXSEAL_V4_CORPUS_DIR")
-	if directory == "" {
-		t.Skip("set PIXSEAL_V4_CORPUS_DIR to run the local experimental v4 blind-geometry corpus")
-	}
-	entries, err := os.ReadDir(directory)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var paths []string
-	for _, entry := range entries {
-		if entry.IsDir() {
-			continue
-		}
-		name := strings.ToLower(entry.Name())
-		if strings.HasSuffix(name, ".png") || strings.HasSuffix(name, ".jpg") || strings.HasSuffix(name, ".jpeg") {
-			paths = append(paths, filepath.Join(directory, entry.Name()))
-		}
-	}
-	sort.Strings(paths)
-	if len(paths) == 0 {
-		t.Fatal("no PNG/JPEG files found in experimental v4 blind-geometry corpus")
-	}
+	paths := experimentalV4ActiveCorpusPaths(t)
 
 	// Keep the local-corpus gate deliberately compact. The full family matrix is
 	// exercised by the synthetic Build26 target; the private originals cover two

@@ -30,8 +30,11 @@ Usage:
   pixseal <command> [options]
 
 Commands:
-  embed      Hide an authenticated message in an image
-  extract    Recover and authenticate a hidden message with bounded geometric recovery
+  embed      Hide an authenticated v3 message in an image
+  extract    Recover and authenticate a v3 message with bounded geometric recovery
+  v4-embed   EXPERIMENTAL: hide a Build31 Format-v4 message using the locked public pilot
+  v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
+  v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   capacity   Show the usable payload capacity of an image
   analyze    Recommend a v3 profile and embedding settings
   diagnose   Experimental bounded local-lattice diagnostics (v0.3 research)
@@ -53,6 +56,11 @@ Extract options:
   -in FILE           Carrier JPEG or PNG (required)
   -key TEXT          Secret key, minimum 8 bytes (required)
   -raw               Write only authenticated payload bytes to stdout
+
+Experimental v4 options:
+  v4-embed accepts the same -in/-out/-key/-message/-profile/-strength/-force options as embed.
+  v4-extract accepts -in/-key/-raw but requires an already aligned native 8px lattice.
+  v4-extract-projective accepts -in/-key/-raw plus canonical -width/-height from the pre-print carrier.
 
 Capacity options:
   -in FILE           Input JPEG or PNG (required)
@@ -76,6 +84,9 @@ Run "pixseal <command> -help" to show the options for a command.
 Examples:
   pixseal embed -in photo.png -out sealed.png -key "a long secret" -message "hello"
   pixseal extract -in sealed.png -key "a long secret"
+  pixseal v4-embed -in photo.png -out sealed-v4.png -key "a long secret" -message "hello"
+  pixseal v4-extract -in sealed-v4.png -key "a long secret"
+  pixseal v4-extract-projective -in acquired.png -key "a long secret" -width 1632 -height 1632
   pixseal capacity -in photo.png -details
   pixseal analyze -in photo.png -message "hidden message"
   pixseal diagnose -in captured.jpg -json
@@ -93,6 +104,12 @@ func main() {
 		err = embed(os.Args[2:])
 	case "extract":
 		err = extract(os.Args[2:])
+	case "v4-embed":
+		err = v4Embed(os.Args[2:])
+	case "v4-extract":
+		err = v4Extract(os.Args[2:])
+	case "v4-extract-projective":
+		err = v4ExtractProjective(os.Args[2:])
 	case "capacity":
 		err = capacity(os.Args[2:])
 	case "analyze":
@@ -504,6 +521,158 @@ func printExtractDiagnostics(w io.Writer, info watermark.ExtractInfo) {
 	if info.PerspectiveCorrection != "" {
 		fmt.Fprintf(w, "perspective-correction: %s\n", info.PerspectiveCorrection)
 	}
+}
+
+func v4Embed(args []string) error {
+	fs := newFlagSet("v4-embed", "EXPERIMENTAL Build31 encoder: hide an authenticated Format-v4 message using the development-locked prototype-2 pilot. Output is always PNG.")
+	in := fs.String("in", "", "input JPEG or PNG file (required)")
+	out := fs.String("out", "", "output PNG file (required)")
+	message := fs.String("message", "", "message to hide, up to 64 bytes (required)")
+	profileName := fs.String("profile", "auto", "experimental v4 profile: auto, robust, balanced or capacity")
+	force := fs.Bool("force", false, "replace an existing output file")
+	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
+	strength := fs.Float64("strength", 24, "DCT embedding strength from 4 to 120")
+
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q; use -message \"text\"", fs.Arg(0))
+	}
+	if *in == "" || *out == "" || *key == "" || *message == "" {
+		fs.Usage()
+		return fmt.Errorf("-in, -out, -key and -message are required")
+	}
+	if math.IsNaN(*strength) || math.IsInf(*strength, 0) || *strength < 4 || *strength > 120 {
+		return fmt.Errorf("-strength must be a finite number from 4 to 120")
+	}
+	profile, err := watermark.ParseProfile(*profileName)
+	if err != nil {
+		return err
+	}
+	outputPath := pngOutputPath(*out)
+	if _, _, err := outputTargetInfo(outputPath, *force); err != nil {
+		return err
+	}
+	img, err := openImage(*in)
+	if err != nil {
+		return err
+	}
+	marked, info, err := watermark.ExperimentalV4EmbedWithInfo(img, []byte(*message), []byte(*key), watermark.Options{
+		Strength: *strength,
+		Profile:  profile,
+	})
+	if err != nil {
+		return err
+	}
+	if err := writePNGAtomic(outputPath, marked, *force); err != nil {
+		return err
+	}
+	if outputPath != *out {
+		fmt.Printf("output renamed to %s (PixSeal output is PNG)\n", outputPath)
+	}
+	fmt.Printf("EXPERIMENTAL v4: embedded %d bytes using profile %s in %s\n", len([]byte(*message)), info.Profile, outputPath)
+	fmt.Printf("pilot: %s sha256=%s\n", info.PilotName, info.PilotHash)
+	return nil
+}
+
+func v4Extract(args []string) error {
+	fs := newFlagSet("v4-extract", "EXPERIMENTAL Build31 aligned decoder: authenticate a Format-v4 message on a native 8px lattice. For blind projective/crop recovery use v4-extract-projective.")
+	in := fs.String("in", "", "carrier JPEG or PNG file (required)")
+	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
+	raw := fs.Bool("raw", false, "write only the authenticated payload bytes to stdout")
+
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" {
+		fs.Usage()
+		return fmt.Errorf("-in and -key are required")
+	}
+	img, err := openImage(*in)
+	if err != nil {
+		return err
+	}
+	payload, info, err := watermark.ExperimentalV4ExtractAligned(img, []byte(*key))
+	if err != nil {
+		return err
+	}
+	if *raw {
+		if _, err := os.Stdout.Write(payload); err != nil {
+			return err
+		}
+		printV4ExtractDiagnostics(os.Stderr, info)
+		return nil
+	}
+	fmt.Printf("%s\n", payload)
+	printV4ExtractDiagnostics(os.Stderr, info)
+	return nil
+}
+
+func printV4ExtractDiagnostics(w io.Writer, info watermark.ExperimentalV4ExtractInfo) {
+	fmt.Fprintf(w, "EXPERIMENTAL Format-v4 aligned decode\n")
+	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)
+	fmt.Fprintf(w, "pilot-score: %.6f\npilot-margin: %.6f\npilot-origin: (%d,%d) blocks\n", info.PilotScore, info.PilotMargin, info.OriginXBlocks, info.OriginYBlocks)
+	fmt.Fprintf(w, "pilot: %s sha256=%s\n", info.PilotName, info.PilotHash)
+}
+
+func v4ExtractProjective(args []string) error {
+	fs := newFlagSet("v4-extract-projective", "EXPERIMENTAL Build36 physical-channel decoder: run Build34 blind projective/crop recovery, then use reliability-aware Hamming decoding and authenticate the Format-v4 frame. Canonical dimensions must match the block-normalized carrier before printing.")
+	in := fs.String("in", "", "acquired/scanned JPEG or PNG file (required)")
+	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	raw := fs.Bool("raw", false, "write only the authenticated payload bytes to stdout")
+
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	if *width < 296 || *height < 256 || *width%8 != 0 || *height%8 != 0 {
+		return fmt.Errorf("canonical -width/-height must be divisible by 8 and at least 296x256")
+	}
+	img, err := openImage(*in)
+	if err != nil {
+		return err
+	}
+	payload, info, projective, err := watermark.ExperimentalV4ExtractProjective(img, []byte(*key), *width, *height)
+	if err != nil {
+		printV4ProjectiveDiagnostics(os.Stderr, info, projective)
+		return err
+	}
+	if *raw {
+		if _, err := os.Stdout.Write(payload); err != nil {
+			return err
+		}
+		printV4ProjectiveDiagnostics(os.Stderr, info, projective)
+		return nil
+	}
+	fmt.Printf("%s\n", payload)
+	printV4ProjectiveDiagnostics(os.Stderr, info, projective)
+	return nil
+}
+
+func printV4ProjectiveDiagnostics(w io.Writer, info watermark.ExperimentalV4ExtractInfo, p watermark.ExperimentalV4ProjectiveInfo) {
+	fmt.Fprintf(w, "EXPERIMENTAL Format-v4 projective decode\n")
+	fmt.Fprintf(w, "geometry-accepted: %t\n", p.Accepted)
+	fmt.Fprintf(w, "geometry: angle=%.3f scale=(%.5f,%.5f) inset=(%.5f,%.5f)\n", p.AngleDegrees, p.ScaleX, p.ScaleY, p.TopInset, p.BottomInset)
+	fmt.Fprintf(w, "placement-shift: (%.1f,%.1f) px\n", p.PlacementShiftX, p.PlacementShiftY)
+	fmt.Fprintf(w, "proposal-objective: %.6f\ngeometry-validation: %.6f\nplacement-validation: %.6f\nstructural-score: %.6f\nhypotheses: %d\n", p.ProposalObjective, p.GeometryValidation, p.PlacementValidation, p.StructuralScore, p.HypothesesEvaluated)
+	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)
+	fmt.Fprintf(w, "pilot-score: %.6f\npilot-margin: %.6f\npilot-origin: (%d,%d) blocks\n", info.PilotScore, info.PilotMargin, info.OriginXBlocks, info.OriginYBlocks)
+	fmt.Fprintf(w, "pilot: %s sha256=%s\n", info.PilotName, info.PilotHash)
 }
 
 func capacity(args []string) error {

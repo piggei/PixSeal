@@ -80,9 +80,10 @@ type ExperimentalV4Build24SearchReport struct {
 	RunnerUp         ExperimentalV4PilotQualification
 }
 
-// prototype-2 is the reproducible Build24 search result. It is deliberately
-// not a normative Format-v4 constant; later image-domain/physical evidence may
-// still reject or replace it.
+// prototype-2 is the reproducible Build24 search result. Build30 locks this
+// exact mask/sign identity against accidental mutation, but it is still not a
+// normative Format-v4 constant: physical v4 evidence may require a new pilot
+// identity rather than editing this locked candidate in place.
 var experimentalV4Prototype2PilotPositions = [...]int{
 	3, 44, 13, 88, 94, 27, 28, 32,
 	259, 156, 159, 238, 279, 246, 290, 181,

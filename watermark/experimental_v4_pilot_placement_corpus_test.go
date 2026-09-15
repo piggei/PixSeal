@@ -7,34 +7,11 @@ import (
 	"math"
 	"os"
 	"path/filepath"
-	"sort"
-	"strings"
 	"testing"
 )
 
 func TestExperimentalV4PlacementCorpus(t *testing.T) {
-	directory := os.Getenv("PIXSEAL_V4_CORPUS_DIR")
-	if directory == "" {
-		t.Skip("set PIXSEAL_V4_CORPUS_DIR to run the local experimental v4 placement corpus")
-	}
-	entries, err := os.ReadDir(directory)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var paths []string
-	for _, e := range entries {
-		if e.IsDir() {
-			continue
-		}
-		n := strings.ToLower(e.Name())
-		if strings.HasSuffix(n, ".png") || strings.HasSuffix(n, ".jpg") || strings.HasSuffix(n, ".jpeg") {
-			paths = append(paths, filepath.Join(directory, e.Name()))
-		}
-	}
-	sort.Strings(paths)
-	if len(paths) == 0 {
-		t.Fatal("no PNG/JPEG files found in experimental v4 placement corpus")
-	}
+	paths := experimentalV4ActiveCorpusPaths(t)
 	candidate := experimentalV4Prototype2Candidate()
 	cases := []experimentalV4PlacementCase{
 		{name: "rotate-scale-crop", p: experimentalV4BlindGeometryParams{angleDeg: 11.2, scaleX: 1.07, scaleY: .93}, crop: [4]int{117, 83, 95, 61}},

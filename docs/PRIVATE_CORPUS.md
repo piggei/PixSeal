@@ -97,3 +97,39 @@ originals, print them and acquire separate smartphone/scanner samples under a v4
 ### Build25 local-original geometry note
 
 Build25 reuses the local original images only as backgrounds for synthetic v4 pilot/data-plane carriers and deterministic geometric transforms. The originals and transformed derivatives remain local and must not be included in source/evidence archives. Evidence may contain only textual metrics/logs. These experiments are not physical v4 print-camera evidence.
+
+
+## Build31 private Format-v4 physical corpus
+
+Build31 is the first version capable of creating a genuine v4 carrier. The existing private v3 print-camera/scanner photographs **must not** be relabeled as v4 evidence; they were printed from a different on-image format and contain no prototype-2 pilot or Build31 v4 frame.
+
+For the first v4 physical experiment, generate fresh PNG carriers with the explicit experimental command, preferably using the reproducible test key `Piccotti`, robust profile and default strength 24:
+
+```sh
+pixseal v4-embed \
+  -in INPUT.png \
+  -out OUTPUT-v4-build31.png \
+  -key Piccotti \
+  -message "PixSeal Build31 physical v4" \
+  -profile robust \
+  -strength 24
+```
+
+Print those exact generated PNGs, then photograph and/or scan the paper. Keep the generated digital carrier together with each acquisition and record printer, paper, print scaling, acquisition device and whether any editor rescaled/cropped the image. Physical source/acquisition files remain private and must not enter source/evidence release archives.
+
+A future physical result counts as v4 success only when the Build31 frame reaches **HMAC-authenticated payload recovery**. Public pilot detection, geometry score, CRC or ECC success alone are diagnostics. Build31 `v4-extract` currently handles aligned native lattices only, so the first physical decoder integration remains a later research checkpoint.
+
+Build31 also provides a reproducible helper:
+
+```sh
+make v4-physical-fixtures
+```
+
+By default it reads `original pics/` and writes only generated private carriers plus a TSV SHA-256 manifest under `v4-physical private/build31-generated/`. That output tree is git-ignored. Override `V4_PHYSICAL_SOURCE_DIR`, `V4_PHYSICAL_OUTPUT_DIR`, key/message/profile/strength Make variables when a different experiment is intended.
+
+
+## Build32 active corpus policy
+
+The active v4 development/qualification corpus is now exactly the three anonymous originals listed in root `private-corpus-active.tsv`: LQ, MQ and HQ. Corpus-driven tests must consume that manifest and must not discover arbitrary directory contents. `corpus-manifest-check` verifies dimensions and SHA-256. HQ is approximately 200.5 MP and is intentionally skipped by bounded tests whose configured image budget is lower; this is a SKIP, not a PASS.
+
+New v4 experiments and physical fixtures use the intentionally public development key `PixSeal-v4-TestKey-2026`. The historical key `Piccotti` remains only where older regression vectors require it. Neither the three originals nor generated print fixtures belong in source/evidence release archives.

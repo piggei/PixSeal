@@ -1,0 +1,5 @@
+# PixSeal Build32 active private corpus
+# role	filename	width	height	sha256
+LQ	Immagine LQ.png	800	757	f543e34c5d5b794fbc7058591795493410f651970560e529f7fa714178fb8400
+MQ	Immagine MQ.png	1635	1635	0102710ad55b6cc174ae823d98bcb54a3cc09685716194594e5ea67de1110661
+HQ	Immagine HQ.png	16320	12288	04b81afa3508a7fbbca77552a43ac39666157a248bb3a9b2cb70bde9068daee7

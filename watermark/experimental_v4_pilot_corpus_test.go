@@ -6,8 +6,6 @@ import (
 	_ "image/png"
 	"os"
 	"path/filepath"
-	"sort"
-	"strings"
 	"testing"
 )
 
@@ -15,28 +13,7 @@ import (
 // archives do not ship the local image corpus. It embeds only a synthetic v4
 // pilot/data plane; no payload encoder or authentication path is involved.
 func TestExperimentalV4PilotCorpus(t *testing.T) {
-	directory := os.Getenv("PIXSEAL_V4_CORPUS_DIR")
-	if directory == "" {
-		t.Skip("set PIXSEAL_V4_CORPUS_DIR to run the local experimental v4 pilot corpus")
-	}
-	entries, err := os.ReadDir(directory)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var paths []string
-	for _, entry := range entries {
-		if entry.IsDir() {
-			continue
-		}
-		name := strings.ToLower(entry.Name())
-		if strings.HasSuffix(name, ".png") || strings.HasSuffix(name, ".jpg") || strings.HasSuffix(name, ".jpeg") {
-			paths = append(paths, filepath.Join(directory, entry.Name()))
-		}
-	}
-	sort.Strings(paths)
-	if len(paths) == 0 {
-		t.Fatal("no PNG/JPEG files found in experimental v4 pilot corpus")
-	}
+	paths := experimentalV4ActiveCorpusPaths(t)
 
 	candidate := experimentalV4Prototype2Candidate()
 	for _, path := range paths {

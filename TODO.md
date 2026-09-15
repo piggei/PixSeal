@@ -172,10 +172,9 @@ and `CHANGELOG.md`.
       sign refinement, exhaustive cyclic metrics and partial-visibility qualification; build24 selects the
       non-normative `prototype-2-search-p64` candidate.
 - [x] Extend the synthetic-channel qualification to arbitrary rotation, anisotropic scaling, shear, mild perspective, crop and combined transformations with independently supplied geometry; Build25 adds 16 deterministic cases plus the same matrix on the local originals.
-- [ ] Decide and document the v4 framing/version marker before implementing a real encoder.
-- [ ] Decide whether v4 retains Hamming(7,4) or adopts a stronger ECC after apples-to-apples pilot tests.
-- [ ] Implement an **experimental-only** v4 encoder behind an explicit format/version switch; never silently
-      change the default v3 encoder.
+- [x] Define and document the first experimental v4 framing/version marker. Build31 uses authenticated header/profile bytes `0x41/0x42/0x43`, v4-specific whitening/HMAC domains and a deterministic compatibility vector; it remains non-normative.
+- [ ] Decide whether normative v4 retains Hamming(7,4) or adopts a stronger ECC. Build31 intentionally keeps Hamming(7,4) only as an apples-to-apples framing/channel baseline.
+- [x] Implement an **experimental-only** v4 encoder/decoder path behind explicit `v4-embed` / `v4-extract` commands; stable v3 `embed` / `extract` remain unchanged. Build31 extraction is native-lattice/aligned only.
 - [x] Implement an experimental pilot-only detector for an already-resolved 8/6/4-pixel lattice; it reports
       absolute cyclic origin, score, runner-up and margin without payload/HMAC evidence.
 - [x] Generalize the pilot-only detector to a first bounded blind rotation/affine/shear/mild-perspective recovery path: Build26 uses repeated data-plane self-consistency for coarse proposal, then public-pilot ranking and held-out pilot validation.
@@ -185,11 +184,33 @@ and `CHANGELOG.md`.
 - [x] Combine blind affine geometry with Build27 placement under arbitrary negative crop: Build28 jointly recovers rotation, anisotropic scale and crop/translation with structural-only geometry selection and split-pilot placement validation.
 - [x] Add a bounded Build29 joint **projective/perspective + crop** search with explicit ACCEPT/SAFE-REJECT gates; synthetic and `PJ_lingua` qualify, while the smaller `PJ_piccolo` case is intentionally rejected rather than falsely accepted.
 - [x] Add a bounded Build29 joint **affine + positive padded-canvas** search and qualify the synthetic case.
-- [ ] Improve photographic padded-canvas geometry ranking: both current local originals are SAFE REJECTED by the joint search; `PJ_lingua` retains a strong known-geometry pilot/placement control.
+- [x] Add a Build30 **semantic candidate lock** for `prototype-2-search-p64`: exact 37×32 geometry, ordered 64-position mask/sign sequence and SHA-256 identity are now protected against accidental mutation. This is a development lock, not normative Format-v4 promotion.
+- [x] Add a Build30 known-mapping corpus audit covering projective-crop and affine-padded fixtures on both local originals; all four marked cases recover origin `(0,0)` with margin >= 0.484 while matching unmarked controls remain <= 0.0106.
+- [ ] Improve photographic padded-canvas geometry/placement ranking: both current local originals remain SAFE REJECTED by the joint search even though Build30 confirms strong pilot evidence under the exact mapping.
 - [ ] Improve projective ranking on small/low-redundancy carriers so `PJ_piccolo` can be accepted without weakening the Build29 margin gate.
-- [ ] Extend the joint search to positive padded-canvas placement and re-qualify shear jointly with placement before considering the pilot frozen.
+- [ ] Re-qualify shear jointly with placement and broaden padded/projective joint coverage before claiming a general blind v4 geometry decoder.
 - [ ] Replace the current known canonical-extent assumption with a coarse tile/lattice extent estimator suitable for physical captures before pilot ranking.
-- [ ] Create a separate private v4 print-camera/scanner corpus by re-embedding and reprinting; do not treat the
-      existing v3 photographs as v4 evidence.
+- [x] Add Build33 stage-by-stage MQ joint-projective ranking observability: compare random-data and authenticated-v4 carriers under the same transform, record truth-basin rank after structural/half-pilot/full-proposal stages, and dump distinct basins without using HMAC as an oracle.
+- [x] Build34 replaces the MQ joint-projective ranking failure with bounded multi-anchor, structural-preserving, translation-phase-aware refinement and validates two different authenticated v4 payloads end-to-end.
+- [x] Connect the qualified public geometry/placement proposal chain to Build31 data-only sampling and HMAC frame authentication without allowing payload/HMAC evidence to select geometry. Build34 closes this on MQ with two authenticated payloads.
+- [x] Define the Build35 private v4 physical-corpus protocol: MQ block-normalized control + two robust/strength-24 authenticated carriers, exact hashes/acquisition plan, scanner-first 300 ppi/dpi workflow and HMAC-only PASS criterion.
+- [x] Acquire the Build35 physical scanner corpus; the office scanner produced 600-dpi color JPEG captures of control / marked-a / marked-b. This is real v4 physical evidence, but blind qualification is still open because A/B currently SAFE-REJECT geometrically.
 - [ ] Promote v4 only after physical pilot detection beats negative controls and a valid HMAC-authenticated
       payload is recovered. Pilot confidence alone must never authenticate.
+
+
+## v0.3.0 — Build36 physical v4 campaign
+
+- [x] Prove channel sufficiency independently of blind geometry: reference-assisted registration + Build36 soft Hamming authenticates both existing marked scans exactly; keep this explicitly non-normative.
+- [ ] Recover the same Build35 scans with a **blind scanner registration** front-end using only public boundary/lattice/pilot evidence; control must remain rejected.
+- [ ] Promote the physical scanner corpus to a normative v4 PASS only after blind HMAC recovery succeeds without original-carrier registration.
+
+## v0.3.0 — Build35 physical v4 campaign
+
+- [x] Reset the active private corpus to explicit anonymous LQ/MQ/HQ entries with dimensions/SHA-256 (Build32).
+- [x] Close the active MQ blind projective+crop + authenticated recovery blocker without lowering Build29 gates (Build34).
+- [x] Expose the Build34 projective decoder through `ExperimentalV4ExtractProjective` / `v4-extract-projective` with explicit canonical dimensions (Build35).
+- [x] Define the scanner-first MQ fixture pack: control + `v4-b35-phys-a` + `v4-b35-phys-b`, robust/strength 24, public test key, exact hashes and acquisition plan.
+- [x] Print the Build35 pack at actual size / 300 ppi. The available office scanner cannot produce color lossless PNG/TIFF; retain the 600-dpi JPEG captures as the first physical corpus and document the deviation from the planned acquisition mode.
+- [ ] Require both marked scans to HMAC-authenticate their exact payloads and the control to reject.
+- [ ] Only after the scanner gate, acquire frontal-phone and perspective-phone captures of the same three printed sheets.

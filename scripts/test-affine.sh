@@ -46,12 +46,7 @@ SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 # shellcheck source=test-common.sh
 source "$SCRIPT_DIR/test-common.sh"
 
-mapfile -d '' images < <(find "$PICS_DIR" -maxdepth 1 -type f \
-	\( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) -print0 | sort -z)
-if (( ${#images[@]} == 0 )); then
-	echo "error: no JPEG or PNG images found in $PICS_DIR" >&2
-	exit 2
-fi
+load_active_corpus_images "$PICS_DIR" || exit 2
 
 read -r -a profiles <<< "$TEST_PROFILES"
 read -r -a modes <<< "$AFFINE_MODES"

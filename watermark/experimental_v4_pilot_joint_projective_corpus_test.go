@@ -6,34 +6,11 @@ import (
 	_ "image/png"
 	"os"
 	"path/filepath"
-	"sort"
-	"strings"
 	"testing"
 )
 
 func TestExperimentalV4Build29JointCorpus(t *testing.T) {
-	directory := os.Getenv("PIXSEAL_V4_CORPUS_DIR")
-	if directory == "" {
-		t.Skip("set PIXSEAL_V4_CORPUS_DIR to run the local Build29 joint corpus")
-	}
-	entries, err := os.ReadDir(directory)
-	if err != nil {
-		t.Fatal(err)
-	}
-	var paths []string
-	for _, e := range entries {
-		if e.IsDir() {
-			continue
-		}
-		n := strings.ToLower(e.Name())
-		if strings.HasSuffix(n, ".png") || strings.HasSuffix(n, ".jpg") || strings.HasSuffix(n, ".jpeg") {
-			paths = append(paths, filepath.Join(directory, e.Name()))
-		}
-	}
-	sort.Strings(paths)
-	if len(paths) == 0 {
-		t.Fatal("no PNG/JPEG files found in local Build29 corpus")
-	}
+	paths := experimentalV4ActiveCorpusPaths(t)
 	candidate := experimentalV4Prototype2Candidate()
 
 	for _, path := range paths {

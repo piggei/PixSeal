@@ -1357,3 +1357,64 @@ The padded branch uses the same staged machinery with projective insets fixed to
 
 Current Build29 qualification accepts synthetic projective+crop, synthetic affine+padded placement and photographic `PJ_lingua` projective+crop. It deliberately rejects `PJ_piccolo` projective+crop and both photographic padded joint searches. This is safer than promoting a locally plausible but globally wrong geometry.
 
+
+
+## 51. v0.3.0-build30 pilot candidate identity lock
+
+Build30 adds no new production codec and no new accepted geometry family. Instead it freezes one **development identity** so subsequent experiments have a stable public reference. The lock hashes the 37×32 tile dimensions and the ordered 64 `(position, sign)` entries with the existing Build24 candidate-hash algorithm. The required result is:
+
+`858f74305ee9a9cbb59dd3fb6ab8afc6aaf8958e4f9f517711e2c52fc053b174`
+
+The lock test also requires 64 unique in-range positions, exactly 32 positive and 32 negative signs, maximum cyclic mask overlap 7, maximum wrong signed correlation 4 and zero perfect non-zero cyclic aliases. A one-sign mutation must change the identity hash.
+
+A second, private-corpus gate isolates channel evidence from search evidence. It renders the existing Build29 projective-crop and affine-padded fixtures, then supplies the exact known homography directly to `experimentalV4DetectPilotProjective`. Search ranking and placement are not consulted. The marked image must recover `(0,0)` with score >= 0.85 and margin >= 0.40; matching unmarked margin must remain <= 0.08 and marked-minus-negative margin separation >= 0.40.
+
+This lock is intentionally below the normative format layer. Geometry search, confidence thresholds, framing, ECC, data mapping and authentication remain mutable. A future physical v4 qualification may promote the same identity; it may not silently edit it.
+
+## 52. v0.3.0-build31 experimental v4 frame and aligned authenticated decoder
+
+Build31 introduces the first actual data-bearing v4 tile while leaving every frozen v3 source file unchanged. The public pilot remains the Build30 locked prototype-2 candidate. Its 64 positions are removed from the 37x32 tile; the remaining 1120 positions are enumerated row-major as data ordinals.
+
+For profile protected length `C` in `{448,672,1120}`, data ordinal `d` carries protected bit
+
+```text
+j = (251 d) mod C.
+```
+
+Because 251 is coprime with every current protected length, all coded bits are visited. Robust receives two or three data positions per coded bit, balanced one or two, and capacity exactly one. This mapping is distinct from the physical tile position because pilot holes are skipped before the stride is applied.
+
+### 52.1 Frame and cryptographic domains
+
+The fixed frame remains 32/48/80 bytes for robust/balanced/capacity in the first experiment. Bytes 0..7 are:
+
+```text
+'P' 'S' | 0x4p | payload_length | CRC32(payload)
+```
+
+where profile id `p` is 1/2/3, producing `0x41/0x42/0x43`. Actual payload bytes follow. An eight-byte truncated HMAC-SHA256 follows the actual payload, with input
+
+```text
+"pixseal-frame-v4" || 0x00 || frame[0 : 8+payload_length].
+```
+
+Remaining fixed-frame bytes are zero padding. The complete fixed frame is converted MSB-first to bits and XOR-whitened with the existing SHA-256 counter construction using label `pixseal-whiten-v4`, then Hamming(7,4)-encoded. The Hamming choice is an experimental comparison baseline, not the normative v4 ECC decision.
+
+### 52.2 Embedding
+
+Each physical 8x8 DCT block maps to one 37x32 tile position. Locked pilot positions carry their public sign (`+1 -> bit 1`, `-1 -> bit 0`). Every other position carries the protected bit selected from its data ordinal by the formula above. The tile repeats over the image.
+
+### 52.3 Build31 aligned extraction
+
+The experimental aligned extractor assumes the native 8-pixel lattice and zero sub-pixel phase. It first correlates the public pilot across all cyclic tile origins. The selected origin is then used to aggregate **data positions only**. Robust, balanced and capacity protected lengths are tried after geometry/origin is fixed. Each candidate is Hamming-decoded, v4-dewhitened and parsed. A payload is returned only if the v4 HMAC authenticates; CRC is checked after authentication as a consistency check.
+
+The Build29 geometry search is deliberately not invoked from this function. Geometry/pilot evidence therefore cannot be retrospectively selected using HMAC success in Build31. Connecting the branches requires its own qualification checkpoint.
+
+### 52.4 Deterministic vector
+
+For key `Piccotti`, robust profile and payload `Build31-vector`, the 32-byte frame is
+
+```text
+5053410ebb936d304275696c6433312d766563746f720084e064803bb6840000
+```
+
+The Build31 regression requires SHA-256 `52f15752f1829e39ecae215932b56ab4108b9790eb9fb093705e357b68a7d0ea` over `frame || protectedBits`. This is an experimental compatibility guard, not a normative v4 identifier.
