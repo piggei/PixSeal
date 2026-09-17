@@ -76,3 +76,7 @@ Return the three original scan files without JPEG conversion or intermediate res
 ## Next gate
 
 If the scanner set authenticates, repeat the same three printed sheets with a frontal smartphone photograph and then an intentionally oblique/perspective photograph. Those become separate physical gates; scanner success must not be silently generalized to phone-camera success.
+
+## Actual first campaign result
+
+The available office scanner could not produce color lossless PNG/TIFF. The retained first corpus therefore consists of full-page 600-dpi color JPEG scans of the same three prints. Build36 proved those files contain enough protected data to authenticate when geometry is supplied independently. Build37 then closes the blind scanner gate on those exact captures: control REJECT, marked A HMAC PASS, marked B HMAC PASS. The next physical channel is smartphone photography of the same paper set.

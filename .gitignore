@@ -4,15 +4,20 @@
 *.exe
 *.test
 
-# Local source images used by tests
+# Local/private corpora, fixtures and physical acquisitions
 /original pics/
 /print-camera private/
 /print-scan private/
 /private-fixtures/
 /v4-physical private/
-/private-corpus-manifest.sha256
+/v4-phone private/
+
+# Catch future private directories as a secondary safety net.
 *private*/
-/internal/
+
+# Local private manifests/configuration that must not ship
+/private-corpus-manifest.sha256
+/.pixseal-private.env
 
 # Test and coverage artifacts
 coverage.out
@@ -29,5 +34,3 @@ Thumbs.db
 
 # Local comparative test reports
 /reports/
-
-/v4-physical private/

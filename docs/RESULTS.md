@@ -1115,3 +1115,26 @@ No physical PASS is recorded in this document until both marked paper scans reco
 - Blind Build35 geometry: control REJECT; marked A/B SAFE-REJECT — physical blind qualification still open.
 - Reference-assisted geometry diagnostic: marked A and marked B both recover exact v4 payloads and pass HMAC with Build36 soft Hamming.
 - Interpretation: physical signal/ECC capacity is sufficient; blind scanner registration is the active blocker. No reprint or strength/ECC change is justified yet.
+
+## Build37 blind scanner physical qualification
+
+Build37 reuses the exact Build35 printed sheets and the first 600-dpi color-JPEG office-scanner captures. Unlike the Build36 channel-capacity diagnostic, no digital original is used as a registration reference.
+
+The full-page paper/artwork boundary supplies only a geometric seed. A bounded scanner-affine search uses one half of the public v4 pilot for proposal and the disjoint half for held-out ranking. A complete-pilot origin competition then requires canonical origin `(0,0)`. The five best pilot-qualified geometries are frozen before protected data are read; their signed DCT margins are validation-weighted, soft-Hamming decoded and authenticated by the unchanged v4 HMAC.
+
+Observed private-corpus result:
+
+| capture | boundary | proposal | held-out | pilot score | margin | origin | result |
+| --- | ---: | ---: | ---: | ---: | ---: | --- | --- |
+| control | ~0.801 | ~0.306 | ~0.093 | ~0.080 | ~0.005 | non-zero | REJECT |
+| marked A | ~0.808 | ~0.476 | ~0.294 | ~0.297 | ~0.174 | `(0,0)` | HMAC PASS `v4-b35-phys-a` |
+| marked B | ~0.826 | ~0.483 | ~0.199 | ~0.213 | ~0.088 | `(0,0)` | HMAC PASS `v4-b35-phys-b` |
+
+This is the first fully blind Format-v4 print/scanner/HMAC success. It is a scanner-channel result, not evidence for arbitrary smartphone photographs. Format v3 remains frozen and the v4 pilot/frame remain experimental/development-locked.
+
+
+## Build40 pilot-only smartphone residual result
+
+Build40 leaves the strength-48 carrier unchanged and adds a post-Build39 smooth residual field. On the deterministic synthetic phone-residual gate, proposal-only pilot controls fit a <=6 px quadratic field, held-out pilot validation improves, complete-pilot origin returns `(0,0)`, and the protected channel recovers the exact HMAC-authenticated v4 payload. The corresponding unmarked control does not qualify.
+
+The private nine-photo strength-48 corpus does not yet satisfy the same residual assumptions under the current blind Build39 homographies. Example candidate fields can have enough proposal controls and sub-2 px internal fit RMS while **held-out validation decreases** and the complete-pilot origin remains non-zero. Those cases are rejected. This result narrows the remaining blind-phone blocker: the decoder must first retain/select a better global projective basin; a larger local warp is not supported by the evidence.

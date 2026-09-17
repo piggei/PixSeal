@@ -19,7 +19,7 @@ import (
 
 func TestSubcommandHelpReturnsFlagErrHelp(t *testing.T) {
 	for name, fn := range map[string]func([]string) error{
-		"embed": embed, "extract": extract, "v4-embed": v4Embed, "v4-extract": v4Extract, "v4-extract-projective": v4ExtractProjective, "capacity": capacity, "analyze": analyze, "diagnose": diagnose,
+		"embed": embed, "extract": extract, "v4-embed": v4Embed, "v4-extract": v4Extract, "v4-extract-projective": v4ExtractProjective, "v4-extract-scanner": v4ExtractScanner, "v4-extract-phone": v4ExtractPhone, "capacity": capacity, "analyze": analyze, "diagnose": diagnose,
 	} {
 		t.Run(name, func(t *testing.T) {
 			if err := fn([]string{"-help"}); !errors.Is(err, flag.ErrHelp) {
@@ -39,6 +39,31 @@ func TestV4ExtractProjectiveRequiresCanonicalBlockDimensions(t *testing.T) {
 		{"1632", "248"},
 	} {
 		err := v4ExtractProjective([]string{"-in", "does-not-matter.png", "-key", "12345678", "-width", tc.w, "-height", tc.h})
+		if err == nil || !strings.Contains(err.Error(), "divisible by 8") {
+			t.Fatalf("dimensions %sx%s error=%v", tc.w, tc.h, err)
+		}
+	}
+}
+
+func TestV4ExtractScannerRequiresCanonicalBlockDimensions(t *testing.T) {
+	for _, tc := range []struct {
+		w, h string
+	}{
+		{"1635", "1632"},
+		{"1632", "1635"},
+		{"288", "1632"},
+		{"1632", "248"},
+	} {
+		err := v4ExtractScanner([]string{"-in", "does-not-matter.jpg", "-key", "12345678", "-width", tc.w, "-height", tc.h})
+		if err == nil || !strings.Contains(err.Error(), "divisible by 8") {
+			t.Fatalf("dimensions %sx%s error=%v", tc.w, tc.h, err)
+		}
+	}
+}
+
+func TestV4ExtractPhoneRequiresCanonicalBlockDimensions(t *testing.T) {
+	for _, tc := range []struct{ w, h string }{{"1635", "1632"}, {"1632", "1635"}, {"288", "1632"}, {"1632", "248"}} {
+		err := v4ExtractPhone([]string{"-in", "does-not-matter.jpg", "-key", "12345678", "-width", tc.w, "-height", tc.h})
 		if err == nil || !strings.Contains(err.Error(), "divisible by 8") {
 			t.Fatalf("dimensions %sx%s error=%v", tc.w, tc.h, err)
 		}

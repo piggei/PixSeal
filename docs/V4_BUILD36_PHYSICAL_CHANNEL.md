@@ -30,3 +30,7 @@ Build36 does not change the v4 pilot identity, encoder, strength 24, 64/1120 pil
 ## Scientific conclusion
 
 The first real Format-v4 print/scan experiment no longer points to insufficient strength or insufficient ECC as the primary blocker. The existing signal can cross the physical channel and authenticate. The remaining blocker is specifically **blind scanner registration** accurate enough to preserve the 8-pixel DCT lattice. The existing paper prints should be kept; no reprint is required for the next build.
+
+## Build37 follow-up
+
+Build37 closes the blind-registration blocker described above on the same unchanged 600-dpi JPEG corpus. The full-page paper/artwork boundary seeds a narrow scanner-affine search, disjoint public-pilot halves qualify the basin, a complete-pilot `(0,0)` gate rejects aliases, and a five-geometry pilot-qualified ensemble feeds the Build36 soft decoder. The control rejects and both marked scans HMAC-authenticate. See [`V4_BUILD37_BLIND_SCANNER.md`](V4_BUILD37_BLIND_SCANNER.md).

@@ -1418,3 +1418,79 @@ For key `Piccotti`, robust profile and payload `Build31-vector`, the 32-byte fra
 ```
 
 The Build31 regression requires SHA-256 `52f15752f1829e39ecae215932b56ab4108b9790eb9fb093705e357b68a7d0ea` over `frame || protectedBits`. This is an experimental compatibility guard, not a normative v4 identifier.
+
+## 53. v0.3.0-build32 active-corpus freeze
+
+Build32 changes no carrier algorithm. It freezes the active private LQ/MQ/HQ qualification identities through filename, dimensions and SHA-256 metadata so later v4 research is measured on a stable corpus. The images remain private and are not shipped.
+
+## 54. v0.3.0-build33 projective-ranking observability
+
+Build33 adds diagnostics only. For the active MQ projective/crop fixture it records where the known truth basin appears after structural ranking, half-pilot ranking and full proposal ranking on both random data and an authenticated v4 frame. The result established that the correct family was already present early and that the remaining blocker was late ranking/translation coupling, not search-envelope absence.
+
+## 55. v0.3.0-build34 translation-aware MQ projective recovery
+
+Build34 adds a large-carrier path for carriers with at least 4x4 complete v4 tiles. Multiple structural anchors are preserved. Around each anchor a bounded coupled local geometry neighborhood is explored, then public-pilot centered phases at 0, +/-2 and +/-4 pixels rank the shortlist. First/last tile rows remain spatially held out. A detected cyclic pilot offset is absorbed into the canonical side of the homography and the complete pilot is re-evaluated; acceptance still requires canonical origin `(0,0)` and the unchanged Build29 validation/margin gates. Only after geometry acceptance are the 1120 data positions sampled and passed through Hamming, whitening, frame parsing, CRC and HMAC.
+
+## 56. v0.3.0-build35 projective API and physical-fixture protocol
+
+Build35 exports the qualified Build34 path through `ExperimentalV4ExtractProjective` and `v4-extract-projective`, with explicit canonical pre-print dimensions. It also defines the private scanner-first MQ fixture pack: one unmarked control and two robust strength-24 authenticated carriers. This build changes no Build34 geometry algorithm.
+
+## 57. v0.3.0-build36 reliability-aware post-geometry decoding
+
+Build36 keeps the accepted geometry frozen and retains signed protected-bit DCT margins. Each Hamming(7,4) word is decoded by maximum-likelihood comparison of all 16 possible source nibbles against those signed observations. The legacy hard-decision Hamming path remains a deterministic fallback. Geometry, pilot acceptance and candidate ranking do not see frame/HMAC evidence. Reference-assisted diagnostics on the real scanner corpus show that this post-geometry decoder contains enough information to authenticate both marked paper captures.
+
+## 58. v0.3.0-build37 blind scanner registration
+
+Build37 is deliberately specific to full-page scanner captures where the printed artwork rectangle remains visible against a light paper background. It does not replace the general Build34 projective search.
+
+### 58.1 Boundary seed
+
+A downsampled RGB analysis plane estimates the page color and classifies sufficiently distant pixels as artwork foreground. Large row/column occupancy rejects the small filename label and scanner-bed streaks. Persistent edge runs are robustly line-fitted on all four sides; their intersections define a quadrilateral. This quadrilateral is converted into a canonical-to-scan homography `H0`. The boundary is geometry only: it is not watermark evidence and cannot authenticate a payload.
+
+### 58.2 Split-pilot scanner-affine refinement
+
+The scanner residual is modeled as a small affine correction in canonical coordinates around `H0`. Build37 evaluates a fixed bounded coarse bank over scale, shear and translation, keeping only the strongest 64 candidates according to a cheap **pilot partition A** score measured on four separated interior tile repetitions. Only after that shortlist is frozen does disjoint **pilot partition B** rank the bank.
+
+A six-dimensional fine neighborhood around the best held-out coarse basin is then evaluated in the same proposal/validation order: 15,625 fine hypotheses, top 96 by partition A, then partition-B ranking.
+
+The held-out winner must satisfy all current scanner gates:
+
+```text
+proposal(A)        >= 0.30
+validation(B)      >= 0.15
+full pilot score   >= 0.15
+full pilot margin  >= 0.05
+cyclic origin      == (0,0)
+```
+
+These are experimental scanner qualification floors, not normative format constants.
+
+### 58.3 Five-geometry data ensemble
+
+The physical channel showed that one sub-pixel geometry can slightly overfit aggregate pilot score while another nearby geometry better preserves some data blocks. Build37 therefore does not use HMAC to choose among geometries. After the global held-out winner passes the complete-pilot gate, the first five hypotheses that already satisfy the partition-A/B floors are frozen as an ensemble.
+
+For protected bit `j`, geometry `g` supplies signed DCT margin `m[g,j]`. The ensemble margin is
+
+```text
+M[j] = sum_g validation[g] * m[g,j] / sum_g validation[g]
+```
+
+Only after every `M[j]` is fixed does Build36 soft Hamming run, followed by v4 dewhitening, frame parsing and HMAC. Payload/header/CRC/key/HMAC never select, add, remove or reorder geometries.
+
+### 58.4 Physical result and scope
+
+On the first private 600-dpi color-JPEG scanner corpus, the unmarked control fails the held-out/full-pilot gate, while both strength-24 marked captures recover canonical origin `(0,0)` and authenticate `v4-b35-phys-a` / `v4-b35-phys-b` exactly. No reprint, pilot change, ECC change or Format-v3 change is required.
+
+This establishes the controlled scanner channel only. Smartphone capture introduces arbitrary perspective, lens distortion, autofocus/sharpening and framing and remains a separate qualification problem.
+
+## Build40 smartphone residual field
+
+Build40 keeps the Build39 phone homography as the global mapping and adds only a bounded smooth correction in canonical coordinates. The residual field is quadratic in normalized `(x,y)` with six basis terms per axis (`1`, `x`, `y`, `xy`, `x^2`, `y^2`) and is hard-clamped to at most six canonical pixels. This bound is architectural: a larger displacement would no longer be a residual correction and would risk becoming a second unconstrained geometry search.
+
+The repeated Format-v4 pilot is split spatially by checkerboard tile parity. Checkerboard-A tiles provide local displacement controls. Each control is found by a bounded local +/-6 px search and is retained only when the best pilot peak is strong and sufficiently separated from a distinct runner-up. A robust least-squares fit then removes controls that cannot be explained by one smooth field. Checkerboard-B tiles are not consulted during fitting.
+
+After the field is frozen, checkerboard-B provides held-out validation. The residual is usable only when held-out validation improves by a fixed minimum and the complete pilot subsequently recovers cyclic origin `(0,0)` with explicit score and margin floors. Protected frame bytes, Hamming outcome and HMAC are unavailable to all geometry and residual-fit decisions.
+
+When qualified, protected DCT margins are sampled through the composed mapper `canonical -> residual -> Build39 homography -> observed image`, then passed to the unchanged Build36 soft-Hamming and Format-v4 HMAC stages. The untouched Build39 ensemble is retained as a fallback path; HMAC can verify either already-frozen path but is never fed back into geometry ranking.
+
+The synthetic Build40 gate demonstrates successful recovery of a smooth non-projective deformation and exact authenticated payload recovery. Representative current private strength-48 phone captures do not satisfy the residual assumptions under the blind Build39 homographies: proposal-only local maxima are not held-out coherent and complete-pilot origin remains non-zero. Those fields are safe-rejected, identifying global projective-basin selection as the next blocker.

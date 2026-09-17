@@ -778,3 +778,32 @@ The first physical campaign is intentionally scanner-first and uses the active M
 The Build35 paper pack was acquired on an office scanner whose color path outputs JPEG. The useful corpus is the 600-dpi JPEG set; PDF/PPT export modes were inspected but contained lower-quality embedded raster data. Blind Build35 projective recovery SAFE-REJECTs the control as expected but also rejects marked A/B due geometry ranking.
 
 A private reference-assisted registration diagnostic isolates geometry from channel capacity. Under independently supplied geometry, both marked scans recover their exact authenticated payloads with deterministic soft Hamming decoding. This is not a blind PASS and cannot promote the pilot, but it demonstrates that strength 24 and the existing v4 Hamming/frame/HMAC path survive the real print/scan/JPEG channel. Build36 therefore promotes soft Hamming only after geometry acceptance and leaves encoder/format thresholds untouched.
+
+## Build37 — blind scanner registration closes the existing physical corpus
+
+Build36 proved that the physical data channel was sufficient when geometry was supplied independently, but that result could not count as a blind PASS. Build37 therefore freezes encoder/strength/pilot/ECC/frame choices and changes only scanner registration.
+
+The full-page scan itself provides an independent geometric observable: the large printed artwork rectangle against white paper. Build37 robustly fits its four sides and uses the resulting quadrilateral only as an affine/projective initializer. A deliberately narrow local correction bank is then evaluated with disjoint public-pilot evidence. Pilot partition A proposes; pilot partition B ranks the retained proposal bank. The winning held-out geometry must recover absolute cyclic origin `(0,0)` under a complete-pilot competition and exceed explicit scanner score/margin floors. HMAC, payload bytes, frame header and ECC outcomes are not visible during these stages.
+
+A single pilot maximum was rejected as the final data sampler because the physical scans contain sub-pixel registration uncertainty: a geometry can slightly overfit aggregate pilot score while degrading some data positions. The accepted design therefore freezes five pilot-qualified geometries before reading protected data. Their signed DCT margins are averaged with held-out validation weights, then Build36 soft Hamming and the unchanged HMAC decide payload success. HMAC never chooses or reorders geometry.
+
+Private 600-dpi JPEG result with the original Build35 paper set:
+
+- control: proposal ~0.306, held-out validation ~0.093, complete-pilot score ~0.080, margin ~0.005, non-zero cyclic origin -> REJECT;
+- marked A: proposal ~0.476, held-out validation ~0.294, complete-pilot score ~0.297, margin ~0.174, origin `(0,0)` -> `v4-b35-phys-a`, HMAC PASS;
+- marked B: proposal ~0.483, held-out validation ~0.199, complete-pilot score ~0.213, margin ~0.088, origin `(0,0)` -> `v4-b35-phys-b`, HMAC PASS.
+
+This closes the controlled scanner channel without reprinting and without increasing strength. It does not imply phone-camera success; lens distortion, perspective, arbitrary framing and camera resampling remain separate work.
+
+
+## Build40 — bounded pilot-only residual field (2026-09-17)
+
+**Hypothesis.** Once Build39 has the correct global homography, the remaining phone error may be a smooth low-order displacement from lens distortion, paper flatness and resampling. Such a correction must be much smaller than the global projective search and must be identifiable without payload/HMAC feedback.
+
+**Method.** Fit independent quadratic X/Y fields in normalized canonical coordinates, capped at six pixels. Local controls come only from checkerboard-A repeated pilot tiles. Each control must have a sufficiently strong and separated local pilot maximum. The fit is robustly pruned by control residual. Checkerboard-B tiles are untouched until validation; a field is usable only if held-out validation improves and the complete pilot subsequently reports origin `(0,0)` with explicit score/margin floors.
+
+**Synthetic result.** PASS. A strength-48 v4 carrier subjected to a deterministic smooth non-projective warp is recovered by the pilot-only field and reaches exact soft-Hamming/HMAC authentication. The matching unmarked control does not qualify. This demonstrates that the model and sampler are capable of correcting the class of distortion they claim to model.
+
+**Private real-phone result.** SAFE REJECT. With the current Build39 geometry basins, local proposal controls are not consistently explained by one <=6 px smooth field. Representative fits improve proposal evidence but reduce held-out validation and retain non-zero complete-pilot origin. Increasing the residual bound would convert a local correction into another unconstrained geometry search and is therefore rejected.
+
+**Decision.** Keep Build40 as a safe residual checkpoint and move the next research step back one stage: improve global phone projective-basin search/retention, then re-run the same residual model. Encoder, strength 48, ECC and HMAC remain unchanged.

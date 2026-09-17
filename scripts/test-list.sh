@@ -62,6 +62,11 @@ row v4-pilot-joint-projective-corpus-test RESEARCH pics 'Build29 local originals
 row v4-pilot-joint-projective-rank-diagnostic RESEARCH pics 'Build33 MQ truth-basin ranks across structural/half-pilot/full-proposal stages on random and authenticated-v4 data planes'
 row v4-build34-projective-frame-corpus-test RESEARCH pics 'Build34 blind MQ projective geometry followed by exact CRC/HMAC-authenticated v4 payload recovery'
 row v4-build35-projective-api-test RESEARCH source 'Build35 exported blind-projective v4 API/CLI + canonical-dimension contract'
+row v4-build36-soft-channel-test RESEARCH source 'Build36 post-geometry soft Hamming physical-channel decoder'
+row v4-build37-scanner-registration-test RESEARCH source 'Build37 blind paper-boundary + split-pilot scanner registration and ensemble decode'
+row v4-build38-phone-channel-test RESEARCH source 'Build38 strength-48 smartphone qualification carrier round-trip/JPEG gate'
+row v4-build39-phone-registration-test RESEARCH source 'Build39 bounded phone downsample + perspective boundary + spatially split public-pilot registration checkpoint'
+row v4-build40-phone-residual-test RESEARCH source 'Build40 bounded smooth phone residual field fitted on proposal pilot tiles and accepted only by held-out pilot validation'
 row v4-pilot-lock-corpus-test RESEARCH pics 'Build30 known-mapping corpus evidence for the locked pilot candidate'
 row v4-frame-test FORMAT source 'Build31 experimental v4 frame/ECC/HMAC/data mapping + CLI round-trip'
 row v4-frame-corpus-test RESEARCH pics 'Build31 real-image v4 frame round-trip, JPEG-q82 and aligned crop'
@@ -74,7 +79,9 @@ row perspective-test RESEARCH pics 'strict mild projective perspective suite; co
 
 section 'Private physical-channel'
 row v4-physical-fixtures PRIVATE pics 'generate Build35 scanner-first MQ control + two authenticated v4 print carriers'
-row v4-physical-qualification PRIVATE private/v4-physical 'HMAC-qualify Build35 physical scans against generated acquisition plan'
+row v4-physical-qualification PRIVATE private/v4-physical 'HMAC-qualify Build35 captures with the generic projective decoder'
+row v4-phone-fixtures PRIVATE pics 'generate Build38 MQ control + two strength-48 smartphone print carriers'
+row v4-build37-physical-scanner-test PRIVATE private/v4-physical 'blind full-page scanner control/A/B HMAC qualification'
 row print-camera-test PRIVATE private/print-camera 'print -> paper -> smartphone; PASS requires Format-v3 HMAC'
 row print-scan-test PRIVATE private/print-scan 'print -> scanner; PASS requires Format-v3 HMAC'
 
@@ -83,6 +90,6 @@ row extreme-test QUALIFICATION pics 'progressive resize/crop limit map; non-stri
 row test-unit COMPATIBILITY source 'complete go test ./... suite'
 row test AGGREGATE source+pics 'build + test-unit + image round-trips'
 row all AGGREGATE source+pics 'test + baseline transformation suite'
-row all-test AGGREGATE source+pics '53-target qualification matrix with final summary'
+row all-test AGGREGATE source+pics '58-target qualification matrix with final summary'
 
 printf '\nTip: use make <target>. For all-test, optionally set ALL_TEST_REPORT=path/to/report.txt.\n'

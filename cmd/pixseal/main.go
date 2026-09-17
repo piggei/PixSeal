@@ -35,6 +35,8 @@ Commands:
   v4-embed   EXPERIMENTAL: hide a Build31 Format-v4 message using the locked public pilot
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
+  v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
+  v4-extract-phone EXPERIMENTAL: Build40 smartphone projective + pilot-only residual registration + authenticated v4 decode
   capacity   Show the usable payload capacity of an image
   analyze    Recommend a v3 profile and embedding settings
   diagnose   Experimental bounded local-lattice diagnostics (v0.3 research)
@@ -61,6 +63,8 @@ Experimental v4 options:
   v4-embed accepts the same -in/-out/-key/-message/-profile/-strength/-force options as embed.
   v4-extract accepts -in/-key/-raw but requires an already aligned native 8px lattice.
   v4-extract-projective accepts -in/-key/-raw plus canonical -width/-height from the pre-print carrier.
+  v4-extract-scanner accepts the same dimensions but expects a full-page scan with visible paper/artwork boundary.
+  v4-extract-phone accepts the same dimensions and expects a smartphone photo with visible paper around the complete artwork.
 
 Capacity options:
   -in FILE           Input JPEG or PNG (required)
@@ -87,6 +91,7 @@ Examples:
   pixseal v4-embed -in photo.png -out sealed-v4.png -key "a long secret" -message "hello"
   pixseal v4-extract -in sealed-v4.png -key "a long secret"
   pixseal v4-extract-projective -in acquired.png -key "a long secret" -width 1632 -height 1632
+  pixseal v4-extract-scanner -in scan.jpg -key "a long secret" -width 1632 -height 1632
   pixseal capacity -in photo.png -details
   pixseal analyze -in photo.png -message "hidden message"
   pixseal diagnose -in captured.jpg -json
@@ -110,6 +115,10 @@ func main() {
 		err = v4Extract(os.Args[2:])
 	case "v4-extract-projective":
 		err = v4ExtractProjective(os.Args[2:])
+	case "v4-extract-scanner":
+		err = v4ExtractScanner(os.Args[2:])
+	case "v4-extract-phone":
+		err = v4ExtractPhone(os.Args[2:])
 	case "capacity":
 		err = capacity(os.Args[2:])
 	case "analyze":
@@ -662,6 +671,116 @@ func v4ExtractProjective(args []string) error {
 	fmt.Printf("%s\n", payload)
 	printV4ProjectiveDiagnostics(os.Stderr, info, projective)
 	return nil
+}
+
+func v4ExtractScanner(args []string) error {
+	fs := newFlagSet("v4-extract-scanner", "EXPERIMENTAL Build37 scanner decoder: detect the printed artwork boundary, refine a tightly bounded affine mapping with disjoint public-pilot partitions, aggregate a five-geometry pilot-qualified ensemble, then authenticate the unchanged Format-v4 frame.")
+	in := fs.String("in", "", "full-page/scanner JPEG or PNG file with visible white paper around the artwork (required)")
+	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	raw := fs.Bool("raw", false, "write only the authenticated payload bytes to stdout")
+
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	if *width < 296 || *height < 256 || *width%8 != 0 || *height%8 != 0 {
+		return fmt.Errorf("canonical -width/-height must be divisible by 8 and at least 296x256")
+	}
+	img, err := openImage(*in)
+	if err != nil {
+		return err
+	}
+	payload, info, scanner, err := watermark.ExperimentalV4ExtractScanner(img, []byte(*key), *width, *height)
+	if err != nil {
+		printV4ScannerDiagnostics(os.Stderr, info, scanner)
+		return err
+	}
+	if *raw {
+		if _, err := os.Stdout.Write(payload); err != nil {
+			return err
+		}
+		printV4ScannerDiagnostics(os.Stderr, info, scanner)
+		return nil
+	}
+	fmt.Printf("%s\n", payload)
+	printV4ScannerDiagnostics(os.Stderr, info, scanner)
+	return nil
+}
+
+func printV4ScannerDiagnostics(w io.Writer, info watermark.ExperimentalV4ExtractInfo, s watermark.ExperimentalV4ScannerInfo) {
+	fmt.Fprintf(w, "EXPERIMENTAL Format-v4 scanner decode\n")
+	fmt.Fprintf(w, "boundary: detected=%t confidence=%.6f\n", s.BoundaryDetected, s.BoundaryConfidence)
+	fmt.Fprintf(w, "scanner-geometry-accepted: %t ensemble=%d\n", s.Accepted, s.EnsembleCandidates)
+	fmt.Fprintf(w, "scanner-affine: scale=(%.6f,%.6f) shear=(%.6f,%.6f) shift=(%.3f,%.3f)\n", s.ScaleX, s.ScaleY, s.ShearX, s.ShearY, s.ShiftX, s.ShiftY)
+	fmt.Fprintf(w, "proposal: %.6f\nvalidation: %.6f\nhypotheses: %d\n", s.ProposalScore, s.ValidationScore, s.HypothesesEvaluated)
+	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)
+	fmt.Fprintf(w, "pilot-score: %.6f\npilot-margin: %.6f\npilot-origin: (%d,%d) blocks\n", info.PilotScore, info.PilotMargin, info.OriginXBlocks, info.OriginYBlocks)
+	fmt.Fprintf(w, "pilot: %s sha256=%s\n", info.PilotName, info.PilotHash)
+}
+
+func v4ExtractPhone(args []string) error {
+	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build40 smartphone decoder: downsample very large captures, recover the Build39 projective basin, optionally fit a bounded smooth residual field from proposal-only public-pilot tiles, validate it on held-out pilot tiles, then authenticate the unchanged Format-v4 frame.")
+	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
+	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	raw := fs.Bool("raw", false, "write only the authenticated payload bytes to stdout")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	if *width < 296 || *height < 256 || *width%8 != 0 || *height%8 != 0 {
+		return fmt.Errorf("canonical -width/-height must be divisible by 8 and at least 296x256")
+	}
+	img, err := openImage(*in)
+	if err != nil {
+		return err
+	}
+	payload, info, phone, err := watermark.ExperimentalV4ExtractPhone(img, []byte(*key), *width, *height)
+	if err != nil {
+		printV4PhoneDiagnostics(os.Stderr, info, phone)
+		return err
+	}
+	if *raw {
+		if _, err := os.Stdout.Write(payload); err != nil {
+			return err
+		}
+		printV4PhoneDiagnostics(os.Stderr, info, phone)
+		return nil
+	}
+	fmt.Printf("%s\n", payload)
+	printV4PhoneDiagnostics(os.Stderr, info, phone)
+	return nil
+}
+
+func printV4PhoneDiagnostics(w io.Writer, info watermark.ExperimentalV4ExtractInfo, p watermark.ExperimentalV4PhoneInfo) {
+	fmt.Fprintf(w, "EXPERIMENTAL Format-v4 phone decode\n")
+	fmt.Fprintf(w, "working-image: %dx%d downsampled=%t\n", p.WorkingWidth, p.WorkingHeight, p.Downsampled)
+	fmt.Fprintf(w, "boundary: detected=%t confidence=%.6f\n", p.BoundaryDetected, p.BoundaryConfidence)
+	fmt.Fprintf(w, "phone-geometry-accepted: %t ensemble=%d\n", p.Accepted, p.EnsembleCandidates)
+	fmt.Fprintf(w, "proposal: %.6f\nvalidation: %.6f\nhypotheses: %d\n", p.ProposalScore, p.ValidationScore, p.HypothesesEvaluated)
+	if p.ResidualAttempted {
+		fmt.Fprintf(w, "phone-residual: applied=%t controls=%d rms=%.3f px proposal=%.6f->%.6f validation=%.6f->%.6f\n", p.ResidualApplied, p.ResidualControls, p.ResidualRMSPixels, p.ResidualProposalBefore, p.ResidualProposalAfter, p.ResidualValidationBefore, p.ResidualValidationAfter)
+	}
+	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)
+	fmt.Fprintf(w, "pilot-score: %.6f\npilot-margin: %.6f\npilot-origin: (%d,%d) blocks\n", info.PilotScore, info.PilotMargin, info.OriginXBlocks, info.OriginYBlocks)
+	fmt.Fprintf(w, "pilot: %s sha256=%s\n", info.PilotName, info.PilotHash)
 }
 
 func printV4ProjectiveDiagnostics(w io.Writer, info watermark.ExperimentalV4ExtractInfo, p watermark.ExperimentalV4ProjectiveInfo) {

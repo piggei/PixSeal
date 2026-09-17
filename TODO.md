@@ -199,11 +199,24 @@ and `CHANGELOG.md`.
       payload is recovered. Pilot confidence alone must never authenticate.
 
 
+## v0.3.0 — Build37/38 physical v4 campaign
+
+- [x] Add a full-page scanner-specific boundary initializer that ignores the filename label and treats the paper/artwork edge only as geometry.
+- [x] Refine that seed with disjoint public-pilot proposal/validation and require a complete-pilot `(0,0)` origin/margin gate.
+- [x] Freeze a five-geometry pilot-qualified ensemble before reading protected data; aggregate signed DCT margins and use Build36 soft Hamming without allowing HMAC to choose geometry.
+- [x] Blindly HMAC-authenticate both existing marked scanner JPEGs while rejecting the unmarked control.
+- [x] Build38: acquire the first nine-photo smartphone corpus from the strength-24 scanner-qualified paper set (control/A/B x front/mild/angle) and preserve the native ~200 MP originals privately.
+- [x] Use reference-assisted camera diagnostics to separate geometry from data-channel strength; strength 24 remains outside the Hamming/HMAC envelope even after dense residual registration.
+- [x] Print the Build38 phone-specific robust/strength-48 control/A/B pack and acquire front/mild/angle native phone files for both marked carriers plus control.
+- [ ] Before implementing a blind camera warp, prove on the new strength-48 corpus that independently supplied/reference-assisted geometry brings the protected data channel inside exact HMAC recovery range.
+- [x] Determine whether phone-camera decoding needs more than Build34 projective geometry: the strength-24 corpus shows residual lens/local warp, but pilot-only local fitting can overfit texture and does not rescue the data channel.
+- [x] Build39/40: add blind camera boundary/projective registration and a bounded pilot-only residual model with disjoint spatial proposal/validation; keep HMAC out of geometry selection.
+
 ## v0.3.0 — Build36 physical v4 campaign
 
 - [x] Prove channel sufficiency independently of blind geometry: reference-assisted registration + Build36 soft Hamming authenticates both existing marked scans exactly; keep this explicitly non-normative.
-- [ ] Recover the same Build35 scans with a **blind scanner registration** front-end using only public boundary/lattice/pilot evidence; control must remain rejected.
-- [ ] Promote the physical scanner corpus to a normative v4 PASS only after blind HMAC recovery succeeds without original-carrier registration.
+- [x] Recover the same Build35 scans with a **blind scanner registration** front-end using only public boundary/pilot evidence; Build37 rejects the control and HMAC-authenticates both marked scans.
+- [x] Qualify the physical scanner corpus only after blind HMAC recovery succeeds without original-carrier registration; Build37 closes this scanner-specific gate. This does not yet make Format v4 normative.
 
 ## v0.3.0 — Build35 physical v4 campaign
 
@@ -212,5 +225,10 @@ and `CHANGELOG.md`.
 - [x] Expose the Build34 projective decoder through `ExperimentalV4ExtractProjective` / `v4-extract-projective` with explicit canonical dimensions (Build35).
 - [x] Define the scanner-first MQ fixture pack: control + `v4-b35-phys-a` + `v4-b35-phys-b`, robust/strength 24, public test key, exact hashes and acquisition plan.
 - [x] Print the Build35 pack at actual size / 300 ppi. The available office scanner cannot produce color lossless PNG/TIFF; retain the 600-dpi JPEG captures as the first physical corpus and document the deviation from the planned acquisition mode.
-- [ ] Require both marked scans to HMAC-authenticate their exact payloads and the control to reject.
-- [ ] Only after the scanner gate, acquire frontal-phone and perspective-phone captures of the same three printed sheets.
+- [x] Require both marked scans to HMAC-authenticate their exact payloads and the control to reject; Build37 achieves this blindly on the original 600-dpi JPEG captures.
+- [x] Acquire frontal/mild/angle phone captures of the same Build35 strength-24 sheets; preserve them as historical phone-channel evidence.
+- [x] Acquire the new Build38 strength-48 phone qualification pack; preserve it separately from the strength-24 corpus.
+
+- [x] Build39: add bounded phone downsampling, perspective-tolerant artwork boundary estimation, spatially split public-pilot projective refinement, `ExperimentalV4ExtractPhone` and `v4-extract-phone`.
+- [x] Build40: implement and synthetically qualify the bounded pilot-only residual field after the Build39 homography.
+- [ ] Build41+: improve global smartphone projective-basin preservation/ranking on the existing strength-48 corpus. Build40 shows that enlarging the local residual warp is not justified when held-out pilot evidence disagrees.

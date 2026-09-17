@@ -1,3 +1,50 @@
+## v0.3.0-build40 — 2026-09-17
+
+- Adds a bounded quadratic smartphone residual field on top of the Build39 homography; the maximum correction is six canonical pixels.
+- Fits residual controls exclusively from checkerboard-A repetitions of the public Format-v4 pilot and keeps checkerboard-B repetitions held out for acceptance. Payload bytes, frame header, ECC outcome and HMAC are not geometry inputs.
+- Rejects ambiguous local pilot peaks, robustly fits the remaining controls, and requires held-out validation gain plus complete-pilot `(0,0)` origin/score/margin before the field can be used.
+- Integrates residual-aware protected-margin sampling into `ExperimentalV4ExtractPhone` / `v4-extract-phone`; if the residual path does not authenticate, the untouched Build39 ensemble is retried once. HMAC never scores or reorders geometry.
+- Adds `v4-build40-phone-residual-test`: a smooth non-projective strength-48 synthetic channel is corrected from public-pilot evidence and reaches exact HMAC recovery; an unmarked control remains rejected.
+- Records the private real-phone result as a safe negative: current Build39 basins do not yield a coherent <=6 px field, so the remaining blocker is global projective-basin selection rather than justification for a larger local warp.
+- Keeps Format-v3 frozen, strength 48, the v4 pilot/data layout, Hamming(7,4) and HMAC domains unchanged.
+
+## v0.3.0-build39 — 2026-09-17
+
+Build39 starts blind smartphone registration on the completed strength-48 physical corpus without changing Format-v4 encoding, strength, pilot, data mapping, Hamming(7,4), HMAC domains or the frozen Format-v3 core.
+
+- Adds experimental API `ExperimentalV4ExtractPhone` and CLI `v4-extract-phone`.
+- Adds bounded internal downsampling for very large camera captures (long side capped at 4600 px for the registration/data working image).
+- Adds a phone-specific artwork-boundary path: scanner boundary is reused only when it is safely interior; otherwise local-paper evidence plus edge-gradient refinement estimates the four artwork edges under perspective.
+- Adds projective refinement driven only by the public v4 pilot. Proposal and held-out validation use spatially disjoint checkerboard tile partitions; payload/header/ECC/HMAC are excluded from geometry selection.
+- Adds `v4-build39-phone-registration-test`, a synthetic registration checkpoint covering perspective boundary evidence, marked/control separation, the phone downsample bound and invalid canonical dimensions.
+- The real strength-48 corpus confirms that the data channel itself is sufficient under reference-assisted registration (multiple marked captures authenticate by HMAC). Blind phone HMAC closure is **not** claimed in Build39: residual local/lens/print warp remains after a single homography and is the next research target.
+- Keeps the corrected private-data `.gitignore` baseline, including explicit `/private-fixtures/` and `/v4-phone private/` exclusions and no `/internal/` exclusion.
+
+## v0.3.0-build38 — 2026-09-17
+
+Build38 starts smartphone-channel qualification after Build37 closed blind scanner recovery. It deliberately keeps the Format-v4 wire format, locked pilot, 1120-position data mapping, Hamming(7,4), HMAC domains and frozen Format-v3 core unchanged.
+
+- Adds the first private 9-photo smartphone corpus protocol (`front`, `mild`, `angle` for control/A/B) and records the initial strength-24 result as a **negative but informative physical measurement**.
+- Reference-assisted diagnostics isolate the channel limit: even after dense non-rigid registration, representative strength-24 captures retain about 14.5–17.9% protected coded-bit error and 20–42/256 post-soft-Hamming bit errors. This is far outside exact HMAC recovery and shows that geometry alone is not the remaining blocker.
+- Rejects increasingly flexible pilot-only local warp fitting as a production direction for the strength-24 photographs because it can overfit natural image texture while the protected data plane remains weak.
+- Defines a dedicated phone qualification carrier at robust **strength 48**, preserving every other Format-v4 parameter. Digital MQ comparison gives about 32.5 dB PSNR versus the control while remaining visually subtle in the qualification image.
+- Adds `make v4-phone-fixtures`, producing private Build38 control/A/B print masters, SHA-256 manifest, acquisition plan and a phone-specific protocol. The output defaults to `v4-phone private/build38-generated/`.
+- Adds `v4-build38-phone-channel-test` to protect the unchanged v4 framing/ECC path at strength 48 through aligned and JPEG-q82 round trips.
+- Hardens `.gitignore`: explicitly excludes `private-fixtures/`, `v4-physical private/`, the new `v4-phone private/`, the historical private corpora and OS `Zone.Identifier` artifacts; `internal/` remains tracked.
+- The Build35 strength-24 scanner prints remain the qualified scanner corpus and are not overwritten. Build38 requires a new phone-specific marked print pair before any blind camera decoder claim.
+
+## v0.3.0-build37 — 2026-09-15
+
+- Adds `ExperimentalV4ExtractScanner` and the explicit `v4-extract-scanner` CLI for full-page scanner captures with visible white paper around the printed artwork.
+- Adds a paper/artwork boundary estimator that is used only as a geometry initializer, never as watermark/authentication evidence.
+- Adds a deterministic two-stage scanner-affine refinement: a 18,750-hypothesis bounded coarse bank and a 15,625-hypothesis fine neighborhood. Pilot partition A proposes; disjoint partition B ranks.
+- Requires the held-out winner to recover complete-pilot cyclic origin `(0,0)` with scanner pilot score >= 0.15 and margin >= 0.05. Proposal/validation floors are 0.30/0.15.
+- Freezes the top five pilot-qualified geometries before any frame/key/HMAC work. Protected DCT margins are validation-weighted across that ensemble, then passed to the Build36 soft-Hamming decoder and unchanged v4 frame/HMAC.
+- Adds `v4-build37-scanner-registration-test` with a synthetic full-page JPEG scanner channel and an unmarked control.
+- Adds opt-in `v4-build37-physical-scanner-test` for private full-page captures; the private files remain excluded from source archives.
+- First real blind physical scanner result on the existing Build35 corpus: control REJECT; marked A authenticates `v4-b35-phys-a`; marked B authenticates `v4-b35-phys-b`. No reprint, strength change, pilot change, ECC change or Format-v3 change is required.
+- Documents scanner success as a channel-specific checkpoint only; smartphone frontal/perspective capture remains a separate future gate.
+
 ## v0.3.0-build36 — 2026-09-15
 
 Build36 narrows the first real Format-v4 print/scan result to a data-reliability problem after accurate geometry. It does not change the locked pilot, encoder, strength, frame format, ECC code, Build29 acceptance floors or frozen Format-v3 core.

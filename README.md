@@ -1,7 +1,7 @@
 # PixSeal
 
 
-> **Build36 physical-channel checkpoint:** the Build35 scanner campaign has now produced real paper evidence. Build36 keeps the Build34/35 blind geometry gate unchanged and adds reliability-aware soft Hamming decoding after geometry acceptance. Reference-assisted diagnostics authenticate both marked physical scans, proving channel sufficiency; blind scanner registration remains the blocker before normative physical qualification.
+> **Build40 smartphone residual-warp checkpoint:** Build39 remains the global projective initializer. Build40 adds a strictly bounded quadratic correction field in canonical coordinates, fitted only from checkerboard-A repetitions of the public Format-v4 pilot and accepted only when spatially disjoint checkerboard-B pilot evidence improves. The field is capped at six canonical pixels, never sees payload/header/ECC/HMAC during fitting, and falls back to the untouched Build39 geometry if held-out evidence is not coherent. Synthetic qualification proves pilot-only residual recovery can restore the authenticated strength-48 frame. On representative current strength-48 phone captures the fitted fields are deliberately rejected when proposal-only evidence is not supported strongly enough by held-out tiles, showing that the remaining blind blocker is still the global projective basin rather than justification for a larger local warp.
 >
 > **Build32 active private corpus:** qualification now uses only the explicit LQ/MQ/HQ entries in `private-corpus-active.tsv`; extra files in `original pics/` are ignored. New v4 development tests/fixtures use the public test key `PixSeal-v4-TestKey-2026`. Historical `Piccotti` vectors remain only for reproducibility. The corpus images themselves are private and are not shipped.
 
@@ -12,7 +12,7 @@ hiding short authenticated messages inside images. It embeds protected payload
 bits in luminance DCT coefficients while trying to keep the visual change small
 under normal viewing conditions.
 
-Current development snapshot: **v0.3.0-build36**.
+Current development snapshot: **v0.3.0-build40**.
 
 Stable release baseline: **v0.2.0**.
 
@@ -41,7 +41,7 @@ independently, using disjoint pilot halves for proposal and validation. Build28 
 the first **joint** blind affine+crop checkpoint: rotation, anisotropic scale and
 negative crop/translation are all unknown, geometry is selected from sign-independent
 DCT phase contrast, and only then is the public pilot exposed for placement and cyclic
-origin. Build29 extends the joint search to bounded projective+crop and affine+padded-canvas cases, with explicit ACCEPT/SAFE-REJECT gates to prevent weak geometry from being promoted. Build30 locks the exact `prototype-2-search-p64` identity against accidental mutation and adds a known-mapping corpus audit that separates pilot-channel evidence from geometry/placement-search failures. Build31 introduces the first **real experimental v4 frame and encoder**: version/profile bytes `0x41/0x42/0x43`, v4-specific whitening and HMAC domains, an explicit 1120-data-position mapping, and separate `v4-embed` / aligned `v4-extract` commands. Build32 freezes the active LQ/MQ/HQ corpus identity, Build33 localizes the MQ projective ranking failure, Build34 closes that blocker through authenticated projective recovery, and Build35 exposes the resulting path for controlled physical qualification. The pilot remains development-locked rather than normative, and stable `embed` / `extract` continue to mean frozen Format v3.
+origin. Build29 extends the joint search to bounded projective+crop and affine+padded-canvas cases, with explicit ACCEPT/SAFE-REJECT gates to prevent weak geometry from being promoted. Build30 locks the exact `prototype-2-search-p64` identity against accidental mutation and adds a known-mapping corpus audit that separates pilot-channel evidence from geometry/placement-search failures. Build31 introduces the first **real experimental v4 frame and encoder**: version/profile bytes `0x41/0x42/0x43`, v4-specific whitening and HMAC domains, an explicit 1120-data-position mapping, and separate `v4-embed` / aligned `v4-extract` commands. Build32 freezes the active LQ/MQ/HQ corpus identity, Build33 localizes the MQ projective ranking failure, Build34 closes that blocker through authenticated projective recovery, Build35 exposes the resulting path for controlled physical qualification, Build36 proves the paper/scanner data channel is sufficient with post-geometry soft Hamming, and Build37 closes blind scanner registration on the existing physical corpus. The pilot remains development-locked rather than normative, and stable `embed` / `extract` continue to mean frozen Format v3.
 
 Project history and future work are kept in [`HISTORY.md`](HISTORY.md) and
 [`TODO.md`](TODO.md). Release-facing changes are in [`CHANGELOG.md`](CHANGELOG.md).
@@ -49,6 +49,43 @@ The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
 
+
+
+## What v0.3.0-build40 adds
+
+Build40 tests the next registration hypothesis without changing the Format-v4 carrier. The encoder, locked pilot, 1120 data positions, robust strength 48, Hamming(7,4), whitening/HMAC domains and frozen Format-v3 implementation are unchanged. The existing nine-photo strength-48 corpus is reused; no new printing or acquisition is required.
+
+After Build39 has produced a canonical-to-observed homography, Build40 may fit a six-coefficient quadratic displacement field independently for X and Y. The field is intentionally a **residual** model: corrections are capped at six canonical pixels and cannot reopen an arbitrary projective or whole-tile search. Local controls are measured only on checkerboard-A repetitions of the public pilot. Ambiguous local peaks are rejected, the remaining controls are robustly fitted, and checkerboard-B repetitions stay completely held out until acceptance. A residual field must improve held-out validation and then recover complete-pilot origin `(0,0)` with explicit score/margin floors before protected data may be sampled. HMAC is still only the final verifier.
+
+The new `v4-build40-phone-residual-test` creates a synthetic strength-48 carrier with a known smooth non-projective deformation. The uncorrected carrier remains geometrically imperfect; the pilot-only field is recovered, held-out validation improves, soft-Hamming data sampling through the warped mapper recovers the exact HMAC-authenticated payload, and an unmarked control does not qualify. The residual sampler is integrated into `ExperimentalV4ExtractPhone` / `v4-extract-phone`, with automatic fallback to the untouched Build39 ensemble if a residual-qualified attempt does not authenticate.
+
+The private real-phone result is intentionally negative but informative: the current Build39 basins do not produce a coherent <=6 px residual field. Candidate fits can improve proposal tiles while held-out validation falls and the complete pilot retains a non-zero origin, so Build40 **safe-rejects** those fields rather than overfitting the image. The next blind-phone step is therefore to improve the global projective-basin search/retention before attempting another residual refinement. See [`docs/V4_BUILD40_PHONE_RESIDUAL.md`](docs/V4_BUILD40_PHONE_RESIDUAL.md).
+
+## What v0.3.0-build39 adds
+
+Build39 consumes the completed strength-48 smartphone acquisition rather than changing the carrier again. The private nine-photo set remains control / marked A / marked B x front / mild / angle at native ~200 MP. Reference-assisted registration now proves that strength 48 is sufficient: representative marked captures reach the authenticated v4 frame, while A/mild is within one post-soft-Hamming bit. The blocker is therefore registration, not another strength/ECC change.
+
+A new experimental `v4-extract-phone` API/CLI path performs bounded internal downsampling (working long side <= 4600 px), rejects scanner-style page/background fits that touch the camera frame, estimates the printed artwork quadrilateral with local-paper and edge-gradient evidence, and refines a canonical-to-observed homography with the public pilot. Proposal and validation use spatially disjoint checkerboard tile partitions so payload/header/ECC/HMAC remain unavailable to geometry selection. A small pilot-qualified geometry ensemble is then eligible for the unchanged Build36 soft-Hamming/HMAC decoder.
+
+The new `v4-build39-phone-registration-test` is deliberately a **checkpoint gate**: it qualifies the downsample bound, perspective boundary extraction, disjoint-pilot registration evidence and negative-control separation on synthetic phone geometry. It does not claim blind HMAC closure on the private real-photo corpus. Current real captures show that a single projective mapping can still leave local residual misregistration (camera optics / print flatness / resampling), so the next research step is a bounded pilot-only residual warp after projective registration. Format v3 remains frozen and Build37 scanner recovery remains unchanged.
+
+## What v0.3.0-build38 adds
+
+Build38 begins the smartphone-specific physical channel without altering the v4 framing, pilot, data mapping, Hamming code, HMAC domains or frozen Format v3. The first private phone corpus contains nine native ~200 MP JPEGs from the existing Build35 strength-24 paper set: control / marked A / marked B, each photographed frontally, at mild perspective and at stronger perspective.
+
+That corpus is an important negative measurement. Build37's scanner boundary assumptions do not transfer directly to free-camera framing, but even reference-assisted diagnostics that supply the digital original for geometry cannot recover the strength-24 payloads. With dense non-rigid residual registration, representative captures still show about 14.5–17.9% protected coded-bit error and 20–42 wrong bits after soft Hamming. A pilot-only local warp can overfit natural image texture without improving protected data, so Build38 explicitly rejects that as a production shortcut.
+
+The next physical experiment therefore changes only embedding strength. `make v4-phone-fixtures` produces a private MQ pack at robust strength **48**, retaining the same 1632x1632 canonical carrier, 300-ppi print geometry, locked pilot and v4 frame. It emits control plus `v4-b38-phone-a` / `v4-b38-phone-b`, a SHA-256 manifest, acquisition plan and instructions under `v4-phone private/build38-generated/`. The new `v4-build38-phone-channel-test` protects aligned/JPEG decoding at the chosen strength. On the canonical MQ image, strength 48 measures about 32.5 dB PSNR against the control and remains visually subtle.
+
+The successful Build35/37 scanner corpus is preserved unchanged. The original strength-24 phone photographs remain a historical private corpus and must not be overwritten. A blind phone decoder will be developed only after the strength-48 photographs prove that the physical data channel itself is inside the Hamming/HMAC recovery envelope. See [`docs/V4_BUILD38_PHONE_QUALIFICATION.md`](docs/V4_BUILD38_PHONE_QUALIFICATION.md).
+
+## What v0.3.0-build37 adds
+
+Build37 closes the first fully blind Format-v4 **print -> paper -> scanner -> JPEG -> authenticated payload** checkpoint on the existing Build35 physical corpus. No carrier is reprinted, embedding strength remains 24, the locked `prototype-2-search-p64` pilot and 37x32/64+1120 tile are unchanged, Hamming(7,4) remains the current experimental ECC, and frozen Format v3 is untouched.
+
+The `ExperimentalV4ExtractScanner` API and `v4-extract-scanner` CLI expect a full-page scan with visible white paper around the printed artwork plus the canonical pre-print dimensions. The visible paper/artwork boundary is used only as an independent geometric initializer. A deliberately narrow scanner-affine bank is proposed with pilot partition A; disjoint pilot partition B ranks the surviving basin. The held-out winner must also win a complete-pilot cyclic-origin competition at `(0,0)` with explicit score/margin floors. The five best pilot-qualified geometries are then frozen as an ensemble. Only after that freeze are protected data margins sampled, validation-weighted across the ensemble, soft-Hamming decoded and authenticated by the unchanged v4 frame/HMAC. Payload/header/CRC/key/HMAC evidence is unavailable to boundary detection, geometry search and pilot acceptance.
+
+On the first private scanner corpus (actual-size 300-ppi print, smooth low-porosity white paper, office scanner, 600-dpi color JPEG), Build37 produces: control REJECT; `v4-b35-phys-a` PASS; `v4-b35-phys-b` PASS.
 
 ## What v0.3.0-build36 adds
 
