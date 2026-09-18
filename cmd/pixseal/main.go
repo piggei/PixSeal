@@ -36,7 +36,7 @@ Commands:
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
-  v4-extract-phone EXPERIMENTAL: Build40 smartphone projective + pilot-only residual registration + authenticated v4 decode
+  v4-extract-phone EXPERIMENTAL: Build41 smartphone basin recovery + Build40 pilot-only residual + authenticated v4 decode
   capacity   Show the usable payload capacity of an image
   analyze    Recommend a v3 profile and embedding settings
   diagnose   Experimental bounded local-lattice diagnostics (v0.3 research)
@@ -728,7 +728,7 @@ func printV4ScannerDiagnostics(w io.Writer, info watermark.ExperimentalV4Extract
 }
 
 func v4ExtractPhone(args []string) error {
-	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build40 smartphone decoder: downsample very large captures, recover the Build39 projective basin, optionally fit a bounded smooth residual field from proposal-only public-pilot tiles, validate it on held-out pilot tiles, then authenticate the unchanged Format-v4 frame.")
+	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build41 smartphone decoder: anchor the artwork boundary structurally, fit a bounded public-pilot projective basin on a fixed proposal fold set, validate a frozen diverse geometry ensemble on held-out pilot tiles, optionally apply the Build40 residual field, then authenticate the unchanged Format-v4 frame.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
@@ -773,11 +773,14 @@ func printV4PhoneDiagnostics(w io.Writer, info watermark.ExperimentalV4ExtractIn
 	fmt.Fprintf(w, "EXPERIMENTAL Format-v4 phone decode\n")
 	fmt.Fprintf(w, "working-image: %dx%d downsampled=%t\n", p.WorkingWidth, p.WorkingHeight, p.Downsampled)
 	fmt.Fprintf(w, "boundary: detected=%t confidence=%.6f\n", p.BoundaryDetected, p.BoundaryConfidence)
+	fmt.Fprintf(w, "projective-basin: found=%t\n", p.ProjectiveBasinFound)
 	fmt.Fprintf(w, "phone-geometry-accepted: %t ensemble=%d\n", p.Accepted, p.EnsembleCandidates)
 	fmt.Fprintf(w, "proposal: %.6f\nvalidation: %.6f\nhypotheses: %d\n", p.ProposalScore, p.ValidationScore, p.HypothesesEvaluated)
 	if p.ResidualAttempted {
-		fmt.Fprintf(w, "phone-residual: applied=%t controls=%d rms=%.3f px proposal=%.6f->%.6f validation=%.6f->%.6f\n", p.ResidualApplied, p.ResidualControls, p.ResidualRMSPixels, p.ResidualProposalBefore, p.ResidualProposalAfter, p.ResidualValidationBefore, p.ResidualValidationAfter)
+		fmt.Fprintf(w, "phone-residual: fitted=%t applied=%t controls=%d rms=%.3f px proposal=%.6f->%.6f validation=%.6f->%.6f\n", p.ResidualFitted, p.ResidualApplied, p.ResidualControls, p.ResidualRMSPixels, p.ResidualProposalBefore, p.ResidualProposalAfter, p.ResidualValidationBefore, p.ResidualValidationAfter)
 	}
+	fmt.Fprintf(w, "data-decode: attempted=%t soft-hamming-profiles=%d max-confidence=%.2f\n", p.DataDecodeAttempted, p.SoftHammingProfiles, p.MaxDataConfidence)
+	fmt.Fprintf(w, "hmac: authenticated=%t fallback-attempted=%t fallback-authenticated=%t\n", p.HMACAuthenticated, p.FallbackAttempted, p.FallbackAuthenticated)
 	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)
 	fmt.Fprintf(w, "pilot-score: %.6f\npilot-margin: %.6f\npilot-origin: (%d,%d) blocks\n", info.PilotScore, info.PilotMargin, info.OriginXBlocks, info.OriginYBlocks)
 	fmt.Fprintf(w, "pilot: %s sha256=%s\n", info.PilotName, info.PilotHash)

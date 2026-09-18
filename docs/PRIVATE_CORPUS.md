@@ -1,7 +1,12 @@
 # Private physical corpus
 
 The physical print/camera and scanner acquisitions are research material and are
-**not distributed with PixSeal source archives**. Their test key is intentionally
+**not distributed with PixSeal source archives**. The PolyForm Noncommercial
+license applies to the PixSeal source distribution; it does **not** make these
+private photographs, scans, generated fixtures or acquisition archives part of
+the licensed source package. Unless a separate notice explicitly grants rights
+to a private corpus, keep it private and out of releases. See
+[`LICENSING.md`](LICENSING.md). Their test key is intentionally
 public and reproducible: `Piccotti`. Build17 keeps it as the default
 `PRINT_CAMERA_KEY` so the historical corpus can be decoded without extra setup.
 It is a project test constant, not a personal or production credential. If PixSeal is
@@ -133,3 +138,10 @@ By default it reads `original pics/` and writes only generated private carriers 
 The active v4 development/qualification corpus is now exactly the three anonymous originals listed in root `private-corpus-active.tsv`: LQ, MQ and HQ. Corpus-driven tests must consume that manifest and must not discover arbitrary directory contents. `corpus-manifest-check` verifies dimensions and SHA-256. HQ is approximately 200.5 MP and is intentionally skipped by bounded tests whose configured image budget is lower; this is a SKIP, not a PASS.
 
 New v4 experiments and physical fixtures use the intentionally public development key `PixSeal-v4-TestKey-2026`. The historical key `Piccotti` remains only where older regression vectors require it. Neither the three originals nor generated print fixtures belong in source/evidence release archives.
+
+
+## Build41 smartphone qualification corpus
+
+Build41 reuses the nine original strength-48 files under `v4-phone private/build38-acquired/`. They remain private qualification material and are never copied into source/release archives. `make v4-build41-phone-physical-test` may write only derived TSV/Markdown telemetry and stderr logs under `v4-phone private/build41-diagnostics/`; those outputs are private/generated evidence and are covered by the existing `/v4-phone private/` ignore rule.
+
+The software's PolyForm Noncommercial License does not grant separate rights to private photographs, scans, source images or qualification fixtures. Keep those corpora outside release archives and public commits unless their owner explicitly chooses to publish them under a separate license.

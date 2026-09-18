@@ -807,3 +807,16 @@ This closes the controlled scanner channel without reprinting and without increa
 **Private real-phone result.** SAFE REJECT. With the current Build39 geometry basins, local proposal controls are not consistently explained by one <=6 px smooth field. Representative fits improve proposal evidence but reduce held-out validation and retain non-zero complete-pilot origin. Increasing the residual bound would convert a local correction into another unconstrained geometry search and is therefore rejected.
 
 **Decision.** Keep Build40 as a safe residual checkpoint and move the next research step back one stage: improve global phone projective-basin search/retention, then re-run the same residual model. Encoder, strength 48, ECC and HMAC remain unchanged.
+
+
+## Build41 — blind smartphone basin recovery (2026-09-18)
+
+**Evidence gate.** The complete Build40 matrix over the nine original strength-48 photographs showed that no marked capture was reaching a sufficiently stable blind global basin. Reference-assisted diagnostics continued to authenticate multiple marked captures, so increasing embedding strength or changing ECC/HMAC was not supported.
+
+**Rejected variants.** A free corner walk that maximized one pilot subset overfit spatially and could discard a slightly lower proposal geometry with stronger held-out support. A pure 50/50 checkerboard split lost too much signal under strong perspective. A large multi-start bank increased cost and false local peaks without improving the scientific gate. HMAC-guided pair selection was used only once as an offline diagnostic to prove that qualified geometry banks already contained an authenticating pair; it was explicitly not promoted to production.
+
+**Accepted design.** Use the visible artwork as an absolute structural anchor, keep an eight-coordinate projective correction tightly bounded around it, and use a fixed three-fold spatial pilot split. Two folds generate/refine a proposal-only shortlist; the third is never sampled until freeze. Preserve multiple strong proposal candidates instead of only the maximum, because the maximum can overfit its own subset. After held-out/full-pilot qualification, require a two-member ensemble with scale-normalized geometric diversity so it brackets sub-pixel uncertainty rather than duplicating one optimum.
+
+**Physical result.** All three controls reject. `A/angle` authenticates `v4-b38-phone-a`; `B/front` authenticates `v4-b38-phone-b`. `A/mild` reaches data decoding but fails HMAC; A/front, B/mild and B/angle remain geometry rejects. The downstream Build40 residual does not qualify for either PASS capture.
+
+**Decision.** Freeze Build41 at the staged A/B milestone. Future work may broaden the capture envelope, but it must preserve the three control rejections, both Build41 physical PASS cases, the proposal/held-out separation and the rule that payload/ECC/key/HMAC never select geometry.

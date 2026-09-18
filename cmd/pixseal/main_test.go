@@ -15,6 +15,7 @@ import (
 	"testing"
 
 	"github.com/pj/pixseal/internal/buildinfo"
+	"github.com/pj/pixseal/watermark"
 )
 
 func TestSubcommandHelpReturnsFlagErrHelp(t *testing.T) {
@@ -66,6 +67,32 @@ func TestV4ExtractPhoneRequiresCanonicalBlockDimensions(t *testing.T) {
 		err := v4ExtractPhone([]string{"-in", "does-not-matter.jpg", "-key", "12345678", "-width", tc.w, "-height", tc.h})
 		if err == nil || !strings.Contains(err.Error(), "divisible by 8") {
 			t.Fatalf("dimensions %sx%s error=%v", tc.w, tc.h, err)
+		}
+	}
+}
+
+func TestV4PhoneDiagnosticsExposeBuild41MatrixFields(t *testing.T) {
+	var buf bytes.Buffer
+	info := watermark.ExperimentalV4ExtractInfo{Confidence: 12.5, Profile: watermark.ProfileRobust, PilotScore: 0.3, PilotMargin: 0.08, OriginXBlocks: 0, OriginYBlocks: 0, PilotName: "pilot", PilotHash: "hash"}
+	phone := watermark.ExperimentalV4PhoneInfo{
+		WorkingWidth: 1200, WorkingHeight: 900, Downsampled: true,
+		BoundaryDetected: true, BoundaryConfidence: 0.8, ProjectiveBasinFound: true,
+		Accepted: true, EnsembleCandidates: 2, ProposalScore: 0.25, ValidationScore: 0.2,
+		ResidualAttempted: true, ResidualFitted: true, ResidualApplied: false, ResidualControls: 9, ResidualRMSPixels: 1.2,
+		ResidualProposalBefore: 0.2, ResidualProposalAfter: 0.3, ResidualValidationBefore: 0.18, ResidualValidationAfter: 0.16,
+		DataDecodeAttempted: true, SoftHammingProfiles: 3, MaxDataConfidence: 11.2,
+		HMACAuthenticated: false, FallbackAttempted: true, FallbackAuthenticated: false,
+	}
+	printV4PhoneDiagnostics(&buf, info, phone)
+	out := buf.String()
+	for _, want := range []string{
+		"projective-basin: found=true",
+		"phone-residual: fitted=true applied=false",
+		"data-decode: attempted=true soft-hamming-profiles=3 max-confidence=11.20",
+		"hmac: authenticated=false fallback-attempted=true fallback-authenticated=false",
+	} {
+		if !strings.Contains(out, want) {
+			t.Fatalf("diagnostics missing %q:\n%s", want, out)
 		}
 	}
 }

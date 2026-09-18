@@ -69,12 +69,18 @@ V4_PHONE_MESSAGE_B ?= v4-b38-phone-b
 V4_PHONE_PROFILE ?= robust
 V4_PHONE_STRENGTH ?= 48
 V4_PHONE_PRINT_PPI ?= 300
+V4_PHONE_ACQUISITION_DIR ?= v4-phone private/build38-acquired
+V4_PHONE_DIAGNOSTIC_DIR ?= v4-phone private/build40-diagnostics
+V4_PHONE_BUILD41_DIAGNOSTIC_DIR ?= v4-phone private/build41-diagnostics
+V4_PHONE_CANONICAL_WIDTH ?= 1632
+V4_PHONE_CANONICAL_HEIGHT ?= 1632
+V4_PHONE_TIMEOUT ?= 600
 ALL_TEST_REPORT ?=
 ALL_TEST_TARGETS ?=
 ALL_TEST_STRICT ?=1
 GO_SOURCES := $(shell find cmd internal watermark -type f -name '*.go')
 
-.PHONY: test-list corpus-manifest-check private-corpus-manifest v4-physical-fixtures v4-physical-qualification v4-phone-fixtures print-scan-test build test test-unit release-unit v3-freeze-check v4-pilot-lock-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build37-physical-scanner-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
+.PHONY: test-list corpus-manifest-check private-corpus-manifest v4-physical-fixtures v4-physical-qualification v4-phone-fixtures v4-build40-phone-corpus-diagnostic v4-build41-phone-physical-test print-scan-test build test test-unit release-unit v3-freeze-check v4-pilot-lock-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build37-physical-scanner-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
 
 # Print a categorized index of all test/check targets without running them.
 test-list:
@@ -132,6 +138,21 @@ v4-phone-fixtures: build
 	V4_PHONE_STRENGTH="$(V4_PHONE_STRENGTH)" \
 	V4_PHONE_PRINT_PPI="$(V4_PHONE_PRINT_PPI)" \
 	bash ./scripts/prepare-v4-phone-fixtures.sh
+
+# Opt-in Build40 matrix over the nine private strength-48 smartphone captures.
+# This target does not change geometry or decoding behavior; it only records
+# stage-by-stage telemetry needed to decide the first Build41 algorithm change.
+v4-build40-phone-corpus-diagnostic: build
+	@PIXSEAL="$(abspath $(PIXSEAL))" \
+	V4_PHONE_ACQUISITION_DIR="$(V4_PHONE_ACQUISITION_DIR)" \
+	V4_PHONE_DIAGNOSTIC_DIR="$(V4_PHONE_DIAGNOSTIC_DIR)" \
+	V4_PHONE_KEY="$(V4_PHONE_KEY)" \
+	V4_PHONE_MESSAGE_A="$(V4_PHONE_MESSAGE_A)" \
+	V4_PHONE_MESSAGE_B="$(V4_PHONE_MESSAGE_B)" \
+	V4_PHONE_CANONICAL_WIDTH="$(V4_PHONE_CANONICAL_WIDTH)" \
+	V4_PHONE_CANONICAL_HEIGHT="$(V4_PHONE_CANONICAL_HEIGHT)" \
+	V4_PHONE_TIMEOUT="$(V4_PHONE_TIMEOUT)" \
+	bash ./scripts/diagnose-v4-phone-corpus.sh
 
 # Default target: build the native executable for the current platform.
 build: $(PIXSEAL)
@@ -393,6 +414,14 @@ v4-build40-phone-residual-test:
 	@go test ./watermark -run '^TestExperimentalV4Build40PilotOnlyResidualWarp$$' -count=1 -v
 	@go test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractPhoneRequiresCanonicalBlockDimensions)$$' -count=1 -v
 
+# Build41 improves the blind global phone basin while keeping the Build40
+# residual layer, carrier and authentication channel unchanged. A fixed 1/3
+# spatial fold is held out until the proposal-only shortlist is frozen.
+v4-build41-phone-basin-test:
+	@echo "Running Build41 Format-v4 blind smartphone basin qualification..."
+	@go test ./watermark -run '^TestExperimentalV4Build41PhoneBasinRecovery$$' -count=1 -v
+	@go test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractPhoneRequiresCanonicalBlockDimensions)$$' -count=1 -v
+
 # Opt-in private physical regression over the original full-page scanner files.
 # Paths are explicit so the private captures never enter the source archive.
 v4-build37-physical-scanner-test: build
@@ -450,6 +479,22 @@ print-camera-test: build
 
 # Optional private print -> scanner corpus. Uses the same HMAC-only semantics as
 # print-camera-test but keeps acquisition methods separate in the filesystem.
+
+# Opt-in Build41 physical milestone over the private nine-photo strength-48
+# corpus. All controls must reject and at least one A plus one B capture must
+# authenticate the exact expected payload.
+v4-build41-phone-physical-test: build
+	@PIXSEAL="$(abspath $(PIXSEAL))" \
+	V4_PHONE_ACQUISITION_DIR="$(V4_PHONE_ACQUISITION_DIR)" \
+	V4_PHONE_BUILD41_DIAGNOSTIC_DIR="$(V4_PHONE_BUILD41_DIAGNOSTIC_DIR)" \
+	V4_PHONE_KEY="$(V4_PHONE_KEY)" \
+	V4_PHONE_CANONICAL_WIDTH="$(V4_PHONE_CANONICAL_WIDTH)" \
+	V4_PHONE_CANONICAL_HEIGHT="$(V4_PHONE_CANONICAL_HEIGHT)" \
+	V4_PHONE_MESSAGE_A="$(V4_PHONE_MESSAGE_A)" \
+	V4_PHONE_MESSAGE_B="$(V4_PHONE_MESSAGE_B)" \
+	V4_PHONE_TIMEOUT="$(V4_PHONE_TIMEOUT)" \
+	bash ./scripts/test-v4-build41-phone-corpus.sh
+
 print-scan-test: build
 	@PIXSEAL="$(abspath $(PIXSEAL))" \
 	PRINT_CAMERA_DIR="$(PRINT_SCAN_DIR)" \

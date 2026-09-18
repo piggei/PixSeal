@@ -208,7 +208,7 @@ and `CHANGELOG.md`.
 - [x] Build38: acquire the first nine-photo smartphone corpus from the strength-24 scanner-qualified paper set (control/A/B x front/mild/angle) and preserve the native ~200 MP originals privately.
 - [x] Use reference-assisted camera diagnostics to separate geometry from data-channel strength; strength 24 remains outside the Hamming/HMAC envelope even after dense residual registration.
 - [x] Print the Build38 phone-specific robust/strength-48 control/A/B pack and acquire front/mild/angle native phone files for both marked carriers plus control.
-- [ ] Before implementing a blind camera warp, prove on the new strength-48 corpus that independently supplied/reference-assisted geometry brings the protected data channel inside exact HMAC recovery range.
+- [x] Prove on the strength-48 corpus that independently supplied/reference-assisted geometry brings multiple marked captures inside exact HMAC recovery range; this established geometry, not embedding energy, as the remaining blocker.
 - [x] Determine whether phone-camera decoding needs more than Build34 projective geometry: the strength-24 corpus shows residual lens/local warp, but pilot-only local fitting can overfit texture and does not rescue the data channel.
 - [x] Build39/40: add blind camera boundary/projective registration and a bounded pilot-only residual model with disjoint spatial proposal/validation; keep HMAC out of geometry selection.
 
@@ -231,4 +231,6 @@ and `CHANGELOG.md`.
 
 - [x] Build39: add bounded phone downsampling, perspective-tolerant artwork boundary estimation, spatially split public-pilot projective refinement, `ExperimentalV4ExtractPhone` and `v4-extract-phone`.
 - [x] Build40: implement and synthetically qualify the bounded pilot-only residual field after the Build39 homography.
-- [ ] Build41+: improve global smartphone projective-basin preservation/ranking on the existing strength-48 corpus. Build40 shows that enlarging the local residual warp is not justified when held-out pilot evidence disagrees.
+- [x] Run the Build40 decoder over all nine strength-48 smartphone originals and preserve the stage-by-stage matrix (boundary, projective basin, proposal/held-out pilot, origin, residual fit/application, data confidence, soft-Hamming attempts and HMAC). The matrix identified global phone basin recovery as the next blocker.
+- [x] Build41: improve only the global smartphone projective-basin stage identified by the complete Build40 matrix. The staged physical milestone is closed: all controls reject, `A/angle` authenticates A and `B/front` authenticates B, with no encoder/ECC/HMAC/residual change.
+- [ ] Build42+: broaden the blind smartphone envelope while preserving all three control rejections and the existing Build41 A/B HMAC PASS cases. Priority cases are A/front, B/mild and B/angle basin recovery; A/mild already reaches the protected-data decoder but still fails authentication. Do not increase strength or enlarge the residual model without new evidence.

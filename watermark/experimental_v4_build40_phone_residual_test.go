@@ -61,7 +61,7 @@ func TestExperimentalV4Build40PilotOnlyResidualWarp(t *testing.T) {
 	base := experimentalV4Build40IdentityHomography()
 
 	warp, residual := experimentalV4PhoneFitResidualPilotOnly(plane, candidate, width, height, base)
-	if warp == nil || !residual.Applied {
+	if warp == nil || !residual.Fitted || !residual.Applied {
 		t.Fatalf("residual warp not accepted: %+v", residual)
 	}
 	if residual.Controls < experimentalV4PhoneResidualMinControls {
@@ -92,5 +92,40 @@ func TestExperimentalV4Build40PilotOnlyResidualWarp(t *testing.T) {
 	controlWarp, controlInfo := experimentalV4PhoneFitResidualPilotOnly(newPixelPlane(control), candidate, width, height, base)
 	if controlWarp != nil || controlInfo.Applied {
 		t.Fatalf("unmarked control unexpectedly qualified residual warp: %+v", controlInfo)
+	}
+}
+
+func TestExperimentalV4Build40PhoneDecodeTelemetry(t *testing.T) {
+	const width = 1184
+	const height = 1024
+	key := []byte("PixSeal-v4-TestKey-2026")
+	payload := []byte("v4-b40-telemetry")
+	opts := DefaultOptions()
+	opts.Profile = ProfileRobust
+	opts.Strength = 48
+	marked, _, err := ExperimentalV4EmbedWithInfo(testImage(width, height), payload, key, opts)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	h := experimentalV4Build40IdentityHomography()
+	candidate := experimentalV4Prototype2Candidate()
+	detection := experimentalV4DetectPilotProjective(marked, candidate, width, height, h)
+	hyp := []experimentalV4PhoneHypothesis{
+		{h: h, validation: 1, detection: detection},
+		{h: h, validation: 0.9, detection: detection},
+	}
+	got, _, telemetry, err := experimentalV4PhoneDecodeEnsemble(marked, key, width, height, hyp)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !bytes.Equal(got, payload) {
+		t.Fatalf("payload=%q want=%q", got, payload)
+	}
+	if !telemetry.Attempted || !telemetry.Authenticated {
+		t.Fatalf("decode telemetry=%+v", telemetry)
+	}
+	if telemetry.ProfilesTried != 1 || telemetry.Profile != ProfileRobust || telemetry.MaxConfidence <= 0 {
+		t.Fatalf("unexpected decode telemetry=%+v", telemetry)
 	}
 }

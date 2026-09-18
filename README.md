@@ -1,26 +1,34 @@
 # PixSeal
 
-
-> **Build40 smartphone residual-warp checkpoint:** Build39 remains the global projective initializer. Build40 adds a strictly bounded quadratic correction field in canonical coordinates, fitted only from checkerboard-A repetitions of the public Format-v4 pilot and accepted only when spatially disjoint checkerboard-B pilot evidence improves. The field is capped at six canonical pixels, never sees payload/header/ECC/HMAC during fitting, and falls back to the untouched Build39 geometry if held-out evidence is not coherent. Synthetic qualification proves pilot-only residual recovery can restore the authenticated strength-48 frame. On representative current strength-48 phone captures the fitted fields are deliberately rejected when proposal-only evidence is not supported strongly enough by held-out tiles, showing that the remaining blind blocker is still the global projective basin rather than justification for a larger local warp.
->
-> **Build32 active private corpus:** qualification now uses only the explicit LQ/MQ/HQ entries in `private-corpus-active.tsv`; extra files in `original pics/` are ignored. New v4 development tests/fixtures use the public test key `PixSeal-v4-TestKey-2026`. Historical `Piccotti` vectors remain only for reproducibility. The corpus images themselves are private and are not shipped.
-
 ![PixSeal — Hide messages. Keep the picture.](docs/assets/pixseal-banner.png)
 
+**Hide messages. Keep the picture.**
+
 PixSeal is an experimental, pure-Go **robust image steganography** tool for
-hiding short authenticated messages inside images. It embeds protected payload
-bits in luminance DCT coefficients while trying to keep the visual change small
-under normal viewing conditions.
-
-Current development snapshot: **v0.3.0-build40**.
-
-Stable release baseline: **v0.2.0**.
+hiding short authenticated messages inside images while preserving their visual
+appearance as much as possible. It embeds protected payload bits in luminance
+DCT coefficients and is designed to investigate how well hidden data can survive
+real-world transformations such as resizing, JPEG recompression, printing,
+scanning and smartphone photography.
 
 PixSeal is a hidden-data channel, not an ownership-marking product. Digital
 watermarking is the robustness mechanism; the project goal is robust
 steganography for short messages. PixSeal does **not** claim statistical
 undetectability and has not undergone a professional cryptographic or
 steganalytic audit.
+
+The project is **source-available for noncommercial use** under the PolyForm
+Noncommercial License 1.0.0 (`PolyForm-Noncommercial-1.0.0`). Commercial use
+requires a separate commercial license. See
+[`docs/LICENSING.md`](docs/LICENSING.md), [`LICENSE`](LICENSE) and
+[`NOTICE`](NOTICE). Historical copies already released under MIT retain the MIT
+rights granted with those copies; the licensing change is prospective.
+
+## Project status and development
+
+Current development snapshot: **v0.3.0-build41**.
+
+Stable release baseline: **v0.2.0**.
 
 Format v3 remains the implemented interoperability baseline. Its on-image layout,
 deterministic encoder fingerprints and production decoder are **frozen**. After builds
@@ -29,19 +37,17 @@ public structure is measurable but not sufficiently discriminative on the physic
 negative control to justify another threshold or voting round. Future v3 work is
 maintenance/regression only unless genuinely new independent evidence appears.
 
-Build23 began an isolated experimental **Format v4** branch with an intentional
-public absolute pilot. Build24 added reproducible pilot search, partial-visibility
-qualification and the first pilot-only synthetic image-channel tests. Build25 extends
-that work through rotation, affine/shear, perspective, crop and combined distortions
-with geometry supplied independently. Build26 adds the first bounded blind geometry
-search: repeated data-plane self-consistency proposes coarse geometry and the public
-pilot ranks/validates the surviving hypotheses. Build27 then isolates the next
-problem: arbitrary crop/translation and padded-canvas placement with geometry supplied
-independently, using disjoint pilot halves for proposal and validation. Build28 closes
-the first **joint** blind affine+crop checkpoint: rotation, anisotropic scale and
-negative crop/translation are all unknown, geometry is selected from sign-independent
-DCT phase contrast, and only then is the public pilot exposed for placement and cyclic
-origin. Build29 extends the joint search to bounded projective+crop and affine+padded-canvas cases, with explicit ACCEPT/SAFE-REJECT gates to prevent weak geometry from being promoted. Build30 locks the exact `prototype-2-search-p64` identity against accidental mutation and adds a known-mapping corpus audit that separates pilot-channel evidence from geometry/placement-search failures. Build31 introduces the first **real experimental v4 frame and encoder**: version/profile bytes `0x41/0x42/0x43`, v4-specific whitening and HMAC domains, an explicit 1120-data-position mapping, and separate `v4-embed` / aligned `v4-extract` commands. Build32 freezes the active LQ/MQ/HQ corpus identity, Build33 localizes the MQ projective ranking failure, Build34 closes that blocker through authenticated projective recovery, Build35 exposes the resulting path for controlled physical qualification, Build36 proves the paper/scanner data channel is sufficient with post-geometry soft Hamming, and Build37 closes blind scanner registration on the existing physical corpus. The pilot remains development-locked rather than normative, and stable `embed` / `extract` continue to mean frozen Format v3.
+Current Format-v4 development is focused on blind physical recovery from smartphone
+photographs. Build39 introduced the global projective phone path, Build40 added a
+strictly bounded public-pilot-only residual field, and Build41 improves the global
+basin itself. On the existing strength-48 physical corpus Build41 now blindly
+HMAC-authenticates one A capture and one B capture while all three unmarked controls
+reject. Protected payload contents, ECC outcome, secret key and HMAC remain excluded
+from geometry selection; HMAC is used only as the final authentication result.
+
+> **Build41 blind-smartphone milestone:** the artwork boundary anchors physical phase, two thirds of the public pilot generate a bounded eight-coordinate projective basin and a proposal-only frozen shortlist, while a deterministic one-third spatial fold remains completely held out until qualification. A scale-normalized two-geometry ensemble must contain genuinely distinct hypotheses before the unchanged soft-Hamming/HMAC channel is attempted. On the private nine-photo strength-48 corpus, `A/angle` authenticates `v4-b38-phone-a`, `B/front` authenticates `v4-b38-phone-b`, and all three controls reject before data decode. The Build40 residual is attempted where applicable but is not applied in either PASS case. See [`docs/V4_BUILD41_PHONE_BASIN.md`](docs/V4_BUILD41_PHONE_BASIN.md).
+>
+> **Build32 active private corpus:** qualification uses only the explicit LQ/MQ/HQ entries in `private-corpus-active.tsv`; extra files in `original pics/` are ignored. New v4 development tests/fixtures use the public test key `PixSeal-v4-TestKey-2026`. Historical `Piccotti` vectors remain only for reproducibility. The corpus images themselves are private and are not shipped.
 
 Project history and future work are kept in [`HISTORY.md`](HISTORY.md) and
 [`TODO.md`](TODO.md). Release-facing changes are in [`CHANGELOG.md`](CHANGELOG.md).
@@ -49,7 +55,15 @@ The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
 
+## What v0.3.0-build41 adds
 
+Build41 is the first blind smartphone checkpoint to close the staged physical A/B milestone on the existing strength-48 corpus. It changes only the global phone registration front end; the Format-v4 encoder, locked pilot, data layout, strength 48, Hamming(7,4), whitening/HMAC domains, Build40 residual layer and frozen Format-v3 core are unchanged.
+
+A structure-only artwork boundary anchors absolute phase. The canonical-to-phone quadrilateral is then refined with eight bounded corner coordinates using a fixed 3-way spatial split of the public pilot: folds 1+2 are the only proposal evidence, while fold 0 is never sampled until the complete proposal shortlist has been frozen. Shape fitting may ignore cyclic origin while finding the local basin; a bounded proposal-only translation restores physical origin `(0,0)`. The strongest phase candidates receive a small proposal-only corner polish before freeze. Held-out pilot evidence can only accept/reject or rank frozen candidates; it cannot generate new geometry.
+
+The final phone ensemble contains two pilot-qualified geometries separated by at least `max(0.75 px, 0.20 * observed DCT-block scale)`. This diversity requirement prevents two near-identical local optima from masquerading as an ensemble and brackets the remaining sub-pixel registration uncertainty. Only after the pair is frozen does the unchanged Build40 residual/Build36 soft-Hamming/HMAC path run.
+
+`make v4-build41-phone-basin-test` provides a public synthetic end-to-end gate, including an unmarked control. The opt-in private `make v4-build41-phone-physical-test` runs the nine original strength-48 photos and applies the staged milestone: all three controls must reject and at least one A plus one B capture must authenticate the exact expected payload. Current physical result: `A/angle` and `B/front` HMAC PASS; `A/mild` reaches qualified geometry/data decode but does not authenticate; A/front, B/mild and B/angle remain outside the accepted basin. See [`docs/V4_BUILD41_PHONE_BASIN.md`](docs/V4_BUILD41_PHONE_BASIN.md).
 
 ## What v0.3.0-build40 adds
 
@@ -59,7 +73,11 @@ After Build39 has produced a canonical-to-observed homography, Build40 may fit a
 
 The new `v4-build40-phone-residual-test` creates a synthetic strength-48 carrier with a known smooth non-projective deformation. The uncorrected carrier remains geometrically imperfect; the pilot-only field is recovered, held-out validation improves, soft-Hamming data sampling through the warped mapper recovers the exact HMAC-authenticated payload, and an unmarked control does not qualify. The residual sampler is integrated into `ExperimentalV4ExtractPhone` / `v4-extract-phone`, with automatic fallback to the untouched Build39 ensemble if a residual-qualified attempt does not authenticate.
 
-The private real-phone result is intentionally negative but informative: the current Build39 basins do not produce a coherent <=6 px residual field. Candidate fits can improve proposal tiles while held-out validation falls and the complete pilot retains a non-zero origin, so Build40 **safe-rejects** those fields rather than overfitting the image. The next blind-phone step is therefore to improve the global projective-basin search/retention before attempting another residual refinement. See [`docs/V4_BUILD40_PHONE_RESIDUAL.md`](docs/V4_BUILD40_PHONE_RESIDUAL.md).
+The Build40 private real-phone result was intentionally negative but informative: the then-current Build39 basins did not produce a coherent <=6 px residual field. Candidate fits could improve proposal tiles while held-out validation fell and the complete pilot retained a non-zero origin, so Build40 **safe-rejected** those fields rather than overfitting the image. That result directly motivated Build41 global basin recovery. See [`docs/V4_BUILD40_PHONE_RESIDUAL.md`](docs/V4_BUILD40_PHONE_RESIDUAL.md).
+
+Before changing the Build39/40 algorithm, use the opt-in private-corpus target `make v4-build40-phone-corpus-diagnostic`. It runs the unchanged `v4-extract-phone` path over the canonical nine strength-48 captures and writes a TSV plus Markdown matrix under `v4-phone private/build40-diagnostics/`. The matrix records boundary detection, presence of a Build39 projective basin, accepted ensemble size, proposal/held-out pilot scores, pilot origin, residual fit/application and RMS, held-out delta, soft-Hamming profile attempts, maximum data confidence, HMAC/fallback result and exact-payload qualification. Per-image stderr logs are retained; image bytes are never copied into the report directory or release artifacts. This diagnostic target is intentionally excluded from `all-test` because the corpus is private.
+
+The Build40 diagnostic harness remains available as a historical pre-Build41 matrix tool. Build41 adds a separate staged private qualification target and does not rewrite the Build40 measurements.
 
 ## What v0.3.0-build39 adds
 
@@ -1184,5 +1202,19 @@ Qualification results are recorded in [`docs/RESULTS.md`](docs/RESULTS.md).
 
 ## License
 
-MIT. See [`LICENSE`](LICENSE).
+PixSeal is **source-available for noncommercial use** under the
+**PolyForm Noncommercial License 1.0.0**. The SPDX identifier is
+`PolyForm-Noncommercial-1.0.0`. Noncommercial use, modification and
+redistribution are permitted only under the license terms; commercial use
+requires a separate commercial license from the applicable copyright holder(s).
+
+This licensing model is intentionally described as *source-available*, not as
+OSI open source. Historical copies that were already distributed under MIT keep
+the MIT rights granted with those copies; the current license applies
+prospectively to distributions carrying it.
+
+See [`LICENSE`](LICENSE) for the complete license text, [`NOTICE`](NOTICE) for
+the required project notice, and [`docs/LICENSING.md`](docs/LICENSING.md) for
+licensing scope, redistribution guidance and the separation between source code
+and private research corpora.
 

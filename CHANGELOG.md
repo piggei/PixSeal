@@ -1,3 +1,29 @@
+## v0.3.0-build41 — 2026-09-18
+
+- Closes the first staged blind-smartphone physical milestone on the existing private strength-48 corpus without changing the Format-v4 encoder, locked pilot, 1120-position data partition, Hamming(7,4), whitening/HMAC domains, robust strength 48, Build40 residual model or frozen Format-v3 core.
+- Adds a structure-only inner-artwork boundary seed for difficult free-camera framing and a bounded eight-coordinate projective-basin search anchored to that physical boundary.
+- Uses a deterministic three-way spatial public-pilot split: folds 1+2 generate/refine/freeze the geometry shortlist; fold 0 remains completely held out until qualification. Payload bytes, ECC result, secret key and HMAC are unavailable to geometry generation/ranking.
+- Adds proposal-only phase restoration and fine variants, then requires held-out/full-pilot qualification at canonical origin `(0,0)`. The final two-geometry ensemble must also satisfy a scale-normalized diversity floor so it brackets sub-pixel registration uncertainty instead of duplicating one local optimum.
+- Adds `v4-build41-phone-basin-test`, an end-to-end synthetic marked/control gate over the public `ExperimentalV4ExtractPhone` API.
+- Adds opt-in `v4-build41-phone-physical-test` for the private nine-photo strength-48 corpus. Current physical result: all three controls REJECT; `A/angle` authenticates `v4-b38-phone-a`; `B/front` authenticates `v4-b38-phone-b`; `A/mild` reaches data decode but does not authenticate; the other three marked captures remain outside the accepted basin.
+- The Build40 residual is attempted where applicable but is not applied in either physical PASS case, so the two authenticated results come from Build41 global registration plus the unchanged soft-Hamming/HMAC channel.
+- Keeps the project source-available for noncommercial use under PolyForm Noncommercial License 1.0.0.
+
+## Licensing update — 2026-09-18
+
+- Changes the license for current and future source distributions from MIT to
+  **PolyForm Noncommercial License 1.0.0**
+  (`PolyForm-Noncommercial-1.0.0`).
+- Describes the project as **source-available for noncommercial use** rather
+  than OSI open source. Commercial use requires a separate commercial license
+  from the applicable copyright holder(s).
+- Adds `NOTICE` and `docs/LICENSING.md`, including redistribution requirements,
+  historical-MIT continuity and the explicit separation of the software license
+  from private qualification corpora.
+- At the time of the relicensing checkpoint, this was a licensing/documentation-only change and `VERSION` remained `v0.3.0-build40`; no encoder, decoder, format, pilot, ECC, geometry or HMAC behavior changed in that relicensing step. Build41 was developed subsequently under the new license.
+- Copies already distributed under MIT retain the MIT rights granted with those
+  copies; the new license applies prospectively to distributions carrying it.
+
 ## v0.3.0-build40 — 2026-09-17
 
 - Adds a bounded quadratic smartphone residual field on top of the Build39 homography; the maximum correction is six canonical pixels.

@@ -3,6 +3,16 @@
 This file records technical evolution, including experiments that were later
 superseded or deliberately not promoted.
 
+## 2026-09-18 — licensing transition
+
+Current and future PixSeal source distributions move from MIT to the PolyForm
+Noncommercial License 1.0.0 (`PolyForm-Noncommercial-1.0.0`). The project is
+therefore described as source-available for noncommercial use; commercial use
+requires a separate commercial license. Copies already distributed under MIT
+retain their original MIT grant. This transition changes licensing and
+documentation only and does not create a new algorithmic build or alter any
+Format-v3/Format-v4 behavior. See [`docs/LICENSING.md`](docs/LICENSING.md).
+
 ## v0.1.0
 
 First stable public-development baseline: classical DCT embedding for short
@@ -808,3 +818,14 @@ The completed strength-48 phone corpus changes the diagnosis from Build38. Refer
 Build39 introduces the first dedicated blind phone path. Native ~200 MP captures are reduced internally to a bounded working image, the printed artwork is localized independently of the watermark, and the resulting quadrilateral seeds a projective search. Public pilot evidence is split spatially between proposal and held-out validation, preserving the rule that payload bytes, ECC outcomes and HMAC cannot act as a geometry oracle. The Build36 soft-decision channel is reused only after geometry qualification.
 
 The checkpoint also exposes the next physical limitation: a global homography is not sufficient for every phone capture. Camera lens distortion, page/print flatness and resampling leave local residual phase error even when the artwork corners are close. Build39 therefore does not claim complete blind phone recovery; subsequent work should add a tightly bounded pilot-only residual field after projective registration, with held-out spatial validation and unchanged HMAC semantics.
+
+
+## v0.3.0-build41 — blind smartphone basin milestone
+
+Build40 established that a bounded local residual field is useful when a correct global phone homography already exists, but the complete nine-photo strength-48 matrix showed that the real blind failures were usually earlier: the decoder was losing or mis-ranking the global projective basin. Build41 therefore leaves the encoder, strength 48, locked public pilot, protected data mapping, Hamming(7,4), whitening/HMAC domains, residual model and frozen v3 core untouched and changes only the global smartphone registration front end.
+
+A structure-only inner-artwork boundary anchors physical phase. The public pilot is split deterministically into three spatial folds. Folds 1 and 2 alone generate and refine a bounded eight-coordinate projective shortlist; fold 0 is never sampled until that shortlist has been frozen. Proposal-only cyclic fitting finds the local shape basin without committing to a whole-tile alias, then bounded proposal-only phase restoration returns candidates to physical origin `(0,0)`. The strongest proposal candidates may receive a small proposal-only corner polish before freeze. Held-out and complete-pilot evidence can accept/reject and rank only frozen candidates. Payload/header contents, ECC result, secret key and HMAC never generate or rank geometry.
+
+The final data sampler uses two independently pilot-qualified geometries that must also be separated by a scale-normalized minimum distance. This prevents two near-identical local optima from masquerading as an ensemble and lets the unchanged signed-margin/soft-Hamming path bracket residual sub-pixel uncertainty without HMAC-guided selection. Build40's <=6 px residual remains downstream and is attempted only after the Build41 global ensemble has been frozen.
+
+On the private nine-photo strength-48 corpus Build41 reaches the staged physical milestone defined at the Build40 handoff: all three unmarked controls reject; `phone-a-angle.jpg` authenticates `v4-b38-phone-a`; `phone-b-front.jpg` authenticates `v4-b38-phone-b`. `A/mild` reaches accepted geometry and protected-data decoding but still fails HMAC. `A/front`, `B/mild` and `B/angle` remain outside the accepted basin. The residual layer is not applied in either PASS case because held-out residual evidence does not justify it. Build41 therefore closes the first blind smartphone A/B milestone while explicitly leaving 6/6 marked robustness for later builds.

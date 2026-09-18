@@ -1138,3 +1138,24 @@ This is the first fully blind Format-v4 print/scanner/HMAC success. It is a scan
 Build40 leaves the strength-48 carrier unchanged and adds a post-Build39 smooth residual field. On the deterministic synthetic phone-residual gate, proposal-only pilot controls fit a <=6 px quadratic field, held-out pilot validation improves, complete-pilot origin returns `(0,0)`, and the protected channel recovers the exact HMAC-authenticated v4 payload. The corresponding unmarked control does not qualify.
 
 The private nine-photo strength-48 corpus does not yet satisfy the same residual assumptions under the current blind Build39 homographies. Example candidate fields can have enough proposal controls and sub-2 px internal fit RMS while **held-out validation decreases** and the complete-pilot origin remains non-zero. Those cases are rejected. This result narrows the remaining blind-phone blocker: the decoder must first retain/select a better global projective basin; a larger local warp is not supported by the evidence.
+
+
+## Build41 blind smartphone basin result
+
+Build41 re-runs the unchanged strength-48 nine-photo physical corpus after replacing only the global smartphone basin front end. The private success rule is staged rather than 6/6: all three unmarked controls must reject, and at least one A plus one B photograph must recover the exact expected HMAC-authenticated payload.
+
+| capture | result |
+|---|---|
+| control/front | REJECT before protected-data acceptance |
+| control/mild | REJECT before protected-data acceptance |
+| control/angle | REJECT before protected-data acceptance |
+| A/front | geometry reject |
+| A/mild | geometry/data path reached; HMAC FAIL |
+| A/angle | **HMAC PASS — `v4-b38-phone-a`** |
+| B/front | **HMAC PASS — `v4-b38-phone-b`** |
+| B/mild | geometry reject |
+| B/angle | geometry reject |
+
+Both authenticated cases are blind: the projective shortlist is generated only from structural evidence and the proposal folds of the public pilot, then frozen before the held-out fold is read. The Build40 residual fitter is evaluated downstream but is not applied in either PASS case because held-out residual evidence does not justify it. Thus the new physical success is attributable to Build41 global basin recovery plus the unchanged Build36 soft-Hamming/HMAC channel.
+
+This closes the first smartphone physical milestone but not the whole channel. A/front, B/mild and B/angle still require stronger blind basin acquisition/retention, while A/mild is already close enough geometrically to reach protected-data decoding. Strength 48, ECC and HMAC remain unchanged.

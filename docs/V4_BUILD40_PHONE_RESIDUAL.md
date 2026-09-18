@@ -31,3 +31,19 @@ The existing Build36 soft-Hamming decoder and unchanged v4 HMAC then operate nor
 Representative current private strength-48 captures do **not** qualify the residual field from the blind Build39 basin. Local pilot maxima can be strong, but their corrections are not jointly supported by held-out tiles: representative fits raise proposal evidence while held-out validation falls and the complete pilot retains a non-zero origin. Build40 therefore safe-rejects the field rather than increasing the bound or feeding HMAC results back into registration.
 
 The next research step is global projective-basin preservation/ranking on the same existing phone corpus. No reprint or additional acquisition is justified by Build40.
+
+## Complete-corpus diagnostic gate before Build41
+
+Do not change the registration algorithm until Build40 has been run across all nine canonical strength-48 captures. The source tree includes an opt-in helper:
+
+```sh
+make v4-build40-phone-corpus-diagnostic
+```
+
+By default it expects the originals under `v4-phone private/build38-acquired/` with the canonical `phone-{control,a,b}-{front,mild,angle}.jpg` names. It writes only derived telemetry and per-image decoder stderr logs under `v4-phone private/build40-diagnostics/`; it never copies acquisition bytes.
+
+The phone CLI exposes diagnostic-only fields for whether a projective basin was found, whether a residual model was actually fitted versus accepted/applied, whether protected-data decoding was reached, how many profile streams reached soft-Hamming, maximum data confidence, HMAC result, and whether the untouched Build39 fallback was attempted/authenticated. These fields do not alter proposal, validation, sampling, ECC, HMAC, or fallback decisions.
+
+The resulting matrix is the evidence gate for Build41. Controls must remain rejected. A marked capture counts as recovered only when the exact expected payload authenticates. Pilot scores, residual behavior and soft-Hamming telemetry remain diagnostics and must never be fed back into geometry ranking through payload/key/HMAC evidence.
+
+This instrumentation does not create Build41 and does not change the project version. Build40 remains the qualified algorithmic baseline until the complete physical matrix justifies a specific next change.

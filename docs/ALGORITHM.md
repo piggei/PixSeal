@@ -1494,3 +1494,16 @@ After the field is frozen, checkerboard-B provides held-out validation. The resi
 When qualified, protected DCT margins are sampled through the composed mapper `canonical -> residual -> Build39 homography -> observed image`, then passed to the unchanged Build36 soft-Hamming and Format-v4 HMAC stages. The untouched Build39 ensemble is retained as a fallback path; HMAC can verify either already-frozen path but is never fed back into geometry ranking.
 
 The synthetic Build40 gate demonstrates successful recovery of a smooth non-projective deformation and exact authenticated payload recovery. Representative current private strength-48 phone captures do not satisfy the residual assumptions under the blind Build39 homographies: proposal-only local maxima are not held-out coherent and complete-pilot origin remains non-zero. Those fields are safe-rejected, identifying global projective-basin selection as the next blocker.
+
+
+## Build41 blind smartphone basin recovery
+
+Build41 keeps every Format-v4 carrier/authentication choice from Build40 and replaces only the blind smartphone global-basin front end. The observable artwork boundary remains structural evidence; the watermark contributes only its public pilot until the geometry ensemble has been frozen.
+
+The pilot tile repetitions are assigned to three deterministic spatial folds using `(tx + 2*ty) mod 3`. Fold 0 is held out. Folds 1 and 2 are the only evidence available to boundary-seeded shape fitting, cyclic-phase basin search, bounded phase restoration, fine corner polishing and shortlist construction. The projective shape has eight independently bounded observed-corner coordinates with a +/-56 working-image-pixel envelope around the structural boundary. Shape fitting may temporarily ignore the absolute cyclic origin so a good projective shape is not pulled into a wrong whole-tile alias. A bounded proposal-only translation then restores physical phase.
+
+The complete proposal shortlist is frozen before any fold-0 samples are read. Held-out fold 0 and then the complete public pilot qualify the frozen bank; canonical origin must be `(0,0)` and the existing phone score/margin floors still apply. The final two members are chosen using only proposal, held-out and complete-pilot evidence and must be geometrically distinct by at least `max(0.75 px, 0.20 * observed DCT-block scale)`. This diversity gate brackets sub-pixel registration uncertainty while preventing duplicate local optima from pretending to be an ensemble.
+
+Only after this freeze are protected DCT margins sampled. Build40's bounded residual field may then be proposed/validated exactly as before, followed by Build36 soft Hamming, frame parsing and HMAC. HMAC authenticates the final decoded frame but cannot generate, refine, rank or reorder Build41 geometry.
+
+The public synthetic Build41 regression requires exact authenticated recovery under strong projective camera geometry and rejection of a matching unmarked control. The private staged physical gate requires three control rejections plus at least one authenticated A and one authenticated B capture. Build41 meets that gate with A/angle and B/front while explicitly leaving the remaining marked captures as future robustness work.

@@ -42,6 +42,7 @@ type experimentalV4PhoneResidualControl struct {
 
 type experimentalV4PhoneResidualInfo struct {
 	Applied             bool
+	Fitted              bool
 	Controls            int
 	RMSPixels           float64
 	ProposalBefore      float64
@@ -348,6 +349,7 @@ func experimentalV4PhoneFitResidualPilotOnly(plane *pixelPlane, candidate experi
 	if !ok {
 		return nil, info
 	}
+	info.Fitted = true
 	info.RMSPixels = warp.rmsPixels
 	info.ProposalAfter, _ = experimentalV4PhoneResidualSpatialScore(plane, candidate, cw, ch, h, warp, 0)
 	info.ValidationAfter, _ = experimentalV4PhoneResidualSpatialScore(plane, candidate, cw, ch, h, warp, 1)
