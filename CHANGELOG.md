@@ -1220,3 +1220,11 @@ See [`HISTORY.md`](HISTORY.md) for the complete technical progression.
 - Adds post-hoc oracle corner-distance comparison that is computed only after blind search/qualification and cannot influence geometry.
 - Adds `make v4-build46-phone-handoff-test` and private `make v4-build46-phone-handoff-diagnostic`.
 - Leaves Format-v4, strength 48, pilot, Build42, ECC/Hamming, whitening/HMAC and all production thresholds unchanged.
+
+## v0.3.0-build47 — frozen candidate bank observability
+
+- Added a diagnostic-only Build47 extended proposal bank with three explicit tiers: the exact Build43 production tier, deeper cells on the same selected side pairs, and lower-ranked side-pair extension. Production remains unchanged.
+- Added per-candidate proposal, held-out, pilot, side-pair provenance, qualification and post-hoc oracle-distance telemetry.
+- Kept single-candidate data/HMAC inspection behind unchanged Build43 qualification gates.
+- Added a private Build47 study that completes blind diagnostics before generating SIFT/reference geometry.
+- Build44 remains the latest qualified milestone; Build47 is research-only.

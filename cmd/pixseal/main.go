@@ -39,6 +39,7 @@ Commands:
   v4-extract-phone EXPERIMENTAL: Build44 deterministic JPEG ingest + Build43 smartphone recovery + authenticated v4 decode
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
+  v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
   capacity   Show the usable payload capacity of an image
   analyze    Recommend a v3 profile and embedding settings
   diagnose   Experimental bounded local-lattice diagnostics (v0.3 research)
@@ -69,6 +70,7 @@ Experimental v4 options:
   v4-extract-phone accepts the same dimensions and expects a smartphone photo with visible paper around the complete artwork.
   v4-diagnose-phone accepts the same input/key/dimensions and reports Build45 stage diagnostics; -oracle-quad-json is lab-only.
   v4-diagnose-phone-handoff inspects already-qualified Build43 candidates; optional oracle geometry is comparison-only.
+  v4-diagnose-phone-frozen expands only the diagnostic frozen bank to 128 candidates; production remains capped at 32.
 
 Capacity options:
   -in FILE           Input JPEG or PNG (required)
@@ -98,6 +100,7 @@ Examples:
   pixseal v4-extract-scanner -in scan.jpg -key "a long secret" -width 1632 -height 1632
   pixseal v4-diagnose-phone -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
   pixseal v4-diagnose-phone-handoff -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
+  pixseal v4-diagnose-phone-frozen -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
   pixseal capacity -in photo.png -details
   pixseal analyze -in photo.png -message "hidden message"
   pixseal diagnose -in captured.jpg -json
@@ -129,6 +132,8 @@ func main() {
 		err = v4DiagnosePhone(os.Args[2:])
 	case "v4-diagnose-phone-handoff":
 		err = v4DiagnosePhoneHandoff(os.Args[2:])
+	case "v4-diagnose-phone-frozen":
+		err = v4DiagnosePhoneFrozen(os.Args[2:])
 	case "capacity":
 		err = capacity(os.Args[2:])
 	case "analyze":
@@ -1339,6 +1344,74 @@ func v4DiagnosePhoneHandoff(args []string) error {
 		fmt.Printf("qualified-%d: pair=%s pair-rank=%d proposal=%.6f validation=%.6f pilot=%.6f margin=%.6f origin=(%d,%d) single-profiles=%d single-list-frames=%d single-confidence=%.3f single-hmac=%t", c.Index, c.SourcePair, c.SourcePairRank, c.ProposalScore, c.ValidationScore, c.PilotScore, c.PilotMargin, c.OriginXBlocks, c.OriginYBlocks, c.SingleProfilesTried, c.SingleListFramesTried, c.SingleMaxDataConfidence, c.SingleHMACAuthenticated)
 		if c.OracleCompared {
 			fmt.Printf(" oracle-mean-error=%.2fpx oracle-max-error=%.2fpx oracle-ratio=%.6f", c.OracleMeanCornerErrorPx, c.OracleMaxCornerErrorPx, c.OracleMeanCornerErrorRatio)
+		}
+		fmt.Println()
+	}
+	return nil
+}
+
+type v4Build47FrozenOutput struct {
+	Version       string                                     `json:"version"`
+	InputDecoder  string                                     `json:"input_decoder"`
+	OracleMethod  string                                     `json:"oracle_method,omitempty"`
+	OracleMatches int                                        `json:"oracle_matches,omitempty"`
+	OracleInliers int                                        `json:"oracle_inliers,omitempty"`
+	Frozen        watermark.ExperimentalV4PhoneBuild47Report `json:"frozen"`
+}
+
+func v4DiagnosePhoneFrozen(args []string) error {
+	fs := newFlagSet("v4-diagnose-phone-frozen", "EXPERIMENTAL Build47 diagnostic: preserve the exact Build43 production proposal tier, then add selected-pair depth and lower-ranked side-pair tiers up to 128 diagnostic candidates. Production remains unchanged; optional oracle geometry is post-hoc comparison only.")
+	in := fs.String("in", "", "smartphone JPEG or PNG (required)")
+	key := fs.String("key", "", "secret key used only for post-qualification diagnostic authentication (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	jsonOut := fs.Bool("json", false, "emit machine-readable JSON")
+	oracleQuad := fs.String("oracle-quad-json", "", "lab-only JSON quadrilateral used only after the blind frozen bank has been generated")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	out := v4Build47FrozenOutput{Version: buildinfo.String(), InputDecoder: inputDecoderID(format)}
+	var oracle *[4]watermark.ImagePoint
+	if *oracleQuad != "" {
+		q, qf, err := readBuild45OracleQuad(*oracleQuad)
+		if err != nil {
+			return err
+		}
+		oracle = &q
+		out.OracleMethod, out.OracleMatches, out.OracleInliers = qf.Method, qf.Matches, qf.Inliers
+	}
+	report, err := watermark.ExperimentalV4PhoneBuild47Diagnose(img, []byte(*key), *width, *height, oracle)
+	if err != nil {
+		return err
+	}
+	out.Frozen = report
+	if *jsonOut {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(out)
+	}
+	fmt.Printf("Build47 phone frozen-bank diagnostic\n")
+	fmt.Printf("input-decoder: %s\n", out.InputDecoder)
+	fmt.Printf("frozen: %d/%d proposal-candidates=%d\n", report.FrozenCandidates, report.SuperBankLimit, report.ProposalCandidates)
+	for i, p := range report.PairRanking {
+		fmt.Printf("pair-rank-%d: %s score=%.6f\n", i+1, p.Pair, p.Score)
+	}
+	for _, s := range report.Limits {
+		fmt.Printf("limit-%d: available=%d qualified=%d production-best=%d validation=%.6f", s.Limit, s.Available, s.Qualified, s.ProductionBestIndex, s.ProductionBestValidation)
+		if oracle != nil {
+			fmt.Printf(" oracle-nearest=%d mean=%.2fpx", s.OracleNearestIndex, s.OracleNearestMeanErrorPx)
 		}
 		fmt.Println()
 	}

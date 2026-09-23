@@ -26,7 +26,9 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build46**.
+Current development snapshot: **v0.3.0-build47**.
+
+Latest qualified milestone: **v0.3.0-build44**. Build47 is research-only and does not change the qualified production decoder.
 
 Stable release baseline: **v0.2.0**.
 
@@ -71,7 +73,11 @@ records hypotheses, rejected variants, threshold decisions and negative results 
 future builds do not silently repeat abandoned experiments.
 
 
-## What v0.3.0-build46 adds
+## What v0.3.0-build47 adds
+
+Build47 adds diagnostic-only proposal-breadth observability while keeping Build43 production unchanged. Stage 32 is the exact production proposal tier; stage 64 adds deeper cells on the same two selected side pairs; stage 128 also adds lower-ranked side pairs. This distinguishes cell-depth pruning from side-pair pruning and from a genuinely absent basin. Oracle geometry remains post-hoc only. See `docs/V4_BUILD47_FROZEN_BANK_OBSERVABILITY.md`.
+
+## Build46 handoff diagnostic
 
 Build46 is a diagnostic handoff checkpoint. It does **not** change Build43 candidate generation, held-out qualification, the two-geometry production ensemble, Build42's minimum three-geometry bank, the residual fallback, ECC or HMAC. The new `v4-diagnose-phone-handoff` command reruns only the public-evidence Build41/43 search, enumerates the geometries that have already passed held-out qualification, and records the exact production quorum that prevents or permits each downstream path.
 

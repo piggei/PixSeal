@@ -268,3 +268,10 @@ and `CHANGELOG.md`.
 - [ ] If B/mild singleton HMAC passes, design the next bounded experiment to retain/find a second independent qualified basin.
 - [ ] If B/mild singleton HMAC fails, use oracle distance to choose between precision/refinement work and broader basin retention.
 - [ ] Keep strength 48, Format-v4 framing, pilot, ECC/Hamming, whitening/HMAC and Build42 data-list rules frozen unless the Build46 evidence contradicts the Build45 oracle.
+
+### Build47 research
+
+- Run the corrected three-tier frozen-bank study on B/mild (primary) and B/angle (informational): production tier, selected-pair depth, then all-pair extension.
+- Determine whether oracle-nearest geometry improves materially at candidate caps 64 or 128.
+- If yes, study safe proposal pruning/ranking without using held-out or secret evidence.
+- If no, investigate proposal/basin generation while keeping Format-v4, Build42 and Build44 qualification frozen.
