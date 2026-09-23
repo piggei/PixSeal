@@ -191,3 +191,7 @@ Build49 reuses private `phone-b-mild.jpg`, `phone-b-angle.jpg` and the marked-B 
 ## Build50 private top-4 refinement diagnostics
 
 Build50 reuses only the retained private `phone-b-mild.jpg`, `phone-b-angle.jpg` acquisitions and the marked-B digital reference. The blind top4 refinement JSON for both captures is written under `v4-phone private/build50-diagnostics/blind/` before any SIFT/reference oracle is created. The secret key is available to the blind command only for diagnostic single-candidate HMAC after geometry is frozen and held-out-qualified; it cannot guide proposal ranking or local refinement. Oracle files and reports remain private and are never packaged.
+
+## Build51 private local-surface diagnostics
+
+Build51 reuses only the retained `phone-b-mild.jpg`, `phone-b-angle.jpg` acquisitions and the marked-B digital reference already required by Builds45–50. Blind top4 refinement traces and deterministic local stencils for both captures are written under `v4-phone private/build51-diagnostics/blind/` before the reference/SIFT helper is invoked. The key is used only after geometry freeze for diagnostic authentication of final held-out-qualified states. The oracle is post-hoc only. Trace, stencil, oracle and summary outputs are private research artifacts and must never be packaged.

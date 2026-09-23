@@ -280,23 +280,32 @@ and `CHANGELOG.md`.
 - [x] Add proposal-only local projective refinement over at most two independently selected seeds per side-pair rank.
 - [x] Freeze every refined geometry before held-out/public-pilot qualification; keep key/HMAC and oracle unavailable during generation/refinement.
 - [x] Add pre/post refinement source-quadrilateral telemetry and private post-hoc oracle comparison.
-- [ ] Run `make v4-build48-phone-local-refine-diagnostic` on the qualification host.
-- [ ] Primary gate: determine whether B/mild's oracle-nearest error falls materially below the Build47 34.049 px basin and whether the refined candidate qualifies/authenticates.
-- [ ] Keep B/angle informational; do not widen production search based on B/angle alone.
-- [ ] Keep strength 48, Format-v4, pilot, ECC/Hamming, whitening/HMAC, Build42 and Build43 production thresholds frozen until Build48 evidence justifies a bounded change.
+- [x] Run `make v4-build48-phone-local-refine-diagnostic` on the qualification host: B/mild top2 selected 12 seeds, 4 -> 7 qualified, HMAC 0, nearest selected geometry 46.202 -> 44.436 px.
+- [x] Primary gate resolved negatively: the Build47 34.049 px basin was not selected by top2, so Build48 could not test its refinement reach.
+- [x] Keep B/angle informational; it remained a distant false basin.
+- [x] Keep strength 48, Format-v4, pilot, ECC/Hamming, whitening/HMAC, Build42 and Build43 production thresholds frozen.
 
 
 ### Build49 research
 
-- [ ] Run `make v4-build49-phone-proposal-ranking-diagnostic` on the qualification host.
-- [ ] Determine the B/mild oracle-nearest candidate's proposal rank within its side pair and whether top 4/6/8 would retain it.
-- [ ] Compare fold-min/balance, per-tile consistency, pair score and cell score ranks against oracle error only post-hoc.
-- [ ] Keep Build43/42 production, all thresholds/quorums, strength 48, Format-v4, ECC/Hamming and HMAC frozen until prospective evidence supports a bounded change.
+- [x] Run `make v4-build49-phone-proposal-ranking-diagnostic` on the qualification host.
+- [x] B/mild oracle-nearest 34.049 px candidate is raw-proposal rank 3 within `top+left` (global 17), so top4 retains it.
+- [x] Alternative proposal-only observables rank that candidate worse: fold-min 7, balanced 12, tile-consistency 13. Keep raw proposal unchanged.
+- [x] Keep Build43/42 production, all thresholds/quorums, strength 48, Format-v4, ECC/Hamming and HMAC frozen.
 
 
 ### Build50 research
 
-- [ ] Run `make v4-build50-phone-top4-refine-test` on the qualification host.
-- [ ] Run `make v4-build50-phone-top4-refine-diagnostic` with the retained private B/mild and B/angle captures.
-- [ ] For B/mild, verify that top4 includes the 34.049 px rank-3 basin and measure its post-refinement error, held-out qualification and diagnostic HMAC.
-- [ ] Do not change production seed depth, proposal scoring or qualification thresholds until the Build50 host result is available.
+- [x] Run `make v4-build50-phone-top4-refine-test` on the qualification host.
+- [x] Run `make v4-build50-phone-top4-refine-diagnostic` with retained B/mild/B-angle.
+- [x] B/mild top4 includes the 34.049 px rank-3 basin, but refinement moves the nearest result to 43.168 px; qualified count rises 7 -> 11 and HMAC remains 0.
+- [x] Do not change production seed depth, proposal scoring or qualification thresholds from Build50: the immediate question is local score-surface/refinement behavior.
+
+
+### Build51 research
+
+- [ ] Run `make v4-build51-phone-surface-test` on the qualification host.
+- [ ] Run `make v4-build51-phone-surface-diagnostic` with retained B/mild and B/angle captures.
+- [ ] For the post-hoc B/mild oracle-nearest top4 seed, inspect every accepted/rejected refinement move and the fixed local stencil.
+- [ ] Determine whether any stencil sample improves both proposal score and oracle error (`optimizer-opportunity`) or whether proposal ascent predominantly moves away from the oracle (`proposal-surface-misaligned`).
+- [ ] Keep Build43/42 production, strength 48, Format-v4, pilot, ECC/Hamming, whitening/HMAC and qualification/quorum thresholds frozen until Build51 separates score-surface from optimizer reach.

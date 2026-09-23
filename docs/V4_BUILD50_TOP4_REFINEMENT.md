@@ -55,3 +55,11 @@ For B/mild:
 - top4 changes qualification counts but not geometric precision: do not weaken qualification or quorum merely to accept more candidates.
 
 B/angle is telemetry only and cannot independently justify production changes.
+
+## Qualification-host outcome
+
+The Build50 study was executed on the qualified Go 1.26.0 host. B/mild top4 did include the expected 34.049 px rank-3 seed, proving Build49's coverage prediction. The nearest post-refinement geometry was **43.168 px**, not an improvement. Pre/post held-out-qualified counts were 7/11 and no candidate authenticated. The nested top2 view remained 46.202 -> 44.436 px with 4/7 qualified and HMAC 0.
+
+B/angle remained a distant false basin (5448.391 px pre, 5452.835 px nearest post) with no authentication.
+
+Therefore Build50 closes the seed-depth hypothesis negatively: including the correct known basin is necessary but insufficient, and the current proposal-only local refinement moves that basin away from the independent physical geometry. Build51 studies the local proposal surface and exact refinement trajectory without changing production.

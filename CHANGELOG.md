@@ -1,3 +1,13 @@
+## v0.3.0-build51 — 2026-09-23
+
+- Adds research-only local proposal-surface/refinement-trajectory observability for the blind top4-per-side-pair seeds established by Build50.
+- Adds `v4-diagnose-phone-surface`, which records every evaluated Build41 coordinate-descent +/- move with proposal score and accepted/rejected state, without changing the refiner.
+- Adds a deterministic up-to-53-point-per-seed local stencil spanning individual corner axes plus bounded translation/scale/shear/perspective-like modes. Stencil generation is proposal-only and oracle-free.
+- Freezes complete trace/stencil geometry before held-out validation annotation. Full-pilot qualification and diagnostic HMAC remain limited to original/final seed states; SIFT/reference oracle remains external and post-hoc.
+- Records the qualification-host Build50 result: B/mild top4 includes the 34.049 px seed, but refinement moves the nearest candidate to 43.168 px; qualified count rises 7 -> 11 and HMAC stays 0. B/angle remains a distant false basin.
+- Adds `v4-build51-phone-surface-test`, private `v4-build51-phone-surface-diagnostic`, and `docs/V4_BUILD51_LOCAL_SURFACE.md`.
+- Production Build43/42 behavior, Format-v4, strength 48, pilot, ECC/Hamming, whitening/HMAC domains and Build44 qualification remain frozen.
+
 ## v0.3.0-build50 — 2026-09-23
 
 - Adds research-only top-4-per-side-pair local projective refinement for the difficult smartphone B cases.

@@ -900,3 +900,11 @@ Secret-key/HMAC evidence remains diagnostic-only after freeze/qualification and 
 **Hypothesis.** Seed-depth pruning, rather than proposal-score choice, is the immediate reason Build48 never refined the best known B/mild basin. Build50 will keep blind top4 per pair under the unchanged proposal score, apply the same proposal-only refinement, freeze geometry, then evaluate held-out/HMAC. Oracle error remains post-hoc.
 
 **B/angle control.** Its oracle-nearest remains ~5.45 kpx away even at proposal pair rank 3, so rank 3 alone is not evidence of a recoverable basin and B/angle cannot drive production changes.
+
+## Build50 host result -> Build51 local proposal-surface hypothesis — 2026-09-23
+
+**Observation.** B/mild top4 successfully includes the Build47/49 34.049 px seed (`top+left`, side-pair rank 3, seed rank 3), but the unchanged proposal-only local refinement moves the oracle-nearest refined candidate to 43.168 px. Qualification count rises from 7 pre-refinement to 11 post-refinement while no candidate authenticates. The corresponding B/angle geometry remains ~5.45 kpx from the oracle.
+
+**Interpretation.** Seed-depth pruning is no longer the immediate cause. The refiner is correctly ascending its proposal objective, but that ascent is not proven to align with physical geometry in this basin. Increasing seed depth, refinement steps or qualification permissiveness would therefore be premature.
+
+**Build51 hypothesis.** Record the exact proposal-only coordinate-descent attempts and a fixed local stencil around every blind top4 seed. Freeze all geometry before held-out annotation; keep full-pilot/HMAC downstream and reference/SIFT strictly post-hoc. If the stencil contains a point with both higher proposal and lower oracle error that the coordinate descent misses, investigate optimizer/search directions. If accepted proposal ascent predominantly increases oracle error and no better-both local point exists, investigate an additional public geometric observable rather than a stronger optimizer.

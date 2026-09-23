@@ -26,9 +26,9 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build50**.
+Current development snapshot: **v0.3.0-build51**.
 
-Latest qualified milestone: **v0.3.0-build44**. Build50 is research-only and does not change the qualified production decoder.
+Latest qualified milestone: **v0.3.0-build44**. Build51 is research-only and does not change the qualified production decoder.
 
 Stable release baseline: **v0.2.0**.
 
@@ -61,8 +61,7 @@ required by the production ensemble. Build46 measures whether that qualified sin
 already data-viable and how far it lies from the oracle, without changing any production
 quorum. Build47 then shows that lower-ranked side pairs expose a materially closer B/mild
 basin (34.049 px), Build48 shows that top2 seed pruning prevents that basin from being
-refined, and Build49 measures it at raw-proposal rank 3 within its side pair. Build50 therefore
-tests only a research top4-per-pair seed depth under the unchanged proposal score. Protected
+refined, and Build49 measures it at raw-proposal rank 3 within its side pair. Build50 then tested a research top4-per-pair seed depth under the unchanged proposal score: the 34.049 px seed entered the blind refinement but moved away from the oracle to 43.168 px while qualification count increased and HMAC remained zero. Build51 therefore records the exact proposal-ascent trajectory and a deterministic local score stencil to distinguish a misaligned score surface from an optimizer/search-direction miss. Protected
 payload contents, secret key and HMAC remain excluded from production geometry search/ranking;
 HMAC is only the final frame authenticator.
 
@@ -76,6 +75,12 @@ The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
 
+
+## What v0.3.0-build51 adds
+
+Build51 is a diagnostic-only **local proposal-surface and refinement-trajectory observability** study. The Build50 qualification-host result showed that top4 correctly includes the known B/mild 34.049 px seed, but the unchanged proposal-only coordinate descent moves the nearest refined candidate away to 43.168 px; held-out-qualified candidates rise from 7 to 11 while HMAC remains 0. This rules out seed-depth pruning as the immediate bottleneck and motivates direct observation of the local objective.
+
+The new `v4-diagnose-phone-surface` command records every actually evaluated +/- coordinate move of the existing Build41 refiner, including proposal before/after and whether the move was accepted. It also samples a fixed local stencil around every blind top4 seed using corner-axis perturbations plus small translation/scale/shear/perspective modes. All trace/stencil geometry is generated from proposal evidence only and fully frozen before held-out validation is annotated. Full-pilot/HMAC remains limited to the original/final seed states, and SIFT/reference error is computed only by the private lab script after both blind outputs exist. See `docs/V4_BUILD51_LOCAL_SURFACE.md`.
 
 ## What v0.3.0-build50 adds
 

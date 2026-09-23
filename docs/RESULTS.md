@@ -1271,3 +1271,11 @@ Build49 measured 128 B/mild candidates / 12 held-out-qualified candidates. The o
 B/angle remains informational: the oracle-nearest candidate is still 5448.391 px away despite raw-proposal rank 3 within its side pair.
 
 Build50 will test top4-per-pair refinement under the unchanged proposal score. No production ranking, quorum or threshold is changed.
+
+## Build50 qualification-host result -> Build51 local surface study
+
+The qualification host ran both Build50 targets under Go 1.26.0. For B/mild, the nested top2 view reproduces Build48-like behavior (12 seeds, 4 pre-qualified, 7 post-qualified, 0 authenticated, 46.202 -> 44.436 px nearest error). The top4 view includes 24 seeds and, as predicted by Build49, contains the 34.049 px `top+left` / pair-rank-3 / seed-rank-3 basin before refinement. The unchanged proposal-only coordinate descent moves the nearest refined result away to 43.168 px (max corner error 68.871 px); held-out-qualified candidates increase 7 -> 11 while HMAC remains 0.
+
+B/angle remains a distant false-basin control: top4 starts at 5448.391 px and the nearest refined result is 5452.835 px, with 1 qualified candidate and 0 authenticated.
+
+This rules out top2 seed pruning as the immediate B/mild bottleneck and shows that stronger proposal ascent cannot be assumed to improve physical registration. Build51 therefore instruments the exact refinement trajectory and a deterministic local neighborhood. It changes no production decision.

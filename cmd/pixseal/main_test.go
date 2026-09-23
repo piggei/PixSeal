@@ -22,7 +22,7 @@ import (
 
 func TestSubcommandHelpReturnsFlagErrHelp(t *testing.T) {
 	for name, fn := range map[string]func([]string) error{
-		"embed": embed, "extract": extract, "v4-embed": v4Embed, "v4-extract": v4Extract, "v4-extract-projective": v4ExtractProjective, "v4-extract-scanner": v4ExtractScanner, "v4-extract-phone": v4ExtractPhone, "v4-diagnose-phone": v4DiagnosePhone, "v4-diagnose-phone-handoff": v4DiagnosePhoneHandoff, "v4-diagnose-phone-frozen": v4DiagnosePhoneFrozen, "v4-diagnose-phone-refine": v4DiagnosePhoneRefine, "v4-diagnose-phone-ranking": v4DiagnosePhoneRanking, "v4-diagnose-phone-refine4": v4DiagnosePhoneRefine4, "capacity": capacity, "analyze": analyze, "diagnose": diagnose,
+		"embed": embed, "extract": extract, "v4-embed": v4Embed, "v4-extract": v4Extract, "v4-extract-projective": v4ExtractProjective, "v4-extract-scanner": v4ExtractScanner, "v4-extract-phone": v4ExtractPhone, "v4-diagnose-phone": v4DiagnosePhone, "v4-diagnose-phone-handoff": v4DiagnosePhoneHandoff, "v4-diagnose-phone-frozen": v4DiagnosePhoneFrozen, "v4-diagnose-phone-refine": v4DiagnosePhoneRefine, "v4-diagnose-phone-ranking": v4DiagnosePhoneRanking, "v4-diagnose-phone-refine4": v4DiagnosePhoneRefine4, "v4-diagnose-phone-surface": v4DiagnosePhoneSurface, "capacity": capacity, "analyze": analyze, "diagnose": diagnose,
 	} {
 		t.Run(name, func(t *testing.T) {
 			if err := fn([]string{"-help"}); !errors.Is(err, flag.ErrHelp) {

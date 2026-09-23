@@ -37,6 +37,7 @@ row v4-build47-phone-frozen-bank-test RESEARCH source 'Build47 diagnostic 32/64/
 row v4-build48-phone-local-refine-test RESEARCH source 'Build48 proposal-only seed selection/local projective refinement; production paths unchanged'
 row v4-build49-phone-proposal-ranking-test RESEARCH source 'Build49 proposal-only ranking observability; no key/oracle in blind command'
 row v4-build50-phone-top4-refine-test RESEARCH source 'Build50 blind top-4-per-pair proposal seed selection + same local refinement as Build48; production unchanged'
+row v4-build51-phone-surface-test RESEARCH source 'Build51 proposal-only refinement trajectory + deterministic local stencil observability; production unchanged'
 row lattice-estimator-test RESEARCH source 'local lattice estimator regressions'
 row homography-test RESEARCH source 'bounded homography/projective regressions'
 row photometric-test RESEARCH source 'bounded photometric bank regressions'
@@ -105,6 +106,7 @@ row v4-build47-phone-frozen-bank-diagnostic LAB private/v4-phone+reference 'Buil
 row v4-build48-phone-local-refine-diagnostic LAB private/v4-phone+reference 'Build48 pre/post local-refinement study with oracle computed only after blind refinement is frozen'
 row v4-build49-phone-proposal-ranking-diagnostic LAB private/v4-phone+reference 'Build49 candidate ranking/seed-depth/correlation study with post-hoc oracle'
 row v4-build50-phone-top4-refine-diagnostic LAB private/v4-phone+reference 'Build50 nested top2/top4 local-refinement comparison; oracle generated only after blind refinement'
+row v4-build51-phone-surface-diagnostic LAB private/v4-phone+reference 'Build51 exact refine trace + local stencil; oracle generated only after both blind surface JSON files'
 row v4-build37-physical-scanner-test PRIVATE private/v4-physical 'blind full-page scanner control/A/B HMAC qualification'
 row print-camera-test PRIVATE private/print-camera 'print -> paper -> smartphone; PASS requires Format-v3 HMAC'
 row print-scan-test PRIVATE private/print-scan 'print -> scanner; PASS requires Format-v3 HMAC'
@@ -115,6 +117,6 @@ row v4-build44-go126-jpeg-compat-test COMPATIBILITY source 'explicit Go 1.26 det
 row test-unit COMPATIBILITY source 'complete go test ./... suite'
 row test AGGREGATE source+pics 'build + test-unit + image round-trips'
 row all AGGREGATE source+pics 'test + baseline transformation suite'
-row all-test AGGREGATE source+pics '69-target Build50 matrix; private phone diagnostics remain opt-in'
+row all-test AGGREGATE source+pics '70-target Build51 matrix; private phone diagnostics remain opt-in'
 
 printf '\nTip: use make <target>. For all-test, optionally set ALL_TEST_REPORT=path/to/report.txt.\n'
