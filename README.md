@@ -30,6 +30,8 @@ Current development snapshot: **v0.3.0-build43**.
 
 Stable release baseline: **v0.2.0**.
 
+> **Build43 toolchain qualification:** build/test commands are pinned to **Go 1.25.1**. Go 1.26 replaced the standard-library JPEG decoder and produces a different raster for the canonical smartphone JPEG corpus; on `phone-a-mild.jpg` that difference changes the physical geometry result. The same Build43 source HMAC-authenticates A/mild with Go 1.25.1 and fails the qualified geometry path with Go 1.26.0. Use the repository `make` targets, which select Go 1.25.1 and always rebuild the CLI. See [`docs/GO_TOOLCHAIN_COMPATIBILITY.md`](docs/GO_TOOLCHAIN_COMPATIBILITY.md).
+
 Format v3 remains the implemented interoperability baseline. Its on-image layout,
 deterministic encoder fingerprints and production decoder are **frozen**. After builds
 16–22, the v0.3 absolute-cycle research on v3 is considered **closed**: the available
@@ -861,17 +863,25 @@ On mobile platforms the long-term goal is not to expose a command-line workflow 
 
 ## Build
 
-```sh
-go build -o pixseal ./cmd/pixseal
-```
-
-or:
+Build43 is qualified with **Go 1.25.1**. Use the Makefile rather than a bare `go build`:
 
 ```sh
 make
 ```
 
-`make` builds only.
+The Makefile selects `GOTOOLCHAIN=go1.25.1`, verifies the selected toolchain and **always rebuilds** `dist/pixseal`. This prevents a stale binary built with Go 1.26+ from being reused by a later physical test. To inspect the selected toolchain:
+
+```sh
+make toolchain-check
+```
+
+For a direct Go command outside the Makefile, select the qualified toolchain explicitly:
+
+```sh
+GOTOOLCHAIN=go1.25.1 go build -o pixseal ./cmd/pixseal
+```
+
+Go 1.26+ is not qualified for Build43 JPEG physical recovery because Go 1.26 replaced `image/jpeg` and the canonical smartphone JPEGs rasterize differently. See [`docs/GO_TOOLCHAIN_COMPATIBILITY.md`](docs/GO_TOOLCHAIN_COMPATIBILITY.md).
 
 The project has no external runtime dependencies. ImageMagick and GNU
 `timeout` are required only by the shell robustness suites.
@@ -1137,7 +1147,8 @@ v0.3 because they require an explicit image-pipeline policy.
 ## Tests
 
 ```sh
-make                 # build only
+make                 # build with qualified Go 1.25.1
+make toolchain-check # verify qualified Go toolchain selection
 make test            # complete Go tests + local image round trips
 make release-unit    # release-gate Go regressions only
 make research-unit   # experimental geometry Go regressions

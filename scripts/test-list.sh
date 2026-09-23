@@ -16,6 +16,7 @@ printf 'Legend: INPUT=pics means the local qualification corpus; private means f
 printf 'Research/qualification targets may intentionally fail at current robustness boundaries; release-check is the production gate.\n'
 
 section 'Release / baseline'
+row toolchain-check RELEASE source 'qualified Go 1.25.1 toolchain guard'
 row version-check RELEASE self 'VERSION/buildinfo consistency'
 row vet RELEASE source 'go vet on all packages'
 row release-unit RELEASE source 'release-scoped Go unit/regression gate'
@@ -97,6 +98,6 @@ row extreme-test QUALIFICATION pics 'progressive resize/crop limit map; non-stri
 row test-unit COMPATIBILITY source 'complete go test ./... suite'
 row test AGGREGATE source+pics 'build + test-unit + image round-trips'
 row all AGGREGATE source+pics 'test + baseline transformation suite'
-row all-test AGGREGATE source+pics '60-target qualification matrix with final summary'
+row all-test AGGREGATE source+pics '62-target Build43 qualification matrix with final summary'
 
 printf '\nTip: use make <target>. For all-test, optionally set ALL_TEST_REPORT=path/to/report.txt.\n'

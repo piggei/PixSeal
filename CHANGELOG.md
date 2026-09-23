@@ -5,6 +5,9 @@
 - Adds structural paper→artwork side proposals with conservative gating, multi-pair/angular/fine/complement diversity, a frozen bank capped at 32 candidates, and held-out qualification only after freeze.
 - Recovers the private Build38 `A/front` smartphone capture while preserving the existing `A/mild`, `A/angle`, `B/front` passes and 3/3 control rejections.
 - Adds Build43 CLI telemetry, `v4-build43-phone-side-pair-test`, opt-in `v4-build43-phone-physical-test`, and `docs/V4_BUILD43_PHONE_SIDE_PAIR.md`.
+- Pins Build43 Makefile/Windows build commands to the qualified Go 1.25.1 toolchain and forces native rebuilds so a stale Go 1.26 binary cannot be reused.
+- Documents the Go 1.26 `image/jpeg` decoder replacement discovered by the physical A/mild corpus: identical JPEG bytes rasterize differently and change the geometry result. Go 1.26+ is therefore not a qualified Build43 JPEG toolchain.
+- Adds `docs/GO_TOOLCHAIN_COMPATIBILITY.md`; no watermark, Format-v4, ECC/HMAC or Build43 geometry retuning is made to compensate for the upstream decoder change.
 
 ## v0.3.0-build42 — 2026-09-18
 

@@ -32,6 +32,12 @@ The fixed Build41 1/3 held-out fold is excluded from candidate generation/rankin
 structure/public proposal → bounded bank → FREEZE → held-out qualification → data/ECC → HMAC
 ```
 
+## Qualified Go/JPEG toolchain
+
+Build43 physical qualification is pinned to **Go 1.25.1**. During final qualification, Go 1.26.0 was shown to decode the canonical `phone-a-mild.jpg` into different Y/Cb/Cr samples because Go 1.26 replaced `image/jpeg`. That upstream raster difference changes the public-structure/pilot geometry scores and can cause A/mild to reject before the unchanged Build42 data path. The same Build43 source compiled with Go 1.25.1 restores the expected HMAC PASS.
+
+This is treated as an input-decoder/toolchain compatibility boundary, not as a reason to retune Build43 geometry. Repository `make` targets select Go 1.25.1 and rebuild `dist/pixseal` before physical tests. See [`GO_TOOLCHAIN_COMPATIBILITY.md`](GO_TOOLCHAIN_COMPATIBILITY.md).
+
 ## Public regression
 
 ```bash

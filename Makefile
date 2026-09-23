@@ -2,6 +2,13 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := build
 .NOTPARALLEL:
 
+# Build43 qualification is pinned to Go 1.25.1. Go 1.26 replaced image/jpeg
+# with a new decoder whose pixel output differs enough to change the qualified
+# smartphone geometry path. Use $(GO) for every Go command in this Makefile.
+QUALIFIED_GO_TOOLCHAIN := go1.25.1
+PIXSEAL_GO_TOOLCHAIN ?= $(QUALIFIED_GO_TOOLCHAIN)
+GO := env GOTOOLCHAIN=$(PIXSEAL_GO_TOOLCHAIN) go
+
 PIXSEAL := dist/pixseal
 ORIGINAL_PICS_DIR := original pics
 TEST_KEY ?= pixseal-test-key
@@ -82,7 +89,7 @@ ALL_TEST_TARGETS ?=
 ALL_TEST_STRICT ?=1
 GO_SOURCES := $(shell find cmd internal watermark -type f -name '*.go')
 
-.PHONY: test-list corpus-manifest-check private-corpus-manifest v4-physical-fixtures v4-physical-qualification v4-phone-fixtures v4-build40-phone-corpus-diagnostic v4-build41-phone-physical-test v4-build42-phone-physical-test print-scan-test build test test-unit release-unit v3-freeze-check v4-pilot-lock-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build42-phone-data-test v4-build43-phone-side-pair-test v4-build43-phone-physical-test v4-build37-physical-scanner-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
+.PHONY: toolchain-check test-list corpus-manifest-check private-corpus-manifest v4-physical-fixtures v4-physical-qualification v4-phone-fixtures v4-build40-phone-corpus-diagnostic v4-build41-phone-physical-test v4-build42-phone-physical-test print-scan-test build test test-unit release-unit v3-freeze-check v4-pilot-lock-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build42-phone-data-test v4-build43-phone-side-pair-test v4-build43-phone-physical-test v4-build37-physical-scanner-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
 
 # Print a categorized index of all test/check targets without running them.
 test-list:
@@ -156,13 +163,28 @@ v4-build40-phone-corpus-diagnostic: build
 	V4_PHONE_TIMEOUT="$(V4_PHONE_TIMEOUT)" \
 	bash ./scripts/diagnose-v4-phone-corpus.sh
 
-# Default target: build the native executable for the current platform.
-build: $(PIXSEAL)
+# Verify and use the exact toolchain qualified for Build43. The explicit
+# GOTOOLCHAIN selection is required even on hosts with a newer Go installed.
+toolchain-check:
+	@out="$$( $(GO) version 2>&1 )" || { \
+		echo "error: unable to run qualified Go $(QUALIFIED_GO_TOOLCHAIN) toolchain" >&2; \
+		echo "$$out" >&2; \
+		echo "Install Go $(QUALIFIED_GO_TOOLCHAIN) or allow Go's GOTOOLCHAIN mechanism to download it." >&2; \
+		exit 1; \
+	}; \
+	actual="$$(printf '%s\n' "$$out" | awk '{print $$3}')"; \
+	if [[ "$$actual" != "$(QUALIFIED_GO_TOOLCHAIN)" ]]; then \
+		echo "error: PixSeal Build43 requires Go $(QUALIFIED_GO_TOOLCHAIN); selected $$actual" >&2; \
+		exit 1; \
+	fi; \
+	echo "Qualified Go toolchain: $$actual"
 
-$(PIXSEAL): $(GO_SOURCES) go.mod
-	@echo "Building PixSeal..."
+# Default target: always rebuild the native executable with the qualified
+# toolchain. Rebuilding avoids silently reusing dist/pixseal from Go 1.26+.
+build: toolchain-check
+	@echo "Building PixSeal with $(QUALIFIED_GO_TOOLCHAIN)..."
 	@mkdir -p dist
-	@go build -trimpath -ldflags="-s -w" -o $(PIXSEAL) ./cmd/pixseal
+	@$(GO) build -trimpath -ldflags="-s -w" -o $(PIXSEAL) ./cmd/pixseal
 	@echo "Created $(PIXSEAL)"
 
 # Local release test suite: unit tests plus round trips on original pics.
@@ -171,14 +193,14 @@ test: build test-unit test-images
 
 test-unit:
 	@echo "Running complete Go unit/regression suite..."
-	@go test ./...
+	@$(GO) test ./...
 
 # Release-gate Go tests deliberately exclude the expensive experimental geometry
 # regression group. make test still runs every Go test for compatibility.
 release-unit:
 	@echo "Running release-gate Go tests..."
-	@go test ./cmd/pixseal ./internal/buildinfo -count=1
-	@go test ./watermark -run 'Test(V3EncoderGoldenFingerprint|StrengthRejectsNonFiniteValues|AnalyzerUsesSameWhiteAlphaFlatteningAsEncoder|WorkingImageLimitRejectsBeforePixelPlaneAllocation|WorkingImageLimitRejectsIntegerOverflow|IsotropicScaleSearchIsFixed|HammingCorrectsSingleBit|ProfileSelectionThresholds|ExplicitProfileCapacityErrors|V3ProfileRoundTrips|V3TransformsByProfile|V3AutoProfileExtraction|WrongKeyAndUnmarkedImageAreBounded|AnalyzeImageMatchesProfileMath|V3FrameIgnoresTrailingPaddingButAuthenticatesHeader|V3SyncPatternObservationCounts|V3TileMappingObservationCounts)$$' -count=1
+	@$(GO) test ./cmd/pixseal ./internal/buildinfo -count=1
+	@$(GO) test ./watermark -run 'Test(V3EncoderGoldenFingerprint|StrengthRejectsNonFiniteValues|AnalyzerUsesSameWhiteAlphaFlatteningAsEncoder|WorkingImageLimitRejectsBeforePixelPlaneAllocation|WorkingImageLimitRejectsIntegerOverflow|IsotropicScaleSearchIsFixed|HammingCorrectsSingleBit|ProfileSelectionThresholds|ExplicitProfileCapacityErrors|V3ProfileRoundTrips|V3TransformsByProfile|V3AutoProfileExtraction|WrongKeyAndUnmarkedImageAreBounded|AnalyzeImageMatchesProfileMath|V3FrameIgnoresTrailingPaddingButAuthenticatesHeader|V3SyncPatternObservationCounts|V3TileMappingObservationCounts)$$' -count=1
 
 v3-freeze-check:
 	@echo "Checking frozen Format-v3 core hashes..."
@@ -189,91 +211,91 @@ v3-freeze-check:
 # normative Format-v4 promotion still waits for physical print-camera evidence.
 v4-pilot-lock-check:
 	@echo "Checking Build30 Format-v4 pilot candidate lock..."
-	@go test ./watermark -run '^TestExperimentalV4PilotCandidateLock(Identity|DetectsMutation)$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4PilotCandidateLock(Identity|DetectsMutation)$$' -count=1 -v
 
 
 # v0.3 bounded local-lattice diagnostic regressions. These are research tests and
 # deliberately remain outside the v0.2-derived release-unit gate.
 lattice-estimator-test:
 	@echo "Running v0.3 local-lattice estimator regressions..."
-	@go test ./watermark -run '^TestDiagnostic' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnostic' -count=1
 
 # v0.3 deterministic print-boundary/homography/projective virtual-decoder
 # regressions. These stay research-only and do not alter ExtractWithInfo.
 homography-test:
 	@echo "Running v0.3 bounded homography/projective regressions..."
-	@go test ./watermark -run 'Test(PrintBoundaryEstimatorFindsSyntheticPrint|HomographyForPrintBoundaryMapsCorners|DiagnosticScaleClusteringRewardsCrossRegionSupport|DiagnosticProjectiveVirtualAuthentication|DiagnosticPhaseConsensusPrefersExactScale|DiagnosticPhaseDifferenceIsBoundedModuloTile|DiagnosticFundamentalSelectionRejectsHigherFrequencyAliases|DiagnosticSubpixelOffsetCorrectsBoundaryPhase|DiagnosticResidualWarpFitsSmoothSubBlockField|DiagnosticAdaptiveEscalationAddsOneFinerLevel|DiagnosticWeakBoundaryRequiresPlausibleQuad)$$' -count=1
+	@$(GO) test ./watermark -run 'Test(PrintBoundaryEstimatorFindsSyntheticPrint|HomographyForPrintBoundaryMapsCorners|DiagnosticScaleClusteringRewardsCrossRegionSupport|DiagnosticProjectiveVirtualAuthentication|DiagnosticPhaseConsensusPrefersExactScale|DiagnosticPhaseDifferenceIsBoundedModuloTile|DiagnosticFundamentalSelectionRejectsHigherFrequencyAliases|DiagnosticSubpixelOffsetCorrectsBoundaryPhase|DiagnosticResidualWarpFitsSmoothSubBlockField|DiagnosticAdaptiveEscalationAddsOneFinerLevel|DiagnosticWeakBoundaryRequiresPlausibleQuad)$$' -count=1
 
 photometric-test:
 	@echo "Running v0.3 bounded print-camera photometric regressions..."
-	@go test ./watermark -run '^TestDiagnosticPhotometric' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnosticPhotometric' -count=1
 
 bit-channel-test:
 	@echo "Running v0.3 protected-bit/ECC diagnostics..."
-	@go test ./watermark -run '^TestDiagnosticBitChannel' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnosticBitChannel' -count=1
 
 reliability-test:
 	@echo "Running v0.3 bounded reliability/full-grid regressions..."
-	@go test ./watermark -run '^TestDiagnostic(SoftHamming|Reliability|FullGridSampling)' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnostic(SoftHamming|Reliability|FullGridSampling)' -count=1
 
 spatial-channel-test:
 	@echo "Running v0.3 spatial protected-bit stability regressions..."
-	@go test ./watermark -run '^TestDiagnostic(SpatialBitEvidence|FullGridSamplingCollectsSpatialCells)' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnostic(SpatialBitEvidence|FullGridSamplingCollectsSpatialCells)' -count=1
 
 phase-surface-test:
 	@echo "Running v0.3 confidence-weighted phase-surface regressions..."
-	@go test ./watermark -run '^TestDiagnostic(PhaseSurface|SmoothPhaseConfidence|SmoothPhaseQuadratic|SmoothPhaseHuber)' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnostic(PhaseSurface|SmoothPhaseConfidence|SmoothPhaseQuadratic|SmoothPhaseHuber)' -count=1
 
 blind-phase-test:
 	@echo "Running v0.3 key-independent blind phase regressions..."
-	@go test ./watermark -run '^TestDiagnosticBlind' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnosticBlind' -count=1
 
 lattice-phase-test:
 	@echo "Running v0.3 local fractional lattice-phase regressions..."
-	@go test ./watermark -run '^TestDiagnostic(LocalLatticeFractionalPhase|BlindLatticeFusion)' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnostic(LocalLatticeFractionalPhase|BlindLatticeFusion)' -count=1
 
 global-unwrap-test:
 	@echo "Running v0.3 global discrete phase-unwrapping regressions..."
-	@go test ./watermark -run '^TestDiagnosticGlobalDiscreteUnwrap' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnosticGlobalDiscreteUnwrap' -count=1
 
 crossfit-unwrap-test:
 	@echo "Running v0.3 held-out repetition cross-fit regressions..."
-	@go test ./watermark -run '^TestDiagnostic(Crossfit|GlobalUnwrapCrossfit|ApplyCrossfit)' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnostic(Crossfit|GlobalUnwrapCrossfit|ApplyCrossfit)' -count=1
 
 stability-unwrap-test:
 	@echo "Running v0.3 multi-partition integer-cycle stability regressions..."
-	@go test ./watermark -run '^TestDiagnostic(StabilityPartitions|GlobalUnwrapPartitionStability|ApplyStability)' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnostic(StabilityPartitions|GlobalUnwrapPartitionStability|ApplyStability)' -count=1
 
 cycle-anchor-test:
 	@echo "Running v0.3 independent cross-cell cycle-anchor regressions..."
-	@go test ./watermark -run '^TestDiagnosticCycleAnchor' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnosticCycleAnchor' -count=1
 
 observability-audit-test:
 	@echo "Running v0.3 Format-v3 key-independent observability audit regressions..."
-	@go test ./watermark -run '^TestDiagnosticFormatObservability' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnosticFormatObservability' -count=1
 
 physical-topology-test:
 	@echo "Running v0.3 held-out physical repetition-topology observability regressions..."
-	@go test ./watermark -run '^TestDiagnosticPhysicalTopology' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnosticPhysicalTopology' -count=1
 
 v4-design-study-test:
 	@echo "Running non-normative Format-v4 absolute-pilot design-study regressions..."
-	@go test ./watermark -run '^TestDiagnosticFormatV4DesignStudy' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnosticFormatV4DesignStudy' -count=1
 
 v4-foundation-test:
 	@echo "Running isolated experimental Format-v4 pilot-foundation regressions..."
-	@go test ./watermark -run 'TestExperimentalV4Prototype(FoundationInvariants|UsesOnePilotPerStratum)$$' -count=1
+	@$(GO) test ./watermark -run 'TestExperimentalV4Prototype(FoundationInvariants|UsesOnePilotPerStratum)$$' -count=1
 
 # Build24 deterministic joint coordinate/sign search plus partial-visibility qualification.
 v4-pilot-search-test:
 	@echo "Running Build24 deterministic Format-v4 pilot search/qualification..."
-	@go test ./watermark -run '^TestExperimentalV4(Prototype2StructuralQualification|Prototype2ImprovesBuild23Baseline|Build24SearchReproducesPrototype2)$$' -count=1
+	@$(GO) test ./watermark -run '^TestExperimentalV4(Prototype2StructuralQualification|Prototype2ImprovesBuild23Baseline|Build24SearchReproducesPrototype2)$$' -count=1
 
 # Build24 image-domain pilot-only synthetic channel. This does not encode or
 # authenticate a payload and remains disconnected from production v3 APIs.
 v4-pilot-channel-test:
 	@echo "Running Build24 experimental Format-v4 pilot image-channel regressions..."
-	@go test ./watermark -run '^TestExperimentalV4Prototype2ImageDomainPilotChannel$$' -count=1
+	@$(GO) test ./watermark -run '^TestExperimentalV4Prototype2ImageDomainPilotChannel$$' -count=1
 
 # Optional local image-corpus pilot qualification. Source archives intentionally
 # omit the corpus; the target uses ORIGINAL_PICS_DIR by default when present.
@@ -281,46 +303,46 @@ v4-pilot-corpus-test:
 	@echo "Running Build24 experimental Format-v4 pilot corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
 	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
-		go test ./watermark -run '^TestExperimentalV4PilotCorpus$$' -count=1 -v
+		$(GO) test ./watermark -run '^TestExperimentalV4PilotCorpus$$' -count=1 -v
 
 # Build25 known-geometry pilot qualification. Geometry is supplied independently
 # so this isolates whether prototype-2 survives the transformed image channel.
 v4-pilot-geometry-test:
 	@echo "Running Build25 Format-v4 known-geometry pilot qualification..."
-	@go test ./watermark -run '^TestExperimentalV4Prototype2KnownGeometryQualification$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4Prototype2KnownGeometryQualification$$' -count=1 -v
 
 # Optional Build25 known-geometry qualification on the local original-image corpus.
 v4-pilot-geometry-corpus-test:
 	@echo "Running Build25 Format-v4 known-geometry local corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
 	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
-		go test ./watermark -run '^TestExperimentalV4PilotGeometryCorpus$$' -count=1 -v
+		$(GO) test ./watermark -run '^TestExperimentalV4PilotGeometryCorpus$$' -count=1 -v
 
 # Build26 bounded blind geometry recovery. Repeated data-plane self-consistency
 # proposes geometry without data symbols; the public pilot ranks and validates.
 v4-pilot-blind-geometry-test:
 	@echo "Running Build26 Format-v4 blind pilot-assisted geometry qualification..."
-	@go test ./watermark -run '^TestExperimentalV4(Prototype2BlindGeometryQualification|DataRepeatProposalIsPilotSymbolIndependent)$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4(Prototype2BlindGeometryQualification|DataRepeatProposalIsPilotSymbolIndependent)$$' -count=1 -v
 
 # Optional Build26 blind-geometry qualification on the local original-image corpus.
 v4-pilot-blind-geometry-corpus-test:
 	@echo "Running Build26 Format-v4 blind geometry local corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
 	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
-		go test ./watermark -run '^TestExperimentalV4BlindGeometryCorpus$$' -count=1 -v
+		$(GO) test ./watermark -run '^TestExperimentalV4BlindGeometryCorpus$$' -count=1 -v
 
 # Build27 unknown crop/translation/placement qualification with geometry supplied
 # independently. Pilot half A proposes placement; disjoint pilot half B validates.
 v4-pilot-placement-test:
 	@echo "Running Build27 Format-v4 unknown-placement qualification..."
-	@go test ./watermark -run '^TestExperimentalV4(Prototype2UnknownPlacementQualification|PlacementWrongGeometryDoesNotMasqueradeAsPlacement)$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4(Prototype2UnknownPlacementQualification|PlacementWrongGeometryDoesNotMasqueradeAsPlacement)$$' -count=1 -v
 
 # Optional Build27 placement qualification on the local original-image corpus.
 v4-pilot-placement-corpus-test:
 	@echo "Running Build27 Format-v4 unknown-placement local corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
 	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
-		go test ./watermark -run '^TestExperimentalV4PlacementCorpus$$' -count=1 -v
+		$(GO) test ./watermark -run '^TestExperimentalV4PlacementCorpus$$' -count=1 -v
 
 # Build28 joint affine + unknown negative-crop qualification. Geometry is
 # selected only from public, sign-independent DCT phase contrast; the pilot is
@@ -328,14 +350,14 @@ v4-pilot-placement-corpus-test:
 # proposal/held-out validation split.
 v4-pilot-joint-affine-test:
 	@echo "Running Build28 Format-v4 joint blind affine+crop qualification..."
-	@go test ./watermark -run '^TestExperimentalV4(Prototype2JointAffineCropQualification|JointAffineStructuralProposalIsPilotSymbolIndependent)$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4(Prototype2JointAffineCropQualification|JointAffineStructuralProposalIsPilotSymbolIndependent)$$' -count=1 -v
 
 # Optional Build28 joint affine+crop qualification on the local originals.
 v4-pilot-joint-affine-corpus-test:
 	@echo "Running Build28 Format-v4 joint blind affine+crop local corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
 	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
-		go test ./watermark -run '^TestExperimentalV4JointAffineCropCorpus$$' -count=1 -v
+		$(GO) test ./watermark -run '^TestExperimentalV4JointAffineCropCorpus$$' -count=1 -v
 
 # Build29 composes unknown projective geometry with crop and unknown affine
 # geometry with positive padded placement. Public-pilot evidence is used only
@@ -343,7 +365,7 @@ v4-pilot-joint-affine-corpus-test:
 # ECC and HMAC are never consulted.
 v4-pilot-joint-projective-test:
 	@echo "Running Build29 Format-v4 joint projective+crop / padded qualification..."
-	@go test ./watermark -run '^TestExperimentalV4Build29JointQualification$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build29JointQualification$$' -count=1 -v
 
 # Optional Build29 local-corpus gate. PASS includes explicitly documented SAFE
 # REJECT outcomes for cases that the bounded joint search does not qualify.
@@ -351,7 +373,7 @@ v4-pilot-joint-projective-corpus-test:
 	@echo "Running Build29 Format-v4 joint projective/padded local corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
 	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
-		go test ./watermark -run '^TestExperimentalV4Build29JointCorpus$$' -count=1 -v
+		$(GO) test ./watermark -run '^TestExperimentalV4Build29JointCorpus$$' -count=1 -v
 
 # Build33 ranking-observability checkpoint for the MQ blocker. This diagnostic
 # compares the same projective+crop transform with a synthetic random data plane
@@ -361,7 +383,7 @@ v4-pilot-joint-projective-rank-diagnostic:
 	@echo "Running Build33 Format-v4 MQ projective ranking diagnostic..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
 	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
-		go test ./watermark -run '^TestExperimentalV4Build33ProjectiveRankingDiagnostic$$' -count=1 -v
+		$(GO) test ./watermark -run '^TestExperimentalV4Build33ProjectiveRankingDiagnostic$$' -count=1 -v
 
 # Build34 end-to-end MQ projective+crop gate. Geometry is selected only from
 # structure/public-pilot evidence; authenticated frame recovery happens after
@@ -370,34 +392,34 @@ v4-build34-projective-frame-corpus-test:
 	@echo "Running Build34 Format-v4 authenticated MQ projective corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
 	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
-		go test ./watermark -run '^TestExperimentalV4Build34AuthenticatedProjectiveCorpus$$' -count=1 -v
+		$(GO) test ./watermark -run '^TestExperimentalV4Build34AuthenticatedProjectiveCorpus$$' -count=1 -v
 
 # Build35 exposes the qualified Build34 blind projective decoder as a public
 # experimental API/CLI for controlled physical-channel qualification.
 v4-build35-projective-api-test:
 	@echo "Running Build35 Format-v4 projective API/CLI qualification..."
-	@go test ./watermark -run '^TestExperimentalV4Build35ProjectiveAPI' -count=1 -v
-	@go test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractProjectiveRequiresCanonicalBlockDimensions)$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build35ProjectiveAPI' -count=1 -v
+	@$(GO) test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractProjectiveRequiresCanonicalBlockDimensions)$$' -count=1 -v
 
 # Build36 promotes reliability-aware Hamming decoding into the accepted
 # projective v4 data path. Geometry/pilot acceptance remains unchanged.
 v4-build36-soft-channel-test:
 	@echo "Running Build36 Format-v4 soft-decision physical-channel qualification..."
-	@go test ./watermark -run '^TestExperimentalV4Build36SoftHamming' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build36SoftHamming' -count=1 -v
 
 # Build37 closes blind registration for full-page scanner captures. Boundary
 # geometry proposes a narrow affine basin; disjoint public-pilot halves qualify
 # a five-geometry ensemble before any data/HMAC work occurs.
 v4-build37-scanner-registration-test:
 	@echo "Running Build37 Format-v4 blind scanner-registration qualification..."
-	@go test ./watermark -run '^TestExperimentalV4Build37' -count=1 -v
-	@go test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractScannerRequiresCanonicalBlockDimensions)$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build37' -count=1 -v
+	@$(GO) test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractScannerRequiresCanonicalBlockDimensions)$$' -count=1 -v
 
 # Build38 freezes the smartphone qualification carrier at strength 48 while
 # preserving the Format-v4 pilot, data mapping, Hamming code and HMAC.
 v4-build38-phone-channel-test:
 	@echo "Running Build38 Format-v4 smartphone-channel carrier qualification..."
-	@go test ./watermark -run '^TestExperimentalV4Build38PhoneStrengthRoundTrip$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build38PhoneStrengthRoundTrip$$' -count=1 -v
 
 # Build39 introduces the first dedicated blind-smartphone registration checkpoint.
 # The gate qualifies bounded downsampling, phone artwork-boundary extraction and
@@ -405,40 +427,40 @@ v4-build38-phone-channel-test:
 # claim complete blind HMAC closure on the private real-phone corpus yet.
 v4-build39-phone-registration-test:
 	@echo "Running Build39 Format-v4 blind smartphone-registration checkpoint..."
-	@go test ./watermark -run '^TestExperimentalV4Build39' -count=1 -v
-	@go test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractPhoneRequiresCanonicalBlockDimensions)$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build39' -count=1 -v
+	@$(GO) test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractPhoneRequiresCanonicalBlockDimensions)$$' -count=1 -v
 
 # Build40 tests the hypothesis that the remaining phone error is a small smooth
 # local warp after Build39. Proposal controls come only from checkerboard-A
 # public-pilot tiles; checkerboard-B tiles validate the fitted field.
 v4-build40-phone-residual-test:
 	@echo "Running Build40 Format-v4 pilot-only smartphone residual-warp qualification..."
-	@go test ./watermark -run '^TestExperimentalV4Build40PilotOnlyResidualWarp$$' -count=1 -v
-	@go test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractPhoneRequiresCanonicalBlockDimensions)$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build40PilotOnlyResidualWarp$$' -count=1 -v
+	@$(GO) test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractPhoneRequiresCanonicalBlockDimensions)$$' -count=1 -v
 
 # Build41 improves the blind global phone basin while keeping the Build40
 # residual layer, carrier and authentication channel unchanged. A fixed 1/3
 # spatial fold is held out until the proposal-only shortlist is frozen.
 v4-build41-phone-basin-test:
 	@echo "Running Build41 Format-v4 blind smartphone basin qualification..."
-	@go test ./watermark -run '^TestExperimentalV4Build41PhoneBasinRecovery$$' -count=1 -v
-	@go test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractPhoneRequiresCanonicalBlockDimensions)$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build41PhoneBasinRecovery$$' -count=1 -v
+	@$(GO) test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractPhoneRequiresCanonicalBlockDimensions)$$' -count=1 -v
 
 # Build42 preserves Build41 geometry and adds only post-geometry recovery: the
 # complete already-qualified bank feeds deterministic 3-way data ensembles and
 # a bounded soft-Hamming list decoder. HMAC remains final authentication only.
 v4-build42-phone-data-test:
 	@echo "Running Build42 Format-v4 qualified-bank/list-decoder regression..."
-	@go test ./watermark -run '^(TestExperimentalV4Build41PhoneBasinRecovery|TestExperimentalV4Build42ListDecodeRecoversSecondBestWord)$$' -count=1 -v
-	@go test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractPhoneRequiresCanonicalBlockDimensions|TestV4PhoneDiagnosticsExposeBuild42MatrixFields)$$' -count=1 -v
+	@$(GO) test ./watermark -run '^(TestExperimentalV4Build41PhoneBasinRecovery|TestExperimentalV4Build42ListDecodeRecoversSecondBestWord)$$' -count=1 -v
+	@$(GO) test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractPhoneRequiresCanonicalBlockDimensions|TestV4PhoneDiagnosticsExposeBuild42MatrixFields)$$' -count=1 -v
 
 
 # Build43 adds a bounded side-pair geometry fallback only after Build41 geometry
 # rejects. Candidate generation/ranking is proposal-only and frozen before held-out.
 v4-build43-phone-side-pair-test:
 	@echo "Running Build43 Format-v4 proposal-only side-pair regression..."
-	@go test ./watermark -run '^TestExperimentalV4Build43PhoneSidePairRecovery$$' -count=1 -v
-	@go test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractPhoneRequiresCanonicalBlockDimensions)$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build43PhoneSidePairRecovery$$' -count=1 -v
+	@$(GO) test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractPhoneRequiresCanonicalBlockDimensions)$$' -count=1 -v
 
 # Opt-in private physical regression over the original full-page scanner files.
 # Paths are explicit so the private captures never enter the source archive.
@@ -461,15 +483,15 @@ v4-pilot-lock-corpus-test:
 	@echo "Running Build30 Format-v4 pilot candidate-lock corpus audit..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
 	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
-		go test ./watermark -run '^TestExperimentalV4PilotCandidateLockCorpus$$' -count=1 -v
+		$(GO) test ./watermark -run '^TestExperimentalV4PilotCandidateLockCorpus$$' -count=1 -v
 
 # Build31 first real experimental v4 framing/data path. This target covers
 # frame/version separation, Hamming baseline, locked pilot/data partition,
 # aligned image round-trip, JPEG/crop channel checks and the explicit CLI.
 v4-frame-test:
 	@echo "Running Build31 experimental Format-v4 framing/encoder qualification..."
-	@go test ./watermark -run '^TestExperimentalV4(FrameRoundTripProfiles|AlignedCropRoundTrip|WrongKeyAndCrossVersionIsolation|HammingBaselineCorrectsSingleBitPerCodeword|FrameDeterministicVector|CapacityGeometry|LockedDataPartition|AlignedJPEGChannel|MinimumTileRoundTrip|DataMappingProfileCoverage|HeaderBytes)$$' -count=1 -v
-	@go test ./cmd/pixseal -run '^TestExperimentalV4CLIRoundTrip$$' -count=1 -v
+	@$(GO) test ./watermark -run '^TestExperimentalV4(FrameRoundTripProfiles|AlignedCropRoundTrip|WrongKeyAndCrossVersionIsolation|HammingBaselineCorrectsSingleBitPerCodeword|FrameDeterministicVector|CapacityGeometry|LockedDataPartition|AlignedJPEGChannel|MinimumTileRoundTrip|DataMappingProfileCoverage|HeaderBytes)$$' -count=1 -v
+	@$(GO) test ./cmd/pixseal -run '^TestExperimentalV4CLIRoundTrip$$' -count=1 -v
 
 # Opt-in Build31 real-image framing/channel qualification. The private originals
 # are never distributed; the same experimental frame is tested in all three
@@ -478,11 +500,11 @@ v4-frame-corpus-test:
 	@echo "Running Build31 experimental Format-v4 frame corpus qualification..."
 	@PIXSEAL_V4_CORPUS_DIR="$(CURDIR)/$(V4_PILOT_CORPUS_DIR)" \
 	PIXSEAL_V4_CORPUS_MANIFEST="$(abspath $(ACTIVE_CORPUS_MANIFEST))" \
-		go test ./watermark -run '^TestExperimentalV4FrameCorpus$$' -count=1 -v
+		$(GO) test ./watermark -run '^TestExperimentalV4FrameCorpus$$' -count=1 -v
 
 smooth-phase-test:
 	@echo "Running v0.3 bounded smooth phase-field regressions..."
-	@go test ./watermark -run '^TestDiagnosticSmoothPhase' -count=1
+	@$(GO) test ./watermark -run '^TestDiagnosticSmoothPhase' -count=1
 
 # Private real print -> paper -> smartphone regression gate. Every PNG/JPEG in
 # the private corpus directory is tested automatically. The photographs are
@@ -554,7 +576,7 @@ print-scan-test: build
 # separately so research failures cannot make the release baseline red.
 research-unit:
 	@echo "Running experimental geometry Go regressions..."
-	@go test ./watermark -run 'Test(V3QuarterTurnRecovery|V3ArbitraryRotationRecovery|V3CombinedGeometryRecovery|V3DirectLatticeBasisRecovery|DirectLatticeBasisSearchIsFixed|RotationProbeRejectsUnmarkedSyntheticImage|WrongKeyOnRotatedCarrierIsBounded|V3AxisAlignedAffineScaleRecovery|AxisAlignedAffineSearchIsFixed|V3MildPerspectiveRecoveryEndToEnd|Build11PerspectiveHypothesisBound)$$' -count=1
+	@$(GO) test ./watermark -run 'Test(V3QuarterTurnRecovery|V3ArbitraryRotationRecovery|V3CombinedGeometryRecovery|V3DirectLatticeBasisRecovery|DirectLatticeBasisSearchIsFixed|RotationProbeRejectsUnmarkedSyntheticImage|WrongKeyOnRotatedCarrierIsBounded|V3AxisAlignedAffineScaleRecovery|AxisAlignedAffineSearchIsFixed|V3MildPerspectiveRecoveryEndToEnd|Build11PerspectiveHypothesisBound)$$' -count=1
 
 test-images: build
 	@set -euo pipefail; \
@@ -729,22 +751,23 @@ all-test:
 	@ALL_TEST_REPORT="$(ALL_TEST_REPORT)" \
 	ALL_TEST_TARGETS="$(ALL_TEST_TARGETS)" \
 	ALL_TEST_STRICT="$(ALL_TEST_STRICT)" \
+	PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" \
 	bash ./scripts/test-all.sh
 
 version-check:
 	@echo "Checking VERSION/buildinfo consistency..."
-	@go test ./internal/buildinfo -run TestVersionFileMatchesBuildInfo -count=1
+	@$(GO) test ./internal/buildinfo -run TestVersionFileMatchesBuildInfo -count=1
 
 vet:
 	@echo "Running go vet..."
-	@go vet ./...
+	@$(GO) vet ./...
 
 # Release-candidate gate: static analysis, release-scoped unit tests, local
 # round trips, baseline transforms and reusable-core portability. Research Go
 # regressions remain visible through research-unit / all-test. Requires original pics/.
 # Strict mode is target-specific so a plain `make release-check` is self-contained.
 release-check: STRICT := 1
-release-check: version-check vet release-unit v3-freeze-check v4-pilot-lock-check corpus-manifest-check test-images deep-test core-target-check
+release-check: toolchain-check version-check vet release-unit v3-freeze-check v4-pilot-lock-check corpus-manifest-check test-images deep-test core-target-check
 	@echo "Release baseline checks passed."
 
 # Run build + local round-trip tests + baseline transformation tests.
@@ -754,20 +777,20 @@ all: test deep-test
 build-all:
 	@echo "Building PixSeal for Linux, Windows and macOS..."
 	@mkdir -p dist
-	@GOOS=linux GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o dist/pixseal-linux-amd64 ./cmd/pixseal
-	@GOOS=windows GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o dist/pixseal-windows-amd64.exe ./cmd/pixseal
-	@GOOS=darwin GOARCH=amd64 go build -trimpath -ldflags="-s -w" -o dist/pixseal-macos-amd64 ./cmd/pixseal
-	@GOOS=darwin GOARCH=arm64 go build -trimpath -ldflags="-s -w" -o dist/pixseal-macos-arm64 ./cmd/pixseal
+	@GOOS=linux GOARCH=amd64 $(GO) build -trimpath -ldflags="-s -w" -o dist/pixseal-linux-amd64 ./cmd/pixseal
+	@GOOS=windows GOARCH=amd64 $(GO) build -trimpath -ldflags="-s -w" -o dist/pixseal-windows-amd64.exe ./cmd/pixseal
+	@GOOS=darwin GOARCH=amd64 $(GO) build -trimpath -ldflags="-s -w" -o dist/pixseal-macos-amd64 ./cmd/pixseal
+	@GOOS=darwin GOARCH=arm64 $(GO) build -trimpath -ldflags="-s -w" -o dist/pixseal-macos-arm64 ./cmd/pixseal
 	@echo "Created cross-platform binaries in dist/"
 
 # Compile the reusable steganography core for representative future frontend targets.
 # This creates no distributable binaries; it is an architectural portability check.
 core-target-check:
 	@echo "Checking reusable core on desktop/mobile targets..."
-	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build ./watermark
-	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build ./watermark
-	@CGO_ENABLED=0 GOOS=android GOARCH=arm64 go build ./watermark
-	@CGO_ENABLED=0 GOOS=ios GOARCH=arm64 go build ./watermark
+	@CGO_ENABLED=0 GOOS=linux GOARCH=amd64 $(GO) build ./watermark
+	@CGO_ENABLED=0 GOOS=windows GOARCH=amd64 $(GO) build ./watermark
+	@CGO_ENABLED=0 GOOS=android GOARCH=arm64 $(GO) build ./watermark
+	@CGO_ENABLED=0 GOOS=ios GOARCH=arm64 $(GO) build ./watermark
 	@echo "Core target checks passed: linux/amd64, windows/amd64, android/arm64, ios/arm64"
 
 clean:

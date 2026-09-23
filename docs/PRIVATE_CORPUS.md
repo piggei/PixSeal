@@ -154,4 +154,7 @@ Build42 uses the same nine private strength-48 originals under `v4-phone private
 
 ## Build43 private smartphone gate
 
+The official Build43 physical gate must be built/run through the repository Makefile, which selects the qualified Go 1.25.1 toolchain. Go 1.26+ is not a qualified Build43 JPEG decoder for this corpus; see `docs/GO_TOOLCHAIN_COMPATIBILITY.md`.
+
+
 Build43 reuses the same nine original Build38 strength-48 photographs. `v4-build43-phone-physical-test` writes derived logs/matrices only. Required gate: controls reject; A/front, A/mild, A/angle and B/front authenticate; B/mild/B-angle are informational. No private image is distributed.

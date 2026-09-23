@@ -1185,3 +1185,5 @@ The remaining problem is now cleanly separated: A/front, B/mild and B/angle stil
 ## Build43 result
 
 On the private Build38 strength-48 corpus the minimum Build43 milestone is controls 3/3 reject; A/front, A/mild, A/angle and B/front authenticate; B/mild/B-angle remain informational rejects. A/front is recovered through the new geometry fallback and unchanged Build42/HMAC data path.
+
+Final Build43 qualification is defined with Go 1.25.1. A Go 1.26.0 rebuild of the same source changes the decoded raster of the canonical A/mild JPEG (Go 1.26 replaced `image/jpeg`) and can geometry-reject that case. Rebuilding with Go 1.25.1 restores A/mild HMAC PASS. The Makefile is therefore pinned to Go 1.25.1; Go 1.26+ JPEG physical behavior is deferred rather than masked by geometry retuning.

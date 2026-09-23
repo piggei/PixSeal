@@ -1,0 +1,2911 @@
+PixSeal all-test
+Version: PixSeal v0.3.0-build43
+Started: 2026-09-23 13:47:45 +0200
+Host: Linux 6.18.33.2-microsoft-standard-WSL2 x86_64
+Host Go: go version go1.26.0 linux/amd64
+Qualified Go: go version go1.25.1 linux/amd64
+ImageMagick: Version: ImageMagick 7.1.2-18 Q16 x86_64 23822 https://imagemagick.org
+STRICT=1 is used for deep/geometry/affine/composition/lattice/perspective; extreme-test remains non-strict.
+Report: report_build_43_final.txt
+
+========================================================================
+[1/62] qualified Go toolchain (toolchain-check)
+------------------------------------------------------------------------
+Qualified Go toolchain: go1.25.1
+
+[PASS] toolchain-check — 0s
+
+========================================================================
+[2/62] version consistency (version-check)
+------------------------------------------------------------------------
+Checking VERSION/buildinfo consistency...
+ok  	github.com/pj/pixseal/internal/buildinfo	0.004s
+
+[PASS] version-check — 0s
+
+========================================================================
+[3/62] go vet (vet)
+------------------------------------------------------------------------
+Running go vet...
+
+[PASS] vet — 2s
+
+========================================================================
+[4/62] release-gate Go tests (release-unit)
+------------------------------------------------------------------------
+Running release-gate Go tests...
+ok  	github.com/pj/pixseal/cmd/pixseal	0.281s
+ok  	github.com/pj/pixseal/internal/buildinfo	0.004s
+ok  	github.com/pj/pixseal/watermark	10.178s
+
+[PASS] release-unit — 13s
+
+========================================================================
+[5/62] Format-v3 frozen core manifest (v3-freeze-check)
+------------------------------------------------------------------------
+Checking frozen Format-v3 core hashes...
+watermark/watermark.go: OK
+watermark/v3.go: OK
+watermark/decoder.go: OK
+watermark/geometry.go: OK
+watermark/profile.go: OK
+Format-v3 frozen core matches the build23 reference manifest.
+
+[PASS] v3-freeze-check — 0s
+
+========================================================================
+[6/62] Format-v4 Build30 pilot candidate identity lock (v4-pilot-lock-check)
+------------------------------------------------------------------------
+Checking Build30 Format-v4 pilot candidate lock...
+=== RUN   TestExperimentalV4PilotCandidateLockIdentity
+--- PASS: TestExperimentalV4PilotCandidateLockIdentity (0.02s)
+=== RUN   TestExperimentalV4PilotCandidateLockDetectsMutation
+--- PASS: TestExperimentalV4PilotCandidateLockDetectsMutation (0.00s)
+PASS
+ok  	github.com/pj/pixseal/watermark	0.022s
+
+[PASS] v4-pilot-lock-check — 1s
+
+========================================================================
+[7/62] Build32 active private corpus manifest (corpus-manifest-check)
+------------------------------------------------------------------------
+Checking Build32 active private corpus manifest...
+OK   LQ Immagine LQ.png 800x757 sha256=f543e34c5d5b794fbc7058591795493410f651970560e529f7fa714178fb8400
+OK   MQ Immagine MQ.png 1635x1635 sha256=0102710ad55b6cc174ae823d98bcb54a3cc09685716194594e5ea67de1110661
+OK   HQ Immagine HQ.png 16320x12288 sha256=04b81afa3508a7fbbca77552a43ac39666157a248bb3a9b2cb70bde9068daee7
+
+[PASS] corpus-manifest-check — 1s
+
+========================================================================
+[8/62] local image round-trip (test-images)
+------------------------------------------------------------------------
+Qualified Go toolchain: go1.25.1
+Building PixSeal with go1.25.1...
+Created dist/pixseal
+Testing original pics/Immagine LQ.png
+  OK robust
+  OK balanced
+  OK capacity
+Testing original pics/Immagine MQ.png
+  OK robust
+  OK balanced
+  OK capacity
+Testing original pics/Immagine HQ.png
+  SKIP all profiles 201 MP exceeds limit of 100 MP
+Image round-trip tests completed: 2 images tested x 3 profiles; 1 image(s) skipped
+
+[PASS] test-images — 7s
+
+========================================================================
+[9/62] baseline transformations (deep-test)
+------------------------------------------------------------------------
+Qualified Go toolchain: go1.25.1
+Building PixSeal with go1.25.1...
+Created dist/pixseal
+Running image transformation tests...
+
+Image: Immagine LQ.png
+  Profile: robust (14 bytes)
+    PASS  jpeg-q82         message recovered
+    PASS  resize-95%       message recovered
+    PASS  resize-85%       message recovered
+    PASS  resize-75%       message recovered
+    PASS  resize-65%       message recovered
+    PASS  resize-55%       message recovered
+    PASS  crop-90%         message recovered
+    PASS  crop-75%         message recovered
+    PASS  crop-50%         message recovered
+    PASS  random-75%-1     message recovered
+    PASS  random-50%-1     message recovered
+  Profile: balanced (29 bytes)
+    PASS  jpeg-q82         message recovered
+    PASS  resize-95%       message recovered
+    PASS  resize-85%       message recovered
+    PASS  resize-75%       message recovered
+    PASS  resize-65%       message recovered
+    PASS  resize-55%       message recovered
+    PASS  crop-90%         message recovered
+    PASS  crop-75%         message recovered
+    PASS  crop-50%         message recovered
+    PASS  random-75%-1     message recovered
+    PASS  random-50%-1     message recovered
+  Profile: capacity (61 bytes)
+    PASS  jpeg-q82         message recovered
+    PASS  resize-95%       message recovered
+    PASS  resize-85%       message recovered
+    PASS  resize-75%       message recovered
+    PASS  resize-65%       message recovered
+    PASS  resize-55%       message recovered
+    PASS  crop-90%         message recovered
+    PASS  crop-75%         message recovered
+    PASS  crop-50%         message recovered
+    PASS  random-75%-1     message recovered
+    PASS  random-50%-1     message recovered
+
+Image: Immagine MQ.png
+  Profile: robust (14 bytes)
+    PASS  jpeg-q82         message recovered
+    PASS  resize-95%       message recovered
+    PASS  resize-85%       message recovered
+    PASS  resize-75%       message recovered
+    PASS  resize-65%       message recovered
+    PASS  resize-55%       message recovered
+    PASS  crop-90%         message recovered
+    PASS  crop-75%         message recovered
+    PASS  crop-50%         message recovered
+    PASS  random-75%-1     message recovered
+    PASS  random-50%-1     message recovered
+  Profile: balanced (29 bytes)
+    PASS  jpeg-q82         message recovered
+    PASS  resize-95%       message recovered
+    PASS  resize-85%       message recovered
+    PASS  resize-75%       message recovered
+    PASS  resize-65%       message recovered
+    PASS  resize-55%       message recovered
+    PASS  crop-90%         message recovered
+    PASS  crop-75%         message recovered
+    PASS  crop-50%         message recovered
+    PASS  random-75%-1     message recovered
+    PASS  random-50%-1     message recovered
+  Profile: capacity (61 bytes)
+    PASS  jpeg-q82         message recovered
+    PASS  resize-95%       message recovered
+    PASS  resize-85%       message recovered
+    PASS  resize-75%       message recovered
+    PASS  resize-65%       message recovered
+    PASS  resize-55%       message recovered
+    PASS  crop-90%         message recovered
+    PASS  crop-75%         message recovered
+    PASS  crop-50%         message recovered
+    PASS  random-75%-1     message recovered
+    PASS  random-50%-1     message recovered
+
+Image: Immagine HQ.png
+  SKIP  all transforms   201 MP exceeds limit of 100 MP (3 profiles)
+
+Robustness summary: 66 passed, 0 failed, 0 timeouts, 33 skipped, 0 errors, 99 total
+
+[PASS] deep-test — 74s
+
+========================================================================
+[10/62] progressive limits (extreme-test)
+------------------------------------------------------------------------
+Qualified Go toolchain: go1.25.1
+Building PixSeal with go1.25.1...
+Created dist/pixseal
+Running progressive limit tests...
+
+Image: Immagine LQ.png
+  Profile: robust (14 bytes)
+    PASS  resize-95%        message recovered
+    PASS  resize-90%        message recovered
+    PASS  resize-85%        message recovered
+    PASS  resize-80%        message recovered
+    PASS  resize-75%        message recovered
+    PASS  resize-70%        message recovered
+    PASS  resize-65%        message recovered
+    PASS  resize-60%        message recovered
+    PASS  resize-55%        message recovered
+    PASS  resize-50%        message recovered
+    PASS  resize-45%        message recovered
+    FAIL  resize-40%        message not recovered
+    FAIL  resize-35%        message not recovered
+    FAIL  resize-30%        message not recovered
+    FAIL  resize-25%        message not recovered
+    FAIL  resize-20%        message not recovered
+    FAIL  resize-15%        message not recovered
+    FAIL  resize-10%        message not recovered
+    SCALES resize           passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%
+    SCALES resize           failed: 40%, 35%, 30%, 25%, 20%, 15%, 10%
+    SCALES resize           timeout: none
+    PASS  center-crop-95%    message recovered
+    PASS  center-crop-90%    message recovered
+    PASS  center-crop-85%    message recovered
+    PASS  center-crop-80%    message recovered
+    PASS  center-crop-75%    message recovered
+    PASS  center-crop-70%    message recovered
+    PASS  center-crop-65%    message recovered
+    PASS  center-crop-60%    message recovered
+    PASS  center-crop-55%    message recovered
+    PASS  center-crop-50%    message recovered
+    PASS  center-crop-45%    message recovered
+    PASS  center-crop-40%    message recovered
+    FAIL  center-crop-35%    message not recovered
+    FAIL  center-crop-30%    message not recovered
+    FAIL  center-crop-25%    message not recovered
+    FAIL  center-crop-20%    message not recovered
+    FAIL  center-crop-15%    message not recovered
+    FAIL  center-crop-10%    message not recovered
+    SCALES center crop      passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%
+    SCALES center crop      failed: 35%, 30%, 25%, 20%, 15%, 10%
+    SCALES center crop      timeout: none
+    PASS  random-crop-95%    message recovered at +14+14
+    PASS  random-crop-90%    message recovered at +70+72
+    PASS  random-crop-85%    message recovered at +28+80
+    PASS  random-crop-80%    message recovered at +82+42
+    PASS  random-crop-75%    message recovered at +75+82
+    PASS  random-crop-70%    message recovered at +140+99
+    PASS  random-crop-65%    message recovered at +279+261
+    PASS  random-crop-60%    message recovered at +288+285
+    PASS  random-crop-55%    message recovered at +38+127
+    PASS  random-crop-50%    message recovered at +31+346
+    PASS  random-crop-45%    message recovered at +258+407
+    PASS  random-crop-40%    message recovered at +163+261
+    FAIL  random-crop-35%    message not recovered at +469+218
+    FAIL  random-crop-30%    message not recovered at +470+72
+    FAIL  random-crop-25%    message not recovered at +360+376
+    FAIL  random-crop-20%    message not recovered at +222+529
+    FAIL  random-crop-15%    message not recovered at +395+445
+    FAIL  random-crop-10%    message not recovered at +493+259
+    SCALES random crop      passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%
+    SCALES random crop      failed: 35%, 30%, 25%, 20%, 15%, 10%
+    SCALES random crop      timeout: none
+  Profile: balanced (29 bytes)
+    PASS  resize-95%        message recovered
+    PASS  resize-90%        message recovered
+    PASS  resize-85%        message recovered
+    PASS  resize-80%        message recovered
+    PASS  resize-75%        message recovered
+    PASS  resize-70%        message recovered
+    PASS  resize-65%        message recovered
+    PASS  resize-60%        message recovered
+    PASS  resize-55%        message recovered
+    PASS  resize-50%        message recovered
+    FAIL  resize-45%        message not recovered
+    FAIL  resize-40%        message not recovered
+    FAIL  resize-35%        message not recovered
+    FAIL  resize-30%        message not recovered
+    FAIL  resize-25%        message not recovered
+    FAIL  resize-20%        message not recovered
+    FAIL  resize-15%        message not recovered
+    FAIL  resize-10%        message not recovered
+    SCALES resize           passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%
+    SCALES resize           failed: 45%, 40%, 35%, 30%, 25%, 20%, 15%, 10%
+    SCALES resize           timeout: none
+    PASS  center-crop-95%    message recovered
+    PASS  center-crop-90%    message recovered
+    PASS  center-crop-85%    message recovered
+    PASS  center-crop-80%    message recovered
+    PASS  center-crop-75%    message recovered
+    PASS  center-crop-70%    message recovered
+    PASS  center-crop-65%    message recovered
+    PASS  center-crop-60%    message recovered
+    PASS  center-crop-55%    message recovered
+    PASS  center-crop-50%    message recovered
+    PASS  center-crop-45%    message recovered
+    PASS  center-crop-40%    message recovered
+    FAIL  center-crop-35%    message not recovered
+    FAIL  center-crop-30%    message not recovered
+    FAIL  center-crop-25%    message not recovered
+    FAIL  center-crop-20%    message not recovered
+    FAIL  center-crop-15%    message not recovered
+    FAIL  center-crop-10%    message not recovered
+    SCALES center crop      passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%
+    SCALES center crop      failed: 35%, 30%, 25%, 20%, 15%, 10%
+    SCALES center crop      timeout: none
+    PASS  random-crop-95%    message recovered at +14+14
+    PASS  random-crop-90%    message recovered at +70+72
+    PASS  random-crop-85%    message recovered at +28+80
+    PASS  random-crop-80%    message recovered at +82+42
+    PASS  random-crop-75%    message recovered at +75+82
+    PASS  random-crop-70%    message recovered at +140+99
+    PASS  random-crop-65%    message recovered at +279+261
+    PASS  random-crop-60%    message recovered at +288+285
+    PASS  random-crop-55%    message recovered at +38+127
+    PASS  random-crop-50%    message recovered at +31+346
+    PASS  random-crop-45%    message recovered at +258+407
+    PASS  random-crop-40%    message recovered at +163+261
+    FAIL  random-crop-35%    message not recovered at +469+218
+    FAIL  random-crop-30%    message not recovered at +470+72
+    FAIL  random-crop-25%    message not recovered at +360+376
+    FAIL  random-crop-20%    message not recovered at +222+529
+    FAIL  random-crop-15%    message not recovered at +395+445
+    FAIL  random-crop-10%    message not recovered at +493+259
+    SCALES random crop      passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%
+    SCALES random crop      failed: 35%, 30%, 25%, 20%, 15%, 10%
+    SCALES random crop      timeout: none
+  Profile: capacity (61 bytes)
+    PASS  resize-95%        message recovered
+    PASS  resize-90%        message recovered
+    PASS  resize-85%        message recovered
+    PASS  resize-80%        message recovered
+    PASS  resize-75%        message recovered
+    PASS  resize-70%        message recovered
+    PASS  resize-65%        message recovered
+    PASS  resize-60%        message recovered
+    PASS  resize-55%        message recovered
+    FAIL  resize-50%        message not recovered
+    FAIL  resize-45%        message not recovered
+    FAIL  resize-40%        message not recovered
+    FAIL  resize-35%        message not recovered
+    FAIL  resize-30%        message not recovered
+    FAIL  resize-25%        message not recovered
+    FAIL  resize-20%        message not recovered
+    FAIL  resize-15%        message not recovered
+    FAIL  resize-10%        message not recovered
+    SCALES resize           passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%
+    SCALES resize           failed: 50%, 45%, 40%, 35%, 30%, 25%, 20%, 15%, 10%
+    SCALES resize           timeout: none
+    PASS  center-crop-95%    message recovered
+    PASS  center-crop-90%    message recovered
+    PASS  center-crop-85%    message recovered
+    PASS  center-crop-80%    message recovered
+    PASS  center-crop-75%    message recovered
+    PASS  center-crop-70%    message recovered
+    PASS  center-crop-65%    message recovered
+    PASS  center-crop-60%    message recovered
+    PASS  center-crop-55%    message recovered
+    PASS  center-crop-50%    message recovered
+    PASS  center-crop-45%    message recovered
+    PASS  center-crop-40%    message recovered
+    FAIL  center-crop-35%    message not recovered
+    FAIL  center-crop-30%    message not recovered
+    FAIL  center-crop-25%    message not recovered
+    FAIL  center-crop-20%    message not recovered
+    FAIL  center-crop-15%    message not recovered
+    FAIL  center-crop-10%    message not recovered
+    SCALES center crop      passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%
+    SCALES center crop      failed: 35%, 30%, 25%, 20%, 15%, 10%
+    SCALES center crop      timeout: none
+    PASS  random-crop-95%    message recovered at +14+14
+    PASS  random-crop-90%    message recovered at +70+72
+    PASS  random-crop-85%    message recovered at +28+80
+    PASS  random-crop-80%    message recovered at +82+42
+    PASS  random-crop-75%    message recovered at +75+82
+    PASS  random-crop-70%    message recovered at +140+99
+    PASS  random-crop-65%    message recovered at +279+261
+    PASS  random-crop-60%    message recovered at +288+285
+    PASS  random-crop-55%    message recovered at +38+127
+    PASS  random-crop-50%    message recovered at +31+346
+    PASS  random-crop-45%    message recovered at +258+407
+    PASS  random-crop-40%    message recovered at +163+261
+    FAIL  random-crop-35%    message not recovered at +469+218
+    FAIL  random-crop-30%    message not recovered at +470+72
+    FAIL  random-crop-25%    message not recovered at +360+376
+    FAIL  random-crop-20%    message not recovered at +222+529
+    FAIL  random-crop-15%    message not recovered at +395+445
+    FAIL  random-crop-10%    message not recovered at +493+259
+    SCALES random crop      passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%
+    SCALES random crop      failed: 35%, 30%, 25%, 20%, 15%, 10%
+    SCALES random crop      timeout: none
+
+Image: Immagine MQ.png
+  Profile: robust (14 bytes)
+    PASS  resize-95%        message recovered
+    PASS  resize-90%        message recovered
+    PASS  resize-85%        message recovered
+    PASS  resize-80%        message recovered
+    PASS  resize-75%        message recovered
+    PASS  resize-70%        message recovered
+    PASS  resize-65%        message recovered
+    PASS  resize-60%        message recovered
+    PASS  resize-55%        message recovered
+    PASS  resize-50%        message recovered
+    PASS  resize-45%        message recovered
+    PASS  resize-40%        message recovered
+    FAIL  resize-35%        message not recovered
+    FAIL  resize-30%        message not recovered
+    FAIL  resize-25%        message not recovered
+    FAIL  resize-20%        message not recovered
+    FAIL  resize-15%        message not recovered
+    FAIL  resize-10%        message not recovered
+    SCALES resize           passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%
+    SCALES resize           failed: 35%, 30%, 25%, 20%, 15%, 10%
+    SCALES resize           timeout: none
+    PASS  center-crop-95%    message recovered
+    PASS  center-crop-90%    message recovered
+    PASS  center-crop-85%    message recovered
+    PASS  center-crop-80%    message recovered
+    PASS  center-crop-75%    message recovered
+    PASS  center-crop-70%    message recovered
+    PASS  center-crop-65%    message recovered
+    PASS  center-crop-60%    message recovered
+    PASS  center-crop-55%    message recovered
+    PASS  center-crop-50%    message recovered
+    PASS  center-crop-45%    message recovered
+    PASS  center-crop-40%    message recovered
+    PASS  center-crop-35%    message recovered
+    PASS  center-crop-30%    message recovered
+    PASS  center-crop-25%    message recovered
+    PASS  center-crop-20%    message recovered
+    FAIL  center-crop-15%    message not recovered
+    FAIL  center-crop-10%    message not recovered
+    SCALES center crop      passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%, 35%, 30%, 25%, 20%
+    SCALES center crop      failed: 15%, 10%
+    SCALES center crop      timeout: none
+    PASS  random-crop-95%    message recovered at +20+71
+    PASS  random-crop-90%    message recovered at +71+151
+    PASS  random-crop-85%    message recovered at +244+208
+    PASS  random-crop-80%    message recovered at +140+300
+    PASS  random-crop-75%    message recovered at +287+96
+    PASS  random-crop-70%    message recovered at +255+221
+    PASS  random-crop-65%    message recovered at +310+334
+    PASS  random-crop-60%    message recovered at +444+197
+    PASS  random-crop-55%    message recovered at +559+9
+    PASS  random-crop-50%    message recovered at +194+769
+    PASS  random-crop-45%    message recovered at +695+671
+    PASS  random-crop-40%    message recovered at +0+251
+    PASS  random-crop-35%    message recovered at +137+831
+    PASS  random-crop-30%    message recovered at +972+322
+    PASS  random-crop-25%    message recovered at +1000+621
+    PASS  random-crop-20%    message recovered at +788+336
+    FAIL  random-crop-15%    message not recovered at +1089+24
+    FAIL  random-crop-10%    message not recovered at +710+1367
+    SCALES random crop      passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%, 35%, 30%, 25%, 20%
+    SCALES random crop      failed: 15%, 10%
+    SCALES random crop      timeout: none
+  Profile: balanced (29 bytes)
+    PASS  resize-95%        message recovered
+    PASS  resize-90%        message recovered
+    PASS  resize-85%        message recovered
+    PASS  resize-80%        message recovered
+    PASS  resize-75%        message recovered
+    PASS  resize-70%        message recovered
+    PASS  resize-65%        message recovered
+    PASS  resize-60%        message recovered
+    PASS  resize-55%        message recovered
+    PASS  resize-50%        message recovered
+    PASS  resize-45%        message recovered
+    PASS  resize-40%        message recovered
+    FAIL  resize-35%        message not recovered
+    FAIL  resize-30%        message not recovered
+    FAIL  resize-25%        message not recovered
+    FAIL  resize-20%        message not recovered
+    FAIL  resize-15%        message not recovered
+    FAIL  resize-10%        message not recovered
+    SCALES resize           passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%
+    SCALES resize           failed: 35%, 30%, 25%, 20%, 15%, 10%
+    SCALES resize           timeout: none
+    PASS  center-crop-95%    message recovered
+    PASS  center-crop-90%    message recovered
+    PASS  center-crop-85%    message recovered
+    PASS  center-crop-80%    message recovered
+    PASS  center-crop-75%    message recovered
+    PASS  center-crop-70%    message recovered
+    PASS  center-crop-65%    message recovered
+    PASS  center-crop-60%    message recovered
+    PASS  center-crop-55%    message recovered
+    PASS  center-crop-50%    message recovered
+    PASS  center-crop-45%    message recovered
+    PASS  center-crop-40%    message recovered
+    PASS  center-crop-35%    message recovered
+    PASS  center-crop-30%    message recovered
+    PASS  center-crop-25%    message recovered
+    PASS  center-crop-20%    message recovered
+    FAIL  center-crop-15%    message not recovered
+    FAIL  center-crop-10%    message not recovered
+    SCALES center crop      passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%, 35%, 30%, 25%, 20%
+    SCALES center crop      failed: 15%, 10%
+    SCALES center crop      timeout: none
+    PASS  random-crop-95%    message recovered at +20+71
+    PASS  random-crop-90%    message recovered at +71+151
+    PASS  random-crop-85%    message recovered at +244+208
+    PASS  random-crop-80%    message recovered at +140+300
+    PASS  random-crop-75%    message recovered at +287+96
+    PASS  random-crop-70%    message recovered at +255+221
+    PASS  random-crop-65%    message recovered at +310+334
+    PASS  random-crop-60%    message recovered at +444+197
+    PASS  random-crop-55%    message recovered at +559+9
+    PASS  random-crop-50%    message recovered at +194+769
+    PASS  random-crop-45%    message recovered at +695+671
+    PASS  random-crop-40%    message recovered at +0+251
+    PASS  random-crop-35%    message recovered at +137+831
+    PASS  random-crop-30%    message recovered at +972+322
+    PASS  random-crop-25%    message recovered at +1000+621
+    PASS  random-crop-20%    message recovered at +788+336
+    FAIL  random-crop-15%    message not recovered at +1089+24
+    FAIL  random-crop-10%    message not recovered at +710+1367
+    SCALES random crop      passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%, 35%, 30%, 25%, 20%
+    SCALES random crop      failed: 15%, 10%
+    SCALES random crop      timeout: none
+  Profile: capacity (61 bytes)
+    PASS  resize-95%        message recovered
+    PASS  resize-90%        message recovered
+    PASS  resize-85%        message recovered
+    PASS  resize-80%        message recovered
+    PASS  resize-75%        message recovered
+    PASS  resize-70%        message recovered
+    PASS  resize-65%        message recovered
+    PASS  resize-60%        message recovered
+    PASS  resize-55%        message recovered
+    PASS  resize-50%        message recovered
+    PASS  resize-45%        message recovered
+    PASS  resize-40%        message recovered
+    FAIL  resize-35%        message not recovered
+    FAIL  resize-30%        message not recovered
+    FAIL  resize-25%        message not recovered
+    FAIL  resize-20%        message not recovered
+    FAIL  resize-15%        message not recovered
+    FAIL  resize-10%        message not recovered
+    SCALES resize           passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%
+    SCALES resize           failed: 35%, 30%, 25%, 20%, 15%, 10%
+    SCALES resize           timeout: none
+    PASS  center-crop-95%    message recovered
+    PASS  center-crop-90%    message recovered
+    PASS  center-crop-85%    message recovered
+    PASS  center-crop-80%    message recovered
+    PASS  center-crop-75%    message recovered
+    PASS  center-crop-70%    message recovered
+    PASS  center-crop-65%    message recovered
+    PASS  center-crop-60%    message recovered
+    PASS  center-crop-55%    message recovered
+    PASS  center-crop-50%    message recovered
+    PASS  center-crop-45%    message recovered
+    PASS  center-crop-40%    message recovered
+    PASS  center-crop-35%    message recovered
+    PASS  center-crop-30%    message recovered
+    PASS  center-crop-25%    message recovered
+    PASS  center-crop-20%    message recovered
+    FAIL  center-crop-15%    message not recovered
+    FAIL  center-crop-10%    message not recovered
+    SCALES center crop      passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%, 35%, 30%, 25%, 20%
+    SCALES center crop      failed: 15%, 10%
+    SCALES center crop      timeout: none
+    PASS  random-crop-95%    message recovered at +20+71
+    PASS  random-crop-90%    message recovered at +71+151
+    PASS  random-crop-85%    message recovered at +244+208
+    PASS  random-crop-80%    message recovered at +140+300
+    PASS  random-crop-75%    message recovered at +287+96
+    PASS  random-crop-70%    message recovered at +255+221
+    PASS  random-crop-65%    message recovered at +310+334
+    PASS  random-crop-60%    message recovered at +444+197
+    PASS  random-crop-55%    message recovered at +559+9
+    PASS  random-crop-50%    message recovered at +194+769
+    PASS  random-crop-45%    message recovered at +695+671
+    PASS  random-crop-40%    message recovered at +0+251
+    PASS  random-crop-35%    message recovered at +137+831
+    PASS  random-crop-30%    message recovered at +972+322
+    PASS  random-crop-25%    message recovered at +1000+621
+    PASS  random-crop-20%    message recovered at +788+336
+    FAIL  random-crop-15%    message not recovered at +1089+24
+    FAIL  random-crop-10%    message not recovered at +710+1367
+    SCALES random crop      passed: 100%, 95%, 90%, 85%, 80%, 75%, 70%, 65%, 60%, 55%, 50%, 45%, 40%, 35%, 30%, 25%, 20%
+    SCALES random crop      failed: 15%, 10%
+    SCALES random crop      timeout: none
+
+Image: Immagine HQ.png
+  SKIP  all limits        201 MP exceeds limit of 100 MP
+
+[PASS] extreme-test — 605s
+
+========================================================================
+[11/62] experimental geometry Go regressions (research-unit)
+------------------------------------------------------------------------
+Running experimental geometry Go regressions...
+ok  	github.com/pj/pixseal/watermark	146.228s
+
+[PASS] research-unit — 147s
+
+========================================================================
+[12/62] v0.3 local lattice estimator (lattice-estimator-test)
+------------------------------------------------------------------------
+Running v0.3 local-lattice estimator regressions...
+ok  	github.com/pj/pixseal/watermark	29.209s
+
+[PASS] lattice-estimator-test — 30s
+
+========================================================================
+[13/62] v0.3 bounded homography/projective decoder (homography-test)
+------------------------------------------------------------------------
+Running v0.3 bounded homography/projective regressions...
+ok  	github.com/pj/pixseal/watermark	3.112s
+
+[PASS] homography-test — 4s
+
+========================================================================
+[14/62] v0.3 bounded print-camera photometric bank (photometric-test)
+------------------------------------------------------------------------
+Running v0.3 bounded print-camera photometric regressions...
+ok  	github.com/pj/pixseal/watermark	0.332s
+
+[PASS] photometric-test — 0s
+
+========================================================================
+[15/62] v0.3 protected-bit/ECC channel diagnostics (bit-channel-test)
+------------------------------------------------------------------------
+Running v0.3 protected-bit/ECC diagnostics...
+ok  	github.com/pj/pixseal/watermark	0.008s
+
+[PASS] bit-channel-test — 1s
+
+========================================================================
+[16/62] v0.3 bounded reliability/full-grid decoder (reliability-test)
+------------------------------------------------------------------------
+Running v0.3 bounded reliability/full-grid regressions...
+ok  	github.com/pj/pixseal/watermark	0.011s
+
+[PASS] reliability-test — 0s
+
+========================================================================
+[17/62] v0.3 spatial protected-bit stability (spatial-channel-test)
+------------------------------------------------------------------------
+Running v0.3 spatial protected-bit stability regressions...
+ok  	github.com/pj/pixseal/watermark	0.023s
+
+[PASS] spatial-channel-test — 0s
+
+========================================================================
+[18/62] v0.3 confidence-weighted phase surface (phase-surface-test)
+------------------------------------------------------------------------
+Running v0.3 confidence-weighted phase-surface regressions...
+ok  	github.com/pj/pixseal/watermark	0.005s
+
+[PASS] phase-surface-test — 1s
+
+========================================================================
+[19/62] v0.3 repetition/cross-cell blind phase (blind-phase-test)
+------------------------------------------------------------------------
+Running v0.3 key-independent blind phase regressions...
+ok  	github.com/pj/pixseal/watermark	0.611s
+
+[PASS] blind-phase-test — 1s
+
+========================================================================
+[20/62] v0.3 local fractional lattice phase (lattice-phase-test)
+------------------------------------------------------------------------
+Running v0.3 local fractional lattice-phase regressions...
+ok  	github.com/pj/pixseal/watermark	0.256s
+
+[PASS] lattice-phase-test — 1s
+
+========================================================================
+[21/62] v0.3 global discrete phase unwrap (global-unwrap-test)
+------------------------------------------------------------------------
+Running v0.3 global discrete phase-unwrapping regressions...
+ok  	github.com/pj/pixseal/watermark	2.541s
+
+[PASS] global-unwrap-test — 3s
+
+========================================================================
+[22/62] v0.3 disjoint repetition cross-fit (crossfit-unwrap-test)
+------------------------------------------------------------------------
+Running v0.3 held-out repetition cross-fit regressions...
+ok  	github.com/pj/pixseal/watermark	0.144s
+
+[PASS] crossfit-unwrap-test — 0s
+
+========================================================================
+[23/62] v0.3 multi-partition integer-cycle stability (stability-unwrap-test)
+------------------------------------------------------------------------
+Running v0.3 multi-partition integer-cycle stability regressions...
+ok  	github.com/pj/pixseal/watermark	0.824s
+
+[PASS] stability-unwrap-test — 2s
+
+========================================================================
+[24/62] v0.3 independent cross-cell cycle anchor (cycle-anchor-test)
+------------------------------------------------------------------------
+Running v0.3 independent cross-cell cycle-anchor regressions...
+ok  	github.com/pj/pixseal/watermark	0.004s
+
+[PASS] cycle-anchor-test — 0s
+
+========================================================================
+[25/62] v0.3 Format-v3 observability audit (observability-audit-test)
+------------------------------------------------------------------------
+Running v0.3 Format-v3 key-independent observability audit regressions...
+ok  	github.com/pj/pixseal/watermark	0.148s
+
+[PASS] observability-audit-test — 1s
+
+========================================================================
+[26/62] v0.3 physical differential topology observability (physical-topology-test)
+------------------------------------------------------------------------
+Running v0.3 held-out physical repetition-topology observability regressions...
+ok  	github.com/pj/pixseal/watermark	0.290s
+
+[PASS] physical-topology-test — 1s
+
+========================================================================
+[27/62] Format-v4 absolute-pilot design study (v4-design-study-test)
+------------------------------------------------------------------------
+Running non-normative Format-v4 absolute-pilot design-study regressions...
+ok  	github.com/pj/pixseal/watermark	0.004s
+
+[PASS] v4-design-study-test — 0s
+
+========================================================================
+[28/62] Format-v4 isolated pilot foundation (v4-foundation-test)
+------------------------------------------------------------------------
+Running isolated experimental Format-v4 pilot-foundation regressions...
+ok  	github.com/pj/pixseal/watermark	0.007s
+
+[PASS] v4-foundation-test — 1s
+
+========================================================================
+[29/62] Format-v4 Build24 pilot search/partial visibility (v4-pilot-search-test)
+------------------------------------------------------------------------
+Running Build24 deterministic Format-v4 pilot search/qualification...
+ok  	github.com/pj/pixseal/watermark	24.304s
+
+[PASS] v4-pilot-search-test — 25s
+
+========================================================================
+[30/62] Format-v4 Build24 synthetic pilot image channel (v4-pilot-channel-test)
+------------------------------------------------------------------------
+Running Build24 experimental Format-v4 pilot image-channel regressions...
+ok  	github.com/pj/pixseal/watermark	0.954s
+
+[PASS] v4-pilot-channel-test — 1s
+
+========================================================================
+[31/62] Format-v4 Build24 local image pilot corpus (v4-pilot-corpus-test)
+------------------------------------------------------------------------
+Running Build24 experimental Format-v4 pilot corpus qualification...
+=== RUN   TestExperimentalV4PilotCorpus
+    experimental_v4_pilot_corpus_test.go:16: SKIP active corpus HQ (Immagine HQ.png): 200.5 MP exceeds Go-test budget 50 MP
+=== RUN   TestExperimentalV4PilotCorpus/Immagine_LQ.png
+    experimental_v4_pilot_corpus_test.go:39: negative-control score=0.252207 runner=0.235211 margin=0.016997 origin=(0,5)
+    experimental_v4_pilot_corpus_test.go:75: native score=1.000000 runner=0.447828 margin=0.552172 visible=64 samples=510 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: jpeg-82 score=1.000000 runner=0.456993 margin=0.543007 visible=64 samples=510 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: blur-1 score=0.906069 runner=0.400477 margin=0.505592 visible=64 samples=510 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: noise-4 score=1.000000 runner=0.443891 margin=0.556109 visible=64 samples=510 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: gamma-1.15 score=1.000000 runner=0.459538 margin=0.540462 visible=64 samples=510 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: resize-75 score=1.000000 runner=0.446114 margin=0.553886 visible=64 samples=510 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: resize-50 score=0.987349 runner=0.440584 margin=0.546765 visible=64 samples=510 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: aligned-crop score=1.000000 runner=0.389673 margin=0.610327 visible=64 samples=392 origin=(5,3)
+=== RUN   TestExperimentalV4PilotCorpus/Immagine_MQ.png
+    experimental_v4_pilot_corpus_test.go:39: negative-control score=0.114277 runner=0.109909 margin=0.004368 origin=(17,10)
+    experimental_v4_pilot_corpus_test.go:75: native score=1.000000 runner=0.417429 margin=0.582571 visible=64 samples=2244 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: jpeg-82 score=1.000000 runner=0.421530 margin=0.578470 visible=64 samples=2244 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: blur-1 score=0.993762 runner=0.418524 margin=0.575238 visible=64 samples=2244 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: noise-4 score=1.000000 runner=0.413463 margin=0.586537 visible=64 samples=2244 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: gamma-1.15 score=1.000000 runner=0.416544 margin=0.583456 visible=64 samples=2244 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: resize-75 score=1.000000 runner=0.416480 margin=0.583520 visible=64 samples=2244 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: resize-50 score=1.000000 runner=0.416142 margin=0.583858 visible=64 samples=2244 origin=(0,0)
+    experimental_v4_pilot_corpus_test.go:75: aligned-crop score=1.000000 runner=0.432842 margin=0.567158 visible=64 samples=2021 origin=(5,3)
+--- PASS: TestExperimentalV4PilotCorpus (4.46s)
+    --- PASS: TestExperimentalV4PilotCorpus/Immagine_LQ.png (0.84s)
+    --- PASS: TestExperimentalV4PilotCorpus/Immagine_MQ.png (3.62s)
+PASS
+ok  	github.com/pj/pixseal/watermark	4.476s
+
+[PASS] v4-pilot-corpus-test — 5s
+
+========================================================================
+[32/62] Format-v4 Build25 known-geometry pilot channel (v4-pilot-geometry-test)
+------------------------------------------------------------------------
+Running Build25 Format-v4 known-geometry pilot qualification...
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/rotate-12.3
+    experimental_v4_pilot_geometry_test.go:39: positive score=0.969730 runner=0.390546 margin=0.579183 visible=64 samples=576 origin=(0,0); negative score=0.289762 runner=0.284464 margin=0.005298 origin=(18,27)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/rotate--17
+    experimental_v4_pilot_geometry_test.go:39: positive score=0.996701 runner=0.433105 margin=0.563596 visible=64 samples=576 origin=(0,0); negative score=0.157544 runner=0.157319 margin=0.000225 origin=(4,18)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/scale110x90
+    experimental_v4_pilot_geometry_test.go:39: positive score=1.000000 runner=0.438970 margin=0.561030 visible=64 samples=576 origin=(0,0); negative score=0.120911 runner=0.118977 margin=0.001934 origin=(32,31)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/scale90x110
+    experimental_v4_pilot_geometry_test.go:39: positive score=1.000000 runner=0.436775 margin=0.563225 visible=64 samples=576 origin=(0,0); negative score=0.114645 runner=0.112909 margin=0.001736 origin=(28,19)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/shearx8
+    experimental_v4_pilot_geometry_test.go:39: positive score=1.000000 runner=0.426920 margin=0.573080 visible=64 samples=576 origin=(0,0); negative score=0.267665 runner=0.257277 margin=0.010388 origin=(29,14)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/sheary8
+    experimental_v4_pilot_geometry_test.go:39: positive score=0.963738 runner=0.427567 margin=0.536171 visible=64 samples=576 origin=(0,0); negative score=0.229393 runner=0.228342 margin=0.001051 origin=(36,1)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/perspective-top
+    experimental_v4_pilot_geometry_test.go:39: positive score=0.994115 runner=0.431358 margin=0.562756 visible=64 samples=576 origin=(0,0); negative score=0.179093 runner=0.158451 margin=0.020642 origin=(31,0)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/perspective-bottom
+    experimental_v4_pilot_geometry_test.go:39: positive score=1.000000 runner=0.433121 margin=0.566879 visible=64 samples=576 origin=(0,0); negative score=0.170434 runner=0.155650 margin=0.014784 origin=(31,20)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/rotate12.3-scale110x90
+    experimental_v4_pilot_geometry_test.go:39: positive score=0.968907 runner=0.408815 margin=0.560091 visible=64 samples=576 origin=(0,0); negative score=0.232461 runner=0.231129 margin=0.001333 origin=(29,18)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/rotate--9-shearx5
+    experimental_v4_pilot_geometry_test.go:39: positive score=0.977177 runner=0.418424 margin=0.558753 visible=64 samples=576 origin=(0,0); negative score=0.214963 runner=0.208581 margin=0.006382 origin=(1,27)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/rotate12.3-resize75
+    experimental_v4_pilot_geometry_test.go:39: positive score=0.953934 runner=0.409609 margin=0.544325 visible=64 samples=576 origin=(0,0); negative score=0.192585 runner=0.183423 margin=0.009162 origin=(20,29)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/combined-perspective-jpeg82
+    experimental_v4_pilot_geometry_test.go:39: positive score=0.974851 runner=0.417835 margin=0.557016 visible=64 samples=576 origin=(0,0); negative score=0.194888 runner=0.186714 margin=0.008174 origin=(32,3)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/combined-perspective-blur
+    experimental_v4_pilot_geometry_test.go:39: positive score=0.985590 runner=0.453634 margin=0.531955 visible=64 samples=576 origin=(0,0); negative score=0.099176 runner=0.094586 margin=0.004590 origin=(1,7)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/combined-perspective-noise4
+    experimental_v4_pilot_geometry_test.go:39: positive score=0.971269 runner=0.410918 margin=0.560351 visible=64 samples=576 origin=(0,0); negative score=0.202086 runner=0.188916 margin=0.013170 origin=(30,7)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/combined-perspective-crop
+    experimental_v4_pilot_geometry_test.go:39: positive score=0.991398 runner=0.403689 margin=0.587709 visible=64 samples=535 origin=(0,0); negative score=0.197674 runner=0.193651 margin=0.004023 origin=(32,23)
+=== RUN   TestExperimentalV4Prototype2KnownGeometryQualification/combined-perspective-crop-jpeg82
+    experimental_v4_pilot_geometry_test.go:39: positive score=0.994314 runner=0.403825 margin=0.590489 visible=64 samples=535 origin=(0,0); negative score=0.146081 runner=0.132298 margin=0.013783 origin=(26,7)
+--- PASS: TestExperimentalV4Prototype2KnownGeometryQualification (5.39s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/rotate-12.3 (0.28s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/rotate--17 (0.28s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/scale110x90 (0.24s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/scale90x110 (0.24s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/shearx8 (0.25s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/sheary8 (0.25s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/perspective-top (0.24s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/perspective-bottom (0.24s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/rotate12.3-scale110x90 (0.27s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/rotate--9-shearx5 (0.26s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/rotate12.3-resize75 (0.17s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/combined-perspective-jpeg82 (0.49s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/combined-perspective-blur (0.85s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/combined-perspective-noise4 (0.41s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/combined-perspective-crop (0.24s)
+    --- PASS: TestExperimentalV4Prototype2KnownGeometryQualification/combined-perspective-crop-jpeg82 (0.40s)
+PASS
+ok  	github.com/pj/pixseal/watermark	5.393s
+
+[PASS] v4-pilot-geometry-test — 6s
+
+========================================================================
+[33/62] Format-v4 Build25 known-geometry local corpus (v4-pilot-geometry-corpus-test)
+------------------------------------------------------------------------
+Running Build25 Format-v4 known-geometry local corpus qualification...
+=== RUN   TestExperimentalV4PilotGeometryCorpus
+    experimental_v4_pilot_geometry_corpus_test.go:16: SKIP active corpus HQ (Immagine HQ.png): 200.5 MP exceeds Go-test budget 50 MP
+=== RUN   TestExperimentalV4PilotGeometryCorpus/Immagine_LQ.png
+    experimental_v4_pilot_geometry_corpus_test.go:51: rotate-12.3 positive score=0.923346 runner=0.423707 margin=0.499639 visible=64 samples=510 origin=(0,0); negative score=0.257911 runner=0.230423 margin=0.027488 origin=(30,21)
+    experimental_v4_pilot_geometry_corpus_test.go:51: rotate--17 positive score=0.975507 runner=0.400204 margin=0.575303 visible=64 samples=510 origin=(0,0); negative score=0.264900 runner=0.224375 margin=0.040525 origin=(0,5)
+    experimental_v4_pilot_geometry_corpus_test.go:51: scale110x90 positive score=0.991503 runner=0.429534 margin=0.561969 visible=64 samples=510 origin=(0,0); negative score=0.219299 runner=0.219273 margin=0.000025 origin=(0,5)
+    experimental_v4_pilot_geometry_corpus_test.go:51: scale90x110 positive score=0.988306 runner=0.430896 margin=0.557410 visible=64 samples=510 origin=(0,0); negative score=0.219368 runner=0.218711 margin=0.000657 origin=(15,27)
+    experimental_v4_pilot_geometry_corpus_test.go:51: shearx8 positive score=0.974248 runner=0.387786 margin=0.586462 visible=64 samples=510 origin=(0,0); negative score=0.230719 runner=0.206168 margin=0.024551 origin=(28,13)
+    experimental_v4_pilot_geometry_corpus_test.go:51: sheary8 positive score=0.944628 runner=0.403955 margin=0.540673 visible=64 samples=510 origin=(0,0); negative score=0.248539 runner=0.232186 margin=0.016354 origin=(0,5)
+    experimental_v4_pilot_geometry_corpus_test.go:51: perspective-top positive score=0.973007 runner=0.397246 margin=0.575761 visible=64 samples=510 origin=(0,0); negative score=0.261511 runner=0.234273 margin=0.027238 origin=(0,5)
+    experimental_v4_pilot_geometry_corpus_test.go:51: perspective-bottom positive score=0.986226 runner=0.427681 margin=0.558545 visible=64 samples=510 origin=(0,0); negative score=0.258027 runner=0.235923 margin=0.022104 origin=(0,5)
+    experimental_v4_pilot_geometry_corpus_test.go:51: rotate12.3-scale110x90 positive score=0.929357 runner=0.404267 margin=0.525090 visible=64 samples=510 origin=(0,0); negative score=0.244526 runner=0.242467 margin=0.002060 origin=(20,9)
+    experimental_v4_pilot_geometry_corpus_test.go:51: rotate--9-shearx5 positive score=0.933706 runner=0.388623 margin=0.545083 visible=64 samples=510 origin=(0,0); negative score=0.284117 runner=0.252017 margin=0.032101 origin=(0,5)
+    experimental_v4_pilot_geometry_corpus_test.go:51: rotate12.3-resize75 positive score=0.894093 runner=0.369316 margin=0.524777 visible=64 samples=510 origin=(0,0); negative score=0.269714 runner=0.220135 margin=0.049579 origin=(0,5)
+    experimental_v4_pilot_geometry_corpus_test.go:51: combined-perspective-jpeg82 positive score=0.814626 runner=0.403898 margin=0.410728 visible=64 samples=510 origin=(0,0); negative score=0.247722 runner=0.241952 margin=0.005770 origin=(13,6)
+    experimental_v4_pilot_geometry_corpus_test.go:51: combined-perspective-blur positive score=0.721708 runner=0.362837 margin=0.358871 visible=64 samples=510 origin=(0,0); negative score=0.237341 runner=0.227039 margin=0.010302 origin=(12,6)
+    experimental_v4_pilot_geometry_corpus_test.go:51: combined-perspective-noise4 positive score=0.842463 runner=0.414255 margin=0.428209 visible=64 samples=510 origin=(0,0); negative score=0.231357 runner=0.209952 margin=0.021405 origin=(28,9)
+    experimental_v4_pilot_geometry_corpus_test.go:51: combined-perspective-crop positive score=0.916910 runner=0.396976 margin=0.519934 visible=64 samples=475 origin=(0,0); negative score=0.267508 runner=0.249887 margin=0.017621 origin=(0,5)
+    experimental_v4_pilot_geometry_corpus_test.go:51: combined-perspective-crop-jpeg82 positive score=0.870162 runner=0.392245 margin=0.477917 visible=64 samples=475 origin=(0,0); negative score=0.262801 runner=0.239561 margin=0.023240 origin=(28,9)
+=== RUN   TestExperimentalV4PilotGeometryCorpus/Immagine_MQ.png
+    experimental_v4_pilot_geometry_corpus_test.go:51: rotate-12.3 positive score=0.958586 runner=0.383635 margin=0.574951 visible=64 samples=2244 origin=(0,0); negative score=0.164967 runner=0.143173 margin=0.021794 origin=(14,18)
+    experimental_v4_pilot_geometry_corpus_test.go:51: rotate--17 positive score=0.991578 runner=0.410114 margin=0.581464 visible=64 samples=2244 origin=(0,0); negative score=0.119532 runner=0.108044 margin=0.011488 origin=(8,1)
+    experimental_v4_pilot_geometry_corpus_test.go:51: scale110x90 positive score=1.000000 runner=0.424539 margin=0.575461 visible=64 samples=2244 origin=(0,0); negative score=0.122770 runner=0.118599 margin=0.004171 origin=(35,2)
+    experimental_v4_pilot_geometry_corpus_test.go:51: scale90x110 positive score=1.000000 runner=0.420107 margin=0.579893 visible=64 samples=2244 origin=(0,0); negative score=0.126715 runner=0.118501 margin=0.008214 origin=(35,2)
+    experimental_v4_pilot_geometry_corpus_test.go:51: shearx8 positive score=0.992246 runner=0.404915 margin=0.587332 visible=64 samples=2244 origin=(0,0); negative score=0.157845 runner=0.155271 margin=0.002574 origin=(30,8)
+    experimental_v4_pilot_geometry_corpus_test.go:51: sheary8 positive score=0.986551 runner=0.422282 margin=0.564270 visible=64 samples=2244 origin=(0,0); negative score=0.136715 runner=0.109255 margin=0.027460 origin=(35,2)
+    experimental_v4_pilot_geometry_corpus_test.go:51: perspective-top positive score=0.994360 runner=0.417886 margin=0.576474 visible=64 samples=2244 origin=(0,0); negative score=0.121908 runner=0.113764 margin=0.008143 origin=(35,2)
+    experimental_v4_pilot_geometry_corpus_test.go:51: perspective-bottom positive score=0.995395 runner=0.426594 margin=0.568801 visible=64 samples=2244 origin=(0,0); negative score=0.122165 runner=0.121078 margin=0.001087 origin=(6,27)
+    experimental_v4_pilot_geometry_corpus_test.go:51: rotate12.3-scale110x90 positive score=0.973740 runner=0.409364 margin=0.564376 visible=64 samples=2244 origin=(0,0); negative score=0.133590 runner=0.125362 margin=0.008227 origin=(30,8)
+    experimental_v4_pilot_geometry_corpus_test.go:51: rotate--9-shearx5 positive score=0.973869 runner=0.406667 margin=0.567202 visible=64 samples=2244 origin=(0,0); negative score=0.144748 runner=0.132177 margin=0.012570 origin=(30,8)
+    experimental_v4_pilot_geometry_corpus_test.go:51: rotate12.3-resize75 positive score=0.950216 runner=0.403747 margin=0.546468 visible=64 samples=2244 origin=(0,0); negative score=0.123776 runner=0.114291 margin=0.009485 origin=(8,1)
+    experimental_v4_pilot_geometry_corpus_test.go:51: combined-perspective-jpeg82 positive score=0.937477 runner=0.403291 margin=0.534186 visible=64 samples=2244 origin=(0,0); negative score=0.139521 runner=0.123782 margin=0.015739 origin=(14,18)
+    experimental_v4_pilot_geometry_corpus_test.go:51: combined-perspective-blur positive score=0.932419 runner=0.401335 margin=0.531084 visible=64 samples=2244 origin=(0,0); negative score=0.121541 runner=0.114890 margin=0.006651 origin=(30,8)
+    experimental_v4_pilot_geometry_corpus_test.go:51: combined-perspective-noise4 positive score=0.951442 runner=0.399343 margin=0.552099 visible=64 samples=2244 origin=(0,0); negative score=0.127174 runner=0.124072 margin=0.003102 origin=(30,8)
+    experimental_v4_pilot_geometry_corpus_test.go:51: combined-perspective-crop positive score=0.967670 runner=0.412354 margin=0.555316 visible=64 samples=2100 origin=(0,0); negative score=0.129471 runner=0.125394 margin=0.004077 origin=(14,18)
+    experimental_v4_pilot_geometry_corpus_test.go:51: combined-perspective-crop-jpeg82 positive score=0.955507 runner=0.421966 margin=0.533541 visible=64 samples=2100 origin=(0,0); negative score=0.120113 runner=0.117234 margin=0.002879 origin=(30,8)
+--- PASS: TestExperimentalV4PilotGeometryCorpus (25.23s)
+    --- PASS: TestExperimentalV4PilotGeometryCorpus/Immagine_LQ.png (4.74s)
+    --- PASS: TestExperimentalV4PilotGeometryCorpus/Immagine_MQ.png (20.49s)
+PASS
+ok  	github.com/pj/pixseal/watermark	25.242s
+
+[PASS] v4-pilot-geometry-corpus-test — 26s
+
+========================================================================
+[34/62] Format-v4 Build26 blind pilot-assisted geometry (v4-pilot-blind-geometry-test)
+------------------------------------------------------------------------
+Running Build26 Format-v4 blind pilot-assisted geometry qualification...
+=== RUN   TestExperimentalV4Prototype2BlindGeometryQualification
+=== RUN   TestExperimentalV4Prototype2BlindGeometryQualification/rotate-7.4
+    experimental_v4_pilot_blind_geometry_test.go:54: positive obj=1.872655 runner=1.837126 gap=0.035529 score=0.955895 margin=0.577991 origin=(0,0) hypotheses=5931 params={angleDeg:7.449999999999999 scaleX:1.0000000000000002 scaleY:1.0000000000000002 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:0} corner-error=0.00058; negative obj=0.569940 score=0.482012 margin=0.029032
+=== RUN   TestExperimentalV4Prototype2BlindGeometryQualification/rotate--13.2
+    experimental_v4_pilot_blind_geometry_test.go:54: positive obj=1.919927 runner=1.882813 gap=0.037114 score=0.963658 margin=0.604307 origin=(0,0) hypotheses=5926 params={angleDeg:-13.249999999999954 scaleX:1.0000000000000002 scaleY:1.0000000000000002 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:-1} corner-error=0.00077; negative obj=0.439452 score=0.333600 margin=0.040694
+=== RUN   TestExperimentalV4Prototype2BlindGeometryQualification/rotate-scale-holdout
+    experimental_v4_pilot_blind_geometry_test.go:54: positive obj=1.923753 runner=1.850636 gap=0.073117 score=0.980509 margin=0.595496 origin=(0,0) hypotheses=6015 params={angleDeg:11.199999999999992 scaleX:1.0699999999999994 scaleY:0.9300000000000002 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:0} corner-error=0.00000; negative obj=0.538938 score=0.372104 margin=0.078137
+=== RUN   TestExperimentalV4Prototype2BlindGeometryQualification/shearx-6.5
+    experimental_v4_pilot_blind_geometry_test.go:54: positive obj=1.250996 runner=1.067846 gap=0.183149 score=0.678743 margin=0.349510 origin=(0,0) hypotheses=6022 params={angleDeg:-0.4499999999999847 scaleX:1 scaleY:1 shearXDeg:6 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:-4} corner-error=0.00310; negative obj=0.523283 score=0.424571 margin=0.032783
+=== RUN   TestExperimentalV4Prototype2BlindGeometryQualification/sheary--5.5
+    experimental_v4_pilot_blind_geometry_test.go:54: positive obj=1.840152 runner=1.808129 gap=0.032023 score=0.966022 margin=0.549724 origin=(0,0) hypotheses=5991 params={angleDeg:-0.04999999999998471 scaleX:1 scaleY:1 shearXDeg:0 shearYDeg:-5.5 topInset:0 bottomInset:0 shiftX:0 shiftY:0} corner-error=0.00060; negative obj=0.503347 score=0.474423 margin=0.021010
+=== RUN   TestExperimentalV4Prototype2BlindGeometryQualification/perspective-holdout
+    experimental_v4_pilot_blind_geometry_test.go:54: positive obj=1.932536 runner=1.098705 gap=0.833832 score=0.994505 margin=0.592342 origin=(0,0) hypotheses=6064 params={angleDeg:-0.05000000000000002 scaleX:1.0000000000000002 scaleY:1.0000000000000002 shearXDeg:0 shearYDeg:0 topInset:0.034999999999999996 bottomInset:0.01 shiftX:0 shiftY:-1} corner-error=0.00075; negative obj=0.357428 score=0.272552 margin=0.047286
+=== RUN   TestExperimentalV4Prototype2BlindGeometryQualification/combined-perspective
+    experimental_v4_pilot_blind_geometry_test.go:54: positive obj=1.850587 runner=1.776596 gap=0.073991 score=0.960892 margin=0.559796 origin=(0,0) hypotheses=6037 params={angleDeg:9.35 scaleX:1.0799999999999992 scaleY:0.9200000000000002 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0.015 shiftX:0 shiftY:0} corner-error=0.00057; negative obj=0.549305 score=0.347697 margin=0.102727
+=== RUN   TestExperimentalV4Prototype2BlindGeometryQualification/combined-shear
+    experimental_v4_pilot_blind_geometry_test.go:54: positive obj=1.866346 runner=1.828871 gap=0.037476 score=0.964802 margin=0.567819 origin=(0,0) hypotheses=5999 params={angleDeg:-8.749999999999972 scaleX:1 scaleY:1 shearXDeg:6 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:0} corner-error=0.00055; negative obj=0.420084 score=0.336652 margin=0.022739
+--- PASS: TestExperimentalV4Prototype2BlindGeometryQualification (85.51s)
+    --- PASS: TestExperimentalV4Prototype2BlindGeometryQualification/rotate-7.4 (10.29s)
+    --- PASS: TestExperimentalV4Prototype2BlindGeometryQualification/rotate--13.2 (10.37s)
+    --- PASS: TestExperimentalV4Prototype2BlindGeometryQualification/rotate-scale-holdout (10.59s)
+    --- PASS: TestExperimentalV4Prototype2BlindGeometryQualification/shearx-6.5 (10.81s)
+    --- PASS: TestExperimentalV4Prototype2BlindGeometryQualification/sheary--5.5 (10.36s)
+    --- PASS: TestExperimentalV4Prototype2BlindGeometryQualification/perspective-holdout (10.88s)
+    --- PASS: TestExperimentalV4Prototype2BlindGeometryQualification/combined-perspective (11.21s)
+    --- PASS: TestExperimentalV4Prototype2BlindGeometryQualification/combined-shear (10.74s)
+=== RUN   TestExperimentalV4DataRepeatProposalIsPilotSymbolIndependent
+--- PASS: TestExperimentalV4DataRepeatProposalIsPilotSymbolIndependent (0.37s)
+PASS
+ok  	github.com/pj/pixseal/watermark	85.886s
+
+[PASS] v4-pilot-blind-geometry-test — 86s
+
+========================================================================
+[35/62] Format-v4 Build26 blind geometry local corpus (v4-pilot-blind-geometry-corpus-test)
+------------------------------------------------------------------------
+Running Build26 Format-v4 blind geometry local corpus qualification...
+=== RUN   TestExperimentalV4BlindGeometryCorpus
+    experimental_v4_pilot_blind_geometry_corpus_test.go:16: SKIP active corpus HQ (Immagine HQ.png): 200.5 MP exceeds Go-test budget 50 MP
+=== RUN   TestExperimentalV4BlindGeometryCorpus/Immagine_LQ.png
+    experimental_v4_pilot_blind_geometry_corpus_test.go:42: 800x752 does not provide enough disjoint proposal/validation tiles for Build26
+=== RUN   TestExperimentalV4BlindGeometryCorpus/Immagine_MQ.png
+    experimental_v4_pilot_blind_geometry_corpus_test.go:56: rotate-scale positive obj=1.667529 score=0.883962 margin=0.489045 origin=(0,0) params={angleDeg:11.199999999999992 scaleX:1.0699999999999994 scaleY:0.9300000000000002 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:0} corner-error=0.00000; negative obj=0.797224 score=0.643368 margin=0.069448
+    experimental_v4_pilot_blind_geometry_corpus_test.go:56: combined-perspective positive obj=1.678500 score=0.869202 margin=0.506199 origin=(0,0) params={angleDeg:9.3 scaleX:1.0799999999999992 scaleY:0.9200000000000002 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0.015 shiftX:0 shiftY:0} corner-error=0.00000; negative obj=0.775839 score=0.610659 margin=0.076929
+--- PASS: TestExperimentalV4BlindGeometryCorpus (25.22s)
+    --- SKIP: TestExperimentalV4BlindGeometryCorpus/Immagine_LQ.png (0.03s)
+    --- PASS: TestExperimentalV4BlindGeometryCorpus/Immagine_MQ.png (25.19s)
+PASS
+ok  	github.com/pj/pixseal/watermark	25.237s
+
+[PASS] v4-pilot-blind-geometry-corpus-test — 26s
+
+========================================================================
+[36/62] Format-v4 Build27 unknown crop/placement (v4-pilot-placement-test)
+------------------------------------------------------------------------
+Running Build27 Format-v4 unknown-placement qualification...
+=== RUN   TestExperimentalV4Prototype2UnknownPlacementQualification
+=== RUN   TestExperimentalV4Prototype2UnknownPlacementQualification/rotate-scale-arbitrary-crop
+    experimental_v4_pilot_placement_test.go:41: marked shift=(-113,-77) proposal=0.992105 validation=0.994367 runner=0.974440 visible=253/258 hypotheses=2914; negative validation=0.100612
+=== RUN   TestExperimentalV4Prototype2UnknownPlacementQualification/combined-perspective-arbitrary-crop
+    experimental_v4_pilot_placement_test.go:41: marked shift=(-101,-69) proposal=0.975670 validation=0.980152 runner=0.976725 visible=262/267 hypotheses=2571; negative validation=0.192472
+=== RUN   TestExperimentalV4Prototype2UnknownPlacementQualification/rotate-scale-deep-crop
+    experimental_v4_pilot_placement_test.go:41: marked shift=(-171,-119) proposal=0.990274 validation=1.000000 runner=1.000000 visible=205/207 hypotheses=5857; negative validation=0.094531
+=== RUN   TestExperimentalV4Prototype2UnknownPlacementQualification/rotate-scale-padded-placement
+    experimental_v4_pilot_placement_test.go:41: marked shift=(73,40) proposal=0.953555 validation=0.986240 runner=0.985438 visible=288/288 hypotheses=1639; negative validation=0.221759
+=== RUN   TestExperimentalV4Prototype2UnknownPlacementQualification/perspective-padded-placement
+    experimental_v4_pilot_placement_test.go:41: marked shift=(57,35) proposal=0.974822 validation=0.990739 runner=0.990693 visible=288/288 hypotheses=1812; negative validation=0.176874
+--- PASS: TestExperimentalV4Prototype2UnknownPlacementQualification (15.68s)
+    --- PASS: TestExperimentalV4Prototype2UnknownPlacementQualification/rotate-scale-arbitrary-crop (3.16s)
+    --- PASS: TestExperimentalV4Prototype2UnknownPlacementQualification/combined-perspective-arbitrary-crop (2.92s)
+    --- PASS: TestExperimentalV4Prototype2UnknownPlacementQualification/rotate-scale-deep-crop (4.77s)
+    --- PASS: TestExperimentalV4Prototype2UnknownPlacementQualification/rotate-scale-padded-placement (2.24s)
+    --- PASS: TestExperimentalV4Prototype2UnknownPlacementQualification/perspective-padded-placement (2.32s)
+=== RUN   TestExperimentalV4PlacementWrongGeometryDoesNotMasqueradeAsPlacement
+    experimental_v4_pilot_placement_test.go:96: good validation=0.994367 bad=0.236030
+--- PASS: TestExperimentalV4PlacementWrongGeometryDoesNotMasqueradeAsPlacement (3.48s)
+PASS
+ok  	github.com/pj/pixseal/watermark	19.173s
+
+[PASS] v4-pilot-placement-test — 20s
+
+========================================================================
+[37/62] Format-v4 Build27 unknown-placement local corpus (v4-pilot-placement-corpus-test)
+------------------------------------------------------------------------
+Running Build27 Format-v4 unknown-placement local corpus qualification...
+=== RUN   TestExperimentalV4PlacementCorpus
+    experimental_v4_pilot_placement_corpus_test.go:14: SKIP active corpus HQ (Immagine HQ.png): 200.5 MP exceeds Go-test budget 50 MP
+=== RUN   TestExperimentalV4PlacementCorpus/Immagine_LQ.png
+    experimental_v4_pilot_placement_corpus_test.go:35: 800x752 too small for Build27 2x3 placement corpus
+=== RUN   TestExperimentalV4PlacementCorpus/Immagine_MQ.png
+    experimental_v4_pilot_placement_corpus_test.go:49: rotate-scale-crop marked shift=(-117,-83) proposal=0.975991 validation=0.967479 visible=934/948 hypotheses=3195; negative=0.134417
+    experimental_v4_pilot_placement_corpus_test.go:49: combined-perspective-pad marked shift=(67,43) proposal=0.947579 validation=0.984817 visible=960/960 hypotheses=1840; negative=0.169995
+--- PASS: TestExperimentalV4PlacementCorpus (24.30s)
+    --- SKIP: TestExperimentalV4PlacementCorpus/Immagine_LQ.png (0.03s)
+    --- PASS: TestExperimentalV4PlacementCorpus/Immagine_MQ.png (24.27s)
+PASS
+ok  	github.com/pj/pixseal/watermark	24.318s
+
+[PASS] v4-pilot-placement-corpus-test — 24s
+
+========================================================================
+[38/62] Format-v4 Build28 joint blind affine+crop (v4-pilot-joint-affine-test)
+------------------------------------------------------------------------
+Running Build28 Format-v4 joint blind affine+crop qualification...
+=== RUN   TestExperimentalV4Prototype2JointAffineCropQualification
+=== RUN   TestExperimentalV4Prototype2JointAffineCropQualification/rotate-scale-crop
+    experimental_v4_pilot_joint_affine_test.go:50: params={angleDeg:11.250000000000009 scaleX:1.0699999999999992 scaleY:0.9324999999999996 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:0} shift=(-113,-78) structural=33.743213 proposal=0.970936 validation=0.975547 full-score=0.973180 margin=0.585616 origin=(0,0) corner-error=0.00102 hypotheses=69574; matched-negative validation=-0.120030 margin=0.006211
+=== RUN   TestExperimentalV4Prototype2JointAffineCropQualification/negative-rotate-scale-crop
+    experimental_v4_pilot_joint_affine_test.go:50: params={angleDeg:-7.299999999999999 scaleX:1.0299999999999987 scaleY:0.9674999999999985 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:0} shift=(-90,-63) structural=31.011465 proposal=0.883140 validation=0.881391 full-score=0.882296 margin=0.507172 origin=(0,0) corner-error=0.00135 hypotheses=68989; matched-negative validation=0.005611 margin=0.004132
+--- PASS: TestExperimentalV4Prototype2JointAffineCropQualification (88.05s)
+    --- PASS: TestExperimentalV4Prototype2JointAffineCropQualification/rotate-scale-crop (43.59s)
+    --- PASS: TestExperimentalV4Prototype2JointAffineCropQualification/negative-rotate-scale-crop (44.20s)
+=== RUN   TestExperimentalV4JointAffineStructuralProposalIsPilotSymbolIndependent
+--- PASS: TestExperimentalV4JointAffineStructuralProposalIsPilotSymbolIndependent (0.40s)
+PASS
+ok  	github.com/pj/pixseal/watermark	88.456s
+
+[PASS] v4-pilot-joint-affine-test — 89s
+
+========================================================================
+[39/62] Format-v4 Build28 joint blind affine+crop local corpus (v4-pilot-joint-affine-corpus-test)
+------------------------------------------------------------------------
+Running Build28 Format-v4 joint blind affine+crop local corpus qualification...
+=== RUN   TestExperimentalV4JointAffineCropCorpus
+    experimental_v4_pilot_joint_affine_corpus_test.go:13: SKIP active corpus HQ (Immagine HQ.png): 200.5 MP exceeds Go-test budget 50 MP
+=== RUN   TestExperimentalV4JointAffineCropCorpus/Immagine_LQ.png
+    experimental_v4_pilot_joint_affine_corpus_test.go:32: 800x752 too small for Build28 joint-affine corpus
+=== RUN   TestExperimentalV4JointAffineCropCorpus/Immagine_MQ.png
+    experimental_v4_pilot_joint_affine_corpus_test.go:50: params={angleDeg:11.200000000000001 scaleX:1.069999999999999 scaleY:0.9349999999999988 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:0} shift=(-118,-86) structural=37.306038 proposal=0.660529 validation=0.690697 full-score=0.650063 margin=0.310861 origin=(0,0) corner-error=0.00182 hypotheses=69864; matched-negative validation=-0.068156 margin=0.004773
+--- PASS: TestExperimentalV4JointAffineCropCorpus (52.07s)
+    --- SKIP: TestExperimentalV4JointAffineCropCorpus/Immagine_LQ.png (0.04s)
+    --- PASS: TestExperimentalV4JointAffineCropCorpus/Immagine_MQ.png (52.03s)
+PASS
+ok  	github.com/pj/pixseal/watermark	52.074s
+
+[PASS] v4-pilot-joint-affine-corpus-test — 53s
+
+========================================================================
+[40/62] Format-v4 Build29 joint projective+crop / padded placement (v4-pilot-joint-projective-test)
+------------------------------------------------------------------------
+Running Build29 Format-v4 joint projective+crop / padded qualification...
+=== RUN   TestExperimentalV4Build29JointQualification
+=== RUN   TestExperimentalV4Build29JointQualification/projective-crop
+    experimental_v4_pilot_joint_projective_test.go:61: params={angleDeg:9.599999999999998 scaleX:1.06 scaleY:0.925 shearXDeg:0 shearYDeg:0 topInset:0.02 bottomInset:0 shiftX:0 shiftY:0} shift=(-94,-69) structural=32.623825 proposal=0.744814 geometry-validation=0.051405 placement-validation=0.554332 score=0.511584 margin=0.269007 origin=(0,0) corner-error=0.00472 hypotheses=427982; matched-negative score=0.163844 margin=0.008623
+=== RUN   TestExperimentalV4Build29JointQualification/affine-padded-placement
+    experimental_v4_pilot_joint_projective_test.go:84: params={angleDeg:-7.400000000000004 scaleX:1.03 scaleY:0.9700000000000001 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:0} shift=(73,40) structural=4.251604 proposal=0.945403 placement-validation=0.986240 score=0.970540 margin=0.542529 origin=(0,0) corner-error=0.00085 hypotheses=299613; matched-negative score=0.151570 margin=0.005731
+--- PASS: TestExperimentalV4Build29JointQualification (59.97s)
+    --- PASS: TestExperimentalV4Build29JointQualification/projective-crop (37.38s)
+    --- PASS: TestExperimentalV4Build29JointQualification/affine-padded-placement (22.51s)
+PASS
+ok  	github.com/pj/pixseal/watermark	59.978s
+
+[PASS] v4-pilot-joint-projective-test — 61s
+
+========================================================================
+[41/62] Format-v4 Build29 joint projective/padded local corpus (v4-pilot-joint-projective-corpus-test)
+------------------------------------------------------------------------
+Running Build29 Format-v4 joint projective/padded local corpus qualification...
+=== RUN   TestExperimentalV4Build29JointCorpus
+    experimental_v4_pilot_joint_projective_corpus_test.go:13: SKIP active corpus HQ (Immagine HQ.png): 200.5 MP exceeds Go-test budget 50 MP
+=== RUN   TestExperimentalV4Build29JointCorpus/Immagine_LQ.png
+=== RUN   TestExperimentalV4Build29JointCorpus/Immagine_LQ.png/projective-crop
+    experimental_v4_pilot_joint_projective_corpus_test.go:51: SAFE-REJECT accepted=false available=true params={angleDeg:-12 scaleX:1.15 scaleY:0.975 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0.03 shiftX:0 shiftY:0} validation=0.376941 score=0.261800 margin=0.006406 origin=(20,2) hypotheses=432100
+=== RUN   TestExperimentalV4Build29JointCorpus/Immagine_LQ.png/affine-padded-placement
+    experimental_v4_pilot_joint_projective_corpus_test.go:64: SAFE-REJECT accepted=false available=true params={angleDeg:-8.900000000000002 scaleX:1.05 scaleY:1.01 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:0} validation=0.351334 score=0.224715 margin=0.016013 origin=(31,11) hypotheses=297395
+=== RUN   TestExperimentalV4Build29JointCorpus/Immagine_MQ.png
+=== RUN   TestExperimentalV4Build29JointCorpus/Immagine_MQ.png/projective-crop
+    experimental_v4_pilot_joint_projective_corpus_test.go:41: ACCEPT params={angleDeg:9.3 scaleX:1.08 scaleY:0.92 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0.015 shiftX:0 shiftY:0} shift=(0,0) validation=0.872607 score=0.740547 margin=0.458577 origin=(0,0) corner-error=0.00102 hypotheses=101187; matched-negative score=0.141393 margin=0.021408
+=== RUN   TestExperimentalV4Build29JointCorpus/Immagine_MQ.png/affine-padded-placement
+    experimental_v4_pilot_joint_projective_corpus_test.go:64: SAFE-REJECT accepted=false available=true params={angleDeg:5.7499999999999964 scaleX:1.1 scaleY:1.03 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:0} validation=0.156329 score=0.124692 margin=0.016249 origin=(24,29) hypotheses=306902
+    experimental_v4_pilot_joint_projective_corpus_test.go:78: known-geometry control validation=0.993130 score=0.977844 margin=0.566316 origin=(0,0)
+--- PASS: TestExperimentalV4Build29JointCorpus (124.73s)
+    --- PASS: TestExperimentalV4Build29JointCorpus/Immagine_LQ.png (49.94s)
+        --- PASS: TestExperimentalV4Build29JointCorpus/Immagine_LQ.png/projective-crop (32.37s)
+        --- PASS: TestExperimentalV4Build29JointCorpus/Immagine_LQ.png/affine-padded-placement (17.51s)
+    --- PASS: TestExperimentalV4Build29JointCorpus/Immagine_MQ.png (74.79s)
+        --- PASS: TestExperimentalV4Build29JointCorpus/Immagine_MQ.png/projective-crop (17.21s)
+        --- PASS: TestExperimentalV4Build29JointCorpus/Immagine_MQ.png/affine-padded-placement (57.33s)
+PASS
+ok  	github.com/pj/pixseal/watermark	124.738s
+
+[PASS] v4-pilot-joint-projective-corpus-test — 125s
+
+========================================================================
+[42/62] Format-v4 Build33 MQ projective ranking observability (v4-pilot-joint-projective-rank-diagnostic)
+------------------------------------------------------------------------
+Running Build33 Format-v4 MQ projective ranking diagnostic...
+=== RUN   TestExperimentalV4Build33ProjectiveRankingDiagnostic
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:18: SKIP active corpus HQ (Immagine HQ.png): 200.5 MP exceeds Go-test budget 50 MP
+=== RUN   TestExperimentalV4Build33ProjectiveRankingDiagnostic/random-data-plane
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: structural truth-basin rank=1/5000 params={angleDeg:9 scaleX:1.05 scaleY:0.925 shearXDeg:0 shearYDeg:0 topInset:0.045 bottomInset:0.03 shiftX:0 shiftY:0} score=33.512502
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: half-pilot truth-basin rank=98/5000 params={angleDeg:9.5 scaleX:1.075 scaleY:0.925 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0.015 shiftX:0 shiftY:0} score=0.490496 full=0.529533 origin=(0,0)
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: full-proposal truth-basin rank=22/2000 params={angleDeg:9 scaleX:1.075 scaleY:0.9 shearXDeg:0 shearYDeg:0 topInset:0.045 bottomInset:0.03 shiftX:0 shiftY:0} proposal=0.192089 origin=(1,0)
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 01 proposal=0.234038 structural=8.804936 params={angleDeg:9 scaleX:1.075 scaleY:0.875 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0.045 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 02 proposal=0.232718 structural=8.933428 params={angleDeg:7.5 scaleX:0.975 scaleY:1.05 shearXDeg:0 shearYDeg:0 topInset:0.015 bottomInset:0 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 03 proposal=0.229611 structural=10.051971 params={angleDeg:7.5 scaleX:1.125 scaleY:0.925 shearXDeg:0 shearYDeg:0 topInset:0.06 bottomInset:0.03 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 04 proposal=0.228495 structural=9.018903 params={angleDeg:10 scaleX:0.95 scaleY:1.05 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0.015 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 05 proposal=0.224382 structural=9.032494 params={angleDeg:11 scaleX:0.975 scaleY:1.05 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 06 proposal=0.219141 structural=10.775639 params={angleDeg:9.5 scaleX:1.125 scaleY:1.025 shearXDeg:0 shearYDeg:0 topInset:0.045 bottomInset:0.045 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 07 proposal=0.218351 structural=14.222577 params={angleDeg:9 scaleX:0.975 scaleY:1 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0.015 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 08 proposal=0.215098 structural=10.724381 params={angleDeg:8.5 scaleX:1.1 scaleY:1 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0.045 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 09 proposal=0.214701 structural=9.878441 params={angleDeg:11.5 scaleX:0.95 scaleY:0.975 shearXDeg:0 shearYDeg:0 topInset:0.06 bottomInset:0.03 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 10 proposal=0.211478 structural=9.460022 params={angleDeg:12 scaleX:1.15 scaleY:0.975 shearXDeg:0 shearYDeg:0 topInset:0.045 bottomInset:0.015 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 11 proposal=0.203452 structural=8.530110 params={angleDeg:4.5 scaleX:1.05 scaleY:1.025 shearXDeg:0 shearYDeg:0 topInset:0.015 bottomInset:0.03 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 12 proposal=0.203262 structural=12.411703 params={angleDeg:12 scaleX:1 scaleY:0.95 shearXDeg:0 shearYDeg:0 topInset:0.015 bottomInset:0.045 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 13 proposal=0.202557 structural=9.142216 params={angleDeg:4.5 scaleX:1.1 scaleY:0.95 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 14 proposal=0.200891 structural=8.491612 params={angleDeg:7.5 scaleX:1.1 scaleY:0.95 shearXDeg:0 shearYDeg:0 topInset:0.015 bottomInset:0 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 15 proposal=0.199696 structural=9.220284 params={angleDeg:10.5 scaleX:0.975 scaleY:0.85 shearXDeg:0 shearYDeg:0 topInset:0.015 bottomInset:0.015 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 16 proposal=0.198030 structural=9.138982 params={angleDeg:-10 scaleX:1.15 scaleY:1.025 shearXDeg:0 shearYDeg:0 topInset:0.06 bottomInset:0 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 17 proposal=0.196907 structural=8.309941 params={angleDeg:11 scaleX:1.075 scaleY:0.975 shearXDeg:0 shearYDeg:0 topInset:0.045 bottomInset:0 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 18 proposal=0.194020 structural=9.955132 params={angleDeg:11 scaleX:1.025 scaleY:1.025 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 19 proposal=0.192598 structural=10.854264 params={angleDeg:7.5 scaleX:1.1 scaleY:0.9 shearXDeg:0 shearYDeg:0 topInset:0.045 bottomInset:0.06 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 20 proposal=0.192550 structural=9.519511 params={angleDeg:7.5 scaleX:1.15 scaleY:0.875 shearXDeg:0 shearYDeg:0 topInset:0.015 bottomInset:0 shiftX:0 shiftY:0}
+=== RUN   TestExperimentalV4Build33ProjectiveRankingDiagnostic/authenticated-v4-frame
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: structural truth-basin rank=1/5000 params={angleDeg:9 scaleX:1.05 scaleY:0.925 shearXDeg:0 shearYDeg:0 topInset:0.045 bottomInset:0.03 shiftX:0 shiftY:0} score=35.764172
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: half-pilot truth-basin rank=35/5000 params={angleDeg:10 scaleX:1.1 scaleY:0.95 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0.015 shiftX:0 shiftY:0} score=0.529219 full=0.538482 origin=(1,0)
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: full-proposal truth-basin rank=2/2000 params={angleDeg:9.5 scaleX:1.075 scaleY:0.95 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0 shiftX:0 shiftY:0} proposal=0.263599 origin=(1,31)
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 01 proposal=0.288922 structural=13.951571 params={angleDeg:11 scaleX:0.95 scaleY:1 shearXDeg:0 shearYDeg:0 topInset:0.015 bottomInset:0.03 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 02 proposal=0.263599 structural=9.152671 params={angleDeg:9.5 scaleX:1.075 scaleY:0.95 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 03 proposal=0.254116 structural=11.253523 params={angleDeg:10 scaleX:1.15 scaleY:1.05 shearXDeg:0 shearYDeg:0 topInset:0.06 bottomInset:0.03 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 04 proposal=0.239419 structural=8.648055 params={angleDeg:11 scaleX:1.15 scaleY:0.9 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 05 proposal=0.237351 structural=8.438765 params={angleDeg:10 scaleX:1.1 scaleY:0.925 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0.015 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 06 proposal=0.235898 structural=17.741537 params={angleDeg:11 scaleX:1.025 scaleY:0.925 shearXDeg:0 shearYDeg:0 topInset:0.045 bottomInset:0.03 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 07 proposal=0.232600 structural=8.632330 params={angleDeg:11 scaleX:0.95 scaleY:1.05 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 08 proposal=0.231711 structural=9.706767 params={angleDeg:10.5 scaleX:1.1 scaleY:1 shearXDeg:0 shearYDeg:0 topInset:0.045 bottomInset:0.06 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 09 proposal=0.226039 structural=8.676582 params={angleDeg:8 scaleX:1.125 scaleY:0.925 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0.015 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 10 proposal=0.225655 structural=12.271261 params={angleDeg:12 scaleX:1 scaleY:1 shearXDeg:0 shearYDeg:0 topInset:0 bottomInset:0.045 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 11 proposal=0.224748 structural=8.656425 params={angleDeg:11 scaleX:1.05 scaleY:1 shearXDeg:0 shearYDeg:0 topInset:0.06 bottomInset:0.045 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 12 proposal=0.222082 structural=8.898587 params={angleDeg:8 scaleX:1.075 scaleY:1.025 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0.03 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 13 proposal=0.213328 structural=11.623833 params={angleDeg:7.5 scaleX:1.15 scaleY:1.025 shearXDeg:0 shearYDeg:0 topInset:0.06 bottomInset:0 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 14 proposal=0.208210 structural=8.796049 params={angleDeg:10 scaleX:1.125 scaleY:0.95 shearXDeg:0 shearYDeg:0 topInset:0.06 bottomInset:0.06 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 15 proposal=0.207241 structural=8.864010 params={angleDeg:10.5 scaleX:1.05 scaleY:1 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0.03 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 16 proposal=0.200619 structural=9.340238 params={angleDeg:11.5 scaleX:1.1 scaleY:0.925 shearXDeg:0 shearYDeg:0 topInset:0.06 bottomInset:0.03 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 17 proposal=0.200442 structural=13.690560 params={angleDeg:6 scaleX:1.075 scaleY:0.925 shearXDeg:0 shearYDeg:0 topInset:0.045 bottomInset:0.015 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 18 proposal=0.200283 structural=8.483802 params={angleDeg:11.5 scaleX:1.075 scaleY:0.95 shearXDeg:0 shearYDeg:0 topInset:0.015 bottomInset:0.045 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 19 proposal=0.199135 structural=8.972453 params={angleDeg:4.5 scaleX:1.075 scaleY:0.95 shearXDeg:0 shearYDeg:0 topInset:0.03 bottomInset:0.06 shiftX:0 shiftY:0}
+    experimental_v4_pilot_joint_projective_rank_diagnostic_test.go:75: distinct-basin 20 proposal=0.195355 structural=14.181614 params={angleDeg:10 scaleX:1.125 scaleY:0.95 shearXDeg:0 shearYDeg:0 topInset:0.045 bottomInset:0.015 shiftX:0 shiftY:0}
+--- PASS: TestExperimentalV4Build33ProjectiveRankingDiagnostic (35.69s)
+    --- PASS: TestExperimentalV4Build33ProjectiveRankingDiagnostic/random-data-plane (16.63s)
+    --- PASS: TestExperimentalV4Build33ProjectiveRankingDiagnostic/authenticated-v4-frame (17.37s)
+PASS
+ok  	github.com/pj/pixseal/watermark	35.700s
+
+[PASS] v4-pilot-joint-projective-rank-diagnostic — 36s
+
+========================================================================
+[43/62] Format-v4 Build34 authenticated MQ projective recovery (v4-build34-projective-frame-corpus-test)
+------------------------------------------------------------------------
+Running Build34 Format-v4 authenticated MQ projective corpus qualification...
+=== RUN   TestExperimentalV4Build34AuthenticatedProjectiveCorpus
+    experimental_v4_build34_frame_corpus_test.go:14: SKIP active corpus HQ (Immagine HQ.png): 200.5 MP exceeds Go-test budget 50 MP
+=== RUN   TestExperimentalV4Build34AuthenticatedProjectiveCorpus/v4-b34-auth
+    experimental_v4_build34_frame_corpus_test.go:50: payload="v4-b34-auth" profile=robust confidence=20.957 validation=0.867 score=0.729 margin=0.426 origin=(0,0) corner-error=0.00102
+=== RUN   TestExperimentalV4Build34AuthenticatedProjectiveCorpus/v4-b34-alt
+    experimental_v4_build34_frame_corpus_test.go:50: payload="v4-b34-alt" profile=robust confidence=21.697 validation=0.864 score=0.720 margin=0.413 origin=(0,0) corner-error=0.00102
+--- PASS: TestExperimentalV4Build34AuthenticatedProjectiveCorpus (34.18s)
+    --- PASS: TestExperimentalV4Build34AuthenticatedProjectiveCorpus/v4-b34-auth (17.15s)
+    --- PASS: TestExperimentalV4Build34AuthenticatedProjectiveCorpus/v4-b34-alt (16.74s)
+PASS
+ok  	github.com/pj/pixseal/watermark	34.195s
+
+[PASS] v4-build34-projective-frame-corpus-test — 35s
+
+========================================================================
+[44/62] Format-v4 Build35 projective API/CLI qualification (v4-build35-projective-api-test)
+------------------------------------------------------------------------
+Running Build35 Format-v4 projective API/CLI qualification...
+=== RUN   TestExperimentalV4Build35ProjectiveAPI
+    experimental_v4_build35_projective_api_test.go:41: payload="v4-b35-api" validation=0.758 score=0.746 margin=0.292 origin=(0,0) hypotheses=427373
+--- PASS: TestExperimentalV4Build35ProjectiveAPI (35.78s)
+=== RUN   TestExperimentalV4Build35ProjectiveAPIRejectsInvalidCanonicalExtent
+--- PASS: TestExperimentalV4Build35ProjectiveAPIRejectsInvalidCanonicalExtent (0.01s)
+PASS
+ok  	github.com/pj/pixseal/watermark	35.797s
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone
+Usage: pixseal v4-extract-phone [options]
+
+EXPERIMENTAL Build43 smartphone decoder: preserve Build41/42 behavior, then use a bounded proposal-only side-pair geometry fallback before held-out qualification and unchanged HMAC authentication.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	smartphone JPEG or PNG with the complete artwork and visible paper around it (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/analyze
+Usage: pixseal analyze [options]
+
+Analyze carrier geometry and recommend a v3 adaptive profile. Recommendations are advisory.
+
+Options:
+  -bytes int
+    	payload byte count to analyze instead of -message (default -1)
+  -in string
+    	input JPEG or PNG file (required)
+  -message string
+    	message whose UTF-8 byte length should be analyzed
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/extract
+Usage: pixseal extract [options]
+
+Recover and authenticate a hidden PixSeal message; bounded rotation and supported combined geometry correction are automatic.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-embed
+Usage: pixseal v4-embed [options]
+
+EXPERIMENTAL Build31 encoder: hide an authenticated Format-v4 message using the development-locked prototype-2 pilot. Output is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	experimental v4 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective
+Usage: pixseal v4-extract-projective [options]
+
+EXPERIMENTAL Build36 physical-channel decoder: run Build34 blind projective/crop recovery, then use reliability-aware Hamming decoding and authenticate the Format-v4 frame. Canonical dimensions must match the block-normalized carrier before printing.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	acquired/scanned JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/capacity
+Usage: pixseal capacity [options]
+
+Show usable v3 payload capacity in bytes.
+
+Options:
+  -details
+    	show per-profile capacities and image dimensions
+  -in string
+    	input JPEG or PNG file (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/diagnose
+Usage: pixseal diagnose [options]
+
+Experimental v0.3 local-lattice diagnostics. Lattice evidence is not watermark authentication.
+
+Options:
+  -in string
+    	input JPEG or PNG file (required)
+  -json
+    	emit machine-readable JSON
+  -key string
+    	optional key for an independent baseline v3 authentication attempt
+  -levels int
+    	maximum diagnostic pyramid levels (1 to 3) (default 2)
+  -max-dim int
+    	maximum diagnostic pyramid dimension (512 to 4096) (default 2048)
+  -regions int
+    	diagnostic region grid, N x N (1 to 4) (default 3)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/embed
+Usage: pixseal embed [options]
+
+Hide an authenticated message; the output image is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	v3 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract
+Usage: pixseal v4-extract [options]
+
+EXPERIMENTAL Build31 aligned decoder: authenticate a Format-v4 message on a native 8px lattice. For blind projective/crop recovery use v4-extract-projective.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner
+Usage: pixseal v4-extract-scanner [options]
+
+EXPERIMENTAL Build37 scanner decoder: detect the printed artwork boundary, refine a tightly bounded affine mapping with disjoint public-pilot partitions, aggregate a five-geometry pilot-qualified ensemble, then authenticate the unchanged Format-v4 frame.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	full-page/scanner JPEG or PNG file with visible white paper around the artwork (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+--- PASS: TestSubcommandHelpReturnsFlagErrHelp (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/analyze (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/extract (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/capacity (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/diagnose (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner (0.00s)
+=== RUN   TestV4ExtractProjectiveRequiresCanonicalBlockDimensions
+--- PASS: TestV4ExtractProjectiveRequiresCanonicalBlockDimensions (0.00s)
+PASS
+ok  	github.com/pj/pixseal/cmd/pixseal	0.007s
+
+[PASS] v4-build35-projective-api-test — 37s
+
+========================================================================
+[45/62] Format-v4 Build36 soft-decision physical channel (v4-build36-soft-channel-test)
+------------------------------------------------------------------------
+Running Build36 Format-v4 soft-decision physical-channel qualification...
+=== RUN   TestExperimentalV4Build36SoftHammingRecoversWeakDoubleError
+--- PASS: TestExperimentalV4Build36SoftHammingRecoversWeakDoubleError (0.00s)
+=== RUN   TestExperimentalV4Build36SoftHammingMatchesHardOnCleanWords
+--- PASS: TestExperimentalV4Build36SoftHammingMatchesHardOnCleanWords (0.00s)
+PASS
+ok  	github.com/pj/pixseal/watermark	0.005s
+
+[PASS] v4-build36-soft-channel-test — 0s
+
+========================================================================
+[46/62] Format-v4 Build37 blind scanner registration (v4-build37-scanner-registration-test)
+------------------------------------------------------------------------
+Running Build37 Format-v4 blind scanner-registration qualification...
+=== RUN   TestExperimentalV4Build37BlindScannerRegistration
+--- PASS: TestExperimentalV4Build37BlindScannerRegistration (25.17s)
+=== RUN   TestExperimentalV4Build37ScannerRejectsInvalidCanonicalExtent
+--- PASS: TestExperimentalV4Build37ScannerRejectsInvalidCanonicalExtent (0.01s)
+PASS
+ok  	github.com/pj/pixseal/watermark	25.203s
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-embed
+Usage: pixseal v4-embed [options]
+
+EXPERIMENTAL Build31 encoder: hide an authenticated Format-v4 message using the development-locked prototype-2 pilot. Output is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	experimental v4 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone
+Usage: pixseal v4-extract-phone [options]
+
+EXPERIMENTAL Build43 smartphone decoder: preserve Build41/42 behavior, then use a bounded proposal-only side-pair geometry fallback before held-out qualification and unchanged HMAC authentication.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	smartphone JPEG or PNG with the complete artwork and visible paper around it (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/capacity
+Usage: pixseal capacity [options]
+
+Show usable v3 payload capacity in bytes.
+
+Options:
+  -details
+    	show per-profile capacities and image dimensions
+  -in string
+    	input JPEG or PNG file (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/diagnose
+Usage: pixseal diagnose [options]
+
+Experimental v0.3 local-lattice diagnostics. Lattice evidence is not watermark authentication.
+
+Options:
+  -in string
+    	input JPEG or PNG file (required)
+  -json
+    	emit machine-readable JSON
+  -key string
+    	optional key for an independent baseline v3 authentication attempt
+  -levels int
+    	maximum diagnostic pyramid levels (1 to 3) (default 2)
+  -max-dim int
+    	maximum diagnostic pyramid dimension (512 to 4096) (default 2048)
+  -regions int
+    	diagnostic region grid, N x N (1 to 4) (default 3)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/embed
+Usage: pixseal embed [options]
+
+Hide an authenticated message; the output image is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	v3 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract
+Usage: pixseal v4-extract [options]
+
+EXPERIMENTAL Build31 aligned decoder: authenticate a Format-v4 message on a native 8px lattice. For blind projective/crop recovery use v4-extract-projective.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective
+Usage: pixseal v4-extract-projective [options]
+
+EXPERIMENTAL Build36 physical-channel decoder: run Build34 blind projective/crop recovery, then use reliability-aware Hamming decoding and authenticate the Format-v4 frame. Canonical dimensions must match the block-normalized carrier before printing.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	acquired/scanned JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner
+Usage: pixseal v4-extract-scanner [options]
+
+EXPERIMENTAL Build37 scanner decoder: detect the printed artwork boundary, refine a tightly bounded affine mapping with disjoint public-pilot partitions, aggregate a five-geometry pilot-qualified ensemble, then authenticate the unchanged Format-v4 frame.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	full-page/scanner JPEG or PNG file with visible white paper around the artwork (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/analyze
+Usage: pixseal analyze [options]
+
+Analyze carrier geometry and recommend a v3 adaptive profile. Recommendations are advisory.
+
+Options:
+  -bytes int
+    	payload byte count to analyze instead of -message (default -1)
+  -in string
+    	input JPEG or PNG file (required)
+  -message string
+    	message whose UTF-8 byte length should be analyzed
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/extract
+Usage: pixseal extract [options]
+
+Recover and authenticate a hidden PixSeal message; bounded rotation and supported combined geometry correction are automatic.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+--- PASS: TestSubcommandHelpReturnsFlagErrHelp (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/capacity (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/diagnose (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/analyze (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/extract (0.00s)
+=== RUN   TestV4ExtractScannerRequiresCanonicalBlockDimensions
+--- PASS: TestV4ExtractScannerRequiresCanonicalBlockDimensions (0.00s)
+PASS
+ok  	github.com/pj/pixseal/cmd/pixseal	0.006s
+
+[PASS] v4-build37-scanner-registration-test — 26s
+
+========================================================================
+[47/62] Format-v4 Build38 smartphone-channel carrier (v4-build38-phone-channel-test)
+------------------------------------------------------------------------
+Running Build38 Format-v4 smartphone-channel carrier qualification...
+=== RUN   TestExperimentalV4Build38PhoneStrengthRoundTrip
+--- PASS: TestExperimentalV4Build38PhoneStrengthRoundTrip (0.69s)
+PASS
+ok  	github.com/pj/pixseal/watermark	0.702s
+
+[PASS] v4-build38-phone-channel-test — 2s
+
+========================================================================
+[48/62] Format-v4 Build39 blind smartphone registration checkpoint (v4-build39-phone-registration-test)
+------------------------------------------------------------------------
+Running Build39 Format-v4 blind smartphone-registration checkpoint...
+=== RUN   TestExperimentalV4Build39PhoneRegistrationCheckpoint
+--- PASS: TestExperimentalV4Build39PhoneRegistrationCheckpoint (14.23s)
+=== RUN   TestExperimentalV4Build39PhoneDownsampleBound
+--- PASS: TestExperimentalV4Build39PhoneDownsampleBound (0.35s)
+=== RUN   TestExperimentalV4Build39PhoneRejectsInvalidCanonicalExtent
+--- PASS: TestExperimentalV4Build39PhoneRejectsInvalidCanonicalExtent (0.01s)
+PASS
+ok  	github.com/pj/pixseal/watermark	14.608s
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/extract
+Usage: pixseal extract [options]
+
+Recover and authenticate a hidden PixSeal message; bounded rotation and supported combined geometry correction are automatic.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract
+Usage: pixseal v4-extract [options]
+
+EXPERIMENTAL Build31 aligned decoder: authenticate a Format-v4 message on a native 8px lattice. For blind projective/crop recovery use v4-extract-projective.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective
+Usage: pixseal v4-extract-projective [options]
+
+EXPERIMENTAL Build36 physical-channel decoder: run Build34 blind projective/crop recovery, then use reliability-aware Hamming decoding and authenticate the Format-v4 frame. Canonical dimensions must match the block-normalized carrier before printing.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	acquired/scanned JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner
+Usage: pixseal v4-extract-scanner [options]
+
+EXPERIMENTAL Build37 scanner decoder: detect the printed artwork boundary, refine a tightly bounded affine mapping with disjoint public-pilot partitions, aggregate a five-geometry pilot-qualified ensemble, then authenticate the unchanged Format-v4 frame.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	full-page/scanner JPEG or PNG file with visible white paper around the artwork (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/capacity
+Usage: pixseal capacity [options]
+
+Show usable v3 payload capacity in bytes.
+
+Options:
+  -details
+    	show per-profile capacities and image dimensions
+  -in string
+    	input JPEG or PNG file (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/analyze
+Usage: pixseal analyze [options]
+
+Analyze carrier geometry and recommend a v3 adaptive profile. Recommendations are advisory.
+
+Options:
+  -bytes int
+    	payload byte count to analyze instead of -message (default -1)
+  -in string
+    	input JPEG or PNG file (required)
+  -message string
+    	message whose UTF-8 byte length should be analyzed
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/embed
+Usage: pixseal embed [options]
+
+Hide an authenticated message; the output image is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	v3 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-embed
+Usage: pixseal v4-embed [options]
+
+EXPERIMENTAL Build31 encoder: hide an authenticated Format-v4 message using the development-locked prototype-2 pilot. Output is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	experimental v4 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone
+Usage: pixseal v4-extract-phone [options]
+
+EXPERIMENTAL Build43 smartphone decoder: preserve Build41/42 behavior, then use a bounded proposal-only side-pair geometry fallback before held-out qualification and unchanged HMAC authentication.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	smartphone JPEG or PNG with the complete artwork and visible paper around it (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/diagnose
+Usage: pixseal diagnose [options]
+
+Experimental v0.3 local-lattice diagnostics. Lattice evidence is not watermark authentication.
+
+Options:
+  -in string
+    	input JPEG or PNG file (required)
+  -json
+    	emit machine-readable JSON
+  -key string
+    	optional key for an independent baseline v3 authentication attempt
+  -levels int
+    	maximum diagnostic pyramid levels (1 to 3) (default 2)
+  -max-dim int
+    	maximum diagnostic pyramid dimension (512 to 4096) (default 2048)
+  -regions int
+    	diagnostic region grid, N x N (1 to 4) (default 3)
+--- PASS: TestSubcommandHelpReturnsFlagErrHelp (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/extract (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/capacity (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/analyze (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/diagnose (0.00s)
+=== RUN   TestV4ExtractPhoneRequiresCanonicalBlockDimensions
+--- PASS: TestV4ExtractPhoneRequiresCanonicalBlockDimensions (0.00s)
+PASS
+ok  	github.com/pj/pixseal/cmd/pixseal	0.006s
+
+[PASS] v4-build39-phone-registration-test — 15s
+
+========================================================================
+[49/62] Format-v4 Build40 pilot-only smartphone residual warp (v4-build40-phone-residual-test)
+------------------------------------------------------------------------
+Running Build40 Format-v4 pilot-only smartphone residual-warp qualification...
+=== RUN   TestExperimentalV4Build40PilotOnlyResidualWarp
+--- PASS: TestExperimentalV4Build40PilotOnlyResidualWarp (1.98s)
+PASS
+ok  	github.com/pj/pixseal/watermark	1.987s
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-embed
+Usage: pixseal v4-embed [options]
+
+EXPERIMENTAL Build31 encoder: hide an authenticated Format-v4 message using the development-locked prototype-2 pilot. Output is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	experimental v4 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective
+Usage: pixseal v4-extract-projective [options]
+
+EXPERIMENTAL Build36 physical-channel decoder: run Build34 blind projective/crop recovery, then use reliability-aware Hamming decoding and authenticate the Format-v4 frame. Canonical dimensions must match the block-normalized carrier before printing.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	acquired/scanned JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/analyze
+Usage: pixseal analyze [options]
+
+Analyze carrier geometry and recommend a v3 adaptive profile. Recommendations are advisory.
+
+Options:
+  -bytes int
+    	payload byte count to analyze instead of -message (default -1)
+  -in string
+    	input JPEG or PNG file (required)
+  -message string
+    	message whose UTF-8 byte length should be analyzed
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/diagnose
+Usage: pixseal diagnose [options]
+
+Experimental v0.3 local-lattice diagnostics. Lattice evidence is not watermark authentication.
+
+Options:
+  -in string
+    	input JPEG or PNG file (required)
+  -json
+    	emit machine-readable JSON
+  -key string
+    	optional key for an independent baseline v3 authentication attempt
+  -levels int
+    	maximum diagnostic pyramid levels (1 to 3) (default 2)
+  -max-dim int
+    	maximum diagnostic pyramid dimension (512 to 4096) (default 2048)
+  -regions int
+    	diagnostic region grid, N x N (1 to 4) (default 3)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract
+Usage: pixseal v4-extract [options]
+
+EXPERIMENTAL Build31 aligned decoder: authenticate a Format-v4 message on a native 8px lattice. For blind projective/crop recovery use v4-extract-projective.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner
+Usage: pixseal v4-extract-scanner [options]
+
+EXPERIMENTAL Build37 scanner decoder: detect the printed artwork boundary, refine a tightly bounded affine mapping with disjoint public-pilot partitions, aggregate a five-geometry pilot-qualified ensemble, then authenticate the unchanged Format-v4 frame.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	full-page/scanner JPEG or PNG file with visible white paper around the artwork (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone
+Usage: pixseal v4-extract-phone [options]
+
+EXPERIMENTAL Build43 smartphone decoder: preserve Build41/42 behavior, then use a bounded proposal-only side-pair geometry fallback before held-out qualification and unchanged HMAC authentication.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	smartphone JPEG or PNG with the complete artwork and visible paper around it (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/capacity
+Usage: pixseal capacity [options]
+
+Show usable v3 payload capacity in bytes.
+
+Options:
+  -details
+    	show per-profile capacities and image dimensions
+  -in string
+    	input JPEG or PNG file (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/embed
+Usage: pixseal embed [options]
+
+Hide an authenticated message; the output image is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	v3 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/extract
+Usage: pixseal extract [options]
+
+Recover and authenticate a hidden PixSeal message; bounded rotation and supported combined geometry correction are automatic.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+--- PASS: TestSubcommandHelpReturnsFlagErrHelp (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/analyze (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/diagnose (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/capacity (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/extract (0.00s)
+=== RUN   TestV4ExtractPhoneRequiresCanonicalBlockDimensions
+--- PASS: TestV4ExtractPhoneRequiresCanonicalBlockDimensions (0.00s)
+PASS
+ok  	github.com/pj/pixseal/cmd/pixseal	0.006s
+
+[PASS] v4-build40-phone-residual-test — 3s
+
+========================================================================
+[50/62] Format-v4 Build41 blind smartphone basin recovery (v4-build41-phone-basin-test)
+------------------------------------------------------------------------
+Running Build41 Format-v4 blind smartphone basin qualification...
+=== RUN   TestExperimentalV4Build41PhoneBasinRecovery
+--- PASS: TestExperimentalV4Build41PhoneBasinRecovery (31.17s)
+PASS
+ok  	github.com/pj/pixseal/watermark	31.190s
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/embed
+Usage: pixseal embed [options]
+
+Hide an authenticated message; the output image is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	v3 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective
+Usage: pixseal v4-extract-projective [options]
+
+EXPERIMENTAL Build36 physical-channel decoder: run Build34 blind projective/crop recovery, then use reliability-aware Hamming decoding and authenticate the Format-v4 frame. Canonical dimensions must match the block-normalized carrier before printing.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	acquired/scanned JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone
+Usage: pixseal v4-extract-phone [options]
+
+EXPERIMENTAL Build43 smartphone decoder: preserve Build41/42 behavior, then use a bounded proposal-only side-pair geometry fallback before held-out qualification and unchanged HMAC authentication.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	smartphone JPEG or PNG with the complete artwork and visible paper around it (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/capacity
+Usage: pixseal capacity [options]
+
+Show usable v3 payload capacity in bytes.
+
+Options:
+  -details
+    	show per-profile capacities and image dimensions
+  -in string
+    	input JPEG or PNG file (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/diagnose
+Usage: pixseal diagnose [options]
+
+Experimental v0.3 local-lattice diagnostics. Lattice evidence is not watermark authentication.
+
+Options:
+  -in string
+    	input JPEG or PNG file (required)
+  -json
+    	emit machine-readable JSON
+  -key string
+    	optional key for an independent baseline v3 authentication attempt
+  -levels int
+    	maximum diagnostic pyramid levels (1 to 3) (default 2)
+  -max-dim int
+    	maximum diagnostic pyramid dimension (512 to 4096) (default 2048)
+  -regions int
+    	diagnostic region grid, N x N (1 to 4) (default 3)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/extract
+Usage: pixseal extract [options]
+
+Recover and authenticate a hidden PixSeal message; bounded rotation and supported combined geometry correction are automatic.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-embed
+Usage: pixseal v4-embed [options]
+
+EXPERIMENTAL Build31 encoder: hide an authenticated Format-v4 message using the development-locked prototype-2 pilot. Output is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	experimental v4 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract
+Usage: pixseal v4-extract [options]
+
+EXPERIMENTAL Build31 aligned decoder: authenticate a Format-v4 message on a native 8px lattice. For blind projective/crop recovery use v4-extract-projective.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner
+Usage: pixseal v4-extract-scanner [options]
+
+EXPERIMENTAL Build37 scanner decoder: detect the printed artwork boundary, refine a tightly bounded affine mapping with disjoint public-pilot partitions, aggregate a five-geometry pilot-qualified ensemble, then authenticate the unchanged Format-v4 frame.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	full-page/scanner JPEG or PNG file with visible white paper around the artwork (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/analyze
+Usage: pixseal analyze [options]
+
+Analyze carrier geometry and recommend a v3 adaptive profile. Recommendations are advisory.
+
+Options:
+  -bytes int
+    	payload byte count to analyze instead of -message (default -1)
+  -in string
+    	input JPEG or PNG file (required)
+  -message string
+    	message whose UTF-8 byte length should be analyzed
+--- PASS: TestSubcommandHelpReturnsFlagErrHelp (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/capacity (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/diagnose (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/extract (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/analyze (0.00s)
+=== RUN   TestV4ExtractPhoneRequiresCanonicalBlockDimensions
+--- PASS: TestV4ExtractPhoneRequiresCanonicalBlockDimensions (0.00s)
+PASS
+ok  	github.com/pj/pixseal/cmd/pixseal	0.006s
+
+[PASS] v4-build41-phone-basin-test — 32s
+
+========================================================================
+[51/62] Format-v4 Build42 qualified-bank/list data recovery (v4-build42-phone-data-test)
+------------------------------------------------------------------------
+Running Build42 Format-v4 qualified-bank/list-decoder regression...
+=== RUN   TestExperimentalV4Build41PhoneBasinRecovery
+--- PASS: TestExperimentalV4Build41PhoneBasinRecovery (30.66s)
+=== RUN   TestExperimentalV4Build42ListDecodeRecoversSecondBestWord
+--- PASS: TestExperimentalV4Build42ListDecodeRecoversSecondBestWord (0.00s)
+PASS
+ok  	github.com/pj/pixseal/watermark	30.671s
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/extract
+Usage: pixseal extract [options]
+
+Recover and authenticate a hidden PixSeal message; bounded rotation and supported combined geometry correction are automatic.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-embed
+Usage: pixseal v4-embed [options]
+
+EXPERIMENTAL Build31 encoder: hide an authenticated Format-v4 message using the development-locked prototype-2 pilot. Output is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	experimental v4 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract
+Usage: pixseal v4-extract [options]
+
+EXPERIMENTAL Build31 aligned decoder: authenticate a Format-v4 message on a native 8px lattice. For blind projective/crop recovery use v4-extract-projective.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective
+Usage: pixseal v4-extract-projective [options]
+
+EXPERIMENTAL Build36 physical-channel decoder: run Build34 blind projective/crop recovery, then use reliability-aware Hamming decoding and authenticate the Format-v4 frame. Canonical dimensions must match the block-normalized carrier before printing.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	acquired/scanned JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner
+Usage: pixseal v4-extract-scanner [options]
+
+EXPERIMENTAL Build37 scanner decoder: detect the printed artwork boundary, refine a tightly bounded affine mapping with disjoint public-pilot partitions, aggregate a five-geometry pilot-qualified ensemble, then authenticate the unchanged Format-v4 frame.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	full-page/scanner JPEG or PNG file with visible white paper around the artwork (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/capacity
+Usage: pixseal capacity [options]
+
+Show usable v3 payload capacity in bytes.
+
+Options:
+  -details
+    	show per-profile capacities and image dimensions
+  -in string
+    	input JPEG or PNG file (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/analyze
+Usage: pixseal analyze [options]
+
+Analyze carrier geometry and recommend a v3 adaptive profile. Recommendations are advisory.
+
+Options:
+  -bytes int
+    	payload byte count to analyze instead of -message (default -1)
+  -in string
+    	input JPEG or PNG file (required)
+  -message string
+    	message whose UTF-8 byte length should be analyzed
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/diagnose
+Usage: pixseal diagnose [options]
+
+Experimental v0.3 local-lattice diagnostics. Lattice evidence is not watermark authentication.
+
+Options:
+  -in string
+    	input JPEG or PNG file (required)
+  -json
+    	emit machine-readable JSON
+  -key string
+    	optional key for an independent baseline v3 authentication attempt
+  -levels int
+    	maximum diagnostic pyramid levels (1 to 3) (default 2)
+  -max-dim int
+    	maximum diagnostic pyramid dimension (512 to 4096) (default 2048)
+  -regions int
+    	diagnostic region grid, N x N (1 to 4) (default 3)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/embed
+Usage: pixseal embed [options]
+
+Hide an authenticated message; the output image is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	v3 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone
+Usage: pixseal v4-extract-phone [options]
+
+EXPERIMENTAL Build43 smartphone decoder: preserve Build41/42 behavior, then use a bounded proposal-only side-pair geometry fallback before held-out qualification and unchanged HMAC authentication.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	smartphone JPEG or PNG with the complete artwork and visible paper around it (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+--- PASS: TestSubcommandHelpReturnsFlagErrHelp (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/extract (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/capacity (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/analyze (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/diagnose (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone (0.00s)
+=== RUN   TestV4ExtractPhoneRequiresCanonicalBlockDimensions
+--- PASS: TestV4ExtractPhoneRequiresCanonicalBlockDimensions (0.00s)
+=== RUN   TestV4PhoneDiagnosticsExposeBuild42MatrixFields
+--- PASS: TestV4PhoneDiagnosticsExposeBuild42MatrixFields (0.00s)
+PASS
+ok  	github.com/pj/pixseal/cmd/pixseal	0.006s
+
+[PASS] v4-build42-phone-data-test — 32s
+
+========================================================================
+[52/62] Format-v4 Build43 proposal-only side-pair geometry fallback (v4-build43-phone-side-pair-test)
+------------------------------------------------------------------------
+Running Build43 Format-v4 proposal-only side-pair regression...
+=== RUN   TestExperimentalV4Build43PhoneSidePairRecovery
+--- PASS: TestExperimentalV4Build43PhoneSidePairRecovery (22.81s)
+PASS
+ok  	github.com/pj/pixseal/watermark	22.826s
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner
+Usage: pixseal v4-extract-scanner [options]
+
+EXPERIMENTAL Build37 scanner decoder: detect the printed artwork boundary, refine a tightly bounded affine mapping with disjoint public-pilot partitions, aggregate a five-geometry pilot-qualified ensemble, then authenticate the unchanged Format-v4 frame.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	full-page/scanner JPEG or PNG file with visible white paper around the artwork (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/analyze
+Usage: pixseal analyze [options]
+
+Analyze carrier geometry and recommend a v3 adaptive profile. Recommendations are advisory.
+
+Options:
+  -bytes int
+    	payload byte count to analyze instead of -message (default -1)
+  -in string
+    	input JPEG or PNG file (required)
+  -message string
+    	message whose UTF-8 byte length should be analyzed
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/extract
+Usage: pixseal extract [options]
+
+Recover and authenticate a hidden PixSeal message; bounded rotation and supported combined geometry correction are automatic.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective
+Usage: pixseal v4-extract-projective [options]
+
+EXPERIMENTAL Build36 physical-channel decoder: run Build34 blind projective/crop recovery, then use reliability-aware Hamming decoding and authenticate the Format-v4 frame. Canonical dimensions must match the block-normalized carrier before printing.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	acquired/scanned JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone
+Usage: pixseal v4-extract-phone [options]
+
+EXPERIMENTAL Build43 smartphone decoder: preserve Build41/42 behavior, then use a bounded proposal-only side-pair geometry fallback before held-out qualification and unchanged HMAC authentication.
+
+Options:
+  -height int
+    	canonical pre-print carrier height in pixels, divisible by 8 (required)
+  -in string
+    	smartphone JPEG or PNG with the complete artwork and visible paper around it (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+  -width int
+    	canonical pre-print carrier width in pixels, divisible by 8 (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/capacity
+Usage: pixseal capacity [options]
+
+Show usable v3 payload capacity in bytes.
+
+Options:
+  -details
+    	show per-profile capacities and image dimensions
+  -in string
+    	input JPEG or PNG file (required)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/diagnose
+Usage: pixseal diagnose [options]
+
+Experimental v0.3 local-lattice diagnostics. Lattice evidence is not watermark authentication.
+
+Options:
+  -in string
+    	input JPEG or PNG file (required)
+  -json
+    	emit machine-readable JSON
+  -key string
+    	optional key for an independent baseline v3 authentication attempt
+  -levels int
+    	maximum diagnostic pyramid levels (1 to 3) (default 2)
+  -max-dim int
+    	maximum diagnostic pyramid dimension (512 to 4096) (default 2048)
+  -regions int
+    	diagnostic region grid, N x N (1 to 4) (default 3)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/embed
+Usage: pixseal embed [options]
+
+Hide an authenticated message; the output image is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	v3 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-embed
+Usage: pixseal v4-embed [options]
+
+EXPERIMENTAL Build31 encoder: hide an authenticated Format-v4 message using the development-locked prototype-2 pilot. Output is always PNG.
+
+Options:
+  -force
+    	replace an existing output file
+  -in string
+    	input JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -message string
+    	message to hide, up to 64 bytes (required)
+  -out string
+    	output PNG file (required)
+  -profile string
+    	experimental v4 profile: auto, robust, balanced or capacity (default "auto")
+  -strength float
+    	DCT embedding strength from 4 to 120 (default 24)
+=== RUN   TestSubcommandHelpReturnsFlagErrHelp/v4-extract
+Usage: pixseal v4-extract [options]
+
+EXPERIMENTAL Build31 aligned decoder: authenticate a Format-v4 message on a native 8px lattice. For blind projective/crop recovery use v4-extract-projective.
+
+Options:
+  -in string
+    	carrier JPEG or PNG file (required)
+  -key string
+    	secret key (required, minimum 8 bytes)
+  -raw
+    	write only the authenticated payload bytes to stdout
+--- PASS: TestSubcommandHelpReturnsFlagErrHelp (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-scanner (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/analyze (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/extract (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-projective (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract-phone (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/capacity (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/diagnose (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-embed (0.00s)
+    --- PASS: TestSubcommandHelpReturnsFlagErrHelp/v4-extract (0.00s)
+=== RUN   TestV4ExtractPhoneRequiresCanonicalBlockDimensions
+--- PASS: TestV4ExtractPhoneRequiresCanonicalBlockDimensions (0.00s)
+PASS
+ok  	github.com/pj/pixseal/cmd/pixseal	0.007s
+
+[PASS] v4-build43-phone-side-pair-test — 23s
+
+========================================================================
+[53/62] Format-v4 Build30 pilot lock known-mapping corpus audit (v4-pilot-lock-corpus-test)
+------------------------------------------------------------------------
+Running Build30 Format-v4 pilot candidate-lock corpus audit...
+=== RUN   TestExperimentalV4PilotCandidateLockCorpus
+    experimental_v4_pilot_lock_corpus_test.go:25: SKIP active corpus HQ (Immagine HQ.png): 200.5 MP exceeds Go-test budget 50 MP
+=== RUN   TestExperimentalV4PilotCandidateLockCorpus/Immagine_LQ.png
+=== RUN   TestExperimentalV4PilotCandidateLockCorpus/Immagine_LQ.png/projective-crop
+    experimental_v4_pilot_lock_corpus_test.go:53: known-mapping marked score=0.930273 margin=0.512844 origin=(0,0); negative score=0.252116 margin=0.016122 origin=(15,27)
+=== RUN   TestExperimentalV4PilotCandidateLockCorpus/Immagine_LQ.png/affine-padded
+    experimental_v4_pilot_lock_corpus_test.go:53: known-mapping marked score=0.944963 margin=0.528306 origin=(0,0); negative score=0.234126 margin=0.003308 origin=(15,27)
+=== RUN   TestExperimentalV4PilotCandidateLockCorpus/Immagine_MQ.png
+=== RUN   TestExperimentalV4PilotCandidateLockCorpus/Immagine_MQ.png/projective-crop
+    experimental_v4_pilot_lock_corpus_test.go:53: known-mapping marked score=0.976346 margin=0.561625 origin=(0,0); negative score=0.156942 margin=0.029217 origin=(35,2)
+=== RUN   TestExperimentalV4PilotCandidateLockCorpus/Immagine_MQ.png/affine-padded
+    experimental_v4_pilot_lock_corpus_test.go:53: known-mapping marked score=0.977844 margin=0.566316 origin=(0,0); negative score=0.153139 margin=0.026911 origin=(35,2)
+--- PASS: TestExperimentalV4PilotCandidateLockCorpus (4.68s)
+    --- PASS: TestExperimentalV4PilotCandidateLockCorpus/Immagine_LQ.png (0.87s)
+        --- PASS: TestExperimentalV4PilotCandidateLockCorpus/Immagine_LQ.png/projective-crop (0.40s)
+        --- PASS: TestExperimentalV4PilotCandidateLockCorpus/Immagine_LQ.png/affine-padded (0.44s)
+    --- PASS: TestExperimentalV4PilotCandidateLockCorpus/Immagine_MQ.png (3.82s)
+        --- PASS: TestExperimentalV4PilotCandidateLockCorpus/Immagine_MQ.png/projective-crop (1.79s)
+        --- PASS: TestExperimentalV4PilotCandidateLockCorpus/Immagine_MQ.png/affine-padded (1.89s)
+PASS
+ok  	github.com/pj/pixseal/watermark	4.699s
+
+[PASS] v4-pilot-lock-corpus-test — 6s
+
+========================================================================
+[54/62] Format-v4 Build31 experimental frame/encoder (v4-frame-test)
+------------------------------------------------------------------------
+Running Build31 experimental Format-v4 framing/encoder qualification...
+=== RUN   TestExperimentalV4FrameRoundTripProfiles
+=== RUN   TestExperimentalV4FrameRoundTripProfiles/robust
+=== RUN   TestExperimentalV4FrameRoundTripProfiles/balanced
+=== RUN   TestExperimentalV4FrameRoundTripProfiles/capacity
+--- PASS: TestExperimentalV4FrameRoundTripProfiles (0.35s)
+    --- PASS: TestExperimentalV4FrameRoundTripProfiles/robust (0.11s)
+    --- PASS: TestExperimentalV4FrameRoundTripProfiles/balanced (0.10s)
+    --- PASS: TestExperimentalV4FrameRoundTripProfiles/capacity (0.11s)
+=== RUN   TestExperimentalV4AlignedCropRoundTrip
+--- PASS: TestExperimentalV4AlignedCropRoundTrip (0.29s)
+=== RUN   TestExperimentalV4WrongKeyAndCrossVersionIsolation
+--- PASS: TestExperimentalV4WrongKeyAndCrossVersionIsolation (1.51s)
+=== RUN   TestExperimentalV4HammingBaselineCorrectsSingleBitPerCodeword
+--- PASS: TestExperimentalV4HammingBaselineCorrectsSingleBitPerCodeword (0.00s)
+=== RUN   TestExperimentalV4FrameDeterministicVector
+--- PASS: TestExperimentalV4FrameDeterministicVector (0.00s)
+=== RUN   TestExperimentalV4CapacityGeometry
+--- PASS: TestExperimentalV4CapacityGeometry (0.02s)
+=== RUN   TestExperimentalV4LockedDataPartition
+--- PASS: TestExperimentalV4LockedDataPartition (0.00s)
+=== RUN   TestExperimentalV4AlignedJPEGChannel
+    experimental_v4_frame_test.go:182: jpeg-q82 pilot score=1.000000 margin=0.617675 data-confidence=94.856885
+--- PASS: TestExperimentalV4AlignedJPEGChannel (0.16s)
+=== RUN   TestExperimentalV4MinimumTileRoundTrip
+    experimental_v4_frame_test.go:200: minimum tile pilot score=1.000000 margin=0.562120 data-confidence=96.356237
+--- PASS: TestExperimentalV4MinimumTileRoundTrip (0.04s)
+=== RUN   TestExperimentalV4DataMappingProfileCoverage
+--- PASS: TestExperimentalV4DataMappingProfileCoverage (0.00s)
+=== RUN   TestExperimentalV4HeaderBytes
+--- PASS: TestExperimentalV4HeaderBytes (0.00s)
+PASS
+ok  	github.com/pj/pixseal/watermark	2.367s
+=== RUN   TestExperimentalV4CLIRoundTrip
+EXPERIMENTAL Format-v4 aligned decode
+data-confidence: 92.67
+profile: robust
+pilot-score: 1.000000
+pilot-margin: 0.596062
+pilot-origin: (0,0) blocks
+pilot: prototype-2-search-p64 sha256=858f74305ee9a9cbb59dd3fb6ab8afc6aaf8958e4f9f517711e2c52fc053b174
+--- PASS: TestExperimentalV4CLIRoundTrip (0.17s)
+PASS
+ok  	github.com/pj/pixseal/cmd/pixseal	0.173s
+
+[PASS] v4-frame-test — 3s
+
+========================================================================
+[55/62] Format-v4 Build31 frame local corpus (v4-frame-corpus-test)
+------------------------------------------------------------------------
+Running Build31 experimental Format-v4 frame corpus qualification...
+=== RUN   TestExperimentalV4FrameCorpus
+    experimental_v4_frame_corpus_test.go:17: SKIP active corpus HQ (Immagine HQ.png): 200.5 MP exceeds Go-test budget 50 MP
+=== RUN   TestExperimentalV4FrameCorpus/Immagine_LQ.png
+    experimental_v4_frame_corpus_test.go:57: robust native pilot=1.000000 margin=0.585333 data-confidence=93.009596 coded=448
+    experimental_v4_frame_corpus_test.go:68: jpeg-q82 pilot=1.000000 margin=0.593373 data-confidence=97.411228
+    experimental_v4_frame_corpus_test.go:82: aligned-crop pilot=1.000000 margin=0.569293 data-confidence=92.009957
+    experimental_v4_frame_corpus_test.go:57: balanced native pilot=1.000000 margin=0.592710 data-confidence=92.580757 coded=672
+    experimental_v4_frame_corpus_test.go:57: capacity native pilot=1.000000 margin=0.543922 data-confidence=93.328718 coded=1120
+=== RUN   TestExperimentalV4FrameCorpus/Immagine_MQ.png
+    experimental_v4_frame_corpus_test.go:57: robust native pilot=1.000000 margin=0.600781 data-confidence=95.403514 coded=448
+    experimental_v4_frame_corpus_test.go:68: jpeg-q82 pilot=1.000000 margin=0.596197 data-confidence=98.659235
+    experimental_v4_frame_corpus_test.go:82: aligned-crop pilot=1.000000 margin=0.596499 data-confidence=95.475589
+    experimental_v4_frame_corpus_test.go:57: balanced native pilot=1.000000 margin=0.606628 data-confidence=95.398626 coded=672
+    experimental_v4_frame_corpus_test.go:57: capacity native pilot=1.000000 margin=0.542310 data-confidence=95.389562 coded=1120
+--- PASS: TestExperimentalV4FrameCorpus (4.26s)
+    --- PASS: TestExperimentalV4FrameCorpus/Immagine_LQ.png (0.81s)
+    --- PASS: TestExperimentalV4FrameCorpus/Immagine_MQ.png (3.45s)
+PASS
+ok  	github.com/pj/pixseal/watermark	4.275s
+
+[PASS] v4-frame-corpus-test — 5s
+
+========================================================================
+[56/62] v0.3 bounded smooth phase field (smooth-phase-test)
+------------------------------------------------------------------------
+Running v0.3 bounded smooth phase-field regressions...
+ok  	github.com/pj/pixseal/watermark	0.302s
+
+[PASS] smooth-phase-test — 1s
+
+========================================================================
+[57/62] rotation/combined geometry (geometry-test)
+------------------------------------------------------------------------
+Qualified Go toolchain: go1.25.1
+Building PixSeal with go1.25.1...
+Created dist/pixseal
+Running digital rotation and combined geometry tests...
+
+Image: Immagine LQ.png
+  Profile: robust (14 bytes)
+    FAIL  rotate--45deg                  message not recovered
+    FAIL  rotate--30deg                  message not recovered
+    FAIL  rotate--15deg                  message not recovered
+    FAIL  rotate--10deg                  message not recovered
+    FAIL  rotate--5deg                   message not recovered
+    PASS  rotate--1deg                   message recovered (0.95 degrees)
+    PASS  rotate-1deg                    message recovered (-1.00 degrees)
+    FAIL  rotate-5deg                    message not recovered
+    FAIL  rotate-10deg                   message not recovered
+    FAIL  rotate-15deg                   message not recovered
+    FAIL  rotate-30deg                   message not recovered
+    FAIL  rotate-45deg                   message not recovered
+    PASS  rotate-90deg                   message recovered (90.00 degrees)
+    PASS  rotate-180deg                  message recovered (-180.00 degrees)
+    PASS  rotate-270deg                  message recovered (-90.00 degrees)
+    FAIL  rotate-resize75-12.3deg        message not recovered
+    FAIL  resize75-rotate-12.3deg        message not recovered
+    FAIL  rotate-crop80-12.3deg          message not recovered
+    PASS  crop80-rotate-12.3deg          message recovered (-12.25 degrees)
+    FAIL  rotate-resize75-crop80-12.3deg message not recovered
+  Profile: balanced (29 bytes)
+    FAIL  rotate--45deg                  message not recovered
+    FAIL  rotate--30deg                  message not recovered
+    FAIL  rotate--15deg                  message not recovered
+    PASS  rotate--10deg                  message recovered (10.05 degrees)
+    FAIL  rotate--5deg                   message not recovered
+    PASS  rotate--1deg                   message recovered (1.00 degrees)
+    PASS  rotate-1deg                    message recovered (-1.00 degrees)
+    PASS  rotate-5deg                    message recovered (-5.00 degrees)
+    PASS  rotate-10deg                   message recovered (-10.00 degrees)
+    PASS  rotate-15deg                   message recovered (-15.00 degrees)
+    FAIL  rotate-30deg                   message not recovered
+    FAIL  rotate-45deg                   message not recovered
+    PASS  rotate-90deg                   message recovered (90.00 degrees)
+    PASS  rotate-180deg                  message recovered (-180.00 degrees)
+    PASS  rotate-270deg                  message recovered (-90.00 degrees)
+    FAIL  rotate-resize75-12.3deg        message not recovered
+    FAIL  resize75-rotate-12.3deg        message not recovered
+    FAIL  rotate-crop80-12.3deg          message not recovered
+    PASS  crop80-rotate-12.3deg          message recovered (-12.25 degrees)
+    FAIL  rotate-resize75-crop80-12.3deg message not recovered
+  Profile: capacity (61 bytes)
+    FAIL  rotate--45deg                  message not recovered
+    FAIL  rotate--30deg                  message not recovered
+    FAIL  rotate--15deg                  message not recovered
+    PASS  rotate--10deg                  message recovered (10.05 degrees)
+    PASS  rotate--5deg                   message recovered (5.00 degrees)
+    PASS  rotate--1deg                   message recovered (1.00 degrees)
+    PASS  rotate-1deg                    message recovered (-1.00 degrees)
+    FAIL  rotate-5deg                    message not recovered
+    PASS  rotate-10deg                   message recovered (-9.95 degrees)
+    PASS  rotate-15deg                   message recovered (-15.00 degrees)
+    FAIL  rotate-30deg                   message not recovered
+    FAIL  rotate-45deg                   message not recovered
+    PASS  rotate-90deg                   message recovered (90.00 degrees)
+    PASS  rotate-180deg                  message recovered (-180.00 degrees)
+    PASS  rotate-270deg                  message recovered (-90.00 degrees)
+    FAIL  rotate-resize75-12.3deg        message not recovered
+    FAIL  resize75-rotate-12.3deg        message not recovered
+    FAIL  rotate-crop80-12.3deg          message not recovered
+    PASS  crop80-rotate-12.3deg          message recovered (-12.25 degrees)
+    FAIL  rotate-resize75-crop80-12.3deg message not recovered
+
+Image: Immagine MQ.png
+  Profile: robust (14 bytes)
+    PASS  rotate--45deg                  message recovered (-135.00 degrees)
+    PASS  rotate--30deg                  message recovered (30.00 degrees)
+    PASS  rotate--15deg                  message recovered (15.00 degrees)
+    PASS  rotate--10deg                  message recovered (10.00 degrees)
+    PASS  rotate--5deg                   message recovered (5.00 degrees)
+    PASS  rotate--1deg                   message recovered (1.00 degrees)
+    PASS  rotate-1deg                    message recovered (-1.00 degrees)
+    PASS  rotate-5deg                    message recovered (-5.00 degrees)
+    PASS  rotate-10deg                   message recovered (-10.00 degrees)
+    PASS  rotate-15deg                   message recovered (-15.00 degrees)
+    PASS  rotate-30deg                   message recovered (-30.00 degrees)
+    PASS  rotate-45deg                   message recovered (135.00 degrees)
+    PASS  rotate-90deg                   message recovered (90.00 degrees)
+    PASS  rotate-180deg                  message recovered (-180.00 degrees)
+    PASS  rotate-270deg                  message recovered (-90.00 degrees)
+    PASS  rotate-resize75-12.3deg        message recovered (-12.30 degrees)
+    FAIL  resize75-rotate-12.3deg        message not recovered
+    FAIL  rotate-crop80-12.3deg          message not recovered
+    PASS  crop80-rotate-12.3deg          message recovered (-12.30 degrees)
+    FAIL  rotate-resize75-crop80-12.3deg message not recovered
+  Profile: balanced (29 bytes)
+    PASS  rotate--45deg                  message recovered (45.00 degrees)
+    PASS  rotate--30deg                  message recovered (30.00 degrees)
+    PASS  rotate--15deg                  message recovered (15.00 degrees)
+    PASS  rotate--10deg                  message recovered (10.00 degrees)
+    PASS  rotate--5deg                   message recovered (5.00 degrees)
+    PASS  rotate--1deg                   message recovered (1.00 degrees)
+    PASS  rotate-1deg                    message recovered (-1.00 degrees)
+    PASS  rotate-5deg                    message recovered (-5.00 degrees)
+    PASS  rotate-10deg                   message recovered (-10.00 degrees)
+    PASS  rotate-15deg                   message recovered (-15.00 degrees)
+    PASS  rotate-30deg                   message recovered (-30.00 degrees)
+    PASS  rotate-45deg                   message recovered (135.00 degrees)
+    PASS  rotate-90deg                   message recovered (90.00 degrees)
+    PASS  rotate-180deg                  message recovered (-180.00 degrees)
+    PASS  rotate-270deg                  message recovered (-90.00 degrees)
+    PASS  rotate-resize75-12.3deg        message recovered (-12.30 degrees)
+    PASS  resize75-rotate-12.3deg        message recovered (-12.30 degrees)
+    FAIL  rotate-crop80-12.3deg          message not recovered
+    PASS  crop80-rotate-12.3deg          message recovered (-12.30 degrees)
+    FAIL  rotate-resize75-crop80-12.3deg message not recovered
+  Profile: capacity (61 bytes)
+    PASS  rotate--45deg                  message recovered (-135.00 degrees)
+    PASS  rotate--30deg                  message recovered (30.00 degrees)
+    PASS  rotate--15deg                  message recovered (15.00 degrees)
+    PASS  rotate--10deg                  message recovered (10.00 degrees)
+    PASS  rotate--5deg                   message recovered (5.00 degrees)
+    PASS  rotate--1deg                   message recovered (1.00 degrees)
+    PASS  rotate-1deg                    message recovered (-1.00 degrees)
+    PASS  rotate-5deg                    message recovered (-5.00 degrees)
+    PASS  rotate-10deg                   message recovered (-10.00 degrees)
+    PASS  rotate-15deg                   message recovered (-15.00 degrees)
+    PASS  rotate-30deg                   message recovered (-30.00 degrees)
+    PASS  rotate-45deg                   message recovered (135.00 degrees)
+    PASS  rotate-90deg                   message recovered (90.00 degrees)
+    PASS  rotate-180deg                  message recovered (-180.00 degrees)
+    PASS  rotate-270deg                  message recovered (-90.00 degrees)
+    PASS  rotate-resize75-12.3deg        message recovered (-12.30 degrees)
+    FAIL  resize75-rotate-12.3deg        message not recovered
+    PASS  rotate-crop80-12.3deg          message recovered (-12.30 degrees)
+    PASS  crop80-rotate-12.3deg          message recovered (-12.30 degrees)
+    FAIL  rotate-resize75-crop80-12.3deg message not recovered
+Image: Immagine HQ.png
+  SKIP  all geometry     201 MP exceeds limit of 50 MP (60 cases)
+
+Geometry summary: 79 passed, 41 failed, 0 timeouts, 60 skipped, 0 errors, 180 total
+make[1]: *** [Makefile:671: geometry-test] Error 1
+
+[FAIL(2)] geometry-test — 2834s
+
+========================================================================
+[58/62] axis-aligned affine (affine-test)
+------------------------------------------------------------------------
+Qualified Go toolchain: go1.25.1
+Building PixSeal with go1.25.1...
+Created dist/pixseal
+Running axis-aligned affine tests...
+
+Image: Immagine LQ.png
+  Profile: robust (14 bytes)
+    PASS  scale110x90          message recovered (scale-correction: x=0.9091 y=1.1111)
+    PASS  scale90x110          message recovered (scale-correction: x=1.1111 y=0.9091)
+    PASS  shearx8              message recovered (shear-x-correction: 8.00 degrees)
+    FAIL  sheary8              message not recovered
+  Profile: balanced (29 bytes)
+    PASS  scale110x90          message recovered (scale-correction: x=0.9091 y=1.1111)
+    PASS  scale90x110          message recovered (scale-correction: x=1.1111 y=0.9091)
+    PASS  shearx8              message recovered (shear-x-correction: 8.00 degrees)
+    FAIL  sheary8              message not recovered
+  Profile: capacity (61 bytes)
+    PASS  scale110x90          message recovered (scale-correction: x=0.9091 y=1.1111)
+    PASS  scale90x110          message recovered (scale-correction: x=1.1111 y=0.9091)
+    PASS  shearx8              message recovered (shear-x-correction: 8.00 degrees)
+    PASS  sheary8              message recovered (shear-y-correction: -8.00 degrees)
+
+Image: Immagine MQ.png
+  Profile: robust (14 bytes)
+    PASS  scale110x90          message recovered (scale-correction: x=0.9091 y=1.1111)
+    PASS  scale90x110          message recovered (scale-correction: x=1.1111 y=0.9091)
+    PASS  shearx8              message recovered (shear-x-correction: 8.00 degrees)
+    PASS  sheary8              message recovered (shear-y-correction: -8.00 degrees)
+  Profile: balanced (29 bytes)
+    PASS  scale110x90          message recovered (scale-correction: x=0.9091 y=1.1111)
+    PASS  scale90x110          message recovered (scale-correction: x=1.1111 y=0.9091)
+    PASS  shearx8              message recovered (shear-x-correction: 8.00 degrees)
+    PASS  sheary8              message recovered (shear-y-correction: -8.00 degrees)
+  Profile: capacity (61 bytes)
+    PASS  scale110x90          message recovered (scale-correction: x=0.9091 y=1.1111)
+    PASS  scale90x110          message recovered (scale-correction: x=1.1111 y=0.9091)
+    PASS  shearx8              message recovered (shear-x-correction: 8.00 degrees)
+    PASS  sheary8              message recovered (shear-y-correction: -8.00 degrees)
+Image: Immagine HQ.png
+  SKIP  all affine       201 MP exceeds limit of 50 MP (12 cases)
+
+Affine summary: 22 passed, 2 failed, 0 timeouts, 12 skipped, 0 errors, 36 total
+make[1]: *** [Makefile:690: affine-test] Error 1
+
+[FAIL(2)] affine-test — 391s
+
+========================================================================
+[59/62] build-7 composition regression (composition-test)
+------------------------------------------------------------------------
+Qualified Go toolchain: go1.25.1
+Building PixSeal with go1.25.1...
+Created dist/pixseal
+Running composed anisotropic-scale + rotation tests...
+
+Image: Immagine LQ.png
+  Profile: robust (14 bytes)
+    FAIL  scale110x90-rotate@12.3  message not recovered
+
+Image: Immagine MQ.png
+  Profile: robust (14 bytes)
+    PASS  scale110x90-rotate@12.3  message recovered (rotation-correction: -12.25 degrees;scale-correction: x=0.9091 y=1.1111)
+Image: Immagine HQ.png
+  SKIP  composed geometry 201 MP exceeds limit of 50 MP (1 cases)
+
+Composition summary: 1 passed, 1 failed, 0 timeouts, 1 skipped, 0 errors, 3 total
+make[1]: *** [Makefile:707: composition-test] Error 1
+
+[FAIL(2)] composition-test — 41s
+
+========================================================================
+[60/62] direct lattice bank (lattice-test)
+------------------------------------------------------------------------
+Qualified Go toolchain: go1.25.1
+Building PixSeal with go1.25.1...
+Created dist/pixseal
+Running direct lattice-basis composition tests...
+
+Image: Immagine LQ.png
+  Profile: robust (14 bytes)
+    FAIL  scale110x90-rotate@12.3  message not recovered
+    FAIL  scale90x110-rotate@12.3  message not recovered
+    PASS  scale105x95-rotate@12.3  message recovered (rotation-correction: -12.25 degrees;scale-correction: x=0.9524 y=1.0526)
+    FAIL  scale95x105-rotate@12.3  message not recovered
+
+Image: Immagine MQ.png
+  Profile: robust (14 bytes)
+    PASS  scale110x90-rotate@12.3  message recovered (rotation-correction: -12.25 degrees;scale-correction: x=0.9091 y=1.1111)
+    PASS  scale90x110-rotate@12.3  message recovered (rotation-correction: -12.25 degrees;scale-correction: x=1.1111 y=0.9091)
+    PASS  scale105x95-rotate@12.3  message recovered (rotation-correction: -12.25 degrees;scale-correction: x=0.9524 y=1.0526)
+    PASS  scale95x105-rotate@12.3  message recovered (rotation-correction: -12.25 degrees;scale-correction: x=1.0526 y=0.9524)
+Image: Immagine HQ.png
+  SKIP  lattice geometry 201 MP exceeds limit of 50 MP (4 cases)
+
+Lattice summary: 5 passed, 3 failed, 0 timeouts, 4 skipped, 0 errors, 12 total
+make[1]: *** [Makefile:723: lattice-test] Error 1
+
+[FAIL(2)] lattice-test — 173s
+
+========================================================================
+[61/62] mild projective perspective (perspective-test)
+------------------------------------------------------------------------
+Qualified Go toolchain: go1.25.1
+Building PixSeal with go1.25.1...
+Created dist/pixseal
+Running mild perspective tests...
+
+Image: Immagine LQ.png
+  Profile: robust (14 bytes)
+    PASS  top-narrow-4       message recovered (perspective-correction: top-narrow-4)
+    PASS  bottom-narrow-4    message recovered (perspective-correction: bottom-narrow-4)
+
+Image: Immagine MQ.png
+  Profile: robust (14 bytes)
+    PASS  top-narrow-4       message recovered (perspective-correction: top-narrow-4)
+    PASS  bottom-narrow-4    message recovered (perspective-correction: bottom-narrow-4)
+Image: Immagine HQ.png
+  SKIP  mild perspective 201 MP exceeds limit of 50 MP (2 cases)
+
+Perspective summary: 4 passed, 0 failed, 0 timeouts, 2 skipped, 0 errors, 6 total
+
+[PASS] perspective-test — 34s
+
+========================================================================
+[62/62] desktop/mobile core portability (core-target-check)
+------------------------------------------------------------------------
+Checking reusable core on desktop/mobile targets...
+Core target checks passed: linux/amd64, windows/amd64, android/arm64, ios/arm64
+
+[PASS] core-target-check — 4s
+
+========================================================================
+ALL-TEST SUMMARY
+========================================================================
+Target                 Result          Seconds
+---------------------- ------------ ----------
+toolchain-check        PASS                  0
+version-check          PASS                  0
+vet                    PASS                  2
+release-unit           PASS                 13
+v3-freeze-check        PASS                  0
+v4-pilot-lock-check    PASS                  1
+corpus-manifest-check  PASS                  1
+test-images            PASS                  7
+deep-test              PASS                 74
+extreme-test           PASS                605
+research-unit          PASS                147
+lattice-estimator-test PASS                 30
+homography-test        PASS                  4
+photometric-test       PASS                  0
+bit-channel-test       PASS                  1
+reliability-test       PASS                  0
+spatial-channel-test   PASS                  0
+phase-surface-test     PASS                  1
+blind-phase-test       PASS                  1
+lattice-phase-test     PASS                  1
+global-unwrap-test     PASS                  3
+crossfit-unwrap-test   PASS                  0
+stability-unwrap-test  PASS                  2
+cycle-anchor-test      PASS                  0
+observability-audit-test PASS                  1
+physical-topology-test PASS                  1
+v4-design-study-test   PASS                  0
+v4-foundation-test     PASS                  1
+v4-pilot-search-test   PASS                 25
+v4-pilot-channel-test  PASS                  1
+v4-pilot-corpus-test   PASS                  5
+v4-pilot-geometry-test PASS                  6
+v4-pilot-geometry-corpus-test PASS                 26
+v4-pilot-blind-geometry-test PASS                 86
+v4-pilot-blind-geometry-corpus-test PASS                 26
+v4-pilot-placement-test PASS                 20
+v4-pilot-placement-corpus-test PASS                 24
+v4-pilot-joint-affine-test PASS                 89
+v4-pilot-joint-affine-corpus-test PASS                 53
+v4-pilot-joint-projective-test PASS                 61
+v4-pilot-joint-projective-corpus-test PASS                125
+v4-pilot-joint-projective-rank-diagnostic PASS                 36
+v4-build34-projective-frame-corpus-test PASS                 35
+v4-build35-projective-api-test PASS                 37
+v4-build36-soft-channel-test PASS                  0
+v4-build37-scanner-registration-test PASS                 26
+v4-build38-phone-channel-test PASS                  2
+v4-build39-phone-registration-test PASS                 15
+v4-build40-phone-residual-test PASS                  3
+v4-build41-phone-basin-test PASS                 32
+v4-build42-phone-data-test PASS                 32
+v4-build43-phone-side-pair-test PASS                 23
+v4-pilot-lock-corpus-test PASS                  6
+v4-frame-test          PASS                  3
+v4-frame-corpus-test   PASS                  5
+smooth-phase-test      PASS                  1
+geometry-test          FAIL(2)            2834
+affine-test            FAIL(2)             391
+composition-test       FAIL(2)              41
+lattice-test           FAIL(2)             173
+perspective-test       PASS                 34
+core-target-check      PASS                  4
+
+Total elapsed: 5178s
+Release baseline: PASS
+Qualification corpus: PASS
+Research suites: ATTENTION (4 experimental targets failed)
+Overall: FAIL (4 targets failed)

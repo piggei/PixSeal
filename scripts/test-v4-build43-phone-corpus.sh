@@ -41,7 +41,7 @@ done
 mkdir -p "$OUTPUT_DIR/logs"
 tsv="$OUTPUT_DIR/build43-phone-matrix.tsv"
 md="$OUTPUT_DIR/build43-phone-matrix.md"
-printf 'image\tclass\trole\tgeometry\tdata_decode\tbuild43_attempted\tbuild43_bank\tbuild43_ensembles\tbuild43_list_frames\tbuild43_authenticated\thmac\tpayload_match\tqualification\texit_code\n' > "$tsv"
+printf 'image\tclass\trole\tgeometry\tdata_decode\tbuild43_attempted\tbuild43_frozen\tbuild43_qualified\tbuild43_authenticated\thmac\tpayload_match\tqualification\texit_code\n' > "$tsv"
 
 extract_re() {
     local pattern="$1" file="$2" default_value="${3:-}"
@@ -109,19 +109,19 @@ for spec in "${specs[@]}"; do
         esac
     fi
 
-    printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
-        "$file" "$class" "$role" "$geometry" "$data_decode" "$b43_attempted" "$b43_frozen" "$b43_qualified" "0" "$b43_auth" "$hmac" "$payload_match" "$qualification" "$rc" >> "$tsv"
+    printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+        "$file" "$class" "$role" "$geometry" "$data_decode" "$b43_attempted" "$b43_frozen" "$b43_qualified" "$b43_auth" "$hmac" "$payload_match" "$qualification" "$rc" >> "$tsv"
 done
 
 {
     echo '# PixSeal Build43 smartphone qualification matrix'
     echo
-    echo 'Build43 keeps Build41 geometry unchanged and adds a post-geometry qualified-bank/list-decoder fallback.'
+    echo 'Build43 preserves the Build41/42 path and adds a proposal-only side-pair geometry fallback after Build41 geometry rejection.'
     echo
-    echo '| image | role | geometry | data | Build43 | bank | ensembles | list frames | HMAC | payload | qualification |'
+    echo '| image | role | geometry | data | Build43 attempted | frozen | qualified | Build43 auth | HMAC | payload | qualification |'
     echo '|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|'
-    tail -n +2 "$tsv" | while IFS=$'\t' read -r image class role geometry data_decode b43_attempted b43_frozen b43_qualified _ b43_auth hmac payload_match qualification rc; do
-        echo "| $image | $role | $geometry | $data_decode | $b43_attempted/$b43_auth | $b43_frozen | $b43_qualified | - | $hmac | $payload_match | $qualification |"
+    tail -n +2 "$tsv" | while IFS=$'\t' read -r image class role geometry data_decode b43_attempted b43_frozen b43_qualified b43_auth hmac payload_match qualification rc; do
+        echo "| $image | $role | $geometry | $data_decode | $b43_attempted | $b43_frozen | $b43_qualified | $b43_auth | $hmac | $payload_match | $qualification |"
     done
     echo
     echo 'Required gate: controls reject; A/front authenticates through Build43 geometry fallback; A/mild, A/angle and B/front remain authenticated; B/mild/B-angle are informational.'
@@ -129,11 +129,11 @@ done
 
 rm -f "$OUTPUT_DIR/logs/"*.payload.bin
 
-control_passes="$(awk -F '\t' 'NR>1 && $3=="control" && $13=="PASS" {n++} END{print n+0}' "$tsv")"
-a_front_pass="$(awk -F '\t' 'NR>1 && $1=="phone-a-front.jpg" && $13=="PASS" {n++} END{print n+0}' "$tsv")"
-a_mild_pass="$(awk -F '\t' 'NR>1 && $1=="phone-a-mild.jpg" && $13=="PASS" {n++} END{print n+0}' "$tsv")"
-a_angle_pass="$(awk -F '\t' 'NR>1 && $1=="phone-a-angle.jpg" && $13=="PASS" {n++} END{print n+0}' "$tsv")"
-b_front_pass="$(awk -F '\t' 'NR>1 && $1=="phone-b-front.jpg" && $13=="PASS" {n++} END{print n+0}' "$tsv")"
+control_passes="$(awk -F '\t' 'NR>1 && $3=="control" && $12=="PASS" {n++} END{print n+0}' "$tsv")"
+a_front_pass="$(awk -F '\t' 'NR>1 && $1=="phone-a-front.jpg" && $12=="PASS" {n++} END{print n+0}' "$tsv")"
+a_mild_pass="$(awk -F '\t' 'NR>1 && $1=="phone-a-mild.jpg" && $12=="PASS" {n++} END{print n+0}' "$tsv")"
+a_angle_pass="$(awk -F '\t' 'NR>1 && $1=="phone-a-angle.jpg" && $12=="PASS" {n++} END{print n+0}' "$tsv")"
+b_front_pass="$(awk -F '\t' 'NR>1 && $1=="phone-b-front.jpg" && $12=="PASS" {n++} END{print n+0}' "$tsv")"
 
 echo "Build43 staged result: controls=${control_passes}/3 A/front=${a_front_pass}/1 A/mild=${a_mild_pass}/1 A/angle=${a_angle_pass}/1 B/front=${b_front_pass}/1"
 echo "Build43 phone qualification matrix written to:"

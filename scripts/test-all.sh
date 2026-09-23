@@ -8,7 +8,7 @@ if [[ -n "$REPORT" ]]; then
     exec > >(tee "$REPORT") 2>&1
 fi
 
-default_targets="version-check vet release-unit v3-freeze-check v4-pilot-lock-check corpus-manifest-check test-images deep-test extreme-test research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build42-phone-data-test v4-build43-phone-side-pair-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test geometry-test affine-test composition-test lattice-test perspective-test core-target-check"
+default_targets="toolchain-check version-check vet release-unit v3-freeze-check v4-pilot-lock-check corpus-manifest-check test-images deep-test extreme-test research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build42-phone-data-test v4-build43-phone-side-pair-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test geometry-test affine-test composition-test lattice-test perspective-test core-target-check"
 read -r -a targets <<< "${ALL_TEST_TARGETS:-$default_targets}"
 if (( ${#targets[@]} == 0 )); then
     echo "error: ALL_TEST_TARGETS resolved to an empty list" >&2
@@ -17,6 +17,7 @@ fi
 
 label_for() {
     case "$1" in
+        toolchain-check) echo "qualified Go toolchain" ;;
         version-check) echo "version consistency" ;;
         vet) echo "go vet" ;;
         release-unit) echo "release-gate Go tests" ;;
@@ -82,7 +83,7 @@ label_for() {
     esac
 }
 
-release_targets=(version-check vet release-unit v3-freeze-check v4-pilot-lock-check corpus-manifest-check test-images core-target-check)
+release_targets=(toolchain-check version-check vet release-unit v3-freeze-check v4-pilot-lock-check corpus-manifest-check test-images core-target-check)
 qualification_targets=(deep-test extreme-test)
 research_targets=(research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build42-phone-data-test v4-build43-phone-side-pair-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test geometry-test affine-test composition-test lattice-test perspective-test)
 
@@ -104,7 +105,9 @@ printf 'PixSeal all-test\n'
 if [[ -f VERSION ]]; then printf 'Version: %s\n' "$(head -n 1 VERSION)"; fi
 printf 'Started: %s\n' "$started"
 printf 'Host: %s\n' "$(uname -srm 2>/dev/null || echo unknown)"
-printf 'Go: %s\n' "$(go version 2>/dev/null || echo unavailable)"
+printf 'Host Go: %s\n' "$(go version 2>/dev/null || echo unavailable)"
+qualified_toolchain="${PIXSEAL_GO_TOOLCHAIN:-go1.25.1}"
+printf 'Qualified Go: %s\n' "$(GOTOOLCHAIN="$qualified_toolchain" go version 2>/dev/null || echo unavailable)"
 if command -v magick >/dev/null 2>&1; then
     printf 'ImageMagick: %s\n' "$(magick -version 2>/dev/null | head -n 1)"
 elif command -v convert >/dev/null 2>&1; then

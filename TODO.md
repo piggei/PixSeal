@@ -158,6 +158,7 @@ and `CHANGELOG.md`.
 - [ ] Decide explicit EXIF Orientation normalization policy.
 - [ ] Decide ICC/color-management preservation policy.
 - [ ] Consider tiled/lazy pixel access to reduce peak memory on very large images.
+- [ ] Remove the Build43 Go 1.25.1 JPEG-decoder qualification pin by defining a deterministic image-ingest contract and adding cross-toolchain/platform raster fixtures; Go 1.26+ must not be promoted until the canonical physical JPEG corpus produces equivalent qualified behavior.
 
 ## Format v3 closure / maintenance
 
