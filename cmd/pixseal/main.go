@@ -40,6 +40,8 @@ Commands:
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
   v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
+  v4-diagnose-phone-refine EXPERIMENTAL: Build48 proposal-only local projective refinement diagnostic
+  v4-diagnose-phone-ranking EXPERIMENTAL: Build49 proposal-ranking observability diagnostic
   capacity   Show the usable payload capacity of an image
   analyze    Recommend a v3 profile and embedding settings
   diagnose   Experimental bounded local-lattice diagnostics (v0.3 research)
@@ -71,6 +73,8 @@ Experimental v4 options:
   v4-diagnose-phone accepts the same input/key/dimensions and reports Build45 stage diagnostics; -oracle-quad-json is lab-only.
   v4-diagnose-phone-handoff inspects already-qualified Build43 candidates; optional oracle geometry is comparison-only.
   v4-diagnose-phone-frozen expands only the diagnostic frozen bank to 128 candidates; production remains capped at 32.
+  v4-diagnose-phone-refine selects up to two proposal-only seeds per side-pair and locally refines them before held-out qualification.
+  v4-diagnose-phone-ranking measures proposal-only ranking observables across the Build47 extended bank; no key is used.
 
 Capacity options:
   -in FILE           Input JPEG or PNG (required)
@@ -101,6 +105,8 @@ Examples:
   pixseal v4-diagnose-phone -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
   pixseal v4-diagnose-phone-handoff -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
   pixseal v4-diagnose-phone-frozen -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
+  pixseal v4-diagnose-phone-refine -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
+  pixseal v4-diagnose-phone-ranking -in phone.jpg -width 1632 -height 1632 -json
   pixseal capacity -in photo.png -details
   pixseal analyze -in photo.png -message "hidden message"
   pixseal diagnose -in captured.jpg -json
@@ -134,6 +140,10 @@ func main() {
 		err = v4DiagnosePhoneHandoff(os.Args[2:])
 	case "v4-diagnose-phone-frozen":
 		err = v4DiagnosePhoneFrozen(os.Args[2:])
+	case "v4-diagnose-phone-refine":
+		err = v4DiagnosePhoneRefine(os.Args[2:])
+	case "v4-diagnose-phone-ranking":
+		err = v4DiagnosePhoneRanking(os.Args[2:])
 	case "capacity":
 		err = capacity(os.Args[2:])
 	case "analyze":
@@ -1414,6 +1424,100 @@ func v4DiagnosePhoneFrozen(args []string) error {
 			fmt.Printf(" oracle-nearest=%d mean=%.2fpx", s.OracleNearestIndex, s.OracleNearestMeanErrorPx)
 		}
 		fmt.Println()
+	}
+	return nil
+}
+
+type v4Build48RefineOutput struct {
+	Version      string                                     `json:"version"`
+	InputDecoder string                                     `json:"input_decoder"`
+	Refine       watermark.ExperimentalV4PhoneBuild48Report `json:"refine"`
+}
+
+func v4DiagnosePhoneRefine(args []string) error {
+	fs := newFlagSet("v4-diagnose-phone-refine", "EXPERIMENTAL Build48 diagnostic: select up to two seeds per side-pair using proposal-only evidence, locally refine every selected geometry using proposal tiles only, freeze the complete refined bank, then evaluate held-out qualification and diagnostic HMAC. Production remains unchanged.")
+	in := fs.String("in", "", "smartphone JPEG or PNG (required)")
+	key := fs.String("key", "", "secret key used only after geometry freeze/qualification for diagnostic authentication (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	jsonOut := fs.Bool("json", false, "emit machine-readable JSON")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	report, err := watermark.ExperimentalV4PhoneBuild48Diagnose(img, []byte(*key), *width, *height)
+	if err != nil {
+		return err
+	}
+	out := v4Build48RefineOutput{Version: buildinfo.String(), InputDecoder: inputDecoderID(format), Refine: report}
+	if *jsonOut {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(out)
+	}
+	fmt.Printf("Build48 phone local-refinement diagnostic\n")
+	fmt.Printf("input-decoder: %s\n", out.InputDecoder)
+	fmt.Printf("frozen=%d seeds=%d seeds-per-pair=%d refine-evals=%d pre-qualified=%d post-qualified=%d post-authenticated=%d\n", report.FrozenCandidates, report.SeedsSelected, report.SeedsPerPair, report.RefineEvaluations, report.PreQualified, report.PostQualified, report.PostAuthenticated)
+	for i, p := range report.PairRanking {
+		fmt.Printf("pair-rank-%d: %s score=%.6f\n", i+1, p.Pair, p.Score)
+	}
+	for _, c := range report.Candidates {
+		fmt.Printf("candidate-%d: seed=%d pair=%s pair-rank=%d tier=%s cell=%d pre-proposal=%.6f post-proposal=%.6f post-validation=%.6f post-pilot=%.6f post-margin=%.6f post-qualified=%t movement=%.2fpx single-hmac=%t\n", c.Index, c.SeedIndex, c.SourcePair, c.SourcePairRank, c.SourceTier, c.CellRank, c.PreProposal, c.PostProposal, c.PostValidation, c.PostPilotScore, c.PostPilotMargin, c.PostQualified, c.RefineMeanMovementPx, c.SingleHMACAuthenticated)
+	}
+	return nil
+}
+
+type v4Build49RankingOutput struct {
+	Version      string                                     `json:"version"`
+	InputDecoder string                                     `json:"input_decoder"`
+	Ranking      watermark.ExperimentalV4PhoneBuild49Report `json:"ranking"`
+}
+
+func v4DiagnosePhoneRanking(args []string) error {
+	fs := newFlagSet("v4-diagnose-phone-ranking", "EXPERIMENTAL Build49 diagnostic: measure proposal-only ranking observables across the corrected Build47 extended bank, freeze all proposal ranks, then annotate held-out/public-pilot qualification. No secret key, HMAC or oracle evidence participates in this command.")
+	in := fs.String("in", "", "smartphone JPEG or PNG (required)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	jsonOut := fs.Bool("json", false, "emit machine-readable JSON")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -width and -height are required")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	report, err := watermark.ExperimentalV4PhoneBuild49Diagnose(img, *width, *height)
+	if err != nil {
+		return err
+	}
+	out := v4Build49RankingOutput{Version: buildinfo.String(), InputDecoder: inputDecoderID(format), Ranking: report}
+	if *jsonOut {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(out)
+	}
+	fmt.Printf("Build49 phone proposal-ranking diagnostic\ninput-decoder: %s\nfrozen=%d\n", out.InputDecoder, report.FrozenCandidates)
+	for _, c := range report.Candidates {
+		fmt.Printf("candidate-%d pair=%s rank=%d tier=%s cell=%d proposal=%.6f within-pair=%d fold-min=%.6f fold-gap=%.6f tile-mean=%.6f tile-std=%.6f tile-rank=%d qualified=%t\n", c.Index, c.SourcePair, c.SourcePairRank, c.SourceTier, c.CellRank, c.ProposalScore, c.ProposalRankWithinPair, c.FoldMinScore, c.FoldGap, c.ProposalTileMean, c.ProposalTileStdDev, c.TileRankWithinPair, c.Qualified)
 	}
 	return nil
 }

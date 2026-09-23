@@ -1243,3 +1243,22 @@ The Build45 reference oracle remains decisive channel evidence: both B/mild and 
 ## Build46 planned evidence gate
 
 Build46 will classify each difficult B capture from the already-qualified Build43 candidates without changing production behavior. If the singleton authenticates under diagnostic single-candidate decoding, the result is `qualified-ensemble-shortfall`: the next geometry work should seek a second independently qualified basin rather than weaken data/ECC/HMAC. If the singleton does not authenticate, the result is `qualified-candidate-mismatch`: the next geometry work should improve the precision of the surviving blind basin. Post-hoc oracle corner error is recorded only after blind results exist.
+## Build47 corrected frozen-bank host result
+
+The corrected three-tier diagnostic was run on the qualification host. B/mild produces 32 candidates in the exact production tier with one qualified candidate and an oracle-nearest mean corner error of 59.734 px. Adding deeper cells on the same two selected side pairs increases the bank to 64 and qualified count to two but **does not improve** oracle-nearest error. Extending to all six side pairs reaches 128 candidates / 12 qualified and exposes a closer 34.049 px candidate from `top+left`, side-pair rank 3, cell rank 0. That oracle-nearest candidate is not held-out qualified.
+
+B/angle produces 28 / 52 / 108 candidates across the three tiers. Its oracle-nearest error changes only from 5499.824 px to 5448.391 px and remains a distant false basin. This does not justify using B/angle to broaden production search.
+
+The Build47 result therefore rejects a simple cell-depth explanation for B/mild and identifies a better basin in a lower-ranked side pair, while simultaneously showing that naive all-pair promotion would multiply held-out-qualified false basins.
+
+## Build48 local-refinement checkpoint
+
+Build48 changes no production decoder decision. From the corrected Build47 extended bank it selects at most two seeds per side-pair rank **only by proposal score**, locally refines all eight corner coordinates using proposal-fold evidence, freezes the complete refined bank, and only then evaluates held-out/full-pilot qualification. Diagnostic HMAC is attempted only after qualification. The reference-assisted oracle is generated after both blind refinement JSON outputs and is used solely to measure before/after corner error.
+
+The primary private gate is B/mild: determine whether the Build47 ~34.049 px lower-ranked-pair basin can be reduced toward a few-pixel geometry without weakening any qualification threshold. B/angle remains informational.
+
+
+
+## Build48 host result -> Build49 ranking question
+
+On the qualification host, Build48 selected 12 seeds for B/mild, with 4 pre-qualified and 7 post-qualified candidates but 0 authenticated. The selected oracle-nearest seed moved from 46.202 px to 44.436 px mean corner error. This is worse than Build47's 34.049 px all-pair oracle-nearest candidate, showing that the top-2-per-pair proposal selector removed the best known geometry before refinement. B/angle remained ~5.45 kpx from the oracle. Build49 therefore freezes geometry and measures proposal-only ranking observability.

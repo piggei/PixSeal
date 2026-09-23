@@ -26,9 +26,9 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build47**.
+Current development snapshot: **v0.3.0-build49**.
 
-Latest qualified milestone: **v0.3.0-build44**. Build47 is research-only and does not change the qualified production decoder.
+Latest qualified milestone: **v0.3.0-build44**. Build49 is research-only and does not change the qualified production decoder.
 
 Stable release baseline: **v0.2.0**.
 
@@ -72,6 +72,12 @@ The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
 
+
+## What v0.3.0-build49 adds
+
+Build49 is a diagnostic-only **proposal-ranking observability** study. The Build48 qualification-host run showed that B/mild local refinement selected 12 seeds, increased held-out-qualified candidates from 4 to 7, but authenticated none; its best selected geometry improved only 46.202 -> 44.436 px. Build47 had already exposed a better 34.049 px all-pair candidate, proving that the top-2-per-pair proposal selector discarded the best known basin before refinement.
+
+Build49 therefore changes no geometry. It freezes the corrected Build47 extended bank and measures proposal fold agreement, per-tile stability, side-pair/cell evidence and within-pair ranks for every candidate. The CLI command accepts no secret key. Only after both blind outputs are frozen does the private lab script compute SIFT/reference error, top-2/4/6/8-per-pair coverage and post-hoc rank/error correlations. See `docs/V4_BUILD49_PROPOSAL_RANKING_OBSERVABILITY.md`.
 
 ## What v0.3.0-build47 adds
 

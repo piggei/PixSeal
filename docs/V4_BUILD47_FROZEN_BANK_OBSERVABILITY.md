@@ -40,3 +40,12 @@ Interpretation:
 The first Build47 checkpoint accepted a `maxFrozen=128` argument but still reused the Build43 traversal shape: two selected side pairs, two cell ranks per pair, and at most eight candidates per basin. That traversal can emit at most 32 candidates, so the first physical 32/64/128 report necessarily repeated the same bank (`32/32/32` for B/mild and `28/28/28` for B/angle). Those results remain valid measurements of the production-tier bank, but they do **not** test proposal breadth beyond Build43.
 
 The corrected Build47 diagnostic keeps that production tier intact and adds the two explicit diagnostic tiers described above. This correction changes laboratory observability only; Build43 production code and all qualified Build44 behavior remain unchanged.
+
+## Qualification-host result
+
+The corrected three-tier study was then run on the Surface/WSL2 qualification host.
+
+- **B/mild:** production tier 32 candidates / 1 qualified / oracle-nearest mean error 59.734 px; selected-pair-depth 64 / 2 qualified with the same 59.734 px nearest error; all-pair-extension 128 / 12 qualified with a closer 34.049 px candidate from `top+left`, side-pair rank 3, cell rank 0. That oracle-nearest candidate is **not** qualified.
+- **B/angle:** 28 / 52 / 108 candidates across the three tiers; oracle-nearest error changes only from 5499.824 px to 5448.391 px and remains a distant false-basin case.
+
+This rejects simple depth pruning on the two production-selected pairs as the B/mild explanation, while also showing that blindly promoting all six pairs would multiply qualified false basins. Build48 therefore studies bounded proposal-only local refinement of independently selected per-pair seeds rather than weaker qualification or larger production banks.

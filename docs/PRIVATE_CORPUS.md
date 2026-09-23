@@ -177,3 +177,12 @@ B/mild/B-angle remain informational. The private image bytes are never packaged.
 ### Build46 diagnostics
 
 Build46 writes only local research output under `v4-phone private/build46-diagnostics/`. The directory may contain blind handoff JSON/TSV/Markdown plus optional reference-assisted quadrilateral files generated after the blind runs. These files are private evidence and must not be included in source archives or releases.
+## Build48 private local-refinement diagnostics
+
+Build48 reuses the same retained Build38 B/mild and B/angle JPEGs and marked-B digital reference. Private output belongs under `v4-phone private/build48-diagnostics/` and must never be packaged. Blind `*-refine.json` files are written first. Only after both exist may the lab helper create oracle quadrilaterals and the pre/post error tables. B/mild is the primary Build48 research case; B/angle remains informational.
+
+
+
+## Build49 private proposal-ranking diagnostics
+
+Build49 reuses private `phone-b-mild.jpg`, `phone-b-angle.jpg` and the marked-B digital reference. Blind ranking JSON files are written first under `v4-phone private/build49-diagnostics/blind/` without any secret key. Only after both exist may the SIFT/reference helper create oracle quadrilaterals and post-hoc rank/error summaries. No Build49 private output is shipped.

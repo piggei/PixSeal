@@ -1,3 +1,48 @@
+## v0.3.0-build49 — 2026-09-23
+
+- Adds research-only proposal-ranking observability across the corrected Build47 extended bank.
+- Records proposal fold agreement, per-tile stability, pair/cell scores and multiple proposal-only ranks without changing geometry.
+- Adds `v4-diagnose-phone-ranking`; the command deliberately accepts no secret key.
+- Adds post-hoc oracle rank, top-2/4/6/8-per-pair coverage and observable/error Spearman summaries in the private lab script.
+- Records the Build48 host result: B/mild selected refinement improved 46.202 -> 44.436 px, 7 candidates qualified, 0 authenticated; the better 34.049 px Build47 basin was not selected.
+- Build44 remains the latest qualified production milestone.
+
+## v0.3.0-build48 — 2026-09-23
+
+- Adds a research-only local projective refinement stage over the corrected Build47 extended side-pair bank; production Build43/42 behavior is unchanged.
+- Selects at most two seeds per side-pair rank using proposal score only. Held-out validation, full-pilot qualification, key/HMAC and oracle geometry cannot influence seed selection or refinement.
+- Refines all selected seeds on proposal folds, freezes the complete refined bank, then reports pre/post held-out validation, pilot score/margin/origin and diagnostic single-candidate HMAC only for post-qualified geometry.
+- Adds private post-hoc oracle reporting for pre/post corner error after both blind B/mild and B/angle refinement JSON files are complete.
+- Records the Build47 host result motivating the experiment: B/mild improves from 59.734 px oracle-nearest mean error in the production/depth tiers to 34.049 px only through side-pair rank 3 (`top+left`), while B/angle remains a distant false-basin case.
+- Adds `v4-diagnose-phone-refine`, `v4-build48-phone-local-refine-test`, private `v4-build48-phone-local-refine-diagnostic`, and `docs/V4_BUILD48_LOCAL_REFINEMENT.md`.
+- Keeps Build44 as the latest qualified milestone and leaves Format-v4, strength 48, pilot, ECC/Hamming, whitening/HMAC, Build42 and all production geometry thresholds frozen.
+
+## v0.3.0-build47 — frozen candidate bank observability
+
+- Added a diagnostic-only Build47 extended proposal bank with three explicit tiers: the exact Build43 production tier, deeper cells on the same selected side pairs, and lower-ranked side-pair extension. Production remains unchanged.
+- Added per-candidate proposal, held-out, pilot, side-pair provenance, qualification and post-hoc oracle-distance telemetry.
+- Kept single-candidate data/HMAC inspection behind unchanged Build43 qualification gates.
+- Added a private Build47 study that completes blind diagnostics before generating SIFT/reference geometry.
+- Build44 remains the latest qualified milestone; Build47 is research-only.
+
+## v0.3.0-build46 — qualified-geometry handoff diagnostic
+
+- Keeps Build44 as the latest qualified production milestone and changes no production phone decision.
+- Records the Build45 qualification-host finding that B/mild and B/angle each retain exactly one Build43 held-out-qualified candidate, below the production two-geometry ensemble quorum.
+- Adds `v4-diagnose-phone-handoff` to inspect already-qualified Build43 candidates, production quorum availability and a diagnostic-only single-candidate Build42 list decode.
+- Adds post-hoc oracle corner-distance comparison that is computed only after blind search/qualification and cannot influence geometry.
+- Adds `make v4-build46-phone-handoff-test` and private `make v4-build46-phone-handoff-diagnostic`.
+- Leaves Format-v4, strength 48, pilot, Build42, ECC/Hamming, whitening/HMAC and all production thresholds unchanged.
+
+## v0.3.0-build45 — phone failure decomposition
+
+- Starts from the fully qualified Build44 deterministic-JPEG / Go 1.26 baseline without changing production watermark or phone-decoder decisions.
+- Adds `v4-diagnose-phone`, a diagnostic-only view of Build41 qualification, the complete Build43 six-side-pair ranking, frozen/qualified geometry counts, Build42 data-list telemetry and final HMAC result.
+- Adds deterministic failure classes: `geometry`, `qualification`, `data-channel`, and `recovered`.
+- Adds an explicitly isolated reference-assisted lab oracle: OpenCV SIFT/RANSAC may supply one acquisition-space quadrilateral, but that geometry can be consumed only by the diagnostic command and can never become a production fallback.
+- Preliminary retained-corpus oracle evidence recovers exact `v4-b38-phone-b` from both B/mild and B/angle at the first Build42 list frame, proving that the difficult B cases remain inside the protected data-channel envelope when geometry is correct.
+- Keeps B/mild as the primary Build45 research target and B/angle informational until the blind failure matrix identifies the bounded geometry change justified by evidence.
+
 ## v0.3.0-build44 — 2026-09-23
 
 - Starts deterministic JPEG ingest without changing Format-v4, the encoder, public pilot, carrier/data mapping, strength 48, Hamming/ECC, whitening/HMAC domains, Build41/43 geometry or the Build42 data/list decoder.
@@ -1202,29 +1247,3 @@ fingerprints for release hardening.
 ## Development builds 1–12
 
 See [`HISTORY.md`](HISTORY.md) for the complete technical progression.
-
-## v0.3.0-build45 — phone failure decomposition
-
-- Starts from the fully qualified Build44 deterministic-JPEG / Go 1.26 baseline without changing production watermark or phone-decoder decisions.
-- Adds `v4-diagnose-phone`, a diagnostic-only view of Build41 qualification, the complete Build43 six-side-pair ranking, frozen/qualified geometry counts, Build42 data-list telemetry and final HMAC result.
-- Adds deterministic failure classes: `geometry`, `qualification`, `data-channel`, and `recovered`.
-- Adds an explicitly isolated reference-assisted lab oracle: OpenCV SIFT/RANSAC may supply one acquisition-space quadrilateral, but that geometry can be consumed only by the diagnostic command and can never become a production fallback.
-- Preliminary retained-corpus oracle evidence recovers exact `v4-b38-phone-b` from both B/mild and B/angle at the first Build42 list frame, proving that the difficult B cases remain inside the protected data-channel envelope when geometry is correct.
-- Keeps B/mild as the primary Build45 research target and B/angle informational until the blind failure matrix identifies the bounded geometry change justified by evidence.
-
-## v0.3.0-build46 — qualified-geometry handoff diagnostic
-
-- Keeps Build44 as the latest qualified production milestone and changes no production phone decision.
-- Records the Build45 qualification-host finding that B/mild and B/angle each retain exactly one Build43 held-out-qualified candidate, below the production two-geometry ensemble quorum.
-- Adds `v4-diagnose-phone-handoff` to inspect already-qualified Build43 candidates, production quorum availability and a diagnostic-only single-candidate Build42 list decode.
-- Adds post-hoc oracle corner-distance comparison that is computed only after blind search/qualification and cannot influence geometry.
-- Adds `make v4-build46-phone-handoff-test` and private `make v4-build46-phone-handoff-diagnostic`.
-- Leaves Format-v4, strength 48, pilot, Build42, ECC/Hamming, whitening/HMAC and all production thresholds unchanged.
-
-## v0.3.0-build47 — frozen candidate bank observability
-
-- Added a diagnostic-only Build47 extended proposal bank with three explicit tiers: the exact Build43 production tier, deeper cells on the same selected side pairs, and lower-ranked side-pair extension. Production remains unchanged.
-- Added per-candidate proposal, held-out, pilot, side-pair provenance, qualification and post-hoc oracle-distance telemetry.
-- Kept single-candidate data/HMAC inspection behind unchanged Build43 qualification gates.
-- Added a private Build47 study that completes blind diagnostics before generating SIFT/reference geometry.
-- Build44 remains the latest qualified milestone; Build47 is research-only.

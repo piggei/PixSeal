@@ -264,14 +264,31 @@ and `CHANGELOG.md`.
 - [x] Add a diagnostic-only single-candidate Build42 list decode after Build43 freeze + held-out qualification.
 - [x] Record the production quorum explicitly: two qualified geometries for direct phone acceptance, three for the Build42 list bank.
 - [x] Add post-hoc oracle corner-distance comparison that cannot influence blind search or ranking.
-- [ ] Run `make v4-build46-phone-handoff-diagnostic` on the qualification host.
-- [ ] If B/mild singleton HMAC passes, design the next bounded experiment to retain/find a second independent qualified basin.
-- [ ] If B/mild singleton HMAC fails, use oracle distance to choose between precision/refinement work and broader basin retention.
+- [x] Run `make v4-build46-phone-handoff-diagnostic` on the qualification host: both B singletons fail HMAC; B/mild is ~62.7 px mean from oracle and B/angle is a distant false basin.
+- [x] Reject lowering quorum: B/mild singleton HMAC fails. Use oracle distance to study proposal breadth/refinement instead.
 - [ ] Keep strength 48, Format-v4 framing, pilot, ECC/Hamming, whitening/HMAC and Build42 data-list rules frozen unless the Build46 evidence contradicts the Build45 oracle.
 
 ### Build47 research
 
-- Run the corrected three-tier frozen-bank study on B/mild (primary) and B/angle (informational): production tier, selected-pair depth, then all-pair extension.
-- Determine whether oracle-nearest geometry improves materially at candidate caps 64 or 128.
-- If yes, study safe proposal pruning/ranking without using held-out or secret evidence.
-- If no, investigate proposal/basin generation while keeping Format-v4, Build42 and Build44 qualification frozen.
+- [x] Run the corrected three-tier frozen-bank study on B/mild (primary) and B/angle (informational).
+- [x] B/mild selected-pair depth does not improve oracle-nearest error (59.734 px); all-pair extension finds 34.049 px from `top+left`, side-pair rank 3, cell rank 0.
+- [x] B/angle remains a distant false-basin case (5499.824 px production -> 5448.391 px all-pair extension) and stays informational.
+- [x] Do not promote six side pairs or the 128-bank directly: qualified candidates grow sharply while the oracle-nearest B/mild candidate still does not qualify.
+
+### Build48 research
+
+- [x] Add proposal-only local projective refinement over at most two independently selected seeds per side-pair rank.
+- [x] Freeze every refined geometry before held-out/public-pilot qualification; keep key/HMAC and oracle unavailable during generation/refinement.
+- [x] Add pre/post refinement source-quadrilateral telemetry and private post-hoc oracle comparison.
+- [ ] Run `make v4-build48-phone-local-refine-diagnostic` on the qualification host.
+- [ ] Primary gate: determine whether B/mild's oracle-nearest error falls materially below the Build47 34.049 px basin and whether the refined candidate qualifies/authenticates.
+- [ ] Keep B/angle informational; do not widen production search based on B/angle alone.
+- [ ] Keep strength 48, Format-v4, pilot, ECC/Hamming, whitening/HMAC, Build42 and Build43 production thresholds frozen until Build48 evidence justifies a bounded change.
+
+
+### Build49 research
+
+- [ ] Run `make v4-build49-phone-proposal-ranking-diagnostic` on the qualification host.
+- [ ] Determine the B/mild oracle-nearest candidate's proposal rank within its side pair and whether top 4/6/8 would retain it.
+- [ ] Compare fold-min/balance, per-tile consistency, pair score and cell score ranks against oracle error only post-hoc.
+- [ ] Keep Build43/42 production, all thresholds/quorums, strength 48, Format-v4, ECC/Hamming and HMAC frozen until prospective evidence supports a bounded change.

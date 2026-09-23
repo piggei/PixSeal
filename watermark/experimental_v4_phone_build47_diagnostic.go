@@ -84,9 +84,11 @@ type ExperimentalV4PhoneBuild47Report struct {
 }
 
 type experimentalV4PhoneBuild47Frozen struct {
-	h        experimentalV4PhoneHypothesis
-	tier     int
-	cellRank int
+	h          experimentalV4PhoneHypothesis
+	tier       int
+	cellRank   int
+	cellMean   float64
+	cellRobust float64
 }
 
 // experimentalV4PhoneBuild47Freeze keeps the exact Build43 production stream
@@ -160,7 +162,7 @@ func experimentalV4PhoneBuild47Freeze(work image.Image, boundary PrintBoundaryEs
 					}
 					h.build43Pair = rp.pair.name
 					h.build43PairRank = pairRank + 1
-					frozen = append(frozen, experimentalV4PhoneBuild47Frozen{h: h, tier: tier, cellRank: cr})
+					frozen = append(frozen, experimentalV4PhoneBuild47Frozen{h: h, tier: tier, cellRank: cr, cellMean: cells[cr].mean, cellRobust: cells[cr].robust})
 				}
 			}
 		}

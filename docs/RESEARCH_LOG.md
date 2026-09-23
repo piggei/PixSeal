@@ -874,3 +874,20 @@ Decision rule:
 - singleton HMAC FAIL + small oracle error -> inspect sub-pixel/phase precision before changing broader geometry search.
 
 Secret-key/HMAC evidence remains diagnostic-only after freeze/qualification and is forbidden from production geometry generation or ranking.
+## Build47 host result -> Build48 local-refinement hypothesis — 2026-09-23
+
+**Build47 observation.** The corrected three-tier study rules out simple depth pruning on the two production-selected side pairs for B/mild. Production and selected-pair-depth tiers both have the same oracle-nearest mean error, 59.734 px. The all-pair extension exposes a substantially closer 34.049 px candidate from `top+left` side-pair rank 3 / cell rank 0, but it is not held-out qualified. Qualified-candidate count rises to 12 in the all-pair bank, so directly promoting six side pairs would increase ambiguity rather than establish a safe production gain. B/angle remains a distant false-basin case and is not a tuning target.
+
+**Build48 hypothesis.** The lower-ranked B/mild basin may be close enough that a bounded local eight-coordinate projective refinement can converge toward the true mapping, provided refinement uses proposal evidence only and no held-out/key/oracle signal is allowed to steer it.
+
+**Method.** Generate the corrected Build47 extended bank. Group seeds by side-pair rank and retain at most two per pair using proposal score only. Refine each selected quadrilateral with the existing bounded Build41 coordinate descent on proposal folds. Freeze all refinements. Only then compute before/after held-out validation, full-pilot score/margin/origin and diagnostic single-candidate HMAC. Generate SIFT/reference geometry only after both blind outputs are complete and use it only for pre/post error measurement.
+
+**Decision rule.** A material drop from ~34 px toward a few pixels, especially with held-out qualification/HMAC, supports a future bounded production refinement experiment. Proposal improvement without oracle improvement indicates a displaced proposal optimum and argues for changing the observable rather than search breadth. No Build48 result may justify strength/ECC/HMAC changes.
+
+
+
+## Build48 host result -> Build49 proposal-ranking hypothesis — 2026-09-23
+
+**Observation.** B/mild: 12 seeds, pre-qualified 4, post-qualified 7, HMAC 0; oracle-nearest selected seed 46.202 -> 44.436 px. Build47 had a 34.049 px candidate that Build48 did not select. B/angle remained a distant false basin.
+
+**Hypothesis.** The immediate B/mild bottleneck is proposal ranking/seed pruning, not local-refinement reach. Build49 measures only public proposal-fold observables across the fixed extended bank. It does not change geometry or use a key. Oracle/error correlation is computed only after blind outputs are fixed.

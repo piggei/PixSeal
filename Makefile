@@ -87,6 +87,8 @@ V4_PHONE_BUILD44_DIAGNOSTIC_DIR ?= v4-phone private/build44-diagnostics
 V4_PHONE_BUILD45_DIAGNOSTIC_DIR ?= v4-phone private/build45-diagnostics
 V4_PHONE_BUILD46_DIAGNOSTIC_DIR ?= v4-phone private/build46-diagnostics
 V4_PHONE_BUILD47_DIAGNOSTIC_DIR ?= v4-phone private/build47-diagnostics
+V4_PHONE_BUILD48_DIAGNOSTIC_DIR ?= v4-phone private/build48-diagnostics
+V4_PHONE_BUILD49_DIAGNOSTIC_DIR ?= v4-phone private/build49-diagnostics
 V4_PHONE_CANONICAL_WIDTH ?= 1632
 V4_PHONE_CANONICAL_HEIGHT ?= 1632
 V4_PHONE_TIMEOUT ?= 600
@@ -95,7 +97,7 @@ ALL_TEST_TARGETS ?=
 ALL_TEST_STRICT ?=1
 GO_SOURCES := $(shell find cmd internal watermark -type f -name '*.go')
 
-.PHONY: toolchain-check test-list corpus-manifest-check private-corpus-manifest v4-physical-fixtures v4-physical-qualification v4-phone-fixtures v4-build40-phone-corpus-diagnostic v4-build41-phone-physical-test v4-build42-phone-physical-test print-scan-test build test test-unit release-unit v3-freeze-check v4-pilot-lock-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build42-phone-data-test v4-build43-phone-side-pair-test v4-build43-phone-physical-test v4-build44-jpeg-compat-test v4-build44-go126-jpeg-compat-test v4-build44-phone-physical-test v4-build44-go126-phone-physical-test v4-build45-phone-diagnostic-test v4-build45-phone-diagnostic v4-build45-phone-oracle-diagnostic v4-build45-phone-study v4-build46-phone-handoff-test v4-build46-phone-handoff-diagnostic v4-build47-phone-frozen-bank-test v4-build47-phone-frozen-bank-diagnostic v4-build37-physical-scanner-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
+.PHONY: toolchain-check test-list corpus-manifest-check private-corpus-manifest v4-physical-fixtures v4-physical-qualification v4-phone-fixtures v4-build40-phone-corpus-diagnostic v4-build41-phone-physical-test v4-build42-phone-physical-test print-scan-test build test test-unit release-unit v3-freeze-check v4-pilot-lock-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build42-phone-data-test v4-build43-phone-side-pair-test v4-build43-phone-physical-test v4-build44-jpeg-compat-test v4-build44-go126-jpeg-compat-test v4-build44-phone-physical-test v4-build44-go126-phone-physical-test v4-build45-phone-diagnostic-test v4-build45-phone-diagnostic v4-build45-phone-oracle-diagnostic v4-build45-phone-study v4-build46-phone-handoff-test v4-build46-phone-handoff-diagnostic v4-build47-phone-frozen-bank-test v4-build47-phone-frozen-bank-diagnostic v4-build48-phone-local-refine-test v4-build48-phone-local-refine-diagnostic v4-build49-phone-proposal-ranking-test v4-build49-phone-proposal-ranking-diagnostic v4-build37-physical-scanner-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
 
 # Print a categorized index of all test/check targets without running them.
 test-list:
@@ -617,6 +619,45 @@ v4-build47-phone-frozen-bank-diagnostic: build
 	V4_PHONE_CANONICAL_HEIGHT="$(V4_PHONE_CANONICAL_HEIGHT)" \
 	V4_PHONE_TIMEOUT="$(V4_PHONE_TIMEOUT)" \
 	bash ./scripts/diagnose-v4-build47-phone-frozen-bank.sh
+
+# Build48 diagnostic-only regression. Seed selection must depend on proposal
+# evidence only; production Build43/42 paths and quorum remain unchanged.
+v4-build48-phone-local-refine-test:
+	@echo "Running Build48 proposal-only local-refinement regressions..."
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build48' -count=1
+	@$(GO) test ./cmd/pixseal -run '^TestSubcommandHelpReturnsFlagErrHelp$$' -count=1
+
+# Build48 private study. Both blind refinements are completed before the script
+# creates SIFT/reference geometry for post-hoc before/after error measurement.
+v4-build48-phone-local-refine-diagnostic: build
+	@PIXSEAL="$(abspath $(PIXSEAL))" \
+	V4_PHONE_ACQUISITION_DIR="$(V4_PHONE_ACQUISITION_DIR)" \
+	V4_PHONE_OUTPUT_DIR="$(V4_PHONE_OUTPUT_DIR)" \
+	V4_PHONE_BUILD48_DIAGNOSTIC_DIR="$(V4_PHONE_BUILD48_DIAGNOSTIC_DIR)" \
+	V4_PHONE_KEY="$(V4_PHONE_KEY)" \
+	V4_PHONE_CANONICAL_WIDTH="$(V4_PHONE_CANONICAL_WIDTH)" \
+	V4_PHONE_CANONICAL_HEIGHT="$(V4_PHONE_CANONICAL_HEIGHT)" \
+	V4_PHONE_TIMEOUT="$(V4_PHONE_TIMEOUT)" \
+	bash ./scripts/diagnose-v4-build48-phone-local-refine.sh
+
+# Build49 diagnostic-only regression. All candidate ranks use proposal folds
+# only; production Build43 ranking and decoder paths remain unchanged.
+v4-build49-phone-proposal-ranking-test:
+	@echo "Running Build49 proposal-ranking observability regressions..."
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build49' -count=1
+	@$(GO) test ./cmd/pixseal -run '^TestSubcommandHelpReturnsFlagErrHelp$$' -count=1
+
+# Build49 private study. Blind proposal observables for both images are frozen
+# before the SIFT/reference oracle is generated for post-hoc rank analysis.
+v4-build49-phone-proposal-ranking-diagnostic: build
+	@PIXSEAL="$(abspath $(PIXSEAL))" \
+	V4_PHONE_ACQUISITION_DIR="$(V4_PHONE_ACQUISITION_DIR)" \
+	V4_PHONE_OUTPUT_DIR="$(V4_PHONE_OUTPUT_DIR)" \
+	V4_PHONE_BUILD49_DIAGNOSTIC_DIR="$(V4_PHONE_BUILD49_DIAGNOSTIC_DIR)" \
+	V4_PHONE_CANONICAL_WIDTH="$(V4_PHONE_CANONICAL_WIDTH)" \
+	V4_PHONE_CANONICAL_HEIGHT="$(V4_PHONE_CANONICAL_HEIGHT)" \
+	V4_PHONE_TIMEOUT="$(V4_PHONE_TIMEOUT)" \
+	bash ./scripts/diagnose-v4-build49-phone-proposal-ranking.sh
 
 # Optional private print -> scanner corpus. Uses the same HMAC-only semantics as
 # print-camera-test but keeps acquisition methods separate in the filesystem.

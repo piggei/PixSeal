@@ -867,3 +867,14 @@ Build46 leaves those quorums unchanged and adds a diagnostic-only inspection of 
 ## v0.3.0-build47 — frozen candidate observability
 
 Build46 ruled out lowering the production quorum: the held-out-qualified singleton for B/mild is still roughly 62.7 px from the reference-assisted oracle and does not authenticate, while the B/angle singleton is a distant false basin. Build47 therefore preserves the exact production proposal tier and extends proposal breadth in two diagnostic stages: deeper cells on the same selected side pairs, then lower-ranked side pairs. No production threshold or decoder path changes.
+## v0.3.0-build48 — proposal-only local projective refinement
+
+The corrected Build47 host study showed that simply visiting deeper cells on the two production-selected side pairs does not improve B/mild: the oracle-nearest candidate remains 59.734 px mean from the reference-assisted quadrilateral. Extending to all six side pairs does expose a substantially closer B/mild basin at 34.049 px, originating from `top+left`, side-pair rank 3, cell rank 0. That geometry still fails the unchanged held-out qualification gate. B/angle remains more than five thousand pixels from the oracle and is retained only as an informational stress case.
+
+Build48 therefore does not broaden acceptance and does not change the production decoder. It takes the corrected Build47 proposal bank, selects at most two seeds independently for each side-pair rank using proposal score only, and performs a bounded eight-coordinate local projective refinement using only the same proposal folds. The entire refined bank is frozen before held-out/public-pilot evidence is read. Diagnostic HMAC is available only after qualification, and the SIFT/reference oracle is generated only after blind refinement outputs are fixed. The primary question is whether B/mild's ~34 px basin can converge toward a few-pixel registration error without weakening the qualified gates.
+
+
+
+## v0.3.0-build49 — proposal-ranking observability
+
+Build48 demonstrated that bounded local refinement is not the first bottleneck for B/mild: proposal selection itself discarded the 34.049 px Build47 oracle-nearest candidate, while the selected bank's closest geometry was 46.202 px and refined only to 44.436 px. Seven refined candidates passed held-out qualification but none authenticated. Build49 therefore freezes geometry and studies proposal-only observables/ranks across every Build47 extended-bank candidate. Oracle/error analysis remains strictly post-hoc, and the Build49 CLI accepts no key.
