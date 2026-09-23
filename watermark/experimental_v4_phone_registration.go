@@ -23,6 +23,11 @@ const (
 	experimentalV4PhonePilotMarginFloor    = 0.025
 )
 
+type ExperimentalV4PhonePairScore struct {
+	Pair  string  `json:"pair"`
+	Score float64 `json:"score"`
+}
+
 type ExperimentalV4PhoneInfo struct {
 	WorkingWidth               int
 	WorkingHeight              int
@@ -59,6 +64,8 @@ type ExperimentalV4PhoneInfo struct {
 	Build42EnsemblesTried      int
 	Build42ListFramesTried     int
 	Build42DataAuthenticated   bool
+	Build41DirectAccepted      bool
+	Build41QualifiedCandidates int
 	Build43Attempted           bool
 	Build43EdgeRefined         bool
 	Build43PairsScanned        int
@@ -70,6 +77,7 @@ type ExperimentalV4PhoneInfo struct {
 	Build43Pair0               string
 	Build43Pair1               string
 	Build43Authenticated       bool
+	Build43PairRanking         []ExperimentalV4PhonePairScore
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -88,6 +96,11 @@ type experimentalV4PhoneHypothesis struct {
 	detection  ExperimentalV4PilotDetection
 	warp       *experimentalV4PhoneResidualWarp
 	residual   experimentalV4PhoneResidualInfo
+
+	// Diagnostic provenance only. These fields are never consulted by
+	// production ranking, qualification, data decode or authentication.
+	build43Pair     string
+	build43PairRank int
 }
 
 func experimentalV4PhoneResize(src image.Image, maxDimension int) (image.Image, bool) {
@@ -976,6 +989,8 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		HypothesesEvaluated:  evals,
 		EnsembleCandidates:   len(hyp),
 	}
+	public.Build41DirectAccepted = len(hyp) >= experimentalV4PhoneEnsembleSize
+	public.Build41QualifiedCandidates = len(build42Bank)
 	if len(hyp) > 0 {
 		q := hyp[0]
 		public.ProposalScore = q.proposal
@@ -998,6 +1013,7 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		public.Build43QualifiedCandidates = tele43.QualifiedCandidates
 		public.Build43Pair0 = tele43.Pair0
 		public.Build43Pair1 = tele43.Pair1
+		public.Build43PairRanking = append([]ExperimentalV4PhonePairScore(nil), tele43.PairRanking...)
 		public.HypothesesEvaluated += tele43.GeometryEvaluations
 		if len(bank43) >= experimentalV4PhoneEnsembleSize {
 			build42Bank = bank43

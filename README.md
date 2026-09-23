@@ -26,11 +26,15 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build44**.
+Current development snapshot: **v0.3.0-build46**.
 
 Stable release baseline: **v0.2.0**.
 
 > **Build44 qualified milestone:** JPEG input now uses a project-controlled pure-Go pre-Go-1.26 decoder, eliminating the accidental dependency on the compiler standard library without retuning geometry. **Go 1.26.0 is now the qualified Build44 toolchain**: the deterministic-raster regression and the complete private Build43 smartphone matrix both pass unchanged. See [`docs/V4_BUILD44_DETERMINISTIC_JPEG.md`](docs/V4_BUILD44_DETERMINISTIC_JPEG.md) and [`docs/GO_TOOLCHAIN_COMPATIBILITY.md`](docs/GO_TOOLCHAIN_COMPATIBILITY.md).
+
+> **Build45 completed diagnostic checkpoint:** Build44 remains the latest qualified milestone. Build45 changes no production decoder decision; it decomposes the remaining `B/mild` failure into blind geometry, held-out qualification or post-geometry data-channel stages, and adds an explicitly lab-only supplied-geometry oracle. Retained-corpus oracle evidence already authenticates both `B/mild` and `B/angle` exactly under independently supplied geometry, so the next justified work is blind geometry rather than strength/ECC/HMAC changes. See [`docs/V4_BUILD45_PHONE_FAILURE_DECOMPOSITION.md`](docs/V4_BUILD45_PHONE_FAILURE_DECOMPOSITION.md).
+
+> **Build46 research snapshot:** the qualification-host Build45 run shows 32/28 frozen Build43 candidates but only one held-out-qualified candidate for `B/mild`/`B/angle`, while the Build42 bank remains empty because production requires a two-geometry direct ensemble before promoting the Build43 bank. Build46 therefore inspects that already-qualified singleton without changing production thresholds: it tests post-qualification single-candidate channel viability and, only afterwards, compares its corners to the isolated reference oracle. See [`docs/V4_BUILD46_QUALIFIED_HANDOFF.md`](docs/V4_BUILD46_QUALIFIED_HANDOFF.md).
 
 Format v3 remains the implemented interoperability baseline. Its on-image layout,
 deterministic encoder fingerprints and production decoder are **frozen**. After builds
@@ -46,9 +50,15 @@ basin milestone, Build42 improved only post-geometry data recovery, and Build43 
 a bounded side-pair geometry fallback for A/front. The qualified strength-48 matrix is
 controls 3/3 reject; `A/front`, `A/mild`, `A/angle` and `B/front` authenticate;
 `B/mild` and `B/angle` remain informational rejects. Build44 changes only JPEG ingest
-so that this matrix can be reproduced across Go toolchains. Protected payload contents,
-secret key and HMAC remain excluded from geometry search/ranking; HMAC is only the final
-frame authenticator.
+so that this matrix can be reproduced across Go toolchains. Build45 is diagnostic-only:
+it records where the unchanged phone path stops and uses an isolated reference-assisted
+oracle to prove both difficult B captures remain inside the protected data-channel envelope
+when geometry is supplied independently. The qualification-host blind run further shows one
+held-out-qualified Build43 candidate in each difficult B capture, but not the two candidates
+required by the production ensemble. Build46 measures whether that qualified singleton is
+already data-viable and how far it lies from the oracle, without changing any production
+quorum. Protected payload contents, secret key and HMAC remain excluded from production
+geometry search/ranking; HMAC is only the final frame authenticator.
 
 > **Build42 post-geometry milestone:** Build41 geometry is unchanged. The normal two-hypothesis soft-Hamming decode runs first. Only when already-qualified geometry reaches data decode but fails authentication does Build42 retain the complete frozen Build41-qualified bank, enumerate deterministic three-geometry data ensembles, and apply a bounded Hamming list decoder ordered only by ML score gaps. `A/mild` now authenticates `v4-b38-phone-a`; `A/angle` and `B/front` remain direct Build41 passes; all three controls still reject before data decode. A/front, B/mild and B/angle remain geometry-reject research cases. See [`docs/V4_BUILD42_PHONE_DATA_LIST.md`](docs/V4_BUILD42_PHONE_DATA_LIST.md).
 >
@@ -60,6 +70,24 @@ The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
 
+
+## What v0.3.0-build46 adds
+
+Build46 is a diagnostic handoff checkpoint. It does **not** change Build43 candidate generation, held-out qualification, the two-geometry production ensemble, Build42's minimum three-geometry bank, the residual fallback, ECC or HMAC. The new `v4-diagnose-phone-handoff` command reruns only the public-evidence Build41/43 search, enumerates the geometries that have already passed held-out qualification, and records the exact production quorum that prevents or permits each downstream path.
+
+For each qualified Build43 candidate Build46 performs one explicitly diagnostic post-qualification decode using the unchanged Build42 soft-Hamming list. HMAC is observed only after that candidate is already frozen and qualified; it cannot create, move, rank or qualify geometry. An optional oracle quadrilateral is likewise comparison-only and is used after blind search to report corner error.
+
+Use `make v4-build46-phone-handoff-test` for the source regression and `make v4-build46-phone-handoff-diagnostic` for the private B/mild/B/angle study. See [`docs/V4_BUILD46_QUALIFIED_HANDOFF.md`](docs/V4_BUILD46_QUALIFIED_HANDOFF.md).
+
+## What v0.3.0-build45 adds
+
+Build45 is a diagnostic research checkpoint, not a new production decoder. It keeps the qualified Build44 deterministic JPEG ingest and the complete Build41/42/43 smartphone path unchanged, while adding `v4-diagnose-phone` and private study targets that expose Build41 qualified-bank state, the complete six-pair Build43 proposal ranking, frozen/held-out-qualified counts, Build42 list activity and final HMAC result. A failed acquisition is classified as `geometry`, `qualification` or `data-channel`; a normal HMAC success is `recovered`.
+
+An optional lab-only SIFT/RANSAC helper may register the known digital marked-B carrier to an acquisition and supply exactly one quadrilateral to `v4-diagnose-phone -oracle-only`. That geometry cannot enter `v4-extract-phone`, cannot be used to rank production candidates and introduces no OpenCV runtime dependency into PixSeal. On retained private B/mild and B/angle captures, the supplied geometry yields origin `(0,0)` and exact `v4-b38-phone-b` authentication on the first soft-Hamming list frame. This is oracle evidence only, but it establishes that the protected strength-48 channel is sufficient in both difficult B images.
+
+The completed qualification-host blind run freezes 32 candidates for B/mild and 28 for B/angle; exactly one candidate in each image survives Build43 held-out qualification. The Build42 bank remains zero because the production Build43 fallback requires a two-geometry ensemble before promotion, while Build42 independently requires three qualified geometries. Build46 refines this singleton state rather than treating it as a generic qualification failure.
+
+Use `make v4-build45-phone-diagnostic` for the blind decomposition, `make v4-build45-phone-oracle-diagnostic` for the isolated reference-assisted control, or `make v4-build45-phone-study` for both. See [`docs/V4_BUILD45_PHONE_FAILURE_DECOMPOSITION.md`](docs/V4_BUILD45_PHONE_FAILURE_DECOMPOSITION.md).
 
 ## What v0.3.0-build44 adds
 

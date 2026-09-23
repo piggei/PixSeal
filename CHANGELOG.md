@@ -1202,3 +1202,21 @@ fingerprints for release hardening.
 ## Development builds 1–12
 
 See [`HISTORY.md`](HISTORY.md) for the complete technical progression.
+
+## v0.3.0-build45 — phone failure decomposition
+
+- Starts from the fully qualified Build44 deterministic-JPEG / Go 1.26 baseline without changing production watermark or phone-decoder decisions.
+- Adds `v4-diagnose-phone`, a diagnostic-only view of Build41 qualification, the complete Build43 six-side-pair ranking, frozen/qualified geometry counts, Build42 data-list telemetry and final HMAC result.
+- Adds deterministic failure classes: `geometry`, `qualification`, `data-channel`, and `recovered`.
+- Adds an explicitly isolated reference-assisted lab oracle: OpenCV SIFT/RANSAC may supply one acquisition-space quadrilateral, but that geometry can be consumed only by the diagnostic command and can never become a production fallback.
+- Preliminary retained-corpus oracle evidence recovers exact `v4-b38-phone-b` from both B/mild and B/angle at the first Build42 list frame, proving that the difficult B cases remain inside the protected data-channel envelope when geometry is correct.
+- Keeps B/mild as the primary Build45 research target and B/angle informational until the blind failure matrix identifies the bounded geometry change justified by evidence.
+
+## v0.3.0-build46 — qualified-geometry handoff diagnostic
+
+- Keeps Build44 as the latest qualified production milestone and changes no production phone decision.
+- Records the Build45 qualification-host finding that B/mild and B/angle each retain exactly one Build43 held-out-qualified candidate, below the production two-geometry ensemble quorum.
+- Adds `v4-diagnose-phone-handoff` to inspect already-qualified Build43 candidates, production quorum availability and a diagnostic-only single-candidate Build42 list decode.
+- Adds post-hoc oracle corner-distance comparison that is computed only after blind search/qualification and cannot influence geometry.
+- Adds `make v4-build46-phone-handoff-test` and private `make v4-build46-phone-handoff-diagnostic`.
+- Leaves Format-v4, strength 48, pilot, Build42, ECC/Hamming, whitening/HMAC and all production thresholds unchanged.

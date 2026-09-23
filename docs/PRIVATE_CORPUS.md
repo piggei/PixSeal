@@ -173,3 +173,7 @@ decoder and writes derived logs/matrices under
 `v4-phone private/build44-diagnostics/`. The required matrix is identical to
 Build43: controls 3/3 reject; A/front, A/mild, A/angle and B/front authenticate;
 B/mild/B-angle remain informational. The private image bytes are never packaged.
+
+### Build46 diagnostics
+
+Build46 writes only local research output under `v4-phone private/build46-diagnostics/`. The directory may contain blind handoff JSON/TSV/Markdown plus optional reference-assisted quadrilateral files generated after the blind runs. These files are private evidence and must not be included in source archives or releases.

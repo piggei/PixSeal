@@ -245,3 +245,26 @@ and `CHANGELOG.md`.
 - [x] Build41: improve only the global smartphone projective-basin stage identified by the complete Build40 matrix. The staged physical milestone is closed: all controls reject, `A/angle` authenticates A and `B/front` authenticates B, with no encoder/ECC/HMAC/residual change.
 - [x] Build42: preserve Build41 geometry unchanged and recover `A/mild` only in the post-geometry data plane using the complete qualified bank, deterministic three-geometry ensembles and bounded soft-Hamming list decoding. `A/angle` and `B/front` remain direct passes; all controls still reject before data decode.
 - [ ] Build44+: after deterministic ingest is physically qualified, broaden the blind smartphone **geometry** envelope for B/mild and B/angle while preserving A/front/A/mild/A/angle/B/front and all control rejections. Do not increase strength, weaken pilot floors or enlarge the residual model without new evidence.
+
+## Build45 phone research
+
+- [x] Freeze Build44 deterministic JPEG ingest and Go 1.26 qualification as the new baseline.
+- [x] Add structured blind failure decomposition for B/mild/B/angle without changing production decisions.
+- [x] Expose the complete Build43 six-side-pair proposal ranking for diagnostic inspection.
+- [x] Add an isolated supplied-geometry oracle that cannot be reached from `v4-extract-phone`.
+- [x] Confirm in retained-corpus lab analysis that B/mild and B/angle authenticate exactly under independently supplied geometry.
+- [x] Run `make v4-build45-phone-diagnostic` on the qualification host and record the blind B/mild/B/angle matrix: 32/28 frozen candidates, exactly one held-out-qualified candidate in each, production Build42 bank 0.
+- [x] Use the B/mild blind matrix to isolate the next question: determine whether the single held-out-qualified Build43 candidate is data-viable before changing geometry. Keep B/angle informational.
+- [ ] Do not modify strength 48, Format-v4 framing, pilot, ECC/Hamming, whitening/HMAC or Build42 data-list recovery unless new channel evidence contradicts the Build45 oracle result.
+
+
+## Build46 qualified-geometry handoff research
+
+- [x] Preserve Build44/Build43 production thresholds unchanged; do not promote a singleton into the production decoder.
+- [x] Add a diagnostic-only single-candidate Build42 list decode after Build43 freeze + held-out qualification.
+- [x] Record the production quorum explicitly: two qualified geometries for direct phone acceptance, three for the Build42 list bank.
+- [x] Add post-hoc oracle corner-distance comparison that cannot influence blind search or ranking.
+- [ ] Run `make v4-build46-phone-handoff-diagnostic` on the qualification host.
+- [ ] If B/mild singleton HMAC passes, design the next bounded experiment to retain/find a second independent qualified basin.
+- [ ] If B/mild singleton HMAC fails, use oracle distance to choose between precision/refinement work and broader basin retention.
+- [ ] Keep strength 48, Format-v4 framing, pilot, ECC/Hamming, whitening/HMAC and Build42 data-list rules frozen unless the Build46 evidence contradicts the Build45 oracle.

@@ -23,6 +23,7 @@ type experimentalV4PhoneBuild43Telemetry struct {
 	QualifiedCandidates int
 	Pair0               string
 	Pair1               string
+	PairRanking         []ExperimentalV4PhonePairScore
 }
 
 type experimentalV4PhoneBuild43Line struct {
@@ -436,6 +437,10 @@ func experimentalV4PhoneSearchBuild43(work image.Image, boundary PrintBoundaryEs
 		}
 	}
 	sort.SliceStable(ranked, func(i, j int) bool { return ranked[i].score > ranked[j].score })
+	tele.PairRanking = make([]ExperimentalV4PhonePairScore, 0, len(ranked))
+	for _, rp := range ranked {
+		tele.PairRanking = append(tele.PairRanking, ExperimentalV4PhonePairScore{Pair: rp.pair.name, Score: rp.score})
+	}
 	if len(ranked) > experimentalV4PhoneBuild43PairKeep {
 		ranked = ranked[:experimentalV4PhoneBuild43PairKeep]
 	}
@@ -447,7 +452,7 @@ func experimentalV4PhoneSearchBuild43(work image.Image, boundary PrintBoundaryEs
 		tele.Pair1 = ranked[1].pair.name
 	}
 	frozen := make([]experimentalV4PhoneHypothesis, 0, experimentalV4PhoneBuild43MaxFrozen)
-	for _, rp := range ranked {
+	for pairRank, rp := range ranked {
 		cells, n := experimentalV4PhoneBuild43Cells(plane, candidate, cw, ch, anchor, rp.seed, rp.pair)
 		tele.GeometryEvaluations += n
 		for _, cr := range []int{0, 3} {
@@ -461,6 +466,8 @@ func experimentalV4PhoneSearchBuild43(work image.Image, boundary PrintBoundaryEs
 				if len(frozen) >= experimentalV4PhoneBuild43MaxFrozen {
 					break
 				}
+				h.build43Pair = rp.pair.name
+				h.build43PairRank = pairRank + 1
 				frozen = append(frozen, h)
 			}
 		}

@@ -852,3 +852,25 @@ fixture. The Go 1.26.0 deterministic JPEG regression and the unchanged private B
 physical matrix both pass on the Surface/WSL2 qualification host (controls 3/3 reject;
 A/front, A/mild, A/angle and B/front authenticate). Promote Go 1.26.0 as the Build44
 qualified toolchain, then resume B/mild/B/angle geometry research from this stable raster baseline.
+
+## Build45 — B/mild failure decomposition
+
+Build45 begins only after Build44 qualified deterministic JPEG ingest on Go 1.26.0. No production phone parameter is changed. The new diagnostic surface records Build41 qualified-bank state, all six Build43 side-pair proposal scores, frozen/held-out-qualified counts, Build42 list activity and final HMAC outcome.
+
+A lab-only reference-assisted control was also added. OpenCV SIFT/RANSAC supplies an external artwork quadrilateral from the known digital marked-B carrier; PixSeal then performs no geometry search and tests the unchanged pilot/data channel. On retained B/mild, 2564/2584 feature matches are RANSAC inliers and the supplied mapping yields proposal 0.384618, held-out 0.333015, full pilot 0.342214 / margin 0.207221 at origin (0,0), with exact HMAC authentication on the first list frame. B/angle behaves similarly: 3069/3089 inliers, proposal 0.320779, held-out 0.230254, pilot 0.261081 / margin 0.140723 at (0,0), again exact HMAC on the first list frame.
+
+These are oracle measurements, not blind PASS results. They rule out protected-channel insufficiency as the current explanation for B/mild/B/angle and direct the next experiment toward bounded blind geometry only.
+
+## Build45 host result -> Build46 handoff hypothesis — 2026-09-23
+
+The qualification host ran both Build45 targets. Reference-assisted geometry authenticated B/mild and B/angle immediately, confirming protected-channel viability. The blind decomposition then showed 32/28 frozen Build43 candidates but only one held-out-qualified candidate in each image. Build42 reported a zero-size bank because production does not promote a Build43 singleton: the direct phone path requires two qualified geometries and Build42's bank path requires three.
+
+This invalidates the loose phrase "Build43 -> Build42 handoff failure" as a conclusion. The observed state is instead a **qualified singleton below production quorum**. Build46 must not lower the quorum yet. It should first determine whether that singleton itself carries an authenticating data frame after qualification, and independently measure its post-hoc distance from the SIFT/reference oracle.
+
+Decision rule:
+
+- singleton HMAC PASS -> preserve/duplicate the correct basin using additional independent public-evidence geometry; do not retune data decoding;
+- singleton HMAC FAIL + large oracle error -> surviving held-out candidate is a pilot-qualified geometric mismatch; improve blind precision/ranking;
+- singleton HMAC FAIL + small oracle error -> inspect sub-pixel/phase precision before changing broader geometry search.
+
+Secret-key/HMAC evidence remains diagnostic-only after freeze/qualification and is forbidden from production geometry generation or ranking.

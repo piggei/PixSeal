@@ -1216,3 +1216,30 @@ pass on the development baseline. Go 1.26.0 physical promotion is intentionally
 pending: the decisive result is `make v4-build44-go126-phone-physical-test` on
 the unchanged private strength-48 corpus. Until that passes, the qualified
 physical baseline remains Build43 / Go 1.25.1.
+
+## Build45 phone failure decomposition
+
+Build45 introduces no production geometry or channel change. The private B/mild and B/angle captures are first treated as blind failures under the qualified Build44 path, then separately measured under a reference-assisted supplied-geometry oracle.
+
+The retained-corpus oracle yields exact HMAC recovery for both difficult B captures on the first ML-Hamming frame: B/mild has proposal 0.384618, held-out validation 0.333015, full-pilot score 0.342214 / margin 0.207221 at origin `(0,0)`; B/angle has proposal 0.320779, held-out 0.230254, pilot 0.261081 / margin 0.140723 at `(0,0)`. SIFT/RANSAC registration is exceptionally coherent (2564/2584 and 3069/3089 inliers respectively).
+
+This is not a blind decoder qualification. It is decisive channel-isolation evidence: with geometry supplied independently, the unchanged strength-48 carrier, Hamming/ECC, Build42 soft/list decoder and HMAC recover both B payloads. Build45 therefore directs subsequent work to blind geometry acquisition/ranking only.
+
+## Build45 qualification-host blind decomposition — 2026-09-23
+
+The retained private B captures were run through the unchanged Build44 production path on the qualification host after the Build45 oracle study.
+
+| image | classification | Build41 direct | Build41 qualified | Build43 frozen | Build43 qualified | Build42 bank | HMAC |
+|---|---|---:|---:|---:|---:|---:|---:|
+| B/mild | qualification | false | 0 | 32 | 1 | 0 | false |
+| B/angle | qualification | false | 0 | 28 | 1 | 0 | false |
+
+The selected pair leaders differ (`bottom+right` / `left+right` for B/mild; `bottom+left` / `top+left` for B/angle), so the remaining failure is not explained by one universally missing artwork side. The important common feature is instead the **single held-out-qualified Build43 candidate**.
+
+Build45's original `qualification` label is intentionally coarse. Production requires two qualified Build43 geometries before the direct ensemble is accepted; only then can that bank replace the Build41 bank. Build42 separately requires at least three geometries for its three-member list ensembles. Therefore `qualified=1, Build42 bank=0` is consistent with the designed production quorum and is not by itself an implementation handoff bug.
+
+The Build45 reference oracle remains decisive channel evidence: both B/mild and B/angle authenticate `v4-b38-phone-b` on the first list frame under independently supplied geometry. Build46 is therefore restricted to inspecting the precision/data viability of the already-qualified singleton and the production quorum boundary.
+
+## Build46 planned evidence gate
+
+Build46 will classify each difficult B capture from the already-qualified Build43 candidates without changing production behavior. If the singleton authenticates under diagnostic single-candidate decoding, the result is `qualified-ensemble-shortfall`: the next geometry work should seek a second independently qualified basin rather than weaken data/ECC/HMAC. If the singleton does not authenticate, the result is `qualified-candidate-mismatch`: the next geometry work should improve the precision of the surviving blind basin. Post-hoc oracle corner error is recorded only after blind results exist.

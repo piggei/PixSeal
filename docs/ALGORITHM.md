@@ -1537,3 +1537,13 @@ the toolchain standard library. PNG remains unchanged. This stabilizes the
 image evidence seen by the existing boundary/pilot geometry pipeline across Go
 versions; it introduces no new geometry signal and does not alter proposal,
 held-out qualification, data decoding or HMAC ordering.
+
+## Build45 diagnostic decomposition (non-production)
+
+Build45 does not alter the production algorithm described above. `v4-diagnose-phone` invokes the same Build44/Build43 phone decoder and exposes stage telemetry after the fact: Build41 qualified-bank state, the six Build43 side-pair proposal scores, frozen and held-out-qualified counts, Build42 list activity and final HMAC outcome. A simple diagnostic classifier labels the observed stopping point as geometry, qualification, data-channel or recovered.
+
+A second path accepts an independently supplied artwork quadrilateral for laboratory channel isolation. The supplied mapping is never refined from payload/ECC/HMAC evidence and is inaccessible from `v4-extract-phone`. Under that fixed mapping, the public pilot is measured and the existing protected-margin / soft-Hamming / bounded-list / HMAC chain is evaluated. This oracle is evidence about channel viability only and cannot qualify blind geometry.
+
+## Build46 diagnostic handoff observation
+
+Build46 does not alter the production algorithm. The production Build43 fallback still requires two held-out-qualified geometries before accepting a direct phone ensemble, and Build42 still requires a bank of at least three already-qualified geometries before enumerating three-member data ensembles. `v4-diagnose-phone-handoff` observes these quorums and, only after Build43 qualification is complete, may decode each qualified candidate alone as a laboratory measurement. The secret key/HMAC result never feeds back into candidate generation, pair ranking, proposal refinement or held-out qualification. Optional reference geometry is comparison-only and is applied after blind search has completed.
