@@ -26,11 +26,11 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build43**.
+Current development snapshot: **v0.3.0-build44**.
 
 Stable release baseline: **v0.2.0**.
 
-> **Build43 toolchain qualification:** build/test commands are pinned to **Go 1.25.1**. Go 1.26 replaced the standard-library JPEG decoder and produces a different raster for the canonical smartphone JPEG corpus; on `phone-a-mild.jpg` that difference changes the physical geometry result. The same Build43 source HMAC-authenticates A/mild with Go 1.25.1 and fails the qualified geometry path with Go 1.26.0. Use the repository `make` targets, which select Go 1.25.1 and always rebuild the CLI. See [`docs/GO_TOOLCHAIN_COMPATIBILITY.md`](docs/GO_TOOLCHAIN_COMPATIBILITY.md).
+> **Build44 qualified milestone:** JPEG input now uses a project-controlled pure-Go pre-Go-1.26 decoder, eliminating the accidental dependency on the compiler standard library without retuning geometry. **Go 1.26.0 is now the qualified Build44 toolchain**: the deterministic-raster regression and the complete private Build43 smartphone matrix both pass unchanged. See [`docs/V4_BUILD44_DETERMINISTIC_JPEG.md`](docs/V4_BUILD44_DETERMINISTIC_JPEG.md) and [`docs/GO_TOOLCHAIN_COMPATIBILITY.md`](docs/GO_TOOLCHAIN_COMPATIBILITY.md).
 
 Format v3 remains the implemented interoperability baseline. Its on-image layout,
 deterministic encoder fingerprints and production decoder are **frozen**. After builds
@@ -42,11 +42,13 @@ maintenance/regression only unless genuinely new independent evidence appears.
 Current Format-v4 development is focused on blind physical recovery from smartphone
 photographs. Build39 introduced the global projective phone path, Build40 added a
 strictly bounded public-pilot-only residual field, Build41 closed the first blind A/B
-basin milestone, and Build42 improves only the post-geometry data recovery stage. On
-the existing strength-48 physical corpus the decoder now HMAC-authenticates
-`A/angle`, `A/mild` and `B/front`, while all three unmarked controls still reject
-before protected-data decoding. Protected payload contents, secret key and HMAC remain
-excluded from geometry search/ranking; HMAC is only the final frame authenticator.
+basin milestone, Build42 improved only post-geometry data recovery, and Build43 added
+a bounded side-pair geometry fallback for A/front. The qualified strength-48 matrix is
+controls 3/3 reject; `A/front`, `A/mild`, `A/angle` and `B/front` authenticate;
+`B/mild` and `B/angle` remain informational rejects. Build44 changes only JPEG ingest
+so that this matrix can be reproduced across Go toolchains. Protected payload contents,
+secret key and HMAC remain excluded from geometry search/ranking; HMAC is only the final
+frame authenticator.
 
 > **Build42 post-geometry milestone:** Build41 geometry is unchanged. The normal two-hypothesis soft-Hamming decode runs first. Only when already-qualified geometry reaches data decode but fails authentication does Build42 retain the complete frozen Build41-qualified bank, enumerate deterministic three-geometry data ensembles, and apply a bounded Hamming list decoder ordered only by ML score gaps. `A/mild` now authenticates `v4-b38-phone-a`; `A/angle` and `B/front` remain direct Build41 passes; all three controls still reject before data decode. A/front, B/mild and B/angle remain geometry-reject research cases. See [`docs/V4_BUILD42_PHONE_DATA_LIST.md`](docs/V4_BUILD42_PHONE_DATA_LIST.md).
 >
@@ -58,6 +60,16 @@ The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
 
+
+## What v0.3.0-build44 adds
+
+Build44 makes the JPEG raster part of the PixSeal implementation contract instead of inheriting it from the Go compiler version. The CLI now identifies JPEG/PNG by magic bytes; JPEG `DecodeConfig` and full decode use the pure-Go `internal/jpeglegacy` decoder, while PNG remains on `image/png`. The decoder is derived from the pre-Go-1.26 Go standard-library implementation and retains its BSD-style upstream license.
+
+A small public JPEG fixture locks Y/Cb/Cr hashes and a CLI regression proves that normal image opening uses the deterministic decoder. Phone diagnostics expose `input-decoder: pixseal-jpeg-pre-go1.26-v1`. No Format-v3/v4 encoding, pilot, strength, ECC, whitening/HMAC, geometry, data/list decoding or HMAC semantics change.
+
+Go 1.26.0 is the qualified Build44 build/test toolchain. `make v4-build44-jpeg-compat-test` protects the deterministic raster contract and `make v4-build44-phone-physical-test` verifies the unchanged private Build43 physical matrix. The historical `v4-build44-go126-*` targets remain available as explicit qualification regressions.
+
+See [`docs/V4_BUILD44_DETERMINISTIC_JPEG.md`](docs/V4_BUILD44_DETERMINISTIC_JPEG.md).
 
 ## What v0.3.0-build43 adds
 
@@ -863,13 +875,13 @@ On mobile platforms the long-term goal is not to expose a command-line workflow 
 
 ## Build
 
-Build43 is qualified with **Go 1.25.1**. Use the Makefile rather than a bare `go build`:
+Build44 is qualified with **Go 1.26.0** using deterministic project-controlled JPEG ingest. Build43 remains historically qualified with Go 1.25.1. Use the Makefile rather than a bare `go build`:
 
 ```sh
 make
 ```
 
-The Makefile selects `GOTOOLCHAIN=go1.25.1`, verifies the selected toolchain and **always rebuilds** `dist/pixseal`. This prevents a stale binary built with Go 1.26+ from being reused by a later physical test. To inspect the selected toolchain:
+The normal Makefile path selects `GOTOOLCHAIN=go1.26.0`, verifies the qualified Build44 toolchain and **always rebuilds** `dist/pixseal`. To inspect the selected toolchain:
 
 ```sh
 make toolchain-check
@@ -878,10 +890,10 @@ make toolchain-check
 For a direct Go command outside the Makefile, select the qualified toolchain explicitly:
 
 ```sh
-GOTOOLCHAIN=go1.25.1 go build -o pixseal ./cmd/pixseal
+GOTOOLCHAIN=go1.26.0 go build -o pixseal ./cmd/pixseal
 ```
 
-Go 1.26+ is not qualified for Build43 JPEG physical recovery because Go 1.26 replaced `image/jpeg` and the canonical smartphone JPEGs rasterize differently. See [`docs/GO_TOOLCHAIN_COMPATIBILITY.md`](docs/GO_TOOLCHAIN_COMPATIBILITY.md).
+Go 1.26+ was not qualified for Build43 because its standard `image/jpeg` raster differs. Build44 removes that standard-library dependency through `internal/jpeglegacy`; the deterministic-raster and private phone physical gates now pass under Go 1.26.0, which is therefore the qualified Build44 toolchain. See [`docs/GO_TOOLCHAIN_COMPATIBILITY.md`](docs/GO_TOOLCHAIN_COMPATIBILITY.md).
 
 The project has no external runtime dependencies. ImageMagick and GNU
 `timeout` are required only by the shell robustness suites.

@@ -1527,3 +1527,13 @@ The phone execution order is Build41 global decode, Build42 qualified-bank/list 
 ## Build43 smartphone side-pair fallback
 
 Build43 adds a post-Build41 blind geometry fallback using structural side proposals, six side-pair families, bounded angular/fine/complement diversity and a <=32 proposal-only freeze before held-out qualification. The data plane remains Build42 unchanged.
+
+## Build44 deterministic input raster contract
+
+Build44 does not modify the Format-v4 decoder stages. Before any scanner/phone
+geometry is evaluated, JPEG bytes are decoded by the project-controlled
+`internal/jpeglegacy` implementation (`pixseal-jpeg-pre-go1.26-v1`) instead of
+the toolchain standard library. PNG remains unchanged. This stabilizes the
+image evidence seen by the existing boundary/pilot geometry pipeline across Go
+versions; it introduces no new geometry signal and does not alter proposal,
+held-out qualification, data decoding or HMAC ordering.

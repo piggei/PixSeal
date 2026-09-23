@@ -1,10 +1,11 @@
-# Build43 status
+# Build44 status
 
-- [x] Recover Build38 `A/front` through a blind proposal-only geometry fallback.
-- [x] Keep Format-v4/encoder/pilot/ECC/HMAC/data decoder unchanged.
-- [x] Freeze the candidate bank before held-out qualification and cap it at 32.
-- [x] Preserve prior A/mild, A/angle and B/front authenticated paths; controls remain reject.
-- [ ] Future research: improve B/mild and B/angle without relaxing Build41 gates or using secret/data evidence for geometry.
+- [x] Preserve the qualified Build43 watermark/geometry/data path unchanged.
+- [x] Add a project-controlled pure-Go pre-Go-1.26 JPEG decoder and deterministic raster fixture.
+- [x] Route CLI JPEG ingest through the deterministic decoder instead of the toolchain standard library.
+- [x] Qualify the unchanged private strength-48 phone matrix with Go 1.26.0; controls 3/3 reject and A/front, A/mild, A/angle, B/front authenticate.
+- [x] Promote Go 1.26.0 as the qualified Build44 toolchain after the deterministic JPEG and physical gates pass.
+- [ ] Resume geometry research on B/mild and B/angle from the now-qualified deterministic JPEG / Go 1.26 baseline, without relaxing Build41 gates or using secret/data evidence.
 
 # PixSeal TODO
 
@@ -158,7 +159,7 @@ and `CHANGELOG.md`.
 - [ ] Decide explicit EXIF Orientation normalization policy.
 - [ ] Decide ICC/color-management preservation policy.
 - [ ] Consider tiled/lazy pixel access to reduce peak memory on very large images.
-- [ ] Remove the Build43 Go 1.25.1 JPEG-decoder qualification pin by defining a deterministic image-ingest contract and adding cross-toolchain/platform raster fixtures; Go 1.26+ must not be promoted until the canonical physical JPEG corpus produces equivalent qualified behavior.
+- [x] Build44 deterministic JPEG ingest is physically qualified on Go 1.26.0; the Go 1.25.1 pin is no longer required for Build44 and remains only as Build43 historical qualification evidence.
 
 ## Format v3 closure / maintenance
 
@@ -243,4 +244,4 @@ and `CHANGELOG.md`.
 - [x] Run the Build40 decoder over all nine strength-48 smartphone originals and preserve the stage-by-stage matrix (boundary, projective basin, proposal/held-out pilot, origin, residual fit/application, data confidence, soft-Hamming attempts and HMAC). The matrix identified global phone basin recovery as the next blocker.
 - [x] Build41: improve only the global smartphone projective-basin stage identified by the complete Build40 matrix. The staged physical milestone is closed: all controls reject, `A/angle` authenticates A and `B/front` authenticates B, with no encoder/ECC/HMAC/residual change.
 - [x] Build42: preserve Build41 geometry unchanged and recover `A/mild` only in the post-geometry data plane using the complete qualified bank, deterministic three-geometry ensembles and bounded soft-Hamming list decoding. `A/angle` and `B/front` remain direct passes; all controls still reject before data decode.
-- [ ] Build43+: broaden the blind smartphone **geometry** envelope for A/front, B/mild and B/angle while preserving the Build41/42 passes and all control rejections. Do not increase strength, weaken pilot floors or enlarge the residual model without new evidence.
+- [ ] Build44+: after deterministic ingest is physically qualified, broaden the blind smartphone **geometry** envelope for B/mild and B/angle while preserving A/front/A/mild/A/angle/B/front and all control rejections. Do not increase strength, weaken pilot floors or enlarge the residual model without new evidence.

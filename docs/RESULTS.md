@@ -1,3 +1,23 @@
+## v0.3.0-build44 deterministic JPEG / Go 1.26 qualification — 2026-09-23
+
+Build44 physically closes the toolchain reproducibility issue discovered during Build43. The PixSeal-owned `internal/jpeglegacy` decoder reproduces the frozen pre-Go-1.26 raster contract when the project itself is compiled with Go 1.26.0.
+
+On the Surface/WSL2 qualification host:
+
+```text
+make v4-build44-go126-jpeg-compat-test            PASS
+make v4-build44-go126-phone-physical-test        PASS
+controls                                          3/3 REJECT
+A/front                                           PASS
+A/mild                                            PASS
+A/angle                                           PASS
+B/front                                           PASS
+B/mild                                            INFO/reject
+B/angle                                           INFO/reject
+```
+
+No encoder, Format-v4 pilot/data mapping, strength, Hamming/ECC, whitening/HMAC domain, Build41/43 geometry or Build42 data/list behavior changed. Go 1.26.0 is promoted as the qualified Build44 toolchain.
+
 # PixSeal v0.2.0 — qualification and measured results
 
 This document separates the **stable release baseline** from experimental
@@ -1187,3 +1207,12 @@ The remaining problem is now cleanly separated: A/front, B/mild and B/angle stil
 On the private Build38 strength-48 corpus the minimum Build43 milestone is controls 3/3 reject; A/front, A/mild, A/angle and B/front authenticate; B/mild/B-angle remain informational rejects. A/front is recovered through the new geometry fallback and unchanged Build42/HMAC data path.
 
 Final Build43 qualification is defined with Go 1.25.1. A Go 1.26.0 rebuild of the same source changes the decoded raster of the canonical A/mild JPEG (Go 1.26 replaced `image/jpeg`) and can geometry-reject that case. Rebuilding with Go 1.25.1 restores A/mild HMAC PASS. The Makefile is therefore pinned to Go 1.25.1; Go 1.26+ JPEG physical behavior is deferred rather than masked by geometry retuning.
+
+## Build44 deterministic JPEG checkpoint
+
+Build44 adds a project-controlled pre-Go-1.26 JPEG decoder and public locked
+raster vectors. The source-side deterministic JPEG and CLI-ingest regressions
+pass on the development baseline. Go 1.26.0 physical promotion is intentionally
+pending: the decisive result is `make v4-build44-go126-phone-physical-test` on
+the unchanged private strength-48 corpus. Until that passes, the qualified
+physical baseline remains Build43 / Go 1.25.1.

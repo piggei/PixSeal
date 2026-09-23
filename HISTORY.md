@@ -1,3 +1,9 @@
+## Build44 — deterministic JPEG ingest
+
+Build44 begins by isolating input rasterization from the Go toolchain. Build43 qualification demonstrated that Go 1.26.0 and Go 1.25.1 decode the exact same canonical smartphone JPEG into different Y/Cb/Cr planes, enough to move A/mild outside the qualified geometry path. Build44 does not retune geometry around that difference. Instead it vendors the pre-Go-1.26 pure-Go JPEG decoder as `internal/jpeglegacy` and routes CLI JPEG input through that project-controlled path.
+
+The watermark algorithm remains the Build43 baseline: Format-v3 stays frozen; Format-v4 encoding, locked pilot, strength 48, data mapping, Hamming/ECC, whitening/HMAC domains, Build41/43 geometry and Build42 list decoding are unchanged. A public deterministic JPEG fixture locks the decoder raster contract. On the Surface/WSL2 qualification host, Go 1.26.0 passed both the deterministic-raster regression and the complete private Build43 physical matrix (controls 3/3 reject; A/front, A/mild, A/angle and B/front authenticate). Go 1.26.0 is therefore promoted as the qualified Build44 toolchain; Go 1.25.1 remains the historical Build43 reference.
+
 # PixSeal history
 
 This file records technical evolution, including experiments that were later

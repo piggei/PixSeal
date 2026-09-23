@@ -6,3 +6,7 @@ SPDX-License-Identifier: PolyForm-Noncommercial-1.0.0
 Commercial use is not granted by this license. A separate commercial license
 must be obtained from the applicable PixSeal copyright holder(s) for commercial
 use.
+
+Third-party code notice: `internal/jpeglegacy` contains code derived from the
+Go standard library, Copyright 2009 The Go Authors. That code is distributed
+under the BSD-style Go license copied at `internal/jpeglegacy/LICENSE_GO`.

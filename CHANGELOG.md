@@ -1,3 +1,14 @@
+## v0.3.0-build44 — 2026-09-23
+
+- Starts deterministic JPEG ingest without changing Format-v4, the encoder, public pilot, carrier/data mapping, strength 48, Hamming/ECC, whitening/HMAC domains, Build41/43 geometry or the Build42 data/list decoder.
+- Vendors a pure-Go pre-Go-1.26 JPEG decoder under `internal/jpeglegacy`, with the upstream Go BSD-style license retained, so JPEG rasterization no longer depends on the compiler standard library.
+- Routes CLI JPEG `DecodeConfig` and full decode through the PixSeal-controlled decoder; PNG continues to use `image/png`. Magic-byte detection remains extension-independent.
+- Adds a deterministic JPEG fixture with locked Y/Cb/Cr SHA-256 vectors plus a CLI-ingest regression. The decoder identity is exposed in phone diagnostics as `pixseal-jpeg-pre-go1.26-v1`.
+- Qualifies Go 1.26.0 as the Build44 default toolchain after both deterministic JPEG regressions and the unchanged private Build43 smartphone matrix pass on the real Surface/WSL2 qualification host.
+- Physical qualification result: controls 3/3 reject; A/front, A/mild, A/angle and B/front authenticate; B/mild and B/angle remain informational rejects.
+- Promotes `make v4-build44-phone-physical-test` as the normal Build44 physical gate; retains the explicit `v4-build44-go126-*` targets as historical qualification regressions.
+- Adds `v4-build44-jpeg-compat-test`, deterministic decoder fixtures and `docs/V4_BUILD44_DETERMINISTIC_JPEG.md`.
+
 ## v0.3.0-build43 — 2026-09-23
 
 - Adds a proposal-only blind side-pair geometry fallback for smartphone Format-v4 recovery after Build41 geometry rejection.

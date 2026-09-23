@@ -7,9 +7,9 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	jpeglegacy "github.com/pj/pixseal/internal/jpeglegacy"
 	"image"
 	"image/color"
-	_ "image/jpeg"
 	"image/png"
 	"io"
 	"math"
@@ -36,7 +36,7 @@ Commands:
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
-  v4-extract-phone EXPERIMENTAL: Build41 smartphone basin recovery + Build40 pilot-only residual + authenticated v4 decode
+  v4-extract-phone EXPERIMENTAL: Build44 deterministic JPEG ingest + Build43 smartphone recovery + authenticated v4 decode
   capacity   Show the usable payload capacity of an image
   analyze    Recommend a v3 profile and embedding settings
   diagnose   Experimental bounded local-lattice diagnostics (v0.3 research)
@@ -175,13 +175,54 @@ func validateSourceDimensions(width, height int) error {
 	return nil
 }
 
+func detectInputFormat(f *os.File) (string, error) {
+	var signature [8]byte
+	n, err := io.ReadFull(f, signature[:])
+	if err != nil && !errors.Is(err, io.ErrUnexpectedEOF) {
+		return "", err
+	}
+	if _, err := f.Seek(0, io.SeekStart); err != nil {
+		return "", err
+	}
+	b := signature[:n]
+	if len(b) >= 2 && b[0] == 0xff && b[1] == 0xd8 {
+		return "jpeg", nil
+	}
+	pngSignature := [...]byte{0x89, 'P', 'N', 'G', '\r', '\n', 0x1a, '\n'}
+	if len(b) >= len(pngSignature) {
+		match := true
+		for i := range pngSignature {
+			if b[i] != pngSignature[i] {
+				match = false
+				break
+			}
+		}
+		if match {
+			return "png", nil
+		}
+	}
+	return "", errors.New("unsupported image format: PixSeal accepts PNG or JPEG")
+}
+
 func openImageConfig(path string) (image.Config, string, error) {
 	f, err := os.Open(path)
 	if err != nil {
 		return image.Config{}, "", err
 	}
 	defer f.Close()
-	config, format, err := image.DecodeConfig(f)
+	format, err := detectInputFormat(f)
+	if err != nil {
+		return image.Config{}, "", err
+	}
+	var config image.Config
+	switch format {
+	case "jpeg":
+		config, err = jpeglegacy.DecodeConfig(f)
+	case "png":
+		config, err = png.DecodeConfig(f)
+	default:
+		err = errors.New("unsupported image format")
+	}
 	if err != nil {
 		return image.Config{}, "", err
 	}
@@ -201,12 +242,17 @@ func openImageWithFormat(path string) (image.Image, string, error) {
 		return nil, "", err
 	}
 	defer f.Close()
-	img, decodedFormat, err := image.Decode(f)
+	var img image.Image
+	switch format {
+	case "jpeg":
+		img, err = jpeglegacy.Decode(f)
+	case "png":
+		img, err = png.Decode(f)
+	default:
+		err = errors.New("unsupported image format")
+	}
 	if err != nil {
 		return nil, "", err
-	}
-	if decodedFormat != "" {
-		format = decodedFormat
 	}
 	if got := img.Bounds(); got.Dx() != config.Width || got.Dy() != config.Height {
 		return nil, "", fmt.Errorf("decoded dimensions %dx%d differ from image config %dx%d", got.Dx(), got.Dy(), config.Width, config.Height)
@@ -728,7 +774,7 @@ func printV4ScannerDiagnostics(w io.Writer, info watermark.ExperimentalV4Extract
 }
 
 func v4ExtractPhone(args []string) error {
-	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build43 smartphone decoder: preserve Build41/42 behavior, then use a bounded proposal-only side-pair geometry fallback before held-out qualification and unchanged HMAC authentication.")
+	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build44 smartphone decoder: use deterministic PixSeal JPEG rasterization, preserve Build41/42 behavior, then use the Build43 bounded proposal-only side-pair geometry fallback before held-out qualification and unchanged HMAC authentication.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
@@ -748,29 +794,42 @@ func v4ExtractPhone(args []string) error {
 	if *width < 296 || *height < 256 || *width%8 != 0 || *height%8 != 0 {
 		return fmt.Errorf("canonical -width/-height must be divisible by 8 and at least 296x256")
 	}
-	img, err := openImage(*in)
+	img, format, err := openImageWithFormat(*in)
 	if err != nil {
 		return err
 	}
+	decoderID := inputDecoderID(format)
 	payload, info, phone, err := watermark.ExperimentalV4ExtractPhone(img, []byte(*key), *width, *height)
 	if err != nil {
-		printV4PhoneDiagnostics(os.Stderr, info, phone)
+		printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
 		return err
 	}
 	if *raw {
 		if _, err := os.Stdout.Write(payload); err != nil {
 			return err
 		}
-		printV4PhoneDiagnostics(os.Stderr, info, phone)
+		printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
 		return nil
 	}
 	fmt.Printf("%s\n", payload)
-	printV4PhoneDiagnostics(os.Stderr, info, phone)
+	printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
 	return nil
 }
 
-func printV4PhoneDiagnostics(w io.Writer, info watermark.ExperimentalV4ExtractInfo, p watermark.ExperimentalV4PhoneInfo) {
+func inputDecoderID(format string) string {
+	switch format {
+	case "jpeg":
+		return jpeglegacy.DecoderID
+	case "png":
+		return "go-image-png"
+	default:
+		return "unknown"
+	}
+}
+
+func printV4PhoneDiagnostics(w io.Writer, decoderID string, info watermark.ExperimentalV4ExtractInfo, p watermark.ExperimentalV4PhoneInfo) {
 	fmt.Fprintf(w, "EXPERIMENTAL Format-v4 phone decode\n")
+	fmt.Fprintf(w, "input-decoder: %s\n", decoderID)
 	fmt.Fprintf(w, "working-image: %dx%d downsampled=%t\n", p.WorkingWidth, p.WorkingHeight, p.Downsampled)
 	fmt.Fprintf(w, "boundary: detected=%t confidence=%.6f\n", p.BoundaryDetected, p.BoundaryConfidence)
 	fmt.Fprintf(w, "projective-basin: found=%t\n", p.ProjectiveBasinFound)

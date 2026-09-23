@@ -2,7 +2,9 @@ package main
 
 import (
 	"bytes"
+	"crypto/sha256"
 	"encoding/binary"
+	"encoding/hex"
 	"errors"
 	"flag"
 	"hash/crc32"
@@ -84,9 +86,10 @@ func TestV4PhoneDiagnosticsExposeBuild42MatrixFields(t *testing.T) {
 		HMACAuthenticated: false, FallbackAttempted: true, FallbackAuthenticated: false,
 		Build42DataAttempted: true, Build42BankCandidates: 5, Build42EnsemblesTried: 2, Build42ListFramesTried: 1030, Build42DataAuthenticated: true,
 	}
-	printV4PhoneDiagnostics(&buf, info, phone)
+	printV4PhoneDiagnostics(&buf, "pixseal-jpeg-pre-go1.26-v1", info, phone)
 	out := buf.String()
 	for _, want := range []string{
+		"input-decoder: pixseal-jpeg-pre-go1.26-v1",
 		"projective-basin: found=true",
 		"phone-residual: fitted=true applied=false",
 		"data-decode: attempted=true soft-hamming-profiles=3 max-confidence=11.20",
@@ -96,6 +99,28 @@ func TestV4PhoneDiagnosticsExposeBuild42MatrixFields(t *testing.T) {
 		if !strings.Contains(out, want) {
 			t.Fatalf("diagnostics missing %q:\n%s", want, out)
 		}
+	}
+}
+
+func TestOpenImageUsesDeterministicLegacyJPEGDecoder(t *testing.T) {
+	path := filepath.Join("..", "..", "internal", "jpeglegacy", "testdata", "legacy-sample.jpg")
+	img, format, err := openImageWithFormat(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if format != "jpeg" {
+		t.Fatalf("format=%q", format)
+	}
+	y, ok := img.(*image.YCbCr)
+	if !ok {
+		t.Fatalf("decoded type %T, want *image.YCbCr", img)
+	}
+	sum := sha256.Sum256(y.Y)
+	if got := hex.EncodeToString(sum[:]); got != "eb6ec297f45a764be2c668febd833ad55dda2c75313589fd7d3909d188543147" {
+		t.Fatalf("Y sha256=%s", got)
+	}
+	if got := inputDecoderID(format); got != "pixseal-jpeg-pre-go1.26-v1" {
+		t.Fatalf("decoder=%q", got)
 	}
 }
 

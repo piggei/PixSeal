@@ -2,11 +2,13 @@ SHELL := /bin/bash
 .DEFAULT_GOAL := build
 .NOTPARALLEL:
 
-# Build43 qualification is pinned to Go 1.25.1. Go 1.26 replaced image/jpeg
-# with a new decoder whose pixel output differs enough to change the qualified
-# smartphone geometry path. Use $(GO) for every Go command in this Makefile.
-QUALIFIED_GO_TOOLCHAIN := go1.25.1
+# Build44 physically qualifies Go 1.26.0 with PixSeal-owned deterministic JPEG
+# ingest. Use $(GO) for every normal Go command in this Makefile. Go 1.25.1
+# remains a historical Build43 qualification reference only.
+QUALIFIED_GO_TOOLCHAIN := go1.26.0
+BUILD44_CANDIDATE_GO_TOOLCHAIN ?= go1.26.0
 PIXSEAL_GO_TOOLCHAIN ?= $(QUALIFIED_GO_TOOLCHAIN)
+EXPECTED_GO_TOOLCHAIN ?= $(PIXSEAL_GO_TOOLCHAIN)
 GO := env GOTOOLCHAIN=$(PIXSEAL_GO_TOOLCHAIN) go
 
 PIXSEAL := dist/pixseal
@@ -81,6 +83,7 @@ V4_PHONE_DIAGNOSTIC_DIR ?= v4-phone private/build40-diagnostics
 V4_PHONE_BUILD41_DIAGNOSTIC_DIR ?= v4-phone private/build41-diagnostics
 V4_PHONE_BUILD42_DIAGNOSTIC_DIR ?= v4-phone private/build42-diagnostics
 V4_PHONE_BUILD43_DIAGNOSTIC_DIR ?= v4-phone private/build43-diagnostics
+V4_PHONE_BUILD44_DIAGNOSTIC_DIR ?= v4-phone private/build44-diagnostics
 V4_PHONE_CANONICAL_WIDTH ?= 1632
 V4_PHONE_CANONICAL_HEIGHT ?= 1632
 V4_PHONE_TIMEOUT ?= 600
@@ -89,7 +92,7 @@ ALL_TEST_TARGETS ?=
 ALL_TEST_STRICT ?=1
 GO_SOURCES := $(shell find cmd internal watermark -type f -name '*.go')
 
-.PHONY: toolchain-check test-list corpus-manifest-check private-corpus-manifest v4-physical-fixtures v4-physical-qualification v4-phone-fixtures v4-build40-phone-corpus-diagnostic v4-build41-phone-physical-test v4-build42-phone-physical-test print-scan-test build test test-unit release-unit v3-freeze-check v4-pilot-lock-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build42-phone-data-test v4-build43-phone-side-pair-test v4-build43-phone-physical-test v4-build37-physical-scanner-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
+.PHONY: toolchain-check test-list corpus-manifest-check private-corpus-manifest v4-physical-fixtures v4-physical-qualification v4-phone-fixtures v4-build40-phone-corpus-diagnostic v4-build41-phone-physical-test v4-build42-phone-physical-test print-scan-test build test test-unit release-unit v3-freeze-check v4-pilot-lock-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build42-phone-data-test v4-build43-phone-side-pair-test v4-build43-phone-physical-test v4-build44-jpeg-compat-test v4-build44-go126-jpeg-compat-test v4-build44-phone-physical-test v4-build44-go126-phone-physical-test v4-build37-physical-scanner-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
 
 # Print a categorized index of all test/check targets without running them.
 test-list:
@@ -163,8 +166,7 @@ v4-build40-phone-corpus-diagnostic: build
 	V4_PHONE_TIMEOUT="$(V4_PHONE_TIMEOUT)" \
 	bash ./scripts/diagnose-v4-phone-corpus.sh
 
-# Verify and use the exact toolchain qualified for Build43. The explicit
-# GOTOOLCHAIN selection is required even on hosts with a newer Go installed.
+# Verify the selected Build44 qualified toolchain (Go 1.26.0).
 toolchain-check:
 	@out="$$( $(GO) version 2>&1 )" || { \
 		echo "error: unable to run qualified Go $(QUALIFIED_GO_TOOLCHAIN) toolchain" >&2; \
@@ -173,16 +175,17 @@ toolchain-check:
 		exit 1; \
 	}; \
 	actual="$$(printf '%s\n' "$$out" | awk '{print $$3}')"; \
-	if [[ "$$actual" != "$(QUALIFIED_GO_TOOLCHAIN)" ]]; then \
-		echo "error: PixSeal Build43 requires Go $(QUALIFIED_GO_TOOLCHAIN); selected $$actual" >&2; \
+	if [[ "$$actual" != "$(EXPECTED_GO_TOOLCHAIN)" ]]; then \
+		echo "error: PixSeal expected Go $(EXPECTED_GO_TOOLCHAIN); selected $$actual" >&2; \
 		exit 1; \
 	fi; \
-	echo "Qualified Go toolchain: $$actual"
+	echo "Selected Go toolchain: $$actual"
 
 # Default target: always rebuild the native executable with the qualified
-# toolchain. Rebuilding avoids silently reusing dist/pixseal from Go 1.26+.
+# Build44 toolchain. Rebuilding avoids silently reusing a binary from another
+# Go release.
 build: toolchain-check
-	@echo "Building PixSeal with $(QUALIFIED_GO_TOOLCHAIN)..."
+	@echo "Building PixSeal with $(PIXSEAL_GO_TOOLCHAIN)..."
 	@mkdir -p dist
 	@$(GO) build -trimpath -ldflags="-s -w" -o $(PIXSEAL) ./cmd/pixseal
 	@echo "Created $(PIXSEAL)"
@@ -199,7 +202,7 @@ test-unit:
 # regression group. make test still runs every Go test for compatibility.
 release-unit:
 	@echo "Running release-gate Go tests..."
-	@$(GO) test ./cmd/pixseal ./internal/buildinfo -count=1
+	@$(GO) test ./cmd/pixseal ./internal/buildinfo ./internal/jpeglegacy -count=1
 	@$(GO) test ./watermark -run 'Test(V3EncoderGoldenFingerprint|StrengthRejectsNonFiniteValues|AnalyzerUsesSameWhiteAlphaFlatteningAsEncoder|WorkingImageLimitRejectsBeforePixelPlaneAllocation|WorkingImageLimitRejectsIntegerOverflow|IsotropicScaleSearchIsFixed|HammingCorrectsSingleBit|ProfileSelectionThresholds|ExplicitProfileCapacityErrors|V3ProfileRoundTrips|V3TransformsByProfile|V3AutoProfileExtraction|WrongKeyAndUnmarkedImageAreBounded|AnalyzeImageMatchesProfileMath|V3FrameIgnoresTrailingPaddingButAuthenticatesHeader|V3SyncPatternObservationCounts|V3TileMappingObservationCounts)$$' -count=1
 
 v3-freeze-check:
@@ -462,6 +465,24 @@ v4-build43-phone-side-pair-test:
 	@$(GO) test ./watermark -run '^TestExperimentalV4Build43PhoneSidePairRecovery$$' -count=1 -v
 	@$(GO) test ./cmd/pixseal -run '^(TestSubcommandHelpReturnsFlagErrHelp|TestV4ExtractPhoneRequiresCanonicalBlockDimensions)$$' -count=1 -v
 
+# Build44 freezes JPEG rasterization inside PixSeal instead of inheriting the
+# host toolchain's image/jpeg implementation. This baseline regression runs on
+# the currently qualified Go toolchain and protects both the vendored decoder
+# vectors and the CLI ingest path.
+v4-build44-jpeg-compat-test:
+	@echo "Running Build44 deterministic JPEG-ingest regression..."
+	@$(GO) test ./internal/jpeglegacy -run '^TestDeterministicLegacyJPEGFixture$$' -count=1 -v
+	@$(GO) test ./cmd/pixseal -run '^TestOpenImageUsesDeterministicLegacyJPEGDecoder$$' -count=1 -v
+
+# Explicit Go 1.26 deterministic-ingest check. Kept as a named regression for
+# the qualification evidence that promoted Go 1.26.0 in Build44.
+v4-build44-go126-jpeg-compat-test:
+	@set -euo pipefail; \
+	out="$$(env GOTOOLCHAIN=$(BUILD44_CANDIDATE_GO_TOOLCHAIN) go version 2>&1)" || { echo "$$out" >&2; exit 1; }; \
+	echo "Build44 qualified toolchain check: $$out"; \
+	env GOTOOLCHAIN=$(BUILD44_CANDIDATE_GO_TOOLCHAIN) go test ./internal/jpeglegacy -run '^TestDeterministicLegacyJPEGFixture$$' -count=1 -v; \
+	env GOTOOLCHAIN=$(BUILD44_CANDIDATE_GO_TOOLCHAIN) go test ./cmd/pixseal -run '^TestOpenImageUsesDeterministicLegacyJPEGDecoder$$' -count=1 -v
+
 # Opt-in private physical regression over the original full-page scanner files.
 # Paths are explicit so the private captures never enter the source archive.
 v4-build37-physical-scanner-test: build
@@ -563,6 +584,31 @@ v4-build43-phone-physical-test: build
 	V4_PHONE_MESSAGE_B="$(V4_PHONE_MESSAGE_B)" \
 	V4_PHONE_TIMEOUT="$(V4_PHONE_TIMEOUT)" \
 	bash ./scripts/test-v4-build43-phone-corpus.sh
+
+# Build44 qualified Go 1.26 physical gate. The watermark/geometry/data path is
+# unchanged from Build43; only JPEG ingest is frozen inside PixSeal.
+v4-build44-go126-phone-physical-test:
+	@set -euo pipefail; \
+	out="$$(env GOTOOLCHAIN=$(BUILD44_CANDIDATE_GO_TOOLCHAIN) go version 2>&1)" || { echo "$$out" >&2; exit 1; }; \
+	actual="$$(printf '%s\n' "$$out" | awk '{print $$3}')"; \
+	if [[ "$$actual" != "$(BUILD44_CANDIDATE_GO_TOOLCHAIN)" ]]; then echo "error: Build44 qualification requires $(BUILD44_CANDIDATE_GO_TOOLCHAIN); selected $$actual" >&2; exit 1; fi; \
+	echo "Build44 qualified toolchain: $$actual"; \
+	mkdir -p dist; \
+	env GOTOOLCHAIN=$(BUILD44_CANDIDATE_GO_TOOLCHAIN) go build -trimpath -ldflags="-s -w" -o dist/pixseal-build44-go126 ./cmd/pixseal; \
+	PIXSEAL="$(abspath dist/pixseal-build44-go126)" \
+	V4_PHONE_ACQUISITION_DIR="$(V4_PHONE_ACQUISITION_DIR)" \
+	V4_PHONE_BUILD44_DIAGNOSTIC_DIR="$(V4_PHONE_BUILD44_DIAGNOSTIC_DIR)" \
+	V4_PHONE_KEY="$(V4_PHONE_KEY)" \
+	V4_PHONE_CANONICAL_WIDTH="$(V4_PHONE_CANONICAL_WIDTH)" \
+	V4_PHONE_CANONICAL_HEIGHT="$(V4_PHONE_CANONICAL_HEIGHT)" \
+	V4_PHONE_MESSAGE_A="$(V4_PHONE_MESSAGE_A)" \
+	V4_PHONE_MESSAGE_B="$(V4_PHONE_MESSAGE_B)" \
+	V4_PHONE_TIMEOUT="$(V4_PHONE_TIMEOUT)" \
+	bash ./scripts/test-v4-build44-phone-corpus.sh
+
+# Preferred Build44 physical qualification command. Go 1.26.0 is the qualified
+# toolchain; the historical go126-named target remains as an explicit alias.
+v4-build44-phone-physical-test: v4-build44-go126-phone-physical-test
 
 print-scan-test: build
 	@PIXSEAL="$(abspath $(PIXSEAL))" \
@@ -767,7 +813,7 @@ vet:
 # regressions remain visible through research-unit / all-test. Requires original pics/.
 # Strict mode is target-specific so a plain `make release-check` is self-contained.
 release-check: STRICT := 1
-release-check: toolchain-check version-check vet release-unit v3-freeze-check v4-pilot-lock-check corpus-manifest-check test-images deep-test core-target-check
+release-check: toolchain-check version-check vet release-unit v3-freeze-check v4-pilot-lock-check corpus-manifest-check test-images v4-build44-jpeg-compat-test deep-test core-target-check
 	@echo "Release baseline checks passed."
 
 # Run build + local round-trip tests + baseline transformation tests.

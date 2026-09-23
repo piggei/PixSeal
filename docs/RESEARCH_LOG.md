@@ -838,3 +838,17 @@ This closes the controlled scanner channel without reprinting and without increa
 ## Build43 research closure
 
 Research established that A/front was geometrically recoverable without changing Format-v4. The promoted solution preserves multiple side-pair/angular/fine/complement basins before freeze rather than taking a global proposal maximum; held-out evidence is never used to decide where to search.
+
+## Build44 — deterministic JPEG ingest qualification
+
+**Observation.** Build43 A/mild changed from HMAC PASS to geometry reject solely
+when the same source/photo moved from Go 1.25.1 to Go 1.26.0. Direct hashes of
+the decoded Y/Cb/Cr planes proved the divergence occurs inside JPEG decoding,
+before PixSeal resize/geometry.
+
+**Decision.** Do not retune Build43 geometry around a toolchain raster change.
+Freeze the pre-Go-1.26 JPEG decoder inside PixSeal and lock a public decoded-raster
+fixture. The Go 1.26.0 deterministic JPEG regression and the unchanged private Build43
+physical matrix both pass on the Surface/WSL2 qualification host (controls 3/3 reject;
+A/front, A/mild, A/angle and B/front authenticate). Promote Go 1.26.0 as the Build44
+qualified toolchain, then resume B/mild/B/angle geometry research from this stable raster baseline.

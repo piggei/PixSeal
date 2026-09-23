@@ -158,3 +158,18 @@ The official Build43 physical gate must be built/run through the repository Make
 
 
 Build43 reuses the same nine original Build38 strength-48 photographs. `v4-build43-phone-physical-test` writes derived logs/matrices only. Required gate: controls reject; A/front, A/mild, A/angle and B/front authenticate; B/mild/B-angle are informational. No private image is distributed.
+
+## Build44 Go 1.26 ingest qualification
+
+Build44 reuses the exact same nine Build38 strength-48 smartphone photographs;
+no reprint or reacquisition is required. The candidate target is:
+
+```sh
+make v4-build44-go126-phone-physical-test
+```
+
+It builds a separate Go 1.26.0 binary using the deterministic PixSeal JPEG
+decoder and writes derived logs/matrices under
+`v4-phone private/build44-diagnostics/`. The required matrix is identical to
+Build43: controls 3/3 reject; A/front, A/mild, A/angle and B/front authenticate;
+B/mild/B-angle remain informational. The private image bytes are never packaged.

@@ -79,3 +79,23 @@ stable image-ingest contract. Candidate approaches include a project-controlled
 JPEG decoding path or another normalization step whose decoded raster is covered
 by deterministic fixtures/hashes across supported platforms. That change must be
 qualified separately before Go 1.26+ becomes a supported physical-build toolchain.
+
+## Build44 deterministic-ingest qualification
+
+Build44 implements the follow-up described above. JPEG decoding is now owned by
+PixSeal through `internal/jpeglegacy`, with public deterministic Y/Cb/Cr fixture
+hashes and a CLI-ingest regression. PNG remains on `image/png`.
+
+Build44 no longer relies on the toolchain standard library for JPEG rasterization. Two explicit qualification targets were used to validate Go 1.26.0:
+
+```sh
+make v4-build44-go126-jpeg-compat-test
+make v4-build44-go126-phone-physical-test
+```
+
+The first checks the frozen raster contract under Go 1.26.0. The second builds a
+Go 1.26.0 executable and requires the complete private Build43 physical matrix
+to remain unchanged. Both gates passed on the Surface/WSL2 qualification host.
+Build44 therefore promotes **Go 1.26.0** as the normal qualified toolchain.
+`make build`, `make all-test` and `build-windows.bat` now select Go 1.26.0.
+Go 1.25.1 remains relevant only as the historical Build43 qualification reference.
