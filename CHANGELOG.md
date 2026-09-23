@@ -1,3 +1,21 @@
+## v0.3.0-build43 — 2026-09-23
+
+- Adds a proposal-only blind side-pair geometry fallback for smartphone Format-v4 recovery after Build41 geometry rejection.
+- Preserves Format-v4 wire format, encoder, strength-48 qualification signal, pilot, ECC/Hamming, whitening, HMAC and the Build42 data/list decoder.
+- Adds structural paper→artwork side proposals with conservative gating, multi-pair/angular/fine/complement diversity, a frozen bank capped at 32 candidates, and held-out qualification only after freeze.
+- Recovers the private Build38 `A/front` smartphone capture while preserving the existing `A/mild`, `A/angle`, `B/front` passes and 3/3 control rejections.
+- Adds Build43 CLI telemetry, `v4-build43-phone-side-pair-test`, opt-in `v4-build43-phone-physical-test`, and `docs/V4_BUILD43_PHONE_SIDE_PAIR.md`.
+
+## v0.3.0-build42 — 2026-09-18
+
+- Keeps the Build41 smartphone geometry search, proposal/held-out split and acceptance thresholds unchanged.
+- Retains the complete already-qualified Build41 geometry bank for a post-geometry data fallback when the normal two-hypothesis soft decoder fails authentication.
+- Adds deterministic three-geometry margin ensembles and a bounded Hamming list decoder over the ten weakest ML word gaps; HMAC remains final frame authentication and never feeds geometry search/ranking.
+- Reorders the phone pipeline to `Build41 global decode -> Build42 data fallback -> Build40 residual fallback`, avoiding expensive residual fitting when accepted global geometry is already sufficient.
+- Physical result on the unchanged strength-48 corpus: all three controls REJECT before data decode; `A/angle` and `B/front` remain direct PASS; `A/mild` newly authenticates `v4-b38-phone-a` through Build42; A/front, B/mild and B/angle remain geometry rejects.
+- Adds `v4-build42-phone-data-test`, `v4-build42-phone-physical-test`, Build42 CLI telemetry and `docs/V4_BUILD42_PHONE_DATA_LIST.md`.
+- No encoder, pilot, strength, data layout, ECC, whitening/HMAC domain, scanner path or frozen Format-v3 change.
+
 ## v0.3.0-build41 — 2026-09-18
 
 - Closes the first staged blind-smartphone physical milestone on the existing private strength-48 corpus without changing the Format-v4 encoder, locked pilot, 1120-position data partition, Hamming(7,4), whitening/HMAC domains, robust strength 48, Build40 residual model or frozen Format-v3 core.
@@ -5,7 +23,7 @@
 - Uses a deterministic three-way spatial public-pilot split: folds 1+2 generate/refine/freeze the geometry shortlist; fold 0 remains completely held out until qualification. Payload bytes, ECC result, secret key and HMAC are unavailable to geometry generation/ranking.
 - Adds proposal-only phase restoration and fine variants, then requires held-out/full-pilot qualification at canonical origin `(0,0)`. The final two-geometry ensemble must also satisfy a scale-normalized diversity floor so it brackets sub-pixel registration uncertainty instead of duplicating one local optimum.
 - Adds `v4-build41-phone-basin-test`, an end-to-end synthetic marked/control gate over the public `ExperimentalV4ExtractPhone` API.
-- Adds opt-in `v4-build41-phone-physical-test` for the private nine-photo strength-48 corpus. Current physical result: all three controls REJECT; `A/angle` authenticates `v4-b38-phone-a`; `B/front` authenticates `v4-b38-phone-b`; `A/mild` reaches data decode but does not authenticate; the other three marked captures remain outside the accepted basin.
+- Adds opt-in `v4-build41-phone-physical-test` for the private nine-photo strength-48 corpus. Build41 checkpoint result: all three controls REJECT; `A/angle` authenticates `v4-b38-phone-a`; `B/front` authenticates `v4-b38-phone-b`; `A/mild` reaches data decode but does not authenticate; the other three marked captures remain outside the accepted basin.
 - The Build40 residual is attempted where applicable but is not applied in either physical PASS case, so the two authenticated results come from Build41 global registration plus the unchanged soft-Hamming/HMAC channel.
 - Keeps the project source-available for noncommercial use under PolyForm Noncommercial License 1.0.0.
 

@@ -1159,3 +1159,29 @@ Build41 re-runs the unchanged strength-48 nine-photo physical corpus after repla
 Both authenticated cases are blind: the projective shortlist is generated only from structural evidence and the proposal folds of the public pilot, then frozen before the held-out fold is read. The Build40 residual fitter is evaluated downstream but is not applied in either PASS case because held-out residual evidence does not justify it. Thus the new physical success is attributable to Build41 global basin recovery plus the unchanged Build36 soft-Hamming/HMAC channel.
 
 This closes the first smartphone physical milestone but not the whole channel. A/front, B/mild and B/angle still require stronger blind basin acquisition/retention, while A/mild is already close enough geometrically to reach protected-data decoding. Strength 48, ECC and HMAC remain unchanged.
+
+
+## Build42 qualified-bank/list-decoder result
+
+Build42 reuses the unchanged nine-photo strength-48 corpus and the unchanged Build41 geometry thresholds. The new gate is stricter about what changed: the two existing physical passes must remain direct Build41 decodes, `A/mild` must authenticate through the new post-geometry fallback, and all controls must still reject before protected-data decoding.
+
+| capture | Build42 result |
+|---|---|
+| control/front | REJECT before data decode |
+| control/mild | REJECT before data decode |
+| control/angle | REJECT before data decode |
+| A/front | geometry reject |
+| A/mild | **HMAC PASS — `v4-b38-phone-a` via Build42 data fallback** |
+| A/angle | **HMAC PASS — `v4-b38-phone-a`, direct Build41 path** |
+| B/front | **HMAC PASS — `v4-b38-phone-b`, direct Build41 path** |
+| B/mild | geometry reject |
+| B/angle | geometry reject |
+
+For A/mild the frozen Build41 bank contains five qualified geometries. Pair-only diagnostics do not authenticate. Deterministic three-member ensembles reduce the residual soft-Hamming ambiguity enough that the bounded list decoder reaches the authentic frame; the production fallback authenticates after two ensemble attempts. No pilot threshold, strength, ECC or HMAC domain was changed.
+
+The remaining problem is now cleanly separated: A/front, B/mild and B/angle still fail in the geometry stage and therefore cannot benefit from Build42 data recovery. They are deferred to a later geometry-focused build.
+
+
+## Build43 result
+
+On the private Build38 strength-48 corpus the minimum Build43 milestone is controls 3/3 reject; A/front, A/mild, A/angle and B/front authenticate; B/mild/B-angle remain informational rejects. A/front is recovered through the new geometry fallback and unchanged Build42/HMAC data path.

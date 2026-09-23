@@ -820,3 +820,21 @@ This closes the controlled scanner channel without reprinting and without increa
 **Physical result.** All three controls reject. `A/angle` authenticates `v4-b38-phone-a`; `B/front` authenticates `v4-b38-phone-b`. `A/mild` reaches data decoding but fails HMAC; A/front, B/mild and B/angle remain geometry rejects. The downstream Build40 residual does not qualify for either PASS capture.
 
 **Decision.** Freeze Build41 at the staged A/B milestone. Future work may broaden the capture envelope, but it must preserve the three control rejections, both Build41 physical PASS cases, the proposal/held-out separation and the rule that payload/ECC/key/HMAC never select geometry.
+
+
+## Build42 — post-geometry qualified-bank/list recovery (2026-09-18)
+
+**Starting evidence.** Build41 already accepted A/mild geometry and reached protected-data decoding. Repeated attempts to improve A/front/B-mild/B-angle with tracked cyclic origin, alternate held-out splits, radial correction, cross-fit corner polish and proposal-only quadratic residuals either failed qualification or improved proposal evidence while degrading held-out evidence. Those geometry variants were rejected rather than weakening gates.
+
+**A/mild bank diagnostic.** The exact Build41 frozen bank contains five qualified hypotheses. None of the ten validation-weighted pairs authenticates. Testing only post-geometry margin aggregation shows several three-hypothesis ensembles with one residual information-bit error after soft Hamming. In a representative `[Q0,Q2,Q4]` uniform ensemble the only wrong Hamming word chooses nibble `0x5`; the correct `0x7` is exactly the second ML candidate.
+
+**Accepted design.** Keep Build41 geometry untouched. Preserve the full qualified bank, enumerate deterministic three-member data ensembles, and use a bounded list decoder over second-best nibbles only for the ten weakest ML word gaps. HMAC is consulted only after each complete frame candidate is fixed. The pipeline is reordered so accepted global geometry tries normal decode first, Build42 data fallback second, and Build40 residual last.
+
+**Physical result.** A/mild authenticates `v4-b38-phone-a`; A/angle and B/front remain direct passes and do not enter Build42; all controls still reject before data decode. The remaining three marked failures are geometry rejects.
+
+**Decision.** Close Build42 as a post-geometry robustness gain. Do not use its HMAC result to search or rank geometry. A future Build43 should return exclusively to the geometry envelope for A/front, B/mild and B/angle.
+
+
+## Build43 research closure
+
+Research established that A/front was geometrically recoverable without changing Format-v4. The promoted solution preserves multiple side-pair/angular/fine/complement basins before freeze rather than taking a global proposal maximum; held-out evidence is never used to decide where to search.

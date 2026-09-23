@@ -728,7 +728,7 @@ func printV4ScannerDiagnostics(w io.Writer, info watermark.ExperimentalV4Extract
 }
 
 func v4ExtractPhone(args []string) error {
-	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build41 smartphone decoder: anchor the artwork boundary structurally, fit a bounded public-pilot projective basin on a fixed proposal fold set, validate a frozen diverse geometry ensemble on held-out pilot tiles, optionally apply the Build40 residual field, then authenticate the unchanged Format-v4 frame.")
+	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build43 smartphone decoder: preserve Build41/42 behavior, then use a bounded proposal-only side-pair geometry fallback before held-out qualification and unchanged HMAC authentication.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
@@ -780,6 +780,12 @@ func printV4PhoneDiagnostics(w io.Writer, info watermark.ExperimentalV4ExtractIn
 		fmt.Fprintf(w, "phone-residual: fitted=%t applied=%t controls=%d rms=%.3f px proposal=%.6f->%.6f validation=%.6f->%.6f\n", p.ResidualFitted, p.ResidualApplied, p.ResidualControls, p.ResidualRMSPixels, p.ResidualProposalBefore, p.ResidualProposalAfter, p.ResidualValidationBefore, p.ResidualValidationAfter)
 	}
 	fmt.Fprintf(w, "data-decode: attempted=%t soft-hamming-profiles=%d max-confidence=%.2f\n", p.DataDecodeAttempted, p.SoftHammingProfiles, p.MaxDataConfidence)
+	if p.Build42DataAttempted {
+		fmt.Fprintf(w, "build42-data: attempted=true bank=%d ensembles=%d list-frames=%d authenticated=%t\n", p.Build42BankCandidates, p.Build42EnsemblesTried, p.Build42ListFramesTried, p.Build42DataAuthenticated)
+	}
+	if p.Build43Attempted {
+		fmt.Fprintf(w, "build43-geometry: attempted=true edge-refined=%t pairs=%d/%d selected=%s,%s proposal=%d frozen=%d qualified=%d authenticated=%t\n", p.Build43EdgeRefined, p.Build43PairsSelected, p.Build43PairsScanned, p.Build43Pair0, p.Build43Pair1, p.Build43ProposalCandidates, p.Build43FrozenCandidates, p.Build43QualifiedCandidates, p.Build43Authenticated)
+	}
 	fmt.Fprintf(w, "hmac: authenticated=%t fallback-attempted=%t fallback-authenticated=%t\n", p.HMACAuthenticated, p.FallbackAttempted, p.FallbackAuthenticated)
 	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)
 	fmt.Fprintf(w, "pilot-score: %.6f\npilot-margin: %.6f\npilot-origin: (%d,%d) blocks\n", info.PilotScore, info.PilotMargin, info.OriginXBlocks, info.OriginYBlocks)

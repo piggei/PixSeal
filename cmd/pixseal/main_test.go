@@ -71,7 +71,7 @@ func TestV4ExtractPhoneRequiresCanonicalBlockDimensions(t *testing.T) {
 	}
 }
 
-func TestV4PhoneDiagnosticsExposeBuild41MatrixFields(t *testing.T) {
+func TestV4PhoneDiagnosticsExposeBuild42MatrixFields(t *testing.T) {
 	var buf bytes.Buffer
 	info := watermark.ExperimentalV4ExtractInfo{Confidence: 12.5, Profile: watermark.ProfileRobust, PilotScore: 0.3, PilotMargin: 0.08, OriginXBlocks: 0, OriginYBlocks: 0, PilotName: "pilot", PilotHash: "hash"}
 	phone := watermark.ExperimentalV4PhoneInfo{
@@ -82,6 +82,7 @@ func TestV4PhoneDiagnosticsExposeBuild41MatrixFields(t *testing.T) {
 		ResidualProposalBefore: 0.2, ResidualProposalAfter: 0.3, ResidualValidationBefore: 0.18, ResidualValidationAfter: 0.16,
 		DataDecodeAttempted: true, SoftHammingProfiles: 3, MaxDataConfidence: 11.2,
 		HMACAuthenticated: false, FallbackAttempted: true, FallbackAuthenticated: false,
+		Build42DataAttempted: true, Build42BankCandidates: 5, Build42EnsemblesTried: 2, Build42ListFramesTried: 1030, Build42DataAuthenticated: true,
 	}
 	printV4PhoneDiagnostics(&buf, info, phone)
 	out := buf.String()
@@ -89,6 +90,7 @@ func TestV4PhoneDiagnosticsExposeBuild41MatrixFields(t *testing.T) {
 		"projective-basin: found=true",
 		"phone-residual: fitted=true applied=false",
 		"data-decode: attempted=true soft-hamming-profiles=3 max-confidence=11.20",
+		"build42-data: attempted=true bank=5 ensembles=2 list-frames=1030 authenticated=true",
 		"hmac: authenticated=false fallback-attempted=true fallback-authenticated=false",
 	} {
 		if !strings.Contains(out, want) {

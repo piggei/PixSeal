@@ -145,3 +145,13 @@ New v4 experiments and physical fixtures use the intentionally public developmen
 Build41 reuses the nine original strength-48 files under `v4-phone private/build38-acquired/`. They remain private qualification material and are never copied into source/release archives. `make v4-build41-phone-physical-test` may write only derived TSV/Markdown telemetry and stderr logs under `v4-phone private/build41-diagnostics/`; those outputs are private/generated evidence and are covered by the existing `/v4-phone private/` ignore rule.
 
 The software's PolyForm Noncommercial License does not grant separate rights to private photographs, scans, source images or qualification fixtures. Keep those corpora outside release archives and public commits unless their owner explicitly chooses to publish them under a separate license.
+
+
+## Build42 smartphone qualification corpus
+
+Build42 uses the same nine private strength-48 originals under `v4-phone private/build38-acquired/`; no new acquisition is required. `make v4-build42-phone-physical-test` writes only derived telemetry and stderr logs under `v4-phone private/build42-diagnostics/`. The required gate is: all three controls reject before data decode; A/angle and B/front retain direct Build41 authentication; A/mild authenticates through the Build42 data-list fallback. A/front, B/mild and B/angle remain informational geometry-reject rows. No image bytes are copied into source or release archives.
+
+
+## Build43 private smartphone gate
+
+Build43 reuses the same nine original Build38 strength-48 photographs. `v4-build43-phone-physical-test` writes derived logs/matrices only. Required gate: controls reject; A/front, A/mild, A/angle and B/front authenticate; B/mild/B-angle are informational. No private image is distributed.

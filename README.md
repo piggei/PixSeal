@@ -26,7 +26,7 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build41**.
+Current development snapshot: **v0.3.0-build43**.
 
 Stable release baseline: **v0.2.0**.
 
@@ -39,13 +39,14 @@ maintenance/regression only unless genuinely new independent evidence appears.
 
 Current Format-v4 development is focused on blind physical recovery from smartphone
 photographs. Build39 introduced the global projective phone path, Build40 added a
-strictly bounded public-pilot-only residual field, and Build41 improves the global
-basin itself. On the existing strength-48 physical corpus Build41 now blindly
-HMAC-authenticates one A capture and one B capture while all three unmarked controls
-reject. Protected payload contents, ECC outcome, secret key and HMAC remain excluded
-from geometry selection; HMAC is used only as the final authentication result.
+strictly bounded public-pilot-only residual field, Build41 closed the first blind A/B
+basin milestone, and Build42 improves only the post-geometry data recovery stage. On
+the existing strength-48 physical corpus the decoder now HMAC-authenticates
+`A/angle`, `A/mild` and `B/front`, while all three unmarked controls still reject
+before protected-data decoding. Protected payload contents, secret key and HMAC remain
+excluded from geometry search/ranking; HMAC is only the final frame authenticator.
 
-> **Build41 blind-smartphone milestone:** the artwork boundary anchors physical phase, two thirds of the public pilot generate a bounded eight-coordinate projective basin and a proposal-only frozen shortlist, while a deterministic one-third spatial fold remains completely held out until qualification. A scale-normalized two-geometry ensemble must contain genuinely distinct hypotheses before the unchanged soft-Hamming/HMAC channel is attempted. On the private nine-photo strength-48 corpus, `A/angle` authenticates `v4-b38-phone-a`, `B/front` authenticates `v4-b38-phone-b`, and all three controls reject before data decode. The Build40 residual is attempted where applicable but is not applied in either PASS case. See [`docs/V4_BUILD41_PHONE_BASIN.md`](docs/V4_BUILD41_PHONE_BASIN.md).
+> **Build42 post-geometry milestone:** Build41 geometry is unchanged. The normal two-hypothesis soft-Hamming decode runs first. Only when already-qualified geometry reaches data decode but fails authentication does Build42 retain the complete frozen Build41-qualified bank, enumerate deterministic three-geometry data ensembles, and apply a bounded Hamming list decoder ordered only by ML score gaps. `A/mild` now authenticates `v4-b38-phone-a`; `A/angle` and `B/front` remain direct Build41 passes; all three controls still reject before data decode. A/front, B/mild and B/angle remain geometry-reject research cases. See [`docs/V4_BUILD42_PHONE_DATA_LIST.md`](docs/V4_BUILD42_PHONE_DATA_LIST.md).
 >
 > **Build32 active private corpus:** qualification uses only the explicit LQ/MQ/HQ entries in `private-corpus-active.tsv`; extra files in `original pics/` are ignored. New v4 development tests/fixtures use the public test key `PixSeal-v4-TestKey-2026`. Historical `Piccotti` vectors remain only for reproducibility. The corpus images themselves are private and are not shipped.
 
@@ -55,6 +56,25 @@ The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
 
+
+## What v0.3.0-build43 adds
+
+Build43 adds a bounded **blind side-pair geometry fallback** for smartphone Format-v4 recovery. It runs only after the qualified Build41 geometry path rejects, uses visible image structure plus the public pilot for proposal/refinement, freezes a maximum 32-candidate bank before held-out evaluation, and reuses the unchanged Build42 data/list decoder and HMAC authentication.
+
+The private Build38 strength-48 milestone is now: all three controls reject; `A/front` authenticates through Build43; `A/mild`, `A/angle` and `B/front` retain their prior authenticated paths; `B/mild` and `B/angle` remain research/INFO rejects.
+
+Use `make v4-build43-phone-side-pair-test` for the public regression and opt-in `make v4-build43-phone-physical-test` for the private nine-photo matrix. See [`docs/V4_BUILD43_PHONE_SIDE_PAIR.md`](docs/V4_BUILD43_PHONE_SIDE_PAIR.md).
+
+## What v0.3.0-build42 adds
+
+Build42 deliberately does **not** reopen smartphone geometry. The Build41 boundary, fixed 2/3 proposal versus 1/3 held-out split, projective qualification floors and two-geometry direct decoder remain the first path. Encoder strength 48, pilot identity, 1120-position data layout, Hamming(7,4), whitening/HMAC domains and Format-v3 are unchanged.
+
+When Build41 has already accepted geometry but its normal two-hypothesis soft decoder fails HMAC, Build42 keeps the complete geometry bank that was frozen and qualified by exactly the same public-pilot rules. At most six already-qualified geometries are retained. All deterministic three-member data ensembles are formed without key or payload feedback, their protected DCT margins are averaged, and the normal soft-Hamming ML result is attempted first. If that frame does not authenticate, Build42 considers only the second-best nibble for the ten Hamming words with the smallest ML score gaps, producing a tightly bounded list. HMAC validates complete frames only; it does not create, refine or rank geometry.
+
+The decoder order is now `Build41 global decode -> Build42 qualified-bank/list decode -> Build40 residual fallback`. This avoids spending minutes fitting a residual field when the accepted global geometry already contains enough data evidence. On the private strength-48 corpus, `A/angle` and `B/front` still authenticate directly without entering Build42; `A/mild` now authenticates `v4-b38-phone-a` through the new data fallback; all three controls reject before data decode. `A/front`, `B/mild` and `B/angle` remain geometry rejects and are explicitly deferred rather than hidden by weaker thresholds.
+
+Use `make v4-build42-phone-data-test` for the public synthetic/list-decoder gate and opt-in `make v4-build42-phone-physical-test` for the private nine-photo matrix. See [`docs/V4_BUILD42_PHONE_DATA_LIST.md`](docs/V4_BUILD42_PHONE_DATA_LIST.md).
+
 ## What v0.3.0-build41 adds
 
 Build41 is the first blind smartphone checkpoint to close the staged physical A/B milestone on the existing strength-48 corpus. It changes only the global phone registration front end; the Format-v4 encoder, locked pilot, data layout, strength 48, Hamming(7,4), whitening/HMAC domains, Build40 residual layer and frozen Format-v3 core are unchanged.
@@ -63,7 +83,7 @@ A structure-only artwork boundary anchors absolute phase. The canonical-to-phone
 
 The final phone ensemble contains two pilot-qualified geometries separated by at least `max(0.75 px, 0.20 * observed DCT-block scale)`. This diversity requirement prevents two near-identical local optima from masquerading as an ensemble and brackets the remaining sub-pixel registration uncertainty. Only after the pair is frozen does the unchanged Build40 residual/Build36 soft-Hamming/HMAC path run.
 
-`make v4-build41-phone-basin-test` provides a public synthetic end-to-end gate, including an unmarked control. The opt-in private `make v4-build41-phone-physical-test` runs the nine original strength-48 photos and applies the staged milestone: all three controls must reject and at least one A plus one B capture must authenticate the exact expected payload. Current physical result: `A/angle` and `B/front` HMAC PASS; `A/mild` reaches qualified geometry/data decode but does not authenticate; A/front, B/mild and B/angle remain outside the accepted basin. See [`docs/V4_BUILD41_PHONE_BASIN.md`](docs/V4_BUILD41_PHONE_BASIN.md).
+`make v4-build41-phone-basin-test` provides a public synthetic end-to-end gate, including an unmarked control. The opt-in private `make v4-build41-phone-physical-test` runs the nine original strength-48 photos and applies the staged milestone: all three controls must reject and at least one A plus one B capture must authenticate the exact expected payload. Build41 checkpoint result: `A/angle` and `B/front` HMAC PASS; `A/mild` reaches qualified geometry/data decode but does not authenticate; A/front, B/mild and B/angle remain outside the accepted basin. See [`docs/V4_BUILD41_PHONE_BASIN.md`](docs/V4_BUILD41_PHONE_BASIN.md).
 
 ## What v0.3.0-build40 adds
 

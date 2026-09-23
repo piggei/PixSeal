@@ -1507,3 +1507,23 @@ The complete proposal shortlist is frozen before any fold-0 samples are read. He
 Only after this freeze are protected DCT margins sampled. Build40's bounded residual field may then be proposed/validated exactly as before, followed by Build36 soft Hamming, frame parsing and HMAC. HMAC authenticates the final decoded frame but cannot generate, refine, rank or reorder Build41 geometry.
 
 The public synthetic Build41 regression requires exact authenticated recovery under strong projective camera geometry and rejection of a matching unmarked control. The private staged physical gate requires three control rejections plus at least one authenticated A and one authenticated B capture. Build41 meets that gate with A/angle and B/front while explicitly leaving the remaining marked captures as future robustness work.
+
+
+## Build42 qualified-bank data-list recovery
+
+Build42 does not change Format-v4 geometry or carrier semantics. The complete Build41 qualified geometry bank is preserved as a post-geometry resource. The normal Build41 two-hypothesis validation-weighted soft decode runs first. If it authenticates, Build42 is not entered.
+
+If geometry is accepted but the direct frame fails authentication, Build42 takes at most six geometries that have **already** passed the fixed Build41 proposal, held-out and complete-pilot gates. No new geometry is proposed or refined. For each deterministic three-member subset and each protected coded bit `j`, the data evidence is
+
+```text
+M[j] = (m[a,j] + m[b,j] + m[c,j]) / 3
+```
+
+The ordinary soft Hamming(7,4) ML nibble is decoded first. For list recovery, each Hamming word also records the score gap between its best and second-best nibble. The ten words with the smallest gaps form the only ambiguity set. Candidate frames are produced by bounded combinations of those second-best nibbles. The list order and membership depend only on signed DCT evidence and Hamming ML scores. Dewhitening/frame parsing/HMAC occur after each complete candidate is fixed; HMAC can accept a candidate but cannot modify the geometry bank or margin aggregation.
+
+The phone execution order is Build41 global decode, Build42 qualified-bank/list decode, then Build40 residual fitting only if both earlier data paths fail. This preserves the residual model as a final pilot-only fallback while avoiding its cost on captures already recoverable from the global geometry.
+
+
+## Build43 smartphone side-pair fallback
+
+Build43 adds a post-Build41 blind geometry fallback using structural side proposals, six side-pair families, bounded angular/fine/complement diversity and a <=32 proposal-only freeze before held-out qualification. The data plane remains Build42 unchanged.

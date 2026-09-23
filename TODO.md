@@ -1,3 +1,11 @@
+# Build43 status
+
+- [x] Recover Build38 `A/front` through a blind proposal-only geometry fallback.
+- [x] Keep Format-v4/encoder/pilot/ECC/HMAC/data decoder unchanged.
+- [x] Freeze the candidate bank before held-out qualification and cap it at 32.
+- [x] Preserve prior A/mild, A/angle and B/front authenticated paths; controls remain reject.
+- [ ] Future research: improve B/mild and B/angle without relaxing Build41 gates or using secret/data evidence for geometry.
+
 # PixSeal TODO
 
 This file contains open work only. Completed milestones belong in `HISTORY.md`
@@ -233,4 +241,5 @@ and `CHANGELOG.md`.
 - [x] Build40: implement and synthetically qualify the bounded pilot-only residual field after the Build39 homography.
 - [x] Run the Build40 decoder over all nine strength-48 smartphone originals and preserve the stage-by-stage matrix (boundary, projective basin, proposal/held-out pilot, origin, residual fit/application, data confidence, soft-Hamming attempts and HMAC). The matrix identified global phone basin recovery as the next blocker.
 - [x] Build41: improve only the global smartphone projective-basin stage identified by the complete Build40 matrix. The staged physical milestone is closed: all controls reject, `A/angle` authenticates A and `B/front` authenticates B, with no encoder/ECC/HMAC/residual change.
-- [ ] Build42+: broaden the blind smartphone envelope while preserving all three control rejections and the existing Build41 A/B HMAC PASS cases. Priority cases are A/front, B/mild and B/angle basin recovery; A/mild already reaches the protected-data decoder but still fails authentication. Do not increase strength or enlarge the residual model without new evidence.
+- [x] Build42: preserve Build41 geometry unchanged and recover `A/mild` only in the post-geometry data plane using the complete qualified bank, deterministic three-geometry ensembles and bounded soft-Hamming list decoding. `A/angle` and `B/front` remain direct passes; all controls still reject before data decode.
+- [ ] Build43+: broaden the blind smartphone **geometry** envelope for A/front, B/mild and B/angle while preserving the Build41/42 passes and all control rejections. Do not increase strength, weaken pilot floors or enlarge the residual model without new evidence.

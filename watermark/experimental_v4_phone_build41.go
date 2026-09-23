@@ -619,7 +619,7 @@ func experimentalV4PhoneBuild41PairScore(a, b experimentalV4PhoneBuild41Candidat
 	return math.Min(a.hyp.validation, b.hyp.validation) + 0.5*math.Min(a.hyp.detection.Score, b.hyp.detection.Score) + 0.25*math.Min(a.hyp.proposal, b.hyp.proposal)
 }
 
-func experimentalV4PhoneSearchBuild41(src image.Image, cw, ch int) (image.Image, PrintBoundaryEstimate, []experimentalV4PhoneHypothesis, int, bool) {
+func experimentalV4PhoneSearchBuild41Detailed(src image.Image, cw, ch int) (image.Image, PrintBoundaryEstimate, []experimentalV4PhoneHypothesis, []experimentalV4PhoneHypothesis, int, bool) {
 	work, down := experimentalV4PhoneResize(src, experimentalV4PhoneMaxDimension)
 	candidate := experimentalV4Prototype2Candidate()
 	plane := newPixelPlane(work)
@@ -639,7 +639,7 @@ func experimentalV4PhoneSearchBuild41(src image.Image, cw, ch int) (image.Image,
 		boundary = experimentalV4ScannerBoundary(work)
 	}
 	if !experimentalV4PhoneBuild41BoundarySaneForImage(work, boundary) {
-		return work, boundary, nil, 0, down
+		return work, boundary, nil, nil, 0, down
 	}
 
 	anchor := experimentalV4PhoneBuild41Quad(boundary)
@@ -651,17 +651,17 @@ func experimentalV4PhoneSearchBuild41(src image.Image, cw, ch int) (image.Image,
 	coarse, n := experimentalV4PhoneBuild41RefineShapeFold(plane, candidate, cw, ch, anchor, heldout)
 	evals += n
 	if coarse.h.h[8] == 0 {
-		return work, boundary, nil, evals, down
+		return work, boundary, nil, nil, evals, down
 	}
 	shape, n := experimentalV4PhoneBuild41PolishShapeFold(plane, candidate, cw, ch, anchor, coarse, heldout)
 	evals += n
 	if shape.h.h[8] == 0 {
-		return work, boundary, nil, evals, down
+		return work, boundary, nil, nil, evals, down
 	}
 	bank, n := experimentalV4PhoneBuild41PhaseBank(plane, candidate, cw, ch, anchor, shape, heldout)
 	evals += n
 	if len(bank) == 0 {
-		return work, boundary, nil, evals, down
+		return work, boundary, nil, nil, evals, down
 	}
 
 	// Expand the proposal-only shortlist before held-out evidence is read. The
@@ -688,8 +688,12 @@ func experimentalV4PhoneSearchBuild41(src image.Image, cw, ch int) (image.Image,
 			qualified = append(qualified, experimentalV4PhoneBuild41Candidate{hyp: q, fold: heldout, boundary: i})
 		}
 	}
+	qualifiedBank := make([]experimentalV4PhoneHypothesis, len(qualified))
+	for i := range qualified {
+		qualifiedBank[i] = qualified[i].hyp
+	}
 	if len(qualified) < experimentalV4PhoneEnsembleSize {
-		return work, boundary, nil, evals, down
+		return work, boundary, nil, qualifiedBank, evals, down
 	}
 
 	bestPairScore := math.Inf(-1)
@@ -711,7 +715,7 @@ func experimentalV4PhoneSearchBuild41(src image.Image, cw, ch int) (image.Image,
 		}
 	}
 	if len(bestPair) < experimentalV4PhoneEnsembleSize {
-		return work, boundary, nil, evals, down
+		return work, boundary, nil, nil, evals, down
 	}
 	sort.SliceStable(bestPair, func(i, j int) bool {
 		if bestPair[i].validation == bestPair[j].validation {
@@ -719,7 +723,12 @@ func experimentalV4PhoneSearchBuild41(src image.Image, cw, ch int) (image.Image,
 		}
 		return bestPair[i].validation > bestPair[j].validation
 	})
-	return work, boundary, bestPair, evals, down
+	return work, boundary, bestPair, qualifiedBank, evals, down
+}
+
+func experimentalV4PhoneSearchBuild41(src image.Image, cw, ch int) (image.Image, PrintBoundaryEstimate, []experimentalV4PhoneHypothesis, int, bool) {
+	work, boundary, pair, _, evals, down := experimentalV4PhoneSearchBuild41Detailed(src, cw, ch)
+	return work, boundary, pair, evals, down
 }
 
 // Build41 shape refinement deliberately ignores absolute cyclic phase while it

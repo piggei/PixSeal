@@ -829,3 +829,17 @@ A structure-only inner-artwork boundary anchors physical phase. The public pilot
 The final data sampler uses two independently pilot-qualified geometries that must also be separated by a scale-normalized minimum distance. This prevents two near-identical local optima from masquerading as an ensemble and lets the unchanged signed-margin/soft-Hamming path bracket residual sub-pixel uncertainty without HMAC-guided selection. Build40's <=6 px residual remains downstream and is attempted only after the Build41 global ensemble has been frozen.
 
 On the private nine-photo strength-48 corpus Build41 reaches the staged physical milestone defined at the Build40 handoff: all three unmarked controls reject; `phone-a-angle.jpg` authenticates `v4-b38-phone-a`; `phone-b-front.jpg` authenticates `v4-b38-phone-b`. `A/mild` reaches accepted geometry and protected-data decoding but still fails HMAC. `A/front`, `B/mild` and `B/angle` remain outside the accepted basin. The residual layer is not applied in either PASS case because held-out residual evidence does not justify it. Build41 therefore closes the first blind smartphone A/B milestone while explicitly leaving 6/6 marked robustness for later builds.
+
+
+## v0.3.0-build42 — qualified-bank data-list recovery
+
+Build42 starts from a deliberately narrow observation: `A/mild` already passed the complete Build41 public-pilot geometry gate and reached protected-data decoding, yet failed HMAC. Reopening geometry or increasing strength was therefore not justified. Offline diagnostics over the frozen five-member qualified bank showed that no Build41 pair authenticated, but several deterministic three-member ensembles reduced the residual soft-Hamming error to a single information bit. In the best diagnostic ensemble the correct nibble was exactly the second ML Hamming candidate for one word.
+
+The production change is post-geometry only. Build41 still generates and qualifies geometry from structure/public pilot, and its normal two-member decoder remains first. On failure, Build42 keeps up to six already-qualified geometries, enumerates three-member data ensembles deterministically, averages signed protected margins and applies a bounded list decoder over the second-best nibble of the ten weakest Hamming words. Geometry is already frozen before any of this occurs. HMAC is only the final complete-frame validator.
+
+To avoid the expensive Build40 residual pass when it is unnecessary, the phone order becomes global Build41 decode, then Build42 data-list fallback, then Build40 residual only if both fail. On the unchanged physical corpus A/angle and B/front remain direct passes, A/mild becomes an authenticated pass, and all three controls still reject before data decode. A/front, B/mild and B/angle remain geometry research cases for a later build.
+
+
+## v0.3.0-build43 — proposal-only side-pair smartphone recovery
+
+Build43 closes the `A/front` blind-registration gap without changing the watermark/data plane. The new fallback executes only after Build41 geometry rejection, proposes side-pair basins from image structure/public-pilot evidence, preserves angular/fine/complement diversity, freezes a bounded bank before held-out evaluation, then reuses Build41 qualification and the Build42 list decoder unchanged. The private Build38 matrix reaches the minimum target: controls 3/3 reject; A/front, A/mild, A/angle and B/front authenticate; B/mild/B/angle remain informational rejects.

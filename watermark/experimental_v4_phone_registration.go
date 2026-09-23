@@ -24,36 +24,52 @@ const (
 )
 
 type ExperimentalV4PhoneInfo struct {
-	WorkingWidth             int
-	WorkingHeight            int
-	Downsampled              bool
-	BoundaryDetected         bool
-	BoundaryConfidence       float64
-	ProjectiveBasinFound     bool
-	Accepted                 bool
-	ProposalScore            float64
-	ValidationScore          float64
-	PilotScore               float64
-	PilotMargin              float64
-	OriginXBlocks            int
-	OriginYBlocks            int
-	EnsembleCandidates       int
-	HypothesesEvaluated      int
-	ResidualAttempted        bool
-	ResidualFitted           bool
-	ResidualApplied          bool
-	ResidualControls         int
-	ResidualRMSPixels        float64
-	ResidualProposalBefore   float64
-	ResidualProposalAfter    float64
-	ResidualValidationBefore float64
-	ResidualValidationAfter  float64
-	DataDecodeAttempted      bool
-	SoftHammingProfiles      int
-	MaxDataConfidence        float64
-	HMACAuthenticated        bool
-	FallbackAttempted        bool
-	FallbackAuthenticated    bool
+	WorkingWidth               int
+	WorkingHeight              int
+	Downsampled                bool
+	BoundaryDetected           bool
+	BoundaryConfidence         float64
+	ProjectiveBasinFound       bool
+	Accepted                   bool
+	ProposalScore              float64
+	ValidationScore            float64
+	PilotScore                 float64
+	PilotMargin                float64
+	OriginXBlocks              int
+	OriginYBlocks              int
+	EnsembleCandidates         int
+	HypothesesEvaluated        int
+	ResidualAttempted          bool
+	ResidualFitted             bool
+	ResidualApplied            bool
+	ResidualControls           int
+	ResidualRMSPixels          float64
+	ResidualProposalBefore     float64
+	ResidualProposalAfter      float64
+	ResidualValidationBefore   float64
+	ResidualValidationAfter    float64
+	DataDecodeAttempted        bool
+	SoftHammingProfiles        int
+	MaxDataConfidence          float64
+	HMACAuthenticated          bool
+	FallbackAttempted          bool
+	FallbackAuthenticated      bool
+	Build42DataAttempted       bool
+	Build42BankCandidates      int
+	Build42EnsemblesTried      int
+	Build42ListFramesTried     int
+	Build42DataAuthenticated   bool
+	Build43Attempted           bool
+	Build43EdgeRefined         bool
+	Build43PairsScanned        int
+	Build43PairsSelected       int
+	Build43GeometryEvaluations int
+	Build43ProposalCandidates  int
+	Build43FrozenCandidates    int
+	Build43QualifiedCandidates int
+	Build43Pair0               string
+	Build43Pair1               string
+	Build43Authenticated       bool
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -932,11 +948,12 @@ func experimentalV4PhoneDecodeEnsemble(src image.Image, key []byte, cw, ch int, 
 	return nil, info, telemetry, errors.New("experimental v4 phone payload authentication failed")
 }
 
-// ExperimentalV4ExtractPhone is the Build41 blind smartphone path. Build41
-// first resolves a bounded global projective basin from structure/public-pilot
-// evidence with a frozen held-out split. Build40 may then add its small
-// pilot-only smooth residual field; if that field does not qualify on held-out
-// pilot tiles, the Build41 global mapping remains in force.
+// ExperimentalV4ExtractPhone is the Build42 blind smartphone path. Build41
+// remains the geometry baseline: it resolves the bounded global projective
+// basin using only structure/public-pilot evidence with a frozen held-out
+// split. Build42 changes only fallback order and post-geometry data recovery:
+// first try the untouched Build41 global ensemble, then the bounded Build42
+// qualified-bank/list decoder, and only then the older Build40 residual warp.
 func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte, ExperimentalV4ExtractInfo, ExperimentalV4PhoneInfo, error) {
 	if src == nil {
 		return nil, ExperimentalV4ExtractInfo{}, ExperimentalV4PhoneInfo{}, errors.New("nil image")
@@ -947,42 +964,18 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 	if cw < experimentalV4TileWidthBlocks*blockSize || ch < experimentalV4TileHeightBlocks*blockSize || cw%blockSize != 0 || ch%blockSize != 0 {
 		return nil, ExperimentalV4ExtractInfo{}, ExperimentalV4PhoneInfo{}, errors.New("canonical dimensions must be block-aligned and contain at least one complete v4 tile")
 	}
-	work, boundary, hyp, evals, down := experimentalV4PhoneSearchBuild41(src, cw, ch)
-	baseHyp := append([]experimentalV4PhoneHypothesis(nil), hyp...)
-	public := ExperimentalV4PhoneInfo{WorkingWidth: work.Bounds().Dx(), WorkingHeight: work.Bounds().Dy(), Downsampled: down, BoundaryDetected: boundary.Detected, BoundaryConfidence: boundary.Confidence, ProjectiveBasinFound: len(hyp) > 0, HypothesesEvaluated: evals, EnsembleCandidates: len(hyp)}
 
-	// Residual fitting is allowed to inspect only the already public pilot. It
-	// is attempted even on a single Build39 checkpoint candidate so telemetry
-	// can distinguish a coherent local warp from a wrong global homography.
-	if len(hyp) > 0 {
-		plane := newPixelPlane(work)
-		candidate := experimentalV4Prototype2Candidate()
-		for i := range hyp {
-			warp, residual := experimentalV4PhoneFitResidualPilotOnly(plane, candidate, cw, ch, hyp[i].h)
-			hyp[i].residual = residual
-			public.ResidualAttempted = true
-			if residual.Fitted {
-				public.ResidualFitted = true
-			}
-			public.HypothesesEvaluated += residual.HypothesesEvaluated
-			if i == 0 || residual.ValidationAfter > public.ResidualValidationAfter {
-				public.ResidualControls = residual.Controls
-				public.ResidualRMSPixels = residual.RMSPixels
-				public.ResidualProposalBefore = residual.ProposalBefore
-				public.ResidualProposalAfter = residual.ProposalAfter
-				public.ResidualValidationBefore = residual.ValidationBefore
-				public.ResidualValidationAfter = residual.ValidationAfter
-			}
-			if warp != nil && residual.Applied {
-				hyp[i].warp = warp
-				hyp[i].proposal = residual.ProposalAfter
-				hyp[i].validation = residual.ValidationAfter
-				hyp[i].detection = experimentalV4PhoneResidualFullDetection(plane, candidate, cw, ch, hyp[i].h, warp)
-				public.ResidualApplied = true
-			}
-		}
+	work, boundary, hyp, build42Bank, evals, down := experimentalV4PhoneSearchBuild41Detailed(src, cw, ch)
+	public := ExperimentalV4PhoneInfo{
+		WorkingWidth:         work.Bounds().Dx(),
+		WorkingHeight:        work.Bounds().Dy(),
+		Downsampled:          down,
+		BoundaryDetected:     boundary.Detected,
+		BoundaryConfidence:   boundary.Confidence,
+		ProjectiveBasinFound: len(hyp) > 0,
+		HypothesesEvaluated:  evals,
+		EnsembleCandidates:   len(hyp),
 	}
-
 	if len(hyp) > 0 {
 		q := hyp[0]
 		public.ProposalScore = q.proposal
@@ -994,37 +987,124 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 	}
 	public.Accepted = len(hyp) >= experimentalV4PhoneEnsembleSize
 	if !public.Accepted {
+		bank43, tele43 := experimentalV4PhoneSearchBuild43(work, boundary, cw, ch)
+		public.Build43Attempted = tele43.Attempted
+		public.Build43EdgeRefined = tele43.EdgeRefined
+		public.Build43PairsScanned = tele43.PairsScanned
+		public.Build43PairsSelected = tele43.PairsSelected
+		public.Build43GeometryEvaluations = tele43.GeometryEvaluations
+		public.Build43ProposalCandidates = tele43.ProposalCandidates
+		public.Build43FrozenCandidates = tele43.FrozenCandidates
+		public.Build43QualifiedCandidates = tele43.QualifiedCandidates
+		public.Build43Pair0 = tele43.Pair0
+		public.Build43Pair1 = tele43.Pair1
+		public.HypothesesEvaluated += tele43.GeometryEvaluations
+		if len(bank43) >= experimentalV4PhoneEnsembleSize {
+			build42Bank = bank43
+			hyp = append([]experimentalV4PhoneHypothesis(nil), bank43[:experimentalV4PhoneEnsembleSize]...)
+			public.ProjectiveBasinFound = true
+			public.Accepted = true
+			public.EnsembleCandidates = len(hyp)
+			q := bank43[0]
+			public.ProposalScore = q.proposal
+			public.ValidationScore = q.validation
+			public.PilotScore = q.detection.Score
+			public.PilotMargin = q.detection.Margin
+			public.OriginXBlocks = q.detection.OriginXBlocks
+			public.OriginYBlocks = q.detection.OriginYBlocks
+		}
+	}
+	if !public.Accepted {
 		candidate := experimentalV4Prototype2Candidate()
 		info := ExperimentalV4ExtractInfo{Version: experimentalV4Version, PilotName: candidate.name, PilotHash: experimentalV4PilotCandidateHash(candidate), PilotScore: public.PilotScore, PilotMargin: public.PilotMargin, OriginXBlocks: public.OriginXBlocks, OriginYBlocks: public.OriginYBlocks}
 		return nil, info, public, errors.New("experimental v4 phone geometry not accepted")
 	}
 
-	// Prefer the residual-qualified bank when present. If it does not
-	// authenticate, retry the untouched Build39 bank exactly once. HMAC remains
-	// a verifier, never a geometry scorer or search oracle.
-	payload, info, decode, err := experimentalV4PhoneDecodeEnsemble(work, key, cw, ch, hyp)
+	// Build42 ordering starts with the untouched Build41 global mapping. This is
+	// both the cheapest accepted data path and the source of the Build41 physical
+	// A/angle and B/front passes; residual fitting is unnecessary when it already
+	// authenticates.
+	payload, info, decode, baseErr := experimentalV4PhoneDecodeEnsemble(work, key, cw, ch, hyp)
 	public.DataDecodeAttempted = decode.Attempted
 	public.SoftHammingProfiles = decode.ProfilesTried
 	public.MaxDataConfidence = decode.MaxConfidence
 	public.HMACAuthenticated = decode.Authenticated
-	if err == nil {
+	if baseErr == nil {
+		if public.Build43Attempted {
+			public.Build43Authenticated = true
+		}
 		return payload, info, public, nil
 	}
-	if public.ResidualApplied && len(baseHyp) >= experimentalV4PhoneEnsembleSize {
-		public.FallbackAttempted = true
-		payload2, info2, fallback, err2 := experimentalV4PhoneDecodeEnsemble(work, key, cw, ch, baseHyp)
-		if fallback.ProfilesTried > public.SoftHammingProfiles {
-			public.SoftHammingProfiles = fallback.ProfilesTried
-		}
-		if fallback.MaxConfidence > public.MaxDataConfidence {
-			public.MaxDataConfidence = fallback.MaxConfidence
-		}
-		if err2 == nil {
-			public.ResidualApplied = false
+
+	// Build42 data fallback. Reuse the complete bank frozen and qualified during
+	// the same Build41 geometry search, then enumerate only deterministic
+	// three-geometry data ensembles and ML-ordered Hamming alternatives. HMAC is
+	// final authentication only; it never creates or ranks geometry.
+	public.Build42DataAttempted = true
+	public.Build42BankCandidates = len(build42Bank)
+	if len(build42Bank) >= 3 {
+		payload42, info42, data42, err42 := experimentalV4PhoneDecodeBuild42Bank(work, key, cw, ch, build42Bank)
+		public.Build42DataAttempted = data42.Attempted
+		public.Build42BankCandidates = data42.BankCandidates
+		public.Build42EnsemblesTried = data42.EnsemblesTried
+		public.Build42ListFramesTried = data42.ListFramesTried
+		public.Build42DataAuthenticated = data42.Authenticated
+		if err42 == nil {
 			public.HMACAuthenticated = true
-			public.FallbackAuthenticated = true
-			return payload2, info2, public, nil
+			if public.Build43Attempted {
+				public.Build43Authenticated = true
+			}
+			return payload42, info42, public, nil
 		}
 	}
-	return nil, info, public, err
+
+	// Build40 residual warp remains available as the final pilot-only geometry
+	// fallback. It is now paid only when both the accepted global ensemble and
+	// Build42's post-geometry data recovery fail.
+	residualHyp := append([]experimentalV4PhoneHypothesis(nil), hyp...)
+	plane := newPixelPlane(work)
+	candidate := experimentalV4Prototype2Candidate()
+	for i := range residualHyp {
+		warp, residual := experimentalV4PhoneFitResidualPilotOnly(plane, candidate, cw, ch, residualHyp[i].h)
+		residualHyp[i].residual = residual
+		public.ResidualAttempted = true
+		if residual.Fitted {
+			public.ResidualFitted = true
+		}
+		public.HypothesesEvaluated += residual.HypothesesEvaluated
+		if i == 0 || residual.ValidationAfter > public.ResidualValidationAfter {
+			public.ResidualControls = residual.Controls
+			public.ResidualRMSPixels = residual.RMSPixels
+			public.ResidualProposalBefore = residual.ProposalBefore
+			public.ResidualProposalAfter = residual.ProposalAfter
+			public.ResidualValidationBefore = residual.ValidationBefore
+			public.ResidualValidationAfter = residual.ValidationAfter
+		}
+		if warp != nil && residual.Applied {
+			residualHyp[i].warp = warp
+			residualHyp[i].proposal = residual.ProposalAfter
+			residualHyp[i].validation = residual.ValidationAfter
+			residualHyp[i].detection = experimentalV4PhoneResidualFullDetection(plane, candidate, cw, ch, residualHyp[i].h, warp)
+			public.ResidualApplied = true
+		}
+	}
+	if public.ResidualApplied {
+		public.FallbackAttempted = true
+		payloadR, infoR, residualDecode, errR := experimentalV4PhoneDecodeEnsemble(work, key, cw, ch, residualHyp)
+		if residualDecode.ProfilesTried > public.SoftHammingProfiles {
+			public.SoftHammingProfiles = residualDecode.ProfilesTried
+		}
+		if residualDecode.MaxConfidence > public.MaxDataConfidence {
+			public.MaxDataConfidence = residualDecode.MaxConfidence
+		}
+		if errR == nil {
+			public.HMACAuthenticated = true
+			public.FallbackAuthenticated = true
+			if public.Build43Attempted {
+				public.Build43Authenticated = true
+			}
+			return payloadR, infoR, public, nil
+		}
+	}
+	return nil, info, public, baseErr
 }
