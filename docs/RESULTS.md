@@ -1206,16 +1206,16 @@ The remaining problem is now cleanly separated: A/front, B/mild and B/angle stil
 
 On the private Build38 strength-48 corpus the minimum Build43 milestone is controls 3/3 reject; A/front, A/mild, A/angle and B/front authenticate; B/mild/B-angle remain informational rejects. A/front is recovered through the new geometry fallback and unchanged Build42/HMAC data path.
 
-Final Build43 qualification is defined with Go 1.25.1. A Go 1.26.0 rebuild of the same source changes the decoded raster of the canonical A/mild JPEG (Go 1.26 replaced `image/jpeg`) and can geometry-reject that case. Rebuilding with Go 1.25.1 restores A/mild HMAC PASS. The Makefile is therefore pinned to Go 1.25.1; Go 1.26+ JPEG physical behavior is deferred rather than masked by geometry retuning.
+Final Build43 qualification is defined with Go 1.25.1. A Go 1.26.0 rebuild of the same source changes the decoded raster of the canonical A/mild JPEG (Go 1.26 replaced `image/jpeg`) and can geometry-reject that case. Rebuilding with Go 1.25.1 restores A/mild HMAC PASS. The Build43 source package was therefore pinned to Go 1.25.1; Go 1.26+ JPEG physical behavior was deferred rather than masked by geometry retuning.
 
 ## Build44 deterministic JPEG checkpoint
 
 Build44 adds a project-controlled pre-Go-1.26 JPEG decoder and public locked
-raster vectors. The source-side deterministic JPEG and CLI-ingest regressions
-pass on the development baseline. Go 1.26.0 physical promotion is intentionally
-pending: the decisive result is `make v4-build44-go126-phone-physical-test` on
-the unchanged private strength-48 corpus. Until that passes, the qualified
-physical baseline remains Build43 / Go 1.25.1.
+raster vectors. The deterministic JPEG fixture and CLI-ingest regressions pass
+under Go 1.26.0, and the unchanged private strength-48 physical gate also passes:
+all three controls reject while A/front, A/mild, A/angle and B/front authenticate.
+Build44 therefore promotes Go 1.26.0 as the qualified toolchain and is the latest
+qualified smartphone milestone. Go 1.25.1 remains the historical Build43 reference.
 
 ## Build45 phone failure decomposition
 
@@ -1262,3 +1262,12 @@ The primary private gate is B/mild: determine whether the Build47 ~34.049 px low
 ## Build48 host result -> Build49 ranking question
 
 On the qualification host, Build48 selected 12 seeds for B/mild, with 4 pre-qualified and 7 post-qualified candidates but 0 authenticated. The selected oracle-nearest seed moved from 46.202 px to 44.436 px mean corner error. This is worse than Build47's 34.049 px all-pair oracle-nearest candidate, showing that the top-2-per-pair proposal selector removed the best known geometry before refinement. B/angle remained ~5.45 kpx from the oracle. Build49 therefore freezes geometry and measures proposal-only ranking observability.
+
+
+## Build49 qualification-host result -> Build50
+
+Build49 measured 128 B/mild candidates / 12 held-out-qualified candidates. The oracle-nearest candidate (index 67) is 34.049 px from the reference, `top+left`, side-pair rank 3, all-pair-extension, cell rank 0. It is raw-proposal rank 17 globally but rank **3 within its pair**. The alternative Build49 observables rank it worse within the pair: fold-min 7, balanced 12, tile-consistency 13. Therefore Build48's top2-per-pair selector excluded the best known basin by exactly one rank, while the existing raw proposal score is already the strongest measured selector for that basin.
+
+B/angle remains informational: the oracle-nearest candidate is still 5448.391 px away despite raw-proposal rank 3 within its side pair.
+
+Build50 will test top4-per-pair refinement under the unchanged proposal score. No production ranking, quorum or threshold is changed.

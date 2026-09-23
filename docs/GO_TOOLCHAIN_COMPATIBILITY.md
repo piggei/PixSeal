@@ -4,12 +4,10 @@
 
 PixSeal v0.3.0-build43 is qualified with **Go 1.25.1**.
 
-The repository Makefile selects that exact toolchain explicitly through
-`GOTOOLCHAIN=go1.25.1`. `make build` always rebuilds `dist/pixseal`, so an older
-binary compiled with a different Go release cannot be silently reused by a
-physical qualification target.
-
-Use the normal commands:
+The **Build43 source snapshot** selected that exact toolchain explicitly through
+`GOTOOLCHAIN=go1.25.1`. Its `make build` path always rebuilt `dist/pixseal`, so an older
+binary compiled with a different Go release could not be silently reused by a
+physical qualification target. When reproducing Build43 from that historical snapshot, use:
 
 ```sh
 make
@@ -17,12 +15,11 @@ make v4-build43-phone-physical-test
 make all-test ALL_TEST_REPORT=report_build_43.txt
 ```
 
-Do not prefix those commands with a different `GOTOOLCHAIN`. The Makefile owns
-the qualified selection. A machine with a newer Go installed may download/use
-Go 1.25.1 automatically through Go's toolchain mechanism.
+Do not prefix those historical Build43 commands with a different `GOTOOLCHAIN`;
+the Build43 Makefile owns the qualified selection. A machine with a newer Go
+installed may download/use Go 1.25.1 automatically through Go's toolchain mechanism.
 
-On Windows, `build-windows.bat` sets `GOTOOLCHAIN=go1.25.1` before testing and
-building.
+In the Build43 snapshot, `build-windows.bat` also set `GOTOOLCHAIN=go1.25.1` before testing and building. The current Build44+ source instead selects Go 1.26.0, as documented below.
 
 ## Why Go 1.26 is not qualified for Build43
 

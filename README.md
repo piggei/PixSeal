@@ -26,9 +26,9 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build49**.
+Current development snapshot: **v0.3.0-build50**.
 
-Latest qualified milestone: **v0.3.0-build44**. Build49 is research-only and does not change the qualified production decoder.
+Latest qualified milestone: **v0.3.0-build44**. Build50 is research-only and does not change the qualified production decoder.
 
 Stable release baseline: **v0.2.0**.
 
@@ -59,8 +59,12 @@ when geometry is supplied independently. The qualification-host blind run furthe
 held-out-qualified Build43 candidate in each difficult B capture, but not the two candidates
 required by the production ensemble. Build46 measures whether that qualified singleton is
 already data-viable and how far it lies from the oracle, without changing any production
-quorum. Protected payload contents, secret key and HMAC remain excluded from production
-geometry search/ranking; HMAC is only the final frame authenticator.
+quorum. Build47 then shows that lower-ranked side pairs expose a materially closer B/mild
+basin (34.049 px), Build48 shows that top2 seed pruning prevents that basin from being
+refined, and Build49 measures it at raw-proposal rank 3 within its side pair. Build50 therefore
+tests only a research top4-per-pair seed depth under the unchanged proposal score. Protected
+payload contents, secret key and HMAC remain excluded from production geometry search/ranking;
+HMAC is only the final frame authenticator.
 
 > **Build42 post-geometry milestone:** Build41 geometry is unchanged. The normal two-hypothesis soft-Hamming decode runs first. Only when already-qualified geometry reaches data decode but fails authentication does Build42 retain the complete frozen Build41-qualified bank, enumerate deterministic three-geometry data ensembles, and apply a bounded Hamming list decoder ordered only by ML score gaps. `A/mild` now authenticates `v4-b38-phone-a`; `A/angle` and `B/front` remain direct Build41 passes; all three controls still reject before data decode. A/front, B/mild and B/angle remain geometry-reject research cases. See [`docs/V4_BUILD42_PHONE_DATA_LIST.md`](docs/V4_BUILD42_PHONE_DATA_LIST.md).
 >
@@ -72,6 +76,12 @@ The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
 
+
+## What v0.3.0-build50 adds
+
+Build50 is a diagnostic-only **top-4-per-side-pair local refinement** study. The Build49 qualification-host run showed that the best known B/mild basin (34.049 px mean oracle error) is already rank 3 within its side pair under the unchanged raw proposal score. Alternative proposal-only observables ranked it worse (fold-min 7, balanced 12, tile-consistency 13), so Build50 does not replace the proposal score. Instead it expands only the diagnostic seed depth from Build48 top2 to top4, ensuring that rank-3 basin is refined blind without oracle guidance.
+
+The top2 and top4 summaries are nested views of the same blind run. Geometry is refined using proposal evidence only, the complete bank is frozen before held-out qualification, the key is used only for diagnostic HMAC after qualification, and the SIFT/reference oracle is generated only after both blind outputs exist. See `docs/V4_BUILD50_TOP4_REFINEMENT.md`.
 
 ## What v0.3.0-build49 adds
 
@@ -1199,7 +1209,7 @@ v0.3 because they require an explicit image-pipeline policy.
 ## Tests
 
 ```sh
-make                 # build with qualified Go 1.25.1
+make                 # build with qualified Go 1.26.0
 make toolchain-check # verify qualified Go toolchain selection
 make test            # complete Go tests + local image round trips
 make release-unit    # release-gate Go regressions only

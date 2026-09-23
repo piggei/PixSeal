@@ -878,3 +878,8 @@ Build48 therefore does not broaden acceptance and does not change the production
 ## v0.3.0-build49 — proposal-ranking observability
 
 Build48 demonstrated that bounded local refinement is not the first bottleneck for B/mild: proposal selection itself discarded the 34.049 px Build47 oracle-nearest candidate, while the selected bank's closest geometry was 46.202 px and refined only to 44.436 px. Seven refined candidates passed held-out qualification but none authenticated. Build49 therefore freezes geometry and studies proposal-only observables/ranks across every Build47 extended-bank candidate. Oracle/error analysis remains strictly post-hoc, and the Build49 CLI accepts no key.
+
+
+## v0.3.0-build50 — top-4-per-pair local refinement
+
+The qualification-host Build49 run resolved the Build48 seed-selection ambiguity. The B/mild oracle-nearest Build47 candidate remains 34.049 px from the reference and is raw-proposal rank 3 within its side pair (global rank 17). Fold-min, balanced-fold and tile-consistency observables rank it 7, 12 and 13 respectively, so none improves on the existing proposal score. Build50 therefore changes no score: it extends only the diagnostic local-refinement seed depth from top2 to top4 per side pair. The nested top2/top4 comparison is extracted from one blind top4 run; held-out qualification, diagnostic HMAC and post-hoc SIFT/reference error remain strictly downstream of frozen geometry. Build44 remains the latest qualified milestone.

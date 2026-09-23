@@ -42,6 +42,7 @@ Commands:
   v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
   v4-diagnose-phone-refine EXPERIMENTAL: Build48 proposal-only local projective refinement diagnostic
   v4-diagnose-phone-ranking EXPERIMENTAL: Build49 proposal-ranking observability diagnostic
+  v4-diagnose-phone-refine4 EXPERIMENTAL: Build50 top-4-per-pair local refinement diagnostic
   capacity   Show the usable payload capacity of an image
   analyze    Recommend a v3 profile and embedding settings
   diagnose   Experimental bounded local-lattice diagnostics (v0.3 research)
@@ -75,6 +76,7 @@ Experimental v4 options:
   v4-diagnose-phone-frozen expands only the diagnostic frozen bank to 128 candidates; production remains capped at 32.
   v4-diagnose-phone-refine selects up to two proposal-only seeds per side-pair and locally refines them before held-out qualification.
   v4-diagnose-phone-ranking measures proposal-only ranking observables across the Build47 extended bank; no key is used.
+  v4-diagnose-phone-refine4 selects up to four proposal-ranked seeds per side-pair, then applies the same proposal-only refinement as Build48.
 
 Capacity options:
   -in FILE           Input JPEG or PNG (required)
@@ -107,6 +109,7 @@ Examples:
   pixseal v4-diagnose-phone-frozen -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
   pixseal v4-diagnose-phone-refine -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
   pixseal v4-diagnose-phone-ranking -in phone.jpg -width 1632 -height 1632 -json
+  pixseal v4-diagnose-phone-refine4 -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
   pixseal capacity -in photo.png -details
   pixseal analyze -in photo.png -message "hidden message"
   pixseal diagnose -in captured.jpg -json
@@ -144,6 +147,8 @@ func main() {
 		err = v4DiagnosePhoneRefine(os.Args[2:])
 	case "v4-diagnose-phone-ranking":
 		err = v4DiagnosePhoneRanking(os.Args[2:])
+	case "v4-diagnose-phone-refine4":
+		err = v4DiagnosePhoneRefine4(os.Args[2:])
 	case "capacity":
 		err = capacity(os.Args[2:])
 	case "analyze":
@@ -1474,6 +1479,56 @@ func v4DiagnosePhoneRefine(args []string) error {
 	}
 	for _, c := range report.Candidates {
 		fmt.Printf("candidate-%d: seed=%d pair=%s pair-rank=%d tier=%s cell=%d pre-proposal=%.6f post-proposal=%.6f post-validation=%.6f post-pilot=%.6f post-margin=%.6f post-qualified=%t movement=%.2fpx single-hmac=%t\n", c.Index, c.SeedIndex, c.SourcePair, c.SourcePairRank, c.SourceTier, c.CellRank, c.PreProposal, c.PostProposal, c.PostValidation, c.PostPilotScore, c.PostPilotMargin, c.PostQualified, c.RefineMeanMovementPx, c.SingleHMACAuthenticated)
+	}
+	return nil
+}
+
+type v4Build50RefineOutput struct {
+	Version      string                                     `json:"version"`
+	InputDecoder string                                     `json:"input_decoder"`
+	Refine       watermark.ExperimentalV4PhoneBuild48Report `json:"refine"`
+}
+
+func v4DiagnosePhoneRefine4(args []string) error {
+	fs := newFlagSet("v4-diagnose-phone-refine4", "EXPERIMENTAL Build50 diagnostic: select up to four seeds per side-pair using the unchanged proposal score, locally refine every selected geometry using proposal tiles only, freeze the complete refined bank, then evaluate held-out qualification and diagnostic HMAC. Production and Build48 remain unchanged.")
+	in := fs.String("in", "", "smartphone JPEG or PNG (required)")
+	key := fs.String("key", "", "secret key used only after geometry freeze/qualification for diagnostic authentication (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	jsonOut := fs.Bool("json", false, "emit machine-readable JSON")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	report, err := watermark.ExperimentalV4PhoneBuild50Diagnose(img, []byte(*key), *width, *height)
+	if err != nil {
+		return err
+	}
+	out := v4Build50RefineOutput{Version: buildinfo.String(), InputDecoder: inputDecoderID(format), Refine: report}
+	if *jsonOut {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(out)
+	}
+	fmt.Printf("Build50 phone top-4 local-refinement diagnostic\n")
+	fmt.Printf("input-decoder: %s\n", out.InputDecoder)
+	fmt.Printf("frozen=%d seeds=%d seeds-per-pair=%d refine-evals=%d pre-qualified=%d post-qualified=%d post-authenticated=%d\n", report.FrozenCandidates, report.SeedsSelected, report.SeedsPerPair, report.RefineEvaluations, report.PreQualified, report.PostQualified, report.PostAuthenticated)
+	for i, p := range report.PairRanking {
+		fmt.Printf("pair-rank-%d: %s score=%.6f\n", i+1, p.Pair, p.Score)
+	}
+	for _, c := range report.Candidates {
+		fmt.Printf("candidate-%d: seed=%d seed-rank=%d pair=%s pair-rank=%d tier=%s cell=%d pre-proposal=%.6f post-proposal=%.6f post-validation=%.6f post-pilot=%.6f post-margin=%.6f post-qualified=%t movement=%.2fpx single-hmac=%t\n", c.Index, c.SeedIndex, c.SeedRankWithinPair, c.SourcePair, c.SourcePairRank, c.SourceTier, c.CellRank, c.PreProposal, c.PostProposal, c.PostValidation, c.PostPilotScore, c.PostPilotMargin, c.PostQualified, c.RefineMeanMovementPx, c.SingleHMACAuthenticated)
 	}
 	return nil
 }

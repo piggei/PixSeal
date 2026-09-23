@@ -8,6 +8,7 @@ import (
 )
 
 const experimentalV4PhoneBuild48SeedsPerPair = 2
+const experimentalV4PhoneBuild50SeedsPerPair = 4
 
 // ExperimentalV4PhoneBuild48Candidate records one proposal-only seed and its
 // proposal-only local projective refinement. Held-out qualification and HMAC
@@ -15,6 +16,7 @@ const experimentalV4PhoneBuild48SeedsPerPair = 2
 type ExperimentalV4PhoneBuild48Candidate struct {
 	Index                   int           `json:"index"`
 	SeedIndex               int           `json:"seed_index"`
+	SeedRankWithinPair      int           `json:"seed_rank_within_pair"`
 	SourcePair              string        `json:"source_pair,omitempty"`
 	SourcePairRank          int           `json:"source_pair_rank,omitempty"`
 	SourceTier              string        `json:"source_tier,omitempty"`
@@ -63,8 +65,9 @@ type ExperimentalV4PhoneBuild48Report struct {
 }
 
 type experimentalV4PhoneBuild48Seed struct {
-	index  int
-	frozen experimentalV4PhoneBuild47Frozen
+	index          int
+	rankWithinPair int
+	frozen         experimentalV4PhoneBuild47Frozen
 }
 
 // experimentalV4PhoneBuild48SelectSeeds is intentionally proposal-only. It
@@ -99,7 +102,10 @@ func experimentalV4PhoneBuild48SelectSeeds(frozen []experimentalV4PhoneBuild47Fr
 		if len(g) < n {
 			n = len(g)
 		}
-		out = append(out, g[:n]...)
+		for i := 0; i < n; i++ {
+			g[i].rankWithinPair = i + 1
+			out = append(out, g[i])
+		}
 	}
 	return out
 }
@@ -121,6 +127,18 @@ func experimentalV4PhoneBuild48QuadMovement(a, b [4]ImagePoint) (mean, maxMove f
 // ranks. All geometry creation/refinement is proposal-only. The complete set of
 // refined candidates is frozen before held-out qualification is evaluated.
 func ExperimentalV4PhoneBuild48Diagnose(src image.Image, key []byte, cw, ch int) (ExperimentalV4PhoneBuild48Report, error) {
+	return experimentalV4PhoneBuild48DiagnoseWithSeedDepth(src, key, cw, ch, experimentalV4PhoneBuild48SeedsPerPair)
+}
+
+// ExperimentalV4PhoneBuild50Diagnose repeats the Build48 proposal-only local
+// refinement study with a blind top-4-per-side-pair seed depth. It is
+// diagnostic-only; production Build43/42 generation, ranking, qualification
+// and quorum remain unchanged.
+func ExperimentalV4PhoneBuild50Diagnose(src image.Image, key []byte, cw, ch int) (ExperimentalV4PhoneBuild48Report, error) {
+	return experimentalV4PhoneBuild48DiagnoseWithSeedDepth(src, key, cw, ch, experimentalV4PhoneBuild50SeedsPerPair)
+}
+
+func experimentalV4PhoneBuild48DiagnoseWithSeedDepth(src image.Image, key []byte, cw, ch, perPair int) (ExperimentalV4PhoneBuild48Report, error) {
 	var report ExperimentalV4PhoneBuild48Report
 	if src == nil {
 		return report, errors.New("nil image")
@@ -136,7 +154,7 @@ func ExperimentalV4PhoneBuild48Diagnose(src image.Image, key []byte, cw, ch int)
 	report.WorkingWidth, report.WorkingHeight = work.Bounds().Dx(), work.Bounds().Dy()
 	report.Downsampled = down
 	report.BoundaryDetected, report.BoundaryConfidence = boundary.Detected, boundary.Confidence
-	report.SeedsPerPair = experimentalV4PhoneBuild48SeedsPerPair
+	report.SeedsPerPair = perPair
 	if !experimentalV4PhoneBuild41BoundarySaneForImage(work, boundary) {
 		return report, nil
 	}
@@ -147,7 +165,7 @@ func ExperimentalV4PhoneBuild48Diagnose(src image.Image, key []byte, cw, ch int)
 	frozen, pairRanking, _ := experimentalV4PhoneBuild47Freeze(work, boundary, cw, ch, 128)
 	report.PairRanking = append([]ExperimentalV4PhonePairScore(nil), pairRanking...)
 	report.FrozenCandidates = len(frozen)
-	seeds := experimentalV4PhoneBuild48SelectSeeds(frozen, experimentalV4PhoneBuild48SeedsPerPair)
+	seeds := experimentalV4PhoneBuild48SelectSeeds(frozen, perPair)
 	report.SeedsSelected = len(seeds)
 
 	// Phase 1: proposal-only refinement for every selected seed. No held-out,
@@ -182,7 +200,7 @@ func ExperimentalV4PhoneBuild48Diagnose(src image.Image, key []byte, cw, ch int)
 			report.PostQualified++
 		}
 		c := ExperimentalV4PhoneBuild48Candidate{
-			Index: i, SeedIndex: fr.seed.index,
+			Index: i, SeedIndex: fr.seed.index, SeedRankWithinPair: fr.seed.rankWithinPair,
 			SourcePair:     fr.seed.frozen.h.build43Pair,
 			SourcePairRank: fr.seed.frozen.h.build43PairRank,
 			SourceTier:     experimentalV4PhoneBuild47TierName(fr.seed.frozen.tier),

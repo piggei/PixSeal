@@ -891,3 +891,12 @@ Secret-key/HMAC evidence remains diagnostic-only after freeze/qualification and 
 **Observation.** B/mild: 12 seeds, pre-qualified 4, post-qualified 7, HMAC 0; oracle-nearest selected seed 46.202 -> 44.436 px. Build47 had a 34.049 px candidate that Build48 did not select. B/angle remained a distant false basin.
 
 **Hypothesis.** The immediate B/mild bottleneck is proposal ranking/seed pruning, not local-refinement reach. Build49 measures only public proposal-fold observables across the fixed extended bank. It does not change geometry or use a key. Oracle/error correlation is computed only after blind outputs are fixed.
+
+
+## Build49 host result -> Build50 top-4 refinement hypothesis — 2026-09-23
+
+**Observation.** On B/mild, the Build47 oracle-nearest 34.049 px candidate is raw-proposal rank 3 within `top+left` (global rank 17). Fold-min, balanced-fold and tile-consistency ranks are 7, 12 and 13, so the existing raw proposal score retains the useful basin better than the tested alternatives. Build48 kept only top2 per pair and therefore excluded it.
+
+**Hypothesis.** Seed-depth pruning, rather than proposal-score choice, is the immediate reason Build48 never refined the best known B/mild basin. Build50 will keep blind top4 per pair under the unchanged proposal score, apply the same proposal-only refinement, freeze geometry, then evaluate held-out/HMAC. Oracle error remains post-hoc.
+
+**B/angle control.** Its oracle-nearest remains ~5.45 kpx away even at proposal pair rank 3, so rank 3 alone is not evidence of a recoverable basin and B/angle cannot drive production changes.

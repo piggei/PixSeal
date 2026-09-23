@@ -1,3 +1,13 @@
+## v0.3.0-build50 — 2026-09-23
+
+- Adds research-only top-4-per-side-pair local projective refinement for the difficult smartphone B cases.
+- Preserves the unchanged Build49/raw proposal score; Build49 showed the B/mild 34.049 px oracle-nearest basin is proposal rank 3 within its pair, while tested alternative observables rank it worse.
+- Keeps historical Build48 fixed at top 2 seeds per pair and keeps Build43 production fixed at two side pairs / at most 32 frozen candidates.
+- Adds `seed_rank_within_pair` to diagnostic refinement records so one blind top-4 run can be analyzed as exact nested top2/top4 subsets.
+- Keeps all geometry creation/refinement proposal-only, freezes the bank before held-out qualification, uses the key only after qualification for diagnostic HMAC, and generates SIFT/reference oracle geometry only after both blind outputs exist.
+- Adds `v4-diagnose-phone-refine4`, `v4-build50-phone-top4-refine-test`, private `v4-build50-phone-top4-refine-diagnostic`, and `docs/V4_BUILD50_TOP4_REFINEMENT.md`.
+- Build44 remains the latest qualified milestone; no production decoder or Format-v4 wire-format change.
+
 ## v0.3.0-build49 — 2026-09-23
 
 - Adds research-only proposal-ranking observability across the corrected Build47 extended bank.

@@ -42,3 +42,12 @@ Private output belongs under `v4-phone private/build49-diagnostics/` and is neve
 - No measured proposal-only observable improves ranking: the useful geometry is not identifiable by the present pilot surface; the next build should change the public geometric observable rather than simply widen search/refinement.
 
 `B/mild` is the primary case. `B/angle` remains informational and cannot alone justify production changes.
+
+
+## Qualification-host result — 2026-09-23
+
+`B/mild` produced 128 candidates / 12 held-out-qualified candidates. The oracle-nearest candidate is index 67 at 34.049 px mean corner error, from `top+left`, side-pair rank 3, all-pair-extension, cell rank 0. Its raw proposal ranks are global 17 and **within-pair 3**. Alternative within-pair ranks are fold-min 7, balanced-fold 12 and tile-consistency 13. Thus the unchanged raw proposal score is already the best of the measured observables for retaining the known good basin, and Build48's top2 cutoff excluded it by one rank.
+
+`B/angle` remains a distant false basin: its oracle-nearest candidate is 5448.391 px from the oracle (`top+bottom`, pair rank 5, all-pair-extension, cell rank 0) despite proposal within-pair rank 3. It remains informational.
+
+The justified next experiment is therefore Build50 top4-per-pair local refinement, not a new ranking function.

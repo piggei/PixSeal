@@ -186,3 +186,8 @@ Build48 reuses the same retained Build38 B/mild and B/angle JPEGs and marked-B d
 ## Build49 private proposal-ranking diagnostics
 
 Build49 reuses private `phone-b-mild.jpg`, `phone-b-angle.jpg` and the marked-B digital reference. Blind ranking JSON files are written first under `v4-phone private/build49-diagnostics/blind/` without any secret key. Only after both exist may the SIFT/reference helper create oracle quadrilaterals and post-hoc rank/error summaries. No Build49 private output is shipped.
+
+
+## Build50 private top-4 refinement diagnostics
+
+Build50 reuses only the retained private `phone-b-mild.jpg`, `phone-b-angle.jpg` acquisitions and the marked-B digital reference. The blind top4 refinement JSON for both captures is written under `v4-phone private/build50-diagnostics/blind/` before any SIFT/reference oracle is created. The secret key is available to the blind command only for diagnostic single-candidate HMAC after geometry is frozen and held-out-qualified; it cannot guide proposal ranking or local refinement. Oracle files and reports remain private and are never packaged.

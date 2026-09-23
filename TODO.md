@@ -292,3 +292,11 @@ and `CHANGELOG.md`.
 - [ ] Determine the B/mild oracle-nearest candidate's proposal rank within its side pair and whether top 4/6/8 would retain it.
 - [ ] Compare fold-min/balance, per-tile consistency, pair score and cell score ranks against oracle error only post-hoc.
 - [ ] Keep Build43/42 production, all thresholds/quorums, strength 48, Format-v4, ECC/Hamming and HMAC frozen until prospective evidence supports a bounded change.
+
+
+### Build50 research
+
+- [ ] Run `make v4-build50-phone-top4-refine-test` on the qualification host.
+- [ ] Run `make v4-build50-phone-top4-refine-diagnostic` with the retained private B/mild and B/angle captures.
+- [ ] For B/mild, verify that top4 includes the 34.049 px rank-3 basin and measure its post-refinement error, held-out qualification and diagnostic HMAC.
+- [ ] Do not change production seed depth, proposal scoring or qualification thresholds until the Build50 host result is available.
