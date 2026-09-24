@@ -26,9 +26,9 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build54**.
+Current development snapshot: **v0.3.0-build55**.
 
-Latest qualified milestone: **v0.3.0-build44**. Build54 is research-only and does not change the qualified production decoder.
+Latest qualified milestone: **v0.3.0-build44**. Build55 is research-only and does not change the qualified production decoder.
 
 Stable release baseline: **v0.2.0**.
 
@@ -61,7 +61,7 @@ required by the production ensemble. Build46 measures whether that qualified sin
 already data-viable and how far it lies from the oracle, without changing any production
 quorum. Build47 then shows that lower-ranked side pairs expose a materially closer B/mild
 basin (34.049 px), Build48 shows that top2 seed pruning prevents that basin from being
-refined, and Build49 measures it at raw-proposal rank 3 within its side pair. Build50 then tested a research top4-per-pair seed depth under the unchanged proposal score: the 34.049 px seed entered the blind refinement but moved away from the oracle to 43.168 px while qualification count increased and HMAC remained zero. Build51 closed that question: B/mild has an `optimizer-opportunity`, including a `corner-2-x +2` state that improves both proposal and post-hoc oracle error, while B/angle remains `proposal-surface-misaligned`. Build52 then confirmed a partial optimizer gain: its fine restart preserves B/mild states down to 31.747 px and a qualified 32.442 px state, but no state authenticates; B/angle shows no fine-restart gain. The qualified Build53 host run then confirmed a coupled escape from the qualified 32.442 px coordinate-local root: four proposal-improving pair states remain qualified and the best post-hoc pair geometry reaches 31.842 px, still without HMAC. Build54 therefore continues every retained Build53 pair state with bounded proposal-only 1px coordinate descent and retains every accepted intermediate, without changing the score or any production path. Protected
+refined, and Build49 measures it at raw-proposal rank 3 within its side pair. Build50 then tested a research top4-per-pair seed depth under the unchanged proposal score: the 34.049 px seed entered the blind refinement but moved away from the oracle to 43.168 px while qualification count increased and HMAC remained zero. Build51 closed that question: B/mild has an `optimizer-opportunity`, including a `corner-2-x +2` state that improves both proposal and post-hoc oracle error, while B/angle remains `proposal-surface-misaligned`. Build52 then confirmed a partial optimizer gain: its fine restart preserves B/mild states down to 31.747 px and a qualified 32.442 px state, but no state authenticates; B/angle shows no fine-restart gain. The qualified Build53 host run then confirmed a coupled escape from the qualified 32.442 px coordinate-local root: four proposal-improving pair states remain qualified and the best post-hoc pair geometry reaches 31.842 px, still without HMAC. Build54 then confirmed `continuation-qualified-gain`: B/mild reaches a qualified 30.539 px intermediate but still does not authenticate, while later Gauss-Seidel proposal ascent can move away again. Build55 therefore probes every retained Build54 continuation state with an independent full +/-1px sibling stencil evaluated from the same parent, without changing the score or any production path. Protected
 payload contents, secret key and HMAC remain excluded from production geometry search/ranking;
 HMAC is only the final frame authenticator.
 
@@ -76,6 +76,18 @@ records hypotheses, rejected variants, threshold decisions and negative results 
 future builds do not silently repeat abandoned experiments.
 
 
+## What v0.3.0-build55 adds
+
+Build55 is a diagnostic-only **continuation sibling-stencil** study. The Build54 host artifact closes B/mild as `continuation-qualified-gain`: candidate 10 retains 34 continuation states and reaches a qualified 30.539 px intermediate, improving its 32.447 px pair parent by 1.908 px; HMAC remains false. The B/angle target remains `continuation-not-triggered`.
+
+The Build54 trajectory exposes coordinate-order bias: the 30.539 px state is followed by proposal-improving Gauss-Seidel updates that worsen oracle error. A deterministic design probe around that frozen state finds `corner 2 / x +1 px`, which improves proposal `0.257772 -> 0.266832` and post-hoc oracle error `30.539 -> ~29.778 px`, remains qualified, and still does not authenticate.
+
+Build55 reproduces Build54 and, from **every retained continuation state**, evaluates all 16 independent +/-1px coordinate siblings against the exact same parent. Every proposal-improving sibling is frozen before held-out/full-pilot qualification or diagnostic HMAC. SIFT/reference geometry remains post-hoc only.
+
+The new command is `v4-diagnose-phone-sibling-stencil`; the private host study is `make v4-build55-phone-sibling-stencil-diagnostic`. See [`docs/V4_BUILD55_SIBLING_STENCIL.md`](docs/V4_BUILD55_SIBLING_STENCIL.md).
+
+Build55 changes no production path. **Build44 remains the latest qualified milestone.**
+
 ## What v0.3.0-build54 adds
 
 Build54 is a diagnostic-only **post-pair accepted-state continuation** study. The qualified Build53 host run classified B/mild as `pair-qualified-gain`: the 32.442 px coordinate-local root emits four proposal-improving coupled escapes, all four remain held-out-qualified, and pair rank 2 reduces post-hoc oracle error to 31.842 px. No pair state authenticates. The B/angle target remains `pair-not-triggered`.
@@ -84,7 +96,7 @@ Build54 reproduces that blind Build53 pair bank and then continues **every retai
 
 The new command is `v4-diagnose-phone-pair-continue`; the private host study is `make v4-build54-phone-pair-continuation-diagnostic`. See [`docs/V4_BUILD54_PAIR_CONTINUATION.md`](docs/V4_BUILD54_PAIR_CONTINUATION.md).
 
-A local development preflight, **not a qualification result**, shows why intermediate retention matters again: continuing all four B/mild pair states exposes a qualified intermediate near 30.539 px from the oracle, while later proposal ascent can move away again. No preflight continuation state authenticates. The qualified Go 1.26.0 host run is required before interpreting Build54.
+The qualified Go 1.26.0 host run confirms the mechanism: B/mild retains 34 continuation states and reaches a held-out-qualified state at 30.539 px, improving the pair-rank-1 parent by 1.908 px. HMAC remains false. The B/angle target remains `continuation-not-triggered`. Later proposal-improving Gauss-Seidel updates move away from the 30.539 px geometry, motivating Build55's order-independent sibling stencil.
 
 Build54 changes no production path. **Build44 remains the latest qualified milestone.**
 

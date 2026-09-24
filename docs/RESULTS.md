@@ -1311,3 +1311,12 @@ The qualified Go 1.26.0 Build53 run confirms the coupled escape on the primary B
 A local deterministic design probe then continues every retained B/mild pair state using only the unchanged proposal objective. Pair rank 1 re-enters an ordinary 1px coordinate-ascent path; retaining intermediates exposes a held-out-qualified state near 30.539 px before later proposal ascent moves away from the oracle again. No preflight continuation state authenticates. This motivates Build54 but is not qualification evidence.
 
 Build54 therefore reproduces the full Build53 pair bank, continues **every** retained pair state with bounded 1px proposal-only coordinate descent, retains every accepted intermediate, freezes the entire bank, and only then annotates qualification/HMAC and post-hoc oracle error.
+
+
+## Build54 host result -> Build55 sibling-stencil hypothesis — 2026-09-24
+
+**Build54 result.** B/mild candidate 10 retains 34 continuation states. Pair-rank-1 continuation state 7 reaches **30.539 px** mean post-hoc oracle error from a 32.447 px parent while remaining qualified (`proposal=0.257772`, `validation=0.110310`); HMAC remains false. Classification: `continuation-qualified-gain`. The B/angle target is `continuation-not-triggered`.
+
+**Order-bias probe, not qualification evidence.** Re-evaluating every +/-1px neighbor from the exact frozen 30.539 px state shows that `corner 2 / x +1 px` improves proposal to `0.266832` and oracle error to about `29.778 px`, with `validation=0.163706` and unchanged qualification. A single-candidate diagnostic decode still fails HMAC. The ordinary Build54 continuation misses that sibling because another coordinate is accepted earlier and changes the parent before corner-2-x is evaluated.
+
+**Build55 hypothesis.** The proposal objective still contains useful local directions, but sequential Gauss-Seidel ordering can hide them. Build55 therefore evaluates the complete independent +/-1px sibling stencil from every retained continuation state and freezes every proposal-improving sibling before qualification/HMAC.

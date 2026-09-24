@@ -341,6 +341,18 @@ and `CHANGELOG.md`.
 - [x] Freeze all root/pair/continuation geometry before held-out/full-pilot qualification; keep secret key/HMAC and SIFT/reference oracle strictly downstream.
 - [x] Add `v4-diagnose-phone-pair-continue`, source regressions, private diagnostic script and Build54 documentation.
 - [ ] Run `make v4-build54-phone-pair-continuation-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build54-phone-pair-continuation-diagnostic` on retained B/mild and B/angle.
-- [ ] Classify B/mild post-hoc as `continuation-recovery`, `continuation-qualified-gain`, `continuation-geometric-gain`, `continuation-no-oracle-gain`, `continuation-no-accepted-state` or `continuation-not-triggered`; keep B/angle informational.
-- [ ] Only if Build54 authenticates a blind retained state, design a separate production candidate and rerun the complete unchanged Build44 physical gate before promotion.
+- [x] Run `make v4-build54-phone-pair-continuation-diagnostic` on retained B/mild and B/angle; diagnostic artifacts received and analyzed.
+- [x] Classify Build54: B/mild = `continuation-qualified-gain` (best qualified retained state 30.539 px; no HMAC), B/angle target = `continuation-not-triggered`.
+- [x] Do not promote Build54: no blind retained continuation state authenticates, so no production candidate is opened from Build54.
+
+
+### Build55 research
+
+- [x] Keep Build54 continuation, top4 seed bank, proposal score and Build44 production path frozen.
+- [x] Add a complete independent +/-1px sibling stencil around every retained Build54 continuation state; all 16 moves must start from the same parent geometry.
+- [x] Freeze all sibling geometry before held-out/full-pilot qualification; keep key/HMAC and SIFT/reference oracle strictly downstream.
+- [x] Add `v4-diagnose-phone-sibling-stencil`, source regressions, private diagnostic script and Build55 documentation.
+- [ ] Run `make v4-build55-phone-sibling-stencil-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build55-phone-sibling-stencil-diagnostic` on retained B/mild and B/angle.
+- [ ] Classify B/mild as `sibling-recovery`, `sibling-qualified-gain`, `sibling-geometric-gain`, `sibling-proposal-only` or `sibling-not-triggered`; keep B/angle informational.
+- [ ] Only if a blind frozen sibling authenticates, design a separate production candidate and rerun the complete unchanged Build44 physical gate before promotion.

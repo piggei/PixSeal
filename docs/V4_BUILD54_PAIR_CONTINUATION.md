@@ -107,3 +107,12 @@ Build54 does not change:
 - deterministic JPEG compatibility path.
 
 Build44 remains the production qualification baseline.
+
+## Qualification-host result — 2026-09-24
+
+The retained Build54 diagnostic closes as follows:
+
+- `B/mild`, candidate 10 (`top+left`, pair rank 3, seed rank 3): one coordinate-local root, four Build53 pair states and 34 continuation states. The best frozen parent pair is 31.842 px from the oracle. A continuation from pair rank 1 reaches **30.539 px**, improving its 32.447 px parent by 1.908 px while remaining held-out-qualified. Proposal is 0.257772, validation 0.110310 and HMAC remains false. Classification: `continuation-qualified-gain`.
+- `B/angle`, candidate 18: no Build53 pair branch exists for the target, so continuation is not triggered. Classification: `continuation-not-triggered`.
+
+The B/mild trajectory is also diagnostic of **coordinate-order bias**. The 30.539 px state is followed by later proposal-improving Gauss-Seidel updates that move away from the oracle. A post-hoc local design probe around that frozen state finds an independent `corner 2 / x +1 px` sibling that improves the unchanged proposal from 0.257772 to 0.266832 and independent oracle error from 30.539 to about 29.778 px while remaining qualified. That observation motivates Build55; it is not itself qualification evidence.

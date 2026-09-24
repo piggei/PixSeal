@@ -47,6 +47,7 @@ Commands:
   v4-diagnose-phone-restart EXPERIMENTAL: Build52 fine-first proposal-only restart-bank diagnostic
   v4-diagnose-phone-pair-escape EXPERIMENTAL: Build53 coupled 1px escape diagnostic at coordinate-local 2px roots
   v4-diagnose-phone-pair-continue EXPERIMENTAL: Build54 proposal-only 1px continuation from retained Build53 pair states
+  v4-diagnose-phone-sibling-stencil EXPERIMENTAL: Build55 independent +/-1px sibling stencil around retained Build54 states
   capacity   Show the usable payload capacity of an image
   analyze    Recommend a v3 profile and embedding settings
   diagnose   Experimental bounded local-lattice diagnostics (v0.3 research)
@@ -85,6 +86,7 @@ Experimental v4 options:
   v4-diagnose-phone-restart keeps the seed plus every accepted state from a fixed proposal-only 2px -> 1px restart before held-out qualification; oracle remains external/post-hoc.
   v4-diagnose-phone-pair-escape finds proposal-only 1px coordinate-local 2px roots, then scans bounded coupled +/-1px two-coordinate escapes before held-out qualification.
   v4-diagnose-phone-pair-continue continues every retained Build53 pair state with bounded proposal-only 1px coordinate descent and retains every accepted intermediate before held-out qualification.
+  v4-diagnose-phone-sibling-stencil evaluates all independent +/-1px coordinate siblings from every retained Build54 continuation state before held-out qualification.
 
 Capacity options:
   -in FILE           Input JPEG or PNG (required)
@@ -122,6 +124,7 @@ Examples:
   pixseal v4-diagnose-phone-restart -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
   pixseal v4-diagnose-phone-pair-escape -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
   pixseal v4-diagnose-phone-pair-continue -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
+  pixseal v4-diagnose-phone-sibling-stencil -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
   pixseal capacity -in photo.png -details
   pixseal analyze -in photo.png -message "hidden message"
   pixseal diagnose -in captured.jpg -json
@@ -169,6 +172,8 @@ func main() {
 		err = v4DiagnosePhonePairEscape(os.Args[2:])
 	case "v4-diagnose-phone-pair-continue":
 		err = v4DiagnosePhonePairContinue(os.Args[2:])
+	case "v4-diagnose-phone-sibling-stencil":
+		err = v4DiagnosePhoneSiblingStencil(os.Args[2:])
 	case "capacity":
 		err = capacity(os.Args[2:])
 	case "analyze":
@@ -1766,6 +1771,65 @@ func v4DiagnosePhonePairContinue(args []string) error {
 				fmt.Printf("  pair-%d: proposal=%.6f validation=%.6f qualified=%t hmac=%t continuation-states=%d\n", branch.PairRank, branch.ParentPair.Proposal, branch.ParentPair.Validation, branch.ParentPair.Qualified, branch.ParentPair.SingleHMACAuthenticated, len(branch.ContinuationStates))
 				for _, st := range branch.ContinuationStates {
 					fmt.Printf("    state-%d: pass=%d dim=%d delta=%.0f proposal=%.6f validation=%.6f qualified=%t movement=%.2fpx hmac=%t\n", st.Index, st.Pass, st.Dimension, st.DeltaPx, st.Proposal, st.Validation, st.Qualified, st.MeanMovementFromSeedPx, st.SingleHMACAuthenticated)
+				}
+			}
+		}
+	}
+	return nil
+}
+
+type v4Build55SiblingStencilOutput struct {
+	Version      string                                     `json:"version"`
+	InputDecoder string                                     `json:"input_decoder"`
+	Sibling      watermark.ExperimentalV4PhoneBuild55Report `json:"sibling"`
+}
+
+func v4DiagnosePhoneSiblingStencil(args []string) error {
+	fs := newFlagSet("v4-diagnose-phone-sibling-stencil", "EXPERIMENTAL Build55 diagnostic: reproduce the unchanged Build54 continuation bank, then evaluate all independent +/-1px coordinate siblings from every retained continuation state against the same parent. Every proposal-improving sibling is frozen before held-out qualification or diagnostic HMAC. Reference/oracle geometry is not accepted by this command.")
+	in := fs.String("in", "", "smartphone JPEG or PNG (required)")
+	key := fs.String("key", "", "secret key used only after geometry freeze/qualification for diagnostic authentication (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	jsonOut := fs.Bool("json", false, "emit machine-readable JSON")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	report, err := watermark.ExperimentalV4PhoneBuild55Diagnose(img, []byte(*key), *width, *height)
+	if err != nil {
+		return err
+	}
+	out := v4Build55SiblingStencilOutput{Version: buildinfo.String(), InputDecoder: inputDecoderID(format), Sibling: report}
+	if *jsonOut {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(out)
+	}
+	fmt.Printf("Build55 phone continuation sibling-stencil diagnostic\n")
+	fmt.Printf("input-decoder: %s\n", out.InputDecoder)
+	fmt.Printf("frozen=%d seeds=%d continuation-states=%d sibling-evals=%d sibling-states=%d continuation-qualified=%d sibling-qualified=%d sibling-authenticated=%d\n", report.FrozenCandidates, report.SeedsSelected, report.ContinuationStatesFrozen, report.SiblingEvaluations, report.SiblingStatesFrozen, report.ContinuationQualified, report.SiblingQualified, report.SiblingAuthenticated)
+	for _, c := range report.Candidates {
+		for _, root := range c.Roots {
+			for _, branch := range root.Branches {
+				for _, st := range branch.ContinuationStates {
+					if len(st.SiblingStates) == 0 {
+						continue
+					}
+					fmt.Printf("candidate-%d root-%d pair-%d state-%d: proposal=%.6f qualified=%t siblings=%d\n", c.Index, root.RootIndex, branch.PairRank, st.Index, st.Proposal, st.Qualified, len(st.SiblingStates))
+					for _, sib := range st.SiblingStates {
+						fmt.Printf("  sibling-%d: dim=%d delta=%.0f proposal=%.6f validation=%.6f qualified=%t movement=%.2fpx hmac=%t\n", sib.Rank, sib.Dimension, sib.DeltaPx, sib.Proposal, sib.Validation, sib.Qualified, sib.MeanMovementFromSeedPx, sib.SingleHMACAuthenticated)
+					}
 				}
 			}
 		}

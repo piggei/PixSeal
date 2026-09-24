@@ -41,6 +41,7 @@ row v4-build51-phone-surface-test RESEARCH source 'Build51 proposal-only refinem
 row v4-build52-phone-optimizer-test RESEARCH source 'Build52 proposal-only 2->1 fine restart + accepted-state retention; production unchanged'
 row v4-build53-phone-pair-escape-test RESEARCH source 'Build53 1px coordinate-local detection + bounded coupled pair escape; production unchanged'
 row v4-build54-phone-pair-continuation-test RESEARCH source 'Build54 bounded 1px continuation from every retained Build53 pair state; accepted intermediates retained; production unchanged'
+row v4-build55-phone-sibling-stencil-test RESEARCH source 'Build55 independent +/-1px sibling stencil around every retained Build54 continuation parent; production unchanged'
 row lattice-estimator-test RESEARCH source 'local lattice estimator regressions'
 row homography-test RESEARCH source 'bounded homography/projective regressions'
 row photometric-test RESEARCH source 'bounded photometric bank regressions'
@@ -93,6 +94,7 @@ row composition-test RESEARCH pics 'strict anisotropic-scale + rotation suite; c
 row lattice-test RESEARCH pics 'strict direct lattice-basis composition suite; corpus-sensitive'
 row perspective-test RESEARCH pics 'strict mild projective perspective suite; corpus-sensitive'
 
+
 section 'Private physical-channel'
 row v4-physical-fixtures PRIVATE pics 'generate Build35 scanner-first MQ control + two authenticated v4 print carriers'
 row v4-physical-qualification PRIVATE private/v4-physical 'HMAC-qualify Build35 captures with the generic projective decoder'
@@ -113,6 +115,7 @@ row v4-build51-phone-surface-diagnostic LAB private/v4-phone+reference 'Build51 
 row v4-build52-phone-optimizer-diagnostic LAB private/v4-phone+reference 'Build52 coarse baseline vs fine-restart state bank; oracle generated only after both blind restart JSON files'
 row v4-build53-phone-pair-escape-diagnostic LAB private/v4-phone+reference 'Build53 coupled pair-escape bank at proposal-defined coordinate-local roots; oracle generated only after both blind JSON files'
 row v4-build54-phone-pair-continuation-diagnostic LAB private/v4-phone+reference 'Build54 continuation bank from all retained Build53 pair states; oracle generated only after both blind JSON files'
+row v4-build55-phone-sibling-stencil-diagnostic LAB private/v4-phone+reference 'Build55 independent +/-1px sibling stencil from every retained Build54 continuation parent; oracle generated only after both blind JSON files'
 row v4-build37-physical-scanner-test PRIVATE private/v4-physical 'blind full-page scanner control/A/B HMAC qualification'
 row print-camera-test PRIVATE private/print-camera 'print -> paper -> smartphone; PASS requires Format-v3 HMAC'
 row print-scan-test PRIVATE private/print-scan 'print -> scanner; PASS requires Format-v3 HMAC'
@@ -123,6 +126,6 @@ row v4-build44-go126-jpeg-compat-test COMPATIBILITY source 'explicit Go 1.26 det
 row test-unit COMPATIBILITY source 'complete go test ./... suite'
 row test AGGREGATE source+pics 'build + test-unit + image round-trips'
 row all AGGREGATE source+pics 'test + baseline transformation suite'
-row all-test AGGREGATE source+pics 'Build53 matrix; private phone diagnostics remain opt-in'
+row all-test AGGREGATE source+pics 'Build55 matrix; private phone diagnostics remain opt-in'
 
 printf '\nTip: use make <target>. For all-test, optionally set ALL_TEST_REPORT=path/to/report.txt.\n'

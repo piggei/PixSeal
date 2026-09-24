@@ -1,3 +1,14 @@
+## v0.3.0-build55 — 2026-09-24
+
+### Research / Format-v4 phone geometry
+
+- Closes the Build54 host diagnostic: B/mild is `continuation-qualified-gain` with 34 retained continuation states and a best qualified intermediate at 30.539 px; HMAC remains false. The B/angle target is `continuation-not-triggered`.
+- Adds a research-only independent sibling stencil around every retained Build54 continuation state: all 8 corner coordinates are evaluated at both `-1 px` and `+1 px` from the exact same parent geometry.
+- Retains every proposal-improving sibling before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference oracle remains external and post-hoc.
+- Adds `v4-diagnose-phone-sibling-stencil`, `v4-build55-phone-sibling-stencil-test`, private `v4-build55-phone-sibling-stencil-diagnostic`, and `docs/V4_BUILD55_SIBLING_STENCIL.md`.
+- Local design probe (not qualification evidence) shows a qualified sibling at about 29.778 px from the oracle with proposal improvement, but no HMAC.
+- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, score, threshold or quorum changes. Build44 remains the latest qualified milestone.
+
 ## v0.3.0-build54 — 2026-09-24
 
 ### Research / Format-v4 phone geometry
@@ -6,7 +17,7 @@
 - Adds a research-only post-pair continuation diagnostic that reproduces the unchanged Build53 pair bank and continues every retained pair state with bounded 1px proposal-only coordinate descent.
 - Retains every accepted continuation intermediate rather than privileging the greedy endpoint. The complete root/pair/continuation bank is frozen before held-out/full-pilot qualification and diagnostic HMAC; SIFT/reference oracle remains external and post-hoc.
 - Adds `v4-diagnose-phone-pair-continue`, `v4-build54-phone-pair-continuation-test`, private `v4-build54-phone-pair-continuation-diagnostic`, and `docs/V4_BUILD54_PAIR_CONTINUATION.md`.
-- Local design preflight (not qualification evidence) shows a B/mild continuation intermediate near 30.539 px that remains qualified while later proposal ascent moves away again; no preflight continuation authenticates.
+- Qualification-host Build54 result: B/mild retains 34 continuation states and reaches a held-out-qualified 30.539 px intermediate, but no continuation state authenticates; B/angle remains `continuation-not-triggered`. Later proposal ascent can move away from the best retained geometry.
 - No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, geometry threshold or quorum changes. Build44 remains the latest qualified milestone.
 
 ## v0.3.0-build53 — 2026-09-24

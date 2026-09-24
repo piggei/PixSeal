@@ -943,3 +943,12 @@ The fixed Build51 stencil contains a different and more actionable point: `corne
 **Build54 hypothesis.** The coupled escape may cross only the first optimizer barrier. Once across it, ordinary 1px proposal ascent can again expose useful geometry, but the best geometric point may be an intermediate rather than the greedy endpoint. Build54 therefore continues every retained Build53 pair state, not an oracle-selected subset, for at most eight 1px coordinate-descent passes and retains every accepted intermediate.
 
 **Leakage barrier.** Root generation, locality classification, pair generation/ranking and continuation are proposal-only. The complete geometry bank for both difficult B captures is frozen before held-out/full-pilot qualification, key/HMAC or reference/SIFT information is available. Oracle error remains post-hoc only. No production threshold, quorum, score, encoder, pilot, ECC/Hamming or HMAC domain changes.
+
+
+## Build54 host result -> Build55 sibling-stencil — 2026-09-24
+
+**Observed host result.** B/mild closes Build54 as `continuation-qualified-gain`: 34 continuation states are retained for the target, and the best qualified intermediate is state 7 of pair rank 1 at 30.539 px, 1.908 px better than its parent. HMAC remains false. B/angle target continuation is not triggered.
+
+**Optimizer-order evidence.** The Build54 continuation uses immediate Gauss-Seidel acceptance. Around the frozen 30.539 px state, an independent `corner 2 / x +1 px` move improves the unchanged proposal and post-hoc oracle simultaneously, stays qualified, and still fails HMAC. Because Build54 accepts an earlier coordinate before reaching that axis, the same move is evaluated from a different geometry and is lost.
+
+**Build55 rule.** Do not change the score. For every retained Build54 continuation state, evaluate all 16 +/-1px single-coordinate siblings from the identical frozen parent and retain every proposal-improving sibling. Qualification, HMAC and oracle remain strictly downstream of the complete sibling bank.
