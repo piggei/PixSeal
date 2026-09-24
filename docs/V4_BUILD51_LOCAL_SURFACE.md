@@ -91,3 +91,27 @@ For B/mild:
 - if the evidence is mixed, expand observability before any production change.
 
 No Build51 result may justify lowering qualification/quorum or changing strength/ECC/HMAC.
+
+## Qualification-host result — Build51 closed
+
+The Build51 private diagnostic was completed on the qualified host. The post-hoc oracle summary is:
+
+| metric | B/mild | B/angle |
+|---|---:|---:|
+| target candidate | 10 | 18 |
+| side pair / rank | `top+left` / 3 | `top+bottom` / 5 |
+| seed rank within pair | 3 | 3 |
+| seed oracle error | **34.049 px** | **5448.391 px** |
+| final coarse-to-fine error | 43.168 px | 5453.906 px |
+| accepted moves | 9 | 5 |
+| accepted oracle-improving | 2 | 0 |
+| accepted oracle-worsening | 7 | 5 |
+| best geometry merely visited by trace | **25.172 px** | 5434.772 px |
+| fixed-stencil better-both sample | **yes** | no |
+| classification | `optimizer-opportunity` | `proposal-surface-misaligned` |
+
+For B/mild, the 25.172 px trace state is `corner-2-x +16` from the untouched seed. It is **rejected** because its proposal falls from `0.201986` to `0.076256`; it therefore proves geometric reach but not a proposal-compatible path. More importantly, the fixed stencil contains exactly one sample that improves both observables from the untouched seed: `corner-2-x +2`, proposal `0.201986 -> 0.208953` (`+0.006966`) and oracle error `34.049 -> 32.442 px` (`-1.607 px`).
+
+The unchanged coarse-to-fine schedule does not evaluate that `+2 px` move from the untouched seed. At the 4 px level it first accepts `corner-1-x +4`, then `corner-2-y -4`; when the 2 px level is reached, the optimizer is already in a different local state. This closes the Build51 question: **B/mild contains a real optimizer/scheduling opportunity under the existing proposal score.** B/angle does not show the same evidence and remains informational.
+
+Build51 does not establish that the proposal score is globally correct, nor does it justify any production promotion. The next experiment must remain optimizer-only, preserve the untouched seed long enough to exercise the fine local opportunity, freeze all resulting geometry before held-out qualification, and keep B/angle plus the Build44 matrix as controls.

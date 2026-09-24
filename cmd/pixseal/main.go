@@ -44,6 +44,9 @@ Commands:
   v4-diagnose-phone-ranking EXPERIMENTAL: Build49 proposal-ranking observability diagnostic
   v4-diagnose-phone-refine4 EXPERIMENTAL: Build50 top-4-per-pair local refinement diagnostic
   v4-diagnose-phone-surface EXPERIMENTAL: Build51 local proposal-surface/trajectory observability
+  v4-diagnose-phone-restart EXPERIMENTAL: Build52 fine-first proposal-only restart-bank diagnostic
+  v4-diagnose-phone-pair-escape EXPERIMENTAL: Build53 coupled 1px escape diagnostic at coordinate-local 2px roots
+  v4-diagnose-phone-pair-continue EXPERIMENTAL: Build54 proposal-only 1px continuation from retained Build53 pair states
   capacity   Show the usable payload capacity of an image
   analyze    Recommend a v3 profile and embedding settings
   diagnose   Experimental bounded local-lattice diagnostics (v0.3 research)
@@ -79,6 +82,9 @@ Experimental v4 options:
   v4-diagnose-phone-ranking measures proposal-only ranking observables across the Build47 extended bank; no key is used.
   v4-diagnose-phone-refine4 selects up to four proposal-ranked seeds per side-pair, then applies the same proposal-only refinement as Build48.
   v4-diagnose-phone-surface records the exact proposal-only refinement trace plus a deterministic local stencil around each top-4 seed; oracle remains external/post-hoc.
+  v4-diagnose-phone-restart keeps the seed plus every accepted state from a fixed proposal-only 2px -> 1px restart before held-out qualification; oracle remains external/post-hoc.
+  v4-diagnose-phone-pair-escape finds proposal-only 1px coordinate-local 2px roots, then scans bounded coupled +/-1px two-coordinate escapes before held-out qualification.
+  v4-diagnose-phone-pair-continue continues every retained Build53 pair state with bounded proposal-only 1px coordinate descent and retains every accepted intermediate before held-out qualification.
 
 Capacity options:
   -in FILE           Input JPEG or PNG (required)
@@ -113,6 +119,9 @@ Examples:
   pixseal v4-diagnose-phone-ranking -in phone.jpg -width 1632 -height 1632 -json
   pixseal v4-diagnose-phone-refine4 -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
   pixseal v4-diagnose-phone-surface -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
+  pixseal v4-diagnose-phone-restart -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
+  pixseal v4-diagnose-phone-pair-escape -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
+  pixseal v4-diagnose-phone-pair-continue -in phone.jpg -key "a long secret" -width 1632 -height 1632 -json
   pixseal capacity -in photo.png -details
   pixseal analyze -in photo.png -message "hidden message"
   pixseal diagnose -in captured.jpg -json
@@ -154,6 +163,12 @@ func main() {
 		err = v4DiagnosePhoneRefine4(os.Args[2:])
 	case "v4-diagnose-phone-surface":
 		err = v4DiagnosePhoneSurface(os.Args[2:])
+	case "v4-diagnose-phone-restart":
+		err = v4DiagnosePhoneRestart(os.Args[2:])
+	case "v4-diagnose-phone-pair-escape":
+		err = v4DiagnosePhonePairEscape(os.Args[2:])
+	case "v4-diagnose-phone-pair-continue":
+		err = v4DiagnosePhonePairContinue(os.Args[2:])
 	case "capacity":
 		err = capacity(os.Args[2:])
 	case "analyze":
@@ -1590,6 +1605,170 @@ func v4DiagnosePhoneSurface(args []string) error {
 			}
 		}
 		fmt.Printf("candidate-%d: seed=%d seed-rank=%d pair=%s pair-rank=%d tier=%s cell=%d pre=%.6f post=%.6f trace=%d accepted=%d stencil=%d post-qualified=%t single-hmac=%t\n", c.Index, c.SeedIndex, c.SeedRankWithinPair, c.SourcePair, c.SourcePairRank, c.SourceTier, c.CellRank, c.PreProposal, c.PostProposal, len(c.Trace), accepted, len(c.Stencil), c.PostQualified, c.SingleHMACAuthenticated)
+	}
+	return nil
+}
+
+type v4Build52RestartOutput struct {
+	Version      string                                     `json:"version"`
+	InputDecoder string                                     `json:"input_decoder"`
+	Restart      watermark.ExperimentalV4PhoneBuild52Report `json:"restart"`
+}
+
+func v4DiagnosePhoneRestart(args []string) error {
+	fs := newFlagSet("v4-diagnose-phone-restart", "EXPERIMENTAL Build52 diagnostic: from each unchanged blind top-4-per-side-pair seed, keep the seed plus every proposal-improving accepted state from a fixed fine-first 2px -> 1px restart. All restart geometry is frozen before held-out qualification or diagnostic HMAC. Reference/oracle geometry is not accepted by this command.")
+	in := fs.String("in", "", "smartphone JPEG or PNG (required)")
+	key := fs.String("key", "", "secret key used only after geometry freeze/qualification for diagnostic authentication (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	jsonOut := fs.Bool("json", false, "emit machine-readable JSON")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	report, err := watermark.ExperimentalV4PhoneBuild52Diagnose(img, []byte(*key), *width, *height)
+	if err != nil {
+		return err
+	}
+	out := v4Build52RestartOutput{Version: buildinfo.String(), InputDecoder: inputDecoderID(format), Restart: report}
+	if *jsonOut {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(out)
+	}
+	fmt.Printf("Build52 phone fine-first restart-bank diagnostic\n")
+	fmt.Printf("input-decoder: %s\n", out.InputDecoder)
+	fmt.Printf("frozen=%d seeds=%d seeds-per-pair=%d baseline-evals=%d fine-evals=%d fine-states=%d baseline-qualified=%d baseline-authenticated=%d fine-qualified=%d fine-authenticated=%d\n", report.FrozenCandidates, report.SeedsSelected, report.SeedsPerPair, report.BaselineEvaluations, report.FineEvaluations, report.FineStatesFrozen, report.BaselineQualified, report.BaselineAuthenticated, report.FineQualified, report.FineAuthenticated)
+	for _, c := range report.Candidates {
+		fmt.Printf("candidate-%d: seed=%d seed-rank=%d pair=%s pair-rank=%d seed=%.6f baseline=%.6f fine-states=%d\n", c.Index, c.SeedIndex, c.SeedRankWithinPair, c.SourcePair, c.SourcePairRank, c.SeedProposal, c.Baseline.Proposal, len(c.FineRestart))
+		for _, st := range c.FineRestart {
+			fmt.Printf("  fine-%d: step=%.0f dim=%d delta=%.0f proposal=%.6f validation=%.6f qualified=%t movement=%.2fpx hmac=%t\n", st.Index, st.StepSizePx, st.Dimension, st.DeltaPx, st.Proposal, st.Validation, st.Qualified, st.MeanMovementFromSeedPx, st.SingleHMACAuthenticated)
+		}
+	}
+	return nil
+}
+
+type v4Build53PairEscapeOutput struct {
+	Version      string                                     `json:"version"`
+	InputDecoder string                                     `json:"input_decoder"`
+	PairEscape   watermark.ExperimentalV4PhoneBuild53Report `json:"pair_escape"`
+}
+
+func v4DiagnosePhonePairEscape(args []string) error {
+	fs := newFlagSet("v4-diagnose-phone-pair-escape", "EXPERIMENTAL Build53 diagnostic: retain proposal-only 2px roots, identify 1px coordinate-local maxima using only the unchanged Build41 proposal fold, then scan a bounded coupled +/-1px two-coordinate neighborhood only around those roots. At most eight proposal-ranked pair states per root are frozen before held-out qualification or diagnostic HMAC. Reference/oracle geometry is not accepted by this command.")
+	in := fs.String("in", "", "smartphone JPEG or PNG (required)")
+	key := fs.String("key", "", "secret key used only after geometry freeze/qualification for diagnostic authentication (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	jsonOut := fs.Bool("json", false, "emit machine-readable JSON")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	report, err := watermark.ExperimentalV4PhoneBuild53Diagnose(img, []byte(*key), *width, *height)
+	if err != nil {
+		return err
+	}
+	out := v4Build53PairEscapeOutput{Version: buildinfo.String(), InputDecoder: inputDecoderID(format), PairEscape: report}
+	if *jsonOut {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(out)
+	}
+	fmt.Printf("Build53 phone coupled pair-escape diagnostic\n")
+	fmt.Printf("input-decoder: %s\n", out.InputDecoder)
+	fmt.Printf("frozen=%d seeds=%d seeds-per-pair=%d baseline-evals=%d root-evals=%d single-evals=%d pair-evals=%d roots=%d coordinate-local=%d pair-improving=%d pair-states=%d baseline-qualified=%d baseline-authenticated=%d roots-qualified=%d roots-authenticated=%d pair-qualified=%d pair-authenticated=%d\n", report.FrozenCandidates, report.SeedsSelected, report.SeedsPerPair, report.BaselineEvaluations, report.RootEvaluations, report.SingleEvaluations, report.PairEvaluations, report.RootsFrozen, report.CoordinateLocalRoots, report.PairImproving, report.PairStatesFrozen, report.BaselineQualified, report.BaselineAuthenticated, report.RootsQualified, report.RootsAuthenticated, report.PairQualified, report.PairAuthenticated)
+	for _, c := range report.Candidates {
+		fmt.Printf("candidate-%d: seed=%d seed-rank=%d pair=%s pair-rank=%d seed=%.6f baseline=%.6f roots=%d\n", c.Index, c.SeedIndex, c.SeedRankWithinPair, c.SourcePair, c.SourcePairRank, c.SeedProposal, c.Baseline.Proposal, len(c.Roots))
+		for _, root := range c.Roots {
+			if !root.CoordinateLocal && root.PairRetained == 0 {
+				continue
+			}
+			fmt.Printf("  root-%d: proposal=%.6f validation=%.6f qualified=%t movement=%.2fpx hmac=%t single-improving=%d local=%t pair-improving=%d pair-retained=%d\n", root.RootIndex, root.Root.Proposal, root.Root.Validation, root.Root.Qualified, root.Root.MeanMovementFromSeedPx, root.Root.SingleHMACAuthenticated, root.SingleImproving, root.CoordinateLocal, root.PairImproving, root.PairRetained)
+			for _, st := range root.PairStates {
+				fmt.Printf("    pair-%d: dim-a=%d delta-a=%.0f dim-b=%d delta-b=%.0f proposal=%.6f validation=%.6f qualified=%t movement=%.2fpx hmac=%t\n", st.Rank, st.DimensionA, st.DeltaAPx, st.DimensionB, st.DeltaBPx, st.Proposal, st.Validation, st.Qualified, st.MeanMovementFromSeedPx, st.SingleHMACAuthenticated)
+			}
+		}
+	}
+	return nil
+}
+
+type v4Build54PairContinueOutput struct {
+	Version      string                                     `json:"version"`
+	InputDecoder string                                     `json:"input_decoder"`
+	Continuation watermark.ExperimentalV4PhoneBuild54Report `json:"continuation"`
+}
+
+func v4DiagnosePhonePairContinue(args []string) error {
+	fs := newFlagSet("v4-diagnose-phone-pair-continue", "EXPERIMENTAL Build54 diagnostic: reproduce the proposal-only Build53 pair bank, then continue every retained pair state with bounded 1px coordinate descent while retaining every accepted intermediate. The complete continuation bank is frozen before held-out qualification or diagnostic HMAC. Reference/oracle geometry is not accepted by this command.")
+	in := fs.String("in", "", "smartphone JPEG or PNG (required)")
+	key := fs.String("key", "", "secret key used only after geometry freeze/qualification for diagnostic authentication (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	jsonOut := fs.Bool("json", false, "emit machine-readable JSON")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	report, err := watermark.ExperimentalV4PhoneBuild54Diagnose(img, []byte(*key), *width, *height)
+	if err != nil {
+		return err
+	}
+	out := v4Build54PairContinueOutput{Version: buildinfo.String(), InputDecoder: inputDecoderID(format), Continuation: report}
+	if *jsonOut {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(out)
+	}
+	fmt.Printf("Build54 phone post-pair continuation diagnostic\n")
+	fmt.Printf("input-decoder: %s\n", out.InputDecoder)
+	fmt.Printf("frozen=%d seeds=%d seeds-per-pair=%d roots=%d local-roots=%d pair-states=%d continuation-evals=%d continuation-states=%d pair-qualified=%d pair-authenticated=%d continuation-qualified=%d continuation-authenticated=%d\n", report.FrozenCandidates, report.SeedsSelected, report.SeedsPerPair, report.RootsFrozen, report.CoordinateLocalRoots, report.PairStatesFrozen, report.ContinuationEvaluations, report.ContinuationStatesFrozen, report.PairQualified, report.PairAuthenticated, report.ContinuationQualified, report.ContinuationAuthenticated)
+	for _, c := range report.Candidates {
+		for _, root := range c.Roots {
+			if len(root.Branches) == 0 {
+				continue
+			}
+			fmt.Printf("candidate-%d root-%d: pair=%s pair-rank=%d root-proposal=%.6f branches=%d\n", c.Index, root.RootIndex, c.SourcePair, c.SourcePairRank, root.Root.Proposal, len(root.Branches))
+			for _, branch := range root.Branches {
+				fmt.Printf("  pair-%d: proposal=%.6f validation=%.6f qualified=%t hmac=%t continuation-states=%d\n", branch.PairRank, branch.ParentPair.Proposal, branch.ParentPair.Validation, branch.ParentPair.Qualified, branch.ParentPair.SingleHMACAuthenticated, len(branch.ContinuationStates))
+				for _, st := range branch.ContinuationStates {
+					fmt.Printf("    state-%d: pass=%d dim=%d delta=%.0f proposal=%.6f validation=%.6f qualified=%t movement=%.2fpx hmac=%t\n", st.Index, st.Pass, st.Dimension, st.DeltaPx, st.Proposal, st.Validation, st.Qualified, st.MeanMovementFromSeedPx, st.SingleHMACAuthenticated)
+				}
+			}
+		}
 	}
 	return nil
 }

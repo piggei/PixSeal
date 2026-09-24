@@ -1279,3 +1279,35 @@ The qualification host ran both Build50 targets under Go 1.26.0. For B/mild, the
 B/angle remains a distant false-basin control: top4 starts at 5448.391 px and the nearest refined result is 5452.835 px, with 1 qualified candidate and 0 authenticated.
 
 This rules out top2 seed pruning as the immediate B/mild bottleneck and shows that stronger proposal ascent cannot be assumed to improve physical registration. Build51 therefore instruments the exact refinement trajectory and a deterministic local neighborhood. It changes no production decision.
+
+
+## Build51 qualification-host local-surface result -> Build52 optimizer study
+
+Build51 was completed on the qualification host under the frozen Build44 raster/toolchain baseline. The primary B/mild target is candidate 10 (`top+left`, side-pair rank 3, seed rank 3), the same 34.049 px basin exposed by Builds47/49 and retained by Build50 top4.
+
+| image / target | pre oracle | standard-refine oracle | accepted moves | accepted improve / worsen | best trace oracle | better-both stencil | classification |
+|---|---:|---:|---:|---:|---:|---|---|
+| B/mild c10 | 34.049 px | 43.168 px | 9 | 2 / 7 | 25.172 px (rejected) | yes: `corner-2-x +2` | `optimizer-opportunity` |
+| B/angle c18 | 5448.391 px | 5453.906 px | 5 | 0 / 5 | distant false basin | no | `proposal-surface-misaligned` |
+
+The B/mild `corner-2-x +2` stencil point is decisive because it improves both quantities without oracle guidance during generation: proposal rises `0.201986 -> 0.208953` (`+0.006966`) and post-hoc mean corner error falls `34.049 -> 32.442 px` (`-1.607 px`). The ordinary coarse-to-fine schedule does not test that `+2 px` move from the untouched seed: earlier accepted coarse moves have already changed the geometry by the time the 2 px stage is reached.
+
+Build52 therefore changes only optimizer scheduling/state retention. It compares the unchanged coarse-to-fine endpoint with an independent `2 -> 1 px` proposal-only restart from every untouched top4 seed and retains every accepted intermediate restart state. Geometry is frozen before held-out/full-pilot qualification, and HMAC/oracle remain downstream diagnostics. No Build52 result is a production qualification until the private host study is run and any candidate production change separately re-passes the complete Build44 physical gate.
+
+
+## Build52 qualification-host result -> Build53 coupled pair escape
+
+The Go 1.26.0 qualification host completed Build52. B/mild candidate 10 remains the primary target. The untouched seed is 34.049 px from the private post-hoc oracle; the unchanged coarse-to-fine baseline ends at 43.168 px. The fine restart retains 8 states. Its best oracle state is 31.747 px (`-2.302 px` versus the seed) but does not qualify; retained state 1 is held-out-qualified at 32.442 px and no fine state authenticates. Build52 therefore classifies B/mild as `optimizer-partial-gain`. B/angle remains a distant false basin and is `optimizer-no-gain`.
+
+The state sequence narrows the optimizer question further. On B/mild the first accepted 2px state (`corner-2-x +2`) is qualified at 32.442 px. The next 2px move raises proposal again and improves oracle to 31.747 px but destroys qualification. A local development probe (not qualification evidence) finds that the qualified 32.442 px root has no proposal-improving individual +/-1px coordinate move, yet it does have proposal-improving **coupled** +/-1px two-coordinate moves. One such pair, `corner-1-y -1` plus `corner-2-x +1`, remains qualified and reduces post-hoc oracle error to ~31.842 px.
+
+Build53 therefore changes only optimizer neighborhood topology. It retains proposal-only 2px roots, uses the complete +/-1px single-coordinate stencil to identify coordinate-local roots, and only there scans all 112 coupled +/-1px two-coordinate combinations. At most eight proposal-improving pair states per root are retained by proposal rank. Geometry is frozen before qualification/HMAC; reference/SIFT remains post-hoc. The qualified host Build53 run is required before this preflight evidence can be interpreted.
+
+
+## Build53 qualification-host result -> Build54 post-pair continuation
+
+The qualified Go 1.26.0 Build53 run confirms the coupled escape on the primary B/mild target. Candidate 10 (`top+left`, pair rank 3, seed rank 3) contains one 1px coordinate-local 2px root at 32.442 px. The complete coupled stencil retains four proposal-improving pair states and **all four remain held-out-qualified**. Pair rank 2 (`corner-1-y -1` + `corner-2-x +1`) improves proposal from 0.208953 to 0.210454 and reduces post-hoc mean corner error from 32.442 to 31.842 px. No pair state authenticates, so B/mild is `pair-qualified-gain`. The B/angle target has no coordinate-local root and is `pair-not-triggered`.
+
+A local deterministic design probe then continues every retained B/mild pair state using only the unchanged proposal objective. Pair rank 1 re-enters an ordinary 1px coordinate-ascent path; retaining intermediates exposes a held-out-qualified state near 30.539 px before later proposal ascent moves away from the oracle again. No preflight continuation state authenticates. This motivates Build54 but is not qualification evidence.
+
+Build54 therefore reproduces the full Build53 pair bank, continues **every** retained pair state with bounded 1px proposal-only coordinate descent, retains every accepted intermediate, freezes the entire bank, and only then annotates qualification/HMAC and post-hoc oracle error.

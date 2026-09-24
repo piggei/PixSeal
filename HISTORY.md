@@ -1,8 +1,34 @@
+## Build54 — post-pair accepted-state continuation
+
+The qualified Build53 host run confirms `pair-qualified-gain` on B/mild: the qualified 32.442 px coordinate-local root yields four proposal-improving coupled pair states, all four remain qualified, and the best post-hoc pair geometry reaches 31.842 px. No pair state authenticates. The B/angle target remains `pair-not-triggered`.
+
+Build54 keeps that entire blind mechanism fixed and asks what happens **after** the coupled escape. Every retained Build53 pair state is continued with bounded 1px proposal-only coordinate descent for at most eight passes, and every accepted intermediate is retained. The complete continuation bank is frozen before held-out/full-pilot qualification, protected-data decode or HMAC; SIFT/reference geometry remains post-hoc. A local design preflight exposes a qualified B/mild intermediate near 30.539 px but no HMAC, motivating the experiment without constituting qualification evidence. Build54 is research-only and Build44 remains the latest qualified production milestone.
+
+## Build53 — coupled pair escape at proposal-defined coordinate-local roots
+
+The qualified Build52 run confirms only a partial optimizer gain. For B/mild, the fine restart preserves a 31.747 px state and a qualified 32.442 px state, but no retained state authenticates; B/angle shows no better-both fine restart. Build53 therefore keeps the score and seed bank frozen and tests a narrower optimizer limitation: a state may be a local maximum for every individual +/-1px coordinate move while still admitting a proposal-improving **coupled** two-coordinate move.
+
+For every unchanged top4 seed, Build53 retains the proposal-only 2px path, probes each root with the complete single-coordinate +/-1px stencil, and enables a 112-combination coupled +/-1px pair stencil only when the root has zero single-coordinate improvements. Up to eight pair states are kept by proposal rank alone. All geometry is fixed before held-out/full-pilot qualification, protected-data decode or HMAC; reference/SIFT remains post-hoc. Build53 is research-only and Build44 remains the latest qualified production milestone.
+
+The qualified Go 1.26.0 host run confirms the expected B/mild mechanism: the qualified 32.442 px root is coordinate-local at 1px, four coupled proposal-improving pair states are retained and all four remain qualified. Pair rank 2 (`corner-1-y -1` + `corner-2-x +1`) reaches 31.842 px. No pair HMAC succeeds; the B/angle target does not trigger pair scanning.
+
 ## Build44 — deterministic JPEG ingest
 
 Build44 begins by isolating input rasterization from the Go toolchain. Build43 qualification demonstrated that Go 1.26.0 and Go 1.25.1 decode the exact same canonical smartphone JPEG into different Y/Cb/Cr planes, enough to move A/mild outside the qualified geometry path. Build44 does not retune geometry around that difference. Instead it vendors the pre-Go-1.26 pure-Go JPEG decoder as `internal/jpeglegacy` and routes CLI JPEG input through that project-controlled path.
 
 The watermark algorithm remains the Build43 baseline: Format-v3 stays frozen; Format-v4 encoding, locked pilot, strength 48, data mapping, Hamming/ECC, whitening/HMAC domains, Build41/43 geometry and Build42 list decoding are unchanged. A public deterministic JPEG fixture locks the decoder raster contract. On the Surface/WSL2 qualification host, Go 1.26.0 passed both the deterministic-raster regression and the complete private Build43 physical matrix (controls 3/3 reject; A/front, A/mild, A/angle and B/front authenticate). Go 1.26.0 is therefore promoted as the qualified Build44 toolchain; Go 1.25.1 remains the historical Build43 reference.
+
+## Build51 closure — local proposal surface
+
+The qualification-host Build51 study closes the question left by Build50 without changing production behavior. For the B/mild target (`top+left`, side-pair rank 3, seed rank 3), the untouched seed is 34.049 px mean corner error from the post-hoc reference. The unchanged Build41 `16,8,4,2,1` proposal-only coordinate descent accepts nine moves and finishes at 43.168 px; only two accepted moves improve oracle error and seven worsen it. A rejected `corner-2-x +16` evaluation reaches 25.172 px but lowers proposal from 0.201986 to 0.076256, so rejecting it is correct under the frozen objective.
+
+The decisive evidence is instead a normal coordinate sample that the schedule never tests from the untouched seed: `corner-2-x +2` raises proposal from 0.201986 to 0.208953 while independently reducing oracle error from 34.049 to 32.442 px. Build51 therefore classifies B/mild as `optimizer-opportunity`, not as proof that the proposal observable must be replaced. B/angle contains no equivalent better-both local point and remains `proposal-surface-misaligned` / informational.
+
+## Build52 — fine restart and accepted-state retention
+
+Build52 tests only the optimizer consequence of the Build51 evidence. It retains the exact Build50/51 top4-per-side-pair seeds and unchanged proposal objective. In parallel with the unchanged Build41 coarse-to-fine endpoint, every untouched seed receives an independent bounded `2 px -> 1 px` restart. The restart keeps the seed plus every accepted proposal-improving intermediate state instead of exposing only the final greedy endpoint.
+
+The complete baseline/restart bank is generated blind and frozen before held-out/full-pilot qualification. Key/HMAC is used only after qualification and the SIFT/reference geometry remains external and post-hoc. Build52 is research-only; Build44 remains the latest qualified production milestone and no encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, geometry threshold or quorum is changed.
 
 # PixSeal history
 
@@ -886,6 +912,10 @@ The qualification-host Build49 run resolved the Build48 seed-selection ambiguity
 
 ## v0.3.0-build51 — local proposal-surface / refinement-trajectory observability
 
-The qualification-host Build50 run included the previously missed B/mild oracle-nearest seed exactly as intended: top4 pre-refinement error was 34.049 px (`top+left`, pair rank 3, seed rank 3). The unchanged proposal-only coordinate descent did not converge toward the physical mapping; the nearest refined result was 43.168 px. At the same time, held-out-qualified candidates increased from 7 to 11 while no candidate authenticated. B/angle stayed near 5.45 kpx. Seed-depth pruning is therefore no longer the immediate B/mild bottleneck.
+The qualification-host Build50 run included the previously missed B/mild oracle-nearest seed exactly as intended: top4 pre-refinement error was 34.049 px (`top+left`, pair rank 3, seed rank 3). The unchanged proposal-only coordinate descent ended at 43.168 px while held-out-qualified candidates increased from 7 to 11 and no candidate authenticated.
 
-Build51 does not change scoring or geometry. It instruments the exact Build41 local-refinement trajectory and adds a fixed local stencil around every blind top4 seed. Proposal-only geometry is completely generated before held-out annotation; full-pilot/HMAC remains downstream on original/final seed states; reference/SIFT error remains external post-hoc only. The experiment distinguishes a locally misaligned proposal surface from a search-direction/optimizer miss before any new production observable is designed.
+Build51 instrumented that path without changing scoring or geometry. For the target seed it recorded 9 accepted moves: 2 improved oracle error and 7 worsened it. A rejected `corner-2-x +16` evaluation reached 25.172 px but correctly lost proposal score. More importantly, the fixed local stencil contained `corner-2-x +2`, which improved proposal `0.201986 -> 0.208953` and independent post-hoc oracle error `34.049 -> 32.442 px`. B/mild therefore closed as `optimizer-opportunity`; B/angle had no better-both stencil point and remained `proposal-surface-misaligned`.
+
+## v0.3.0-build52 — fine-restart optimizer study
+
+Build52 preserves the Build50/51 top4 seed bank and unchanged proposal score. For every untouched seed it records the normal Build41 coarse-to-fine endpoint and independently runs a bounded `2 px -> 1 px` proposal-only restart, retaining the seed plus every accepted intermediate state. The entire baseline/restart geometry bank is frozen before held-out/full-pilot qualification; diagnostic HMAC is downstream of qualification and SIFT/reference error remains external/post-hoc. Build52 is research-only and Build44 remains the latest qualified milestone.

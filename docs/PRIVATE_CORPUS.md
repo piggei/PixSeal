@@ -195,3 +195,8 @@ Build50 reuses only the retained private `phone-b-mild.jpg`, `phone-b-angle.jpg`
 ## Build51 private local-surface diagnostics
 
 Build51 reuses only the retained `phone-b-mild.jpg`, `phone-b-angle.jpg` acquisitions and the marked-B digital reference already required by Builds45–50. Blind top4 refinement traces and deterministic local stencils for both captures are written under `v4-phone private/build51-diagnostics/blind/` before the reference/SIFT helper is invoked. The key is used only after geometry freeze for diagnostic authentication of final held-out-qualified states. The oracle is post-hoc only. Trace, stencil, oracle and summary outputs are private research artifacts and must never be packaged.
+
+
+## Build52 private fine-restart diagnostics
+
+Build52 reuses only retained `phone-b-mild.jpg`, `phone-b-angle.jpg` and the marked-B digital reference already required by Builds45–51. The blind `v4-diagnose-phone-restart` outputs for both captures are written under `v4-phone private/build52-diagnostics/blind/` before the reference/SIFT helper is invoked. Each blind record contains the unchanged coarse-to-fine baseline plus the proposal-only `2 -> 1 px` restart state bank generated from the same untouched top4 seeds. Held-out/full-pilot qualification and diagnostic HMAC are annotated only after geometry freeze; SIFT/reference error is post-hoc only. All Build52 JSON/TSV/Markdown diagnostic outputs remain private and must never be packaged in a source release.

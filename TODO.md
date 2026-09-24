@@ -304,8 +304,43 @@ and `CHANGELOG.md`.
 
 ### Build51 research
 
-- [ ] Run `make v4-build51-phone-surface-test` on the qualification host.
-- [ ] Run `make v4-build51-phone-surface-diagnostic` with retained B/mild and B/angle captures.
-- [ ] For the post-hoc B/mild oracle-nearest top4 seed, inspect every accepted/rejected refinement move and the fixed local stencil.
-- [ ] Determine whether any stencil sample improves both proposal score and oracle error (`optimizer-opportunity`) or whether proposal ascent predominantly moves away from the oracle (`proposal-surface-misaligned`).
-- [ ] Keep Build43/42 production, strength 48, Format-v4, pilot, ECC/Hamming, whitening/HMAC and qualification/quorum thresholds frozen until Build51 separates score-surface from optimizer reach.
+- [x] Run `make v4-build51-phone-surface-test` on the qualification host.
+- [x] Run `make v4-build51-phone-surface-diagnostic` with retained B/mild and B/angle captures.
+- [x] Inspect the post-hoc B/mild target seed trajectory and fixed local stencil: 9 accepted moves, 2 oracle-improving / 7 worsening; standard refinement 34.049 -> 43.168 px.
+- [x] Classify B/mild as `optimizer-opportunity`: `corner-2-x +2` improves proposal by +0.006966 and oracle error by -1.607 px to 32.442 px.
+- [x] Keep B/angle informational and classify it `proposal-surface-misaligned`; no better-both stencil point exists.
+- [x] Keep Build43/42 production, strength 48, Format-v4, pilot, ECC/Hamming, whitening/HMAC and qualification/quorum thresholds frozen.
+
+### Build52 research
+
+- [x] Close the Build51 trajectory/stencil interpretation without changing the proposal score.
+- [x] Implement a bounded proposal-only `2 px -> 1 px` restart from every untouched top4 seed and retain every accepted intermediate state.
+- [x] Freeze baseline + restart geometry before held-out/full-pilot annotation; keep key/HMAC and SIFT/reference oracle strictly downstream.
+- [x] Add `v4-diagnose-phone-restart`, source regressions, private diagnostic script and Build52 documentation.
+- [x] Run `make v4-build52-phone-optimizer-test` on the qualified Go 1.26.0 host: PASS.
+- [x] Run `make v4-build52-phone-optimizer-diagnostic` on retained B/mild and B/angle.
+- [x] Analyze Build52: B/mild = `optimizer-partial-gain` (31.747 px best retained; 32.442 px best qualified; no HMAC), B/angle = `optimizer-no-gain`.
+- [x] Do not promote Build52 into production; HMAC remains zero, so the Build44 production gate is not rerun as a promotion test.
+
+### Build53 research
+
+- [x] Keep the Build50/51/52 top4 seed bank, proposal score and Build44 production path frozen.
+- [x] Implement proposal-only 2px root retention plus a complete +/-1px single-coordinate locality probe.
+- [x] At 1px coordinate-local roots only, scan all 112 coupled +/-1px two-coordinate moves and retain at most the top 8 proposal-improving states by proposal alone.
+- [x] Freeze all root/pair geometry before held-out/full-pilot qualification; keep secret key/HMAC and SIFT/reference oracle strictly downstream.
+- [x] Add `v4-diagnose-phone-pair-escape`, source regressions, private diagnostic script and Build53 documentation.
+- [x] Run `make v4-build53-phone-pair-escape-test` on the qualified Go 1.26.0 host: PASS.
+- [x] Run `make v4-build53-phone-pair-escape-diagnostic` on retained B/mild and B/angle.
+- [x] Classify Build53: B/mild = `pair-qualified-gain` (four qualified pair states; best post-hoc pair 31.842 px; no HMAC), B/angle target = `pair-not-triggered`.
+- [x] Do not promote Build53 into production; HMAC remains zero.
+
+### Build54 research
+
+- [x] Keep Build53 pair generation, the top4 seed bank, proposal score and Build44 production path frozen.
+- [x] Continue every retained Build53 pair state with bounded 1px proposal-only coordinate descent and retain every accepted intermediate.
+- [x] Freeze all root/pair/continuation geometry before held-out/full-pilot qualification; keep secret key/HMAC and SIFT/reference oracle strictly downstream.
+- [x] Add `v4-diagnose-phone-pair-continue`, source regressions, private diagnostic script and Build54 documentation.
+- [ ] Run `make v4-build54-phone-pair-continuation-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build54-phone-pair-continuation-diagnostic` on retained B/mild and B/angle.
+- [ ] Classify B/mild post-hoc as `continuation-recovery`, `continuation-qualified-gain`, `continuation-geometric-gain`, `continuation-no-oracle-gain`, `continuation-no-accepted-state` or `continuation-not-triggered`; keep B/angle informational.
+- [ ] Only if Build54 authenticates a blind retained state, design a separate production candidate and rerun the complete unchanged Build44 physical gate before promotion.

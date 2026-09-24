@@ -1,3 +1,34 @@
+## v0.3.0-build54 — 2026-09-24
+
+### Research / Format-v4 phone geometry
+
+- Closes the qualified Build53 host study: B/mild is `pair-qualified-gain` (one 1px coordinate-local root, four retained pair states, all four qualified; best post-hoc pair geometry 31.842 px; no HMAC), while the B/angle target is `pair-not-triggered`.
+- Adds a research-only post-pair continuation diagnostic that reproduces the unchanged Build53 pair bank and continues every retained pair state with bounded 1px proposal-only coordinate descent.
+- Retains every accepted continuation intermediate rather than privileging the greedy endpoint. The complete root/pair/continuation bank is frozen before held-out/full-pilot qualification and diagnostic HMAC; SIFT/reference oracle remains external and post-hoc.
+- Adds `v4-diagnose-phone-pair-continue`, `v4-build54-phone-pair-continuation-test`, private `v4-build54-phone-pair-continuation-diagnostic`, and `docs/V4_BUILD54_PAIR_CONTINUATION.md`.
+- Local design preflight (not qualification evidence) shows a B/mild continuation intermediate near 30.539 px that remains qualified while later proposal ascent moves away again; no preflight continuation authenticates.
+- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, geometry threshold or quorum changes. Build44 remains the latest qualified milestone.
+
+## v0.3.0-build53 — 2026-09-24
+
+### Research / Format-v4 phone geometry
+
+- Closes the qualified Build52 host study: B/mild is `optimizer-partial-gain` (best retained oracle 31.747 px; best retained qualified state 32.442 px; no HMAC), while B/angle is `optimizer-no-gain`.
+- Records the qualified Build53 host result: the B/mild target has one coordinate-local root and four retained pair states; all four are qualified, pair rank 2 reaches 31.842 px, and no pair state authenticates. The B/angle target does not trigger pair scanning.
+- Adds a research-only coupled pair-escape diagnostic that preserves the unchanged top4 seed bank and proposal score, retains proposal-only 2px roots, identifies 1px coordinate-local roots, and scans bounded coupled +/-1px two-coordinate moves only at those roots.
+- Pair generation/ranking is proposal-only. At most eight pair states per local root are retained; the full geometry bank is frozen before held-out/full-pilot qualification and diagnostic HMAC. SIFT/reference oracle remains external and post-hoc.
+- Adds `v4-diagnose-phone-pair-escape`, `v4-build53-phone-pair-escape-test`, private `v4-build53-phone-pair-escape-diagnostic`, and `docs/V4_BUILD53_PAIR_ESCAPE.md`.
+- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, geometry threshold or quorum changes. Build44 remains the latest qualified milestone.
+
+## v0.3.0-build52 — 2026-09-24
+
+- Closes the Build51 qualification-host local-surface study: B/mild candidate 10 (`top+left`, pair rank 3, seed rank 3) starts at 34.049 px mean oracle error and the ordinary `16,8,4,2,1` coordinate descent ends at 43.168 px after 9 accepted moves; only 2 accepted moves improve oracle error and 7 worsen it.
+- Records the decisive Build51 stencil sample `corner-2-x +2`: proposal `0.201986 -> 0.208953` (`+0.006966`) while post-hoc oracle error improves `34.049 -> 32.442 px` (`-1.607 px`). B/mild is therefore classified `optimizer-opportunity`; B/angle remains `proposal-surface-misaligned`.
+- Adds a research-only fine-restart optimizer diagnostic that keeps the unchanged Build50/51 top4 seeds and proposal score, independently restarts each untouched seed at `2 px -> 1 px`, and retains the seed plus every accepted proposal-improving intermediate state.
+- Adds `v4-diagnose-phone-restart`, `v4-build52-phone-optimizer-test`, private `v4-build52-phone-optimizer-diagnostic`, and `docs/V4_BUILD52_FINE_RESTART.md`.
+- Freezes the complete baseline + restart state bank before held-out/full-pilot qualification; key/HMAC is downstream of qualification and SIFT/reference oracle remains external and post-hoc.
+- Production Build43/42 behavior, Build44 qualified baseline, Format-v4, strength 48, pilot, ECC/Hamming, whitening/HMAC domains and all production thresholds/quorums remain unchanged.
+
 ## v0.3.0-build51 — 2026-09-23
 
 - Adds research-only local proposal-surface/refinement-trajectory observability for the blind top4-per-side-pair seeds established by Build50.
@@ -5,6 +36,7 @@
 - Adds a deterministic up-to-53-point-per-seed local stencil spanning individual corner axes plus bounded translation/scale/shear/perspective-like modes. Stencil generation is proposal-only and oracle-free.
 - Freezes complete trace/stencil geometry before held-out validation annotation. Full-pilot qualification and diagnostic HMAC remain limited to original/final seed states; SIFT/reference oracle remains external and post-hoc.
 - Records the qualification-host Build50 result: B/mild top4 includes the 34.049 px seed, but refinement moves the nearest candidate to 43.168 px; qualified count rises 7 -> 11 and HMAC stays 0. B/angle remains a distant false basin.
+- Records the completed Build51 host result: for B/mild candidate 10 the refiner accepts 9 moves (2 oracle-improving, 7 oracle-worsening); a rejected `corner-2-x +16` state reaches 25.172 px but lowers proposal, while stencil point `corner-2-x +2` improves both proposal (`+0.006966`) and oracle (`-1.607 px`), establishing `optimizer-opportunity`. B/angle has no better-both stencil point and remains `proposal-surface-misaligned`.
 - Adds `v4-build51-phone-surface-test`, private `v4-build51-phone-surface-diagnostic`, and `docs/V4_BUILD51_LOCAL_SURFACE.md`.
 - Production Build43/42 behavior, Format-v4, strength 48, pilot, ECC/Hamming, whitening/HMAC domains and Build44 qualification remain frozen.
 
