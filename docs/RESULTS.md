@@ -1386,10 +1386,17 @@ Across the complete Build56 banks, B/mild freezes 68 second-pair states (51 qual
 
 Build62 closes B/mild as `fourth-pair-qualified-gain`: 492 fourth-pair states are frozen on B/mild, 491 qualify and 0 authenticate. The best qualified target state reaches 24.056 px from its exact 25.641 px Build61 sibling parent, a -1.585 px local oracle gain. B/angle freezes 3746 fourth-pair states with 0 qualified and 0 authenticated. Build63 therefore continues every retained Build62 fourth-pair state with bounded proposal-only 1px coordinate descent, retains every accepted intermediate, freezes both image banks, and only then annotates qualification/HMAC and post-hoc oracle geometry.
 
-## Build63 first blind B/mild recovery -> Build64 production candidate — 2026-09-24
+## Build63 first blind B/mild recovery -> Build64 qualified production baseline — 2026-09-24
 
 The qualified Go 1.26.0 Build63 host artifact is the first blind recovery of retained `phone-b-mild.jpg`. The final fourth-pair continuation bank contains **937 states, 935 held-out/full-pilot-qualified states and exactly one authenticated state**. The authenticated state belongs to candidate 10 (`top+left`, side-pair rank 3, seed rank 3), fourth-pair rank 7, continuation index 7. Its proposal is `0.302815`, validation `0.240486`, post-hoc oracle error `28.868 px`, and HMAC is true.
 
 The same bank contains a geometrically closer state at `22.099 px` that does not authenticate. Therefore oracle closeness neither generated nor selected the successful state; it remains an independent post-hoc measurement. `B/angle` expands to **6198** fourth-pair continuation states with **0 qualified and 0 authenticated**.
 
 This is the first evidence strong enough to stop the optimizer-only diagnostic chain and open a production-candidate experiment. Build64 adds the exact Build63-derived search family only as a final fallback after the Build44-qualified paths. The complete deep geometry bank must be frozen proposal-only before qualification or HMAC, and the full nine-photo physical matrix must pass before any baseline promotion.
+
+
+## Build64 physical qualification -> qualified baseline — 2026-09-24
+
+The complete retained nine-photo Build38 smartphone matrix passes under Go 1.26.0 with the Build64 deep fallback enabled. All three controls reject. A/front authenticates through the historical Build43 path; A/mild, A/angle and B/front authenticate through their existing paths without invoking Build64. B/mild reaches Build64 after the historical path fails and authenticates exact `v4-b38-phone-b` from a bank of 937 frozen states / 935 qualified states. B/angle reaches Build64, freezes 6198 states, qualifies none and remains rejected.
+
+This closes the Build45–63 optimizer research line as a successful production promotion. Build64 supersedes Build44 as the qualified smartphone physical-recovery baseline while preserving Build44's deterministic JPEG ingest, Go 1.26.0 toolchain qualification and all previously qualified recovery behavior.

@@ -1,10 +1,10 @@
 ## v0.3.0-build64 — 2026-09-24
 
 - Closes Build63 as `fourth-pair-continuation-recovery`: B/mild freezes 937 fourth-pair continuation states, 935 qualify and exactly one authenticates; the authenticated state has proposal 0.302815, validation 0.240486 and post-hoc oracle error 28.868 px. B/angle freezes 6198 continuation states with 0 qualified and 0 authenticated.
-- Adds the first production-candidate deep recovery fallback. Every Build44-qualified path remains first and unchanged; Build64 runs only after the historical phone path fails or cannot form its required geometry ensemble.
+- Promotes the first qualified deep-recovery production fallback. Every Build44-qualified path remains first and unchanged; Build64 runs only after the historical phone path fails or cannot form its required geometry ensemble.
 - Reproduces the complete Build63-derived geometry bank proposal-only, freezes it before held-out/full-pilot qualification, and attempts protected-data/list decoding only after the complete qualified subset is fixed. HMAC remains final authentication only.
-- Adds Build64 recovery telemetry to `v4-extract-phone`, `v4-build64-phone-recovery-test`, a complete nine-photo `v4-build64-phone-physical-test`, and `docs/V4_BUILD64_PHONE_RECOVERY_CANDIDATE.md`.
-- The Build64 physical gate promotes B/mild from informational reject to required authenticated recovery while requiring B/angle and all three controls to remain rejected. Build44 remains the latest qualified production milestone until that gate passes.
+- Adds Build64 recovery telemetry to `v4-extract-phone`, `v4-build64-phone-recovery-test`, a complete nine-photo `v4-build64-phone-physical-test`, and `docs/V4_BUILD64_PHONE_RECOVERY_QUALIFIED.md`.
+- **Qualified physical gate PASS on Go 1.26.0:** controls 3/3 reject; A/front, A/mild, A/angle and B/front preserve their historical authenticated paths without invoking Build64; B/mild authenticates exact `v4-b38-phone-b` through Build64; B/angle remains rejected after the fallback. Build64 supersedes Build44 as the qualified smartphone baseline.
 
 ## v0.3.0-build63 — 2026-09-24
 
@@ -28,7 +28,7 @@
 - Freezes the complete B/mild+B/angle Build61 sibling bank before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference geometry remains external and post-hoc.
 - Adds `v4-diagnose-phone-third-pair-sibling`, `v4-build61-phone-third-pair-sibling-stencil-test`, private `v4-build61-phone-third-pair-sibling-stencil-diagnostic`, and `docs/V4_BUILD61_THIRD_PAIR_SIBLING_STENCIL.md`.
 - Tracks full-bank sibling qualification counts explicitly so the first non-target B/angle qualification leakage observed in Build60 cannot be hidden by target-only summaries.
-- Changes no production encoder/decoder path, proposal score, threshold, quorum, pilot, ECC/Hamming, whitening or HMAC domain. Build44 remains the qualified production baseline.
+- Changes no production encoder/decoder path, proposal score, threshold, quorum, pilot, ECC/Hamming, whitening or HMAC domain. At this research checkpoint, Build44 was the qualified production baseline.
 
 ## v0.3.0-build60 — 2026-09-24
 
@@ -37,7 +37,7 @@
 - Adds a research-only continuation from **every** retained Build59 third-pair state using the unchanged proposal-only 1px coordinate descent for at most eight passes, retaining every accepted intermediate.
 - Freezes the complete B/mild+B/angle Build60 continuation bank before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference geometry remains external and post-hoc.
 - Adds `v4-diagnose-phone-third-pair-continue`, `v4-build60-phone-third-pair-continuation-test`, private `v4-build60-phone-third-pair-continuation-diagnostic`, and `docs/V4_BUILD60_THIRD_PAIR_CONTINUATION.md`.
-- No production encoder/decoder, score, threshold, quorum, pilot, ECC/Hamming or HMAC domain changes. Build44 remains the qualified production baseline.
+- No production encoder/decoder, score, threshold, quorum, pilot, ECC/Hamming or HMAC domain changes. At this research checkpoint, Build44 was the qualified production baseline.
 
 ## v0.3.0-build59 — 2026-09-24
 
@@ -46,7 +46,7 @@
 - Adds a research-only local-max probe around every frozen Build58 sibling and applies the unchanged bounded 112-combination coupled +/-1px pair stencil only at proposal-local siblings, retaining at most eight states by proposal.
 - Freezes the complete B/mild+B/angle Build59 bank before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference geometry remains external and post-hoc.
 - Adds `v4-diagnose-phone-third-pair-escape`, `v4-build59-phone-third-pair-escape-test`, private `v4-build59-phone-third-pair-escape-diagnostic`, and `docs/V4_BUILD59_THIRD_PAIR_ESCAPE.md`.
-- No production encoder/decoder, score, threshold, quorum, pilot, ECC/Hamming or HMAC domain changes. Build44 remains the qualified production baseline.
+- No production encoder/decoder, score, threshold, quorum, pilot, ECC/Hamming or HMAC domain changes. At this research checkpoint, Build44 was the qualified production baseline.
 
 ## v0.3.0-build58 — 2026-09-24
 
@@ -57,7 +57,7 @@
 - Adds a research-only independent +/-1px sibling stencil from every retained Build57 post-second-pair continuation state. All 16 siblings use the identical frozen parent; every proposal-improving sibling is retained.
 - Freezes the complete B/mild+B/angle Build58 bank before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference geometry remains external and post-hoc.
 - Adds `v4-diagnose-phone-second-pair-sibling`, `v4-build58-phone-second-pair-sibling-stencil-test`, private `v4-build58-phone-second-pair-sibling-stencil-diagnostic`, and `docs/V4_BUILD58_SECOND_PAIR_SIBLING_STENCIL.md`.
-- No production path changes. Build44 remains the latest qualified milestone.
+- No production path changes. At this research checkpoint, Build44 was the latest qualified milestone.
 
 ## v0.3.0-build57 — 2026-09-24
 
@@ -68,7 +68,7 @@
 - Adds a research-only continuation bank from **every** retained Build56 second-pair state using the unchanged 1px proposal-only coordinate descent for at most eight passes, retaining every accepted intermediate rather than privileging the endpoint.
 - Freezes the complete B/mild+B/angle second-pair + continuation bank before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference geometry remains external and post-hoc.
 - Adds `v4-diagnose-phone-sibling-pair-continue`, `v4-build57-phone-sibling-pair-continuation-test`, private `v4-build57-phone-sibling-pair-continuation-diagnostic`, and `docs/V4_BUILD57_SECOND_PAIR_CONTINUATION.md`.
-- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, score, threshold or quorum changes. Build44 remains the latest qualified milestone.
+- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, score, threshold or quorum changes. At this research checkpoint, Build44 was the latest qualified milestone.
 
 ## v0.3.0-build56 — 2026-09-24
 
@@ -80,7 +80,7 @@
 - Retains at most eight proposal-improving pair states per proposal-local sibling, ordered only by the unchanged proposal score. The complete bank is frozen before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference oracle remains external and post-hoc.
 - Adds `v4-diagnose-phone-sibling-pair-escape`, `v4-build56-phone-sibling-pair-escape-test`, private `v4-build56-phone-sibling-pair-escape-diagnostic`, and `docs/V4_BUILD56_SIBLING_PAIR_ESCAPE.md`.
 - Design probe (not qualification evidence): the Build55 29.778 px sibling is coordinate-local under all 16 single moves, yet five coupled proposal-improving escapes exist; one retained state reaches about 28.514 px while remaining qualified, with HMAC still false.
-- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, score, threshold or quorum changes. Build44 remains the latest qualified milestone.
+- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, score, threshold or quorum changes. At this research checkpoint, Build44 was the latest qualified milestone.
 
 ## v0.3.0-build55 — 2026-09-24
 
@@ -91,7 +91,7 @@
 - Retains every proposal-improving sibling before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference oracle remains external and post-hoc.
 - Adds `v4-diagnose-phone-sibling-stencil`, `v4-build55-phone-sibling-stencil-test`, private `v4-build55-phone-sibling-stencil-diagnostic`, and `docs/V4_BUILD55_SIBLING_STENCIL.md`.
 - Qualified Go 1.26.0 host result: B/mild target candidate 10 freezes 91 siblings; the best qualified sibling improves oracle error `30.539 -> 29.778 px` and proposal `0.257772 -> 0.266832`, with HMAC false. B/angle target remains `sibling-not-triggered`. Complete-bank counts are 93/76/0 frozen-qualified-authenticated on B/mild and 106/0/0 on B/angle.
-- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, score, threshold or quorum changes. Build44 remains the latest qualified milestone.
+- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, score, threshold or quorum changes. At this research checkpoint, Build44 was the latest qualified milestone.
 
 ## v0.3.0-build54 — 2026-09-24
 
@@ -102,7 +102,7 @@
 - Retains every accepted continuation intermediate rather than privileging the greedy endpoint. The complete root/pair/continuation bank is frozen before held-out/full-pilot qualification and diagnostic HMAC; SIFT/reference oracle remains external and post-hoc.
 - Adds `v4-diagnose-phone-pair-continue`, `v4-build54-phone-pair-continuation-test`, private `v4-build54-phone-pair-continuation-diagnostic`, and `docs/V4_BUILD54_PAIR_CONTINUATION.md`.
 - Qualification-host Build54 result: B/mild retains 34 continuation states and reaches a held-out-qualified 30.539 px intermediate, but no continuation state authenticates; B/angle remains `continuation-not-triggered`. Later proposal ascent can move away from the best retained geometry.
-- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, geometry threshold or quorum changes. Build44 remains the latest qualified milestone.
+- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, geometry threshold or quorum changes. At this research checkpoint, Build44 was the latest qualified milestone.
 
 ## v0.3.0-build53 — 2026-09-24
 
@@ -113,7 +113,7 @@
 - Adds a research-only coupled pair-escape diagnostic that preserves the unchanged top4 seed bank and proposal score, retains proposal-only 2px roots, identifies 1px coordinate-local roots, and scans bounded coupled +/-1px two-coordinate moves only at those roots.
 - Pair generation/ranking is proposal-only. At most eight pair states per local root are retained; the full geometry bank is frozen before held-out/full-pilot qualification and diagnostic HMAC. SIFT/reference oracle remains external and post-hoc.
 - Adds `v4-diagnose-phone-pair-escape`, `v4-build53-phone-pair-escape-test`, private `v4-build53-phone-pair-escape-diagnostic`, and `docs/V4_BUILD53_PAIR_ESCAPE.md`.
-- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, geometry threshold or quorum changes. Build44 remains the latest qualified milestone.
+- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, geometry threshold or quorum changes. At this research checkpoint, Build44 was the latest qualified milestone.
 
 ## v0.3.0-build52 — 2026-09-24
 
@@ -143,7 +143,7 @@
 - Adds `seed_rank_within_pair` to diagnostic refinement records so one blind top-4 run can be analyzed as exact nested top2/top4 subsets.
 - Keeps all geometry creation/refinement proposal-only, freezes the bank before held-out qualification, uses the key only after qualification for diagnostic HMAC, and generates SIFT/reference oracle geometry only after both blind outputs exist.
 - Adds `v4-diagnose-phone-refine4`, `v4-build50-phone-top4-refine-test`, private `v4-build50-phone-top4-refine-diagnostic`, and `docs/V4_BUILD50_TOP4_REFINEMENT.md`.
-- Build44 remains the latest qualified milestone; no production decoder or Format-v4 wire-format change.
+- At that checkpoint, Build44 was the latest qualified milestone; no production decoder or Format-v4 wire-format change.
 
 ## v0.3.0-build49 — 2026-09-23
 
@@ -152,7 +152,7 @@
 - Adds `v4-diagnose-phone-ranking`; the command deliberately accepts no secret key.
 - Adds post-hoc oracle rank, top-2/4/6/8-per-pair coverage and observable/error Spearman summaries in the private lab script.
 - Records the Build48 host result: B/mild selected refinement improved 46.202 -> 44.436 px, 7 candidates qualified, 0 authenticated; the better 34.049 px Build47 basin was not selected.
-- Build44 remains the latest qualified production milestone.
+- At this research checkpoint, Build44 was the latest qualified production milestone.
 
 ## v0.3.0-build48 — 2026-09-23
 
@@ -170,7 +170,7 @@
 - Added per-candidate proposal, held-out, pilot, side-pair provenance, qualification and post-hoc oracle-distance telemetry.
 - Kept single-candidate data/HMAC inspection behind unchanged Build43 qualification gates.
 - Added a private Build47 study that completes blind diagnostics before generating SIFT/reference geometry.
-- Build44 remains the latest qualified milestone; Build47 is research-only.
+- At that checkpoint, Build44 was the latest qualified milestone; Build47 is research-only.
 
 ## v0.3.0-build46 — qualified-geometry handoff diagnostic
 

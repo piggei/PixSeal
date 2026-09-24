@@ -1,6 +1,6 @@
 # Format-v4 Build49 — proposal-ranking observability
 
-Build49 is a research-only diagnostic checkpoint. **Build44 remains the latest qualified production milestone.** No production candidate generation, geometry refinement, qualification threshold, quorum, Format-v4 field, ECC/Hamming, whitening/HMAC or strength setting changes.
+Build49 is a research-only diagnostic checkpoint. **At this research checkpoint, Build44 was the latest qualified production milestone.** No production candidate generation, geometry refinement, qualification threshold, quorum, Format-v4 field, ECC/Hamming, whitening/HMAC or strength setting changes.
 
 ## Evidence entering Build49
 

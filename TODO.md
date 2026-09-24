@@ -449,12 +449,12 @@ and `CHANGELOG.md`.
 - [x] Classify B/mild as `fourth-pair-continuation-recovery`: 937 states / 935 qualified / 1 authenticated; B/angle 6198 / 0 / 0.
 
 
-### Build64 production candidate
+### Build64 qualified production baseline
 
 - [x] Promote the exact Build63-derived blind search family only as a final fallback after existing Build44 phone paths.
 - [x] Keep geometry generation proposal-only and freeze the complete deep bank before held-out qualification or HMAC.
 - [x] Add separate Build64 telemetry and source regressions without changing encoder, Format-v4, pilot, strength, ECC/Hamming, whitening/HMAC domains, score, thresholds or historical quorums.
-- [x] Add a complete nine-photo candidate gate: controls reject; existing A/front/A/mild/A/angle/B/front passes return before Build64; B/mild must authenticate through Build64; B/angle must reject after Build64.
-- [ ] Run `make v4-build64-phone-recovery-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build64-phone-physical-test` on the complete retained Build38 corpus.
-- [ ] Promote Build64 over Build44 only if the complete physical gate passes.
+- [x] Add a complete nine-photo qualification gate: controls reject; existing A/front/A/mild/A/angle/B/front passes return before Build64; B/mild must authenticate through Build64; B/angle must reject after Build64.
+- [x] Run `make v4-build64-phone-recovery-test` on the qualified Go 1.26.0 host — PASS.
+- [x] Run `make v4-build64-phone-physical-test` on the complete retained Build38 corpus — PASS, complete nine-photo matrix.
+- [x] Promote Build64 over Build44 after the complete physical gate passes; Build64 is now the qualified smartphone baseline.

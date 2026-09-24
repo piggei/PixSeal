@@ -150,7 +150,7 @@ func experimentalV4PhoneBuild64DecodeSingle(plane *pixelPlane, h experimentalV4P
 	return nil, info, profiles, frames, maxConfidence, errors.New("experimental v4 Build64 single-candidate authentication failed")
 }
 
-// experimentalV4PhoneBuild64Recover is an additive production-candidate
+// experimentalV4PhoneBuild64Recover is an additive qualified production
 // fallback. It first freezes the complete Build63-derived blind geometry bank,
 // then qualifies every geometry with public held-out pilot evidence, and only
 // after that attempts data/HMAC authentication in deterministic bank order.

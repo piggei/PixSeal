@@ -1,6 +1,6 @@
 # Format-v4 Build54 — post-pair accepted-state continuation
 
-Build54 is a **research-only optimizer diagnostic**. It does not change the qualified production decoder. Build44 remains the latest qualified milestone.
+Build54 is a **research-only optimizer diagnostic**. It does not change the qualified production decoder. At this research checkpoint, Build44 was the latest qualified milestone.
 
 ## Why Build54 exists
 
@@ -106,7 +106,7 @@ Build54 does not change:
 - Build43/44 production candidate depth, side-pair limits, qualification thresholds or quorum;
 - deterministic JPEG compatibility path.
 
-Build44 remains the production qualification baseline.
+At this research checkpoint, Build44 was the production qualification baseline.
 
 ## Qualification-host result — 2026-09-24
 

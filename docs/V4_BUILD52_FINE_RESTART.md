@@ -1,6 +1,6 @@
 # Format-v4 Build52 — fine-first restart / accepted-state retention
 
-Build52 is a research-only optimizer experiment. **Build44 remains the latest qualified production milestone.** Production Build43/42 behavior, Format-v4 framing, encoder, locked public pilot, strength 48, ECC/Hamming, whitening/HMAC domains and deterministic Build44 JPEG ingest remain unchanged.
+Build52 is a research-only optimizer experiment. **At this research checkpoint, Build44 was the latest qualified production milestone.** Production Build43/42 behavior, Format-v4 framing, encoder, locked public pilot, strength 48, ECC/Hamming, whitening/HMAC domains and deterministic Build44 JPEG ingest remain unchanged.
 
 ## Evidence entering Build52
 
@@ -87,4 +87,4 @@ The Go 1.26.0 qualification host ran both Build52 targets successfully. The post
 
 For B/mild the retained state at 32.442 px is held-out-qualified and is the same `corner-2-x +2` opportunity identified by Build51. The next accepted 2px move improves proposal and post-hoc oracle further to 31.747 px but loses qualification. Continuing the 1px stage from that later state does not authenticate. This confirms that optimizer scheduling/state retention matters, but the `2 -> 1` greedy restart is not sufficient for recovery.
 
-No Build52 result is promoted to production. Build44 remains the latest qualified milestone.
+No Build52 result is promoted to production. At this research checkpoint, Build44 was the latest qualified milestone.

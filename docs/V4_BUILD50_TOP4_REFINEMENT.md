@@ -1,6 +1,6 @@
 # Format-v4 Build50 — top-4-per-pair local refinement
 
-Build50 is a research-only diagnostic checkpoint. **Build44 remains the latest qualified production milestone.** No production candidate generation, proposal score, held-out threshold, quorum, Build42 data path, Format-v4 field, ECC/Hamming, whitening/HMAC domain or strength setting changes.
+Build50 is a research-only diagnostic checkpoint. **At this research checkpoint, Build44 was the latest qualified production milestone.** No production candidate generation, proposal score, held-out threshold, quorum, Build42 data path, Format-v4 field, ECC/Hamming, whitening/HMAC domain or strength setting changes.
 
 ## Evidence entering Build50
 

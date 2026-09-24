@@ -1014,7 +1014,7 @@ The fixed Build51 stencil contains a different and more actionable point: `corne
 
 **Build63 rule.** Do not select the 24.056 px state using oracle. Reproduce the complete Build62 blind bank and continue every retained fourth-pair state with the established 1px proposal-only coordinate descent for at most eight passes. Retain every accepted intermediate. Freeze the complete B/mild+B/angle continuation bank before qualification/HMAC and generate SIFT/reference only after both blind JSON outputs exist.
 
-## Build63 host result -> Build64 deep-recovery production candidate — 2026-09-24
+## Build63 host result -> Build64 qualified deep-recovery baseline — 2026-09-24
 
 **Observation.** Build63 produces the first blind authenticated recovery on B/mild. The frozen fourth-pair continuation bank contains 937 states; 935 pass unchanged held-out/full-pilot qualification and exactly one authenticates. The successful state is candidate 10 / side-pair rank 3 / seed rank 3 / fourth-pair rank 7 / continuation index 7 with proposal 0.302815, validation 0.240486 and post-hoc oracle error 28.868 px. The geometrically nearest state is 22.099 px but does not authenticate. B/angle produces 6198 continuation states with 0 qualified and 0 authenticated.
 
@@ -1022,4 +1022,11 @@ The fixed Build51 stencil contains a different and more actionable point: `corne
 
 **Build64 rule.** Do not add another optimizer stage. Promote the exact Build63 search family only as an additive final phone fallback. Preserve Build41/43, Build42 and residual ordering and behavior. If the historical geometry ensemble cannot be formed, allow Build64 before returning the old geometry rejection. Generate the complete deep bank proposal-only, freeze it, qualify the complete bank with existing public held-out/full-pilot rules, then attempt deterministic single-candidate protected-data/list decode and accept only existing HMAC authentication.
 
-**Qualification requirement.** Build64 is not a new baseline until the complete retained nine-photo corpus passes: controls reject; A/front/A/mild/A/angle/B/front remain authenticated without invoking Build64; B/mild authenticates exact expected payload through Build64; B/angle remains rejected after Build64.
+**Qualification requirement at candidate time.** Build64 was not a new baseline until the complete retained nine-photo corpus passed: controls reject; A/front/A/mild/A/angle/B/front remain authenticated without invoking Build64; B/mild authenticates exact expected payload through Build64; B/angle remains rejected after Build64.
+
+
+## Build64 qualification host result — promoted baseline — 2026-09-24
+
+**Observation.** The complete retained nine-photo gate passes under Go 1.26.0. Controls front/mild/angle reject. A/front, A/mild, A/angle and B/front authenticate through their historical paths without invoking Build64. B/mild invokes Build64 and authenticates exact `v4-b38-phone-b` with a frozen bank of 937 states / 935 qualified states. B/angle invokes Build64, freezes 6198 states, qualifies none and remains rejected.
+
+**Decision.** Promote Build64 over Build44 as the qualified smartphone physical-recovery baseline. Preserve the deep recovery ordering and freeze barrier exactly as qualified. Further physical-channel work, including any future screen-camera corpus, starts from Build64 and must not silently retune the qualified production path.

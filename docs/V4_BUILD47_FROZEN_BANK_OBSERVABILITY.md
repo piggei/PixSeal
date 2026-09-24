@@ -1,6 +1,6 @@
 # Format-v4 Build47 — frozen candidate bank observability
 
-Build47 is a research-only diagnostic checkpoint. **Build44 remains the latest qualified production milestone.** Build43 production behavior is unchanged: it still keeps the same two side pairs and freezes at most 32 candidates before held-out qualification.
+Build47 is a research-only diagnostic checkpoint. **At this research checkpoint, Build44 was the latest qualified production milestone.** Build43 production behavior is unchanged: it still keeps the same two side pairs and freezes at most 32 candidates before held-out qualification.
 
 ## Evidence entering Build47
 

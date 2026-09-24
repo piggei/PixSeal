@@ -2,7 +2,7 @@
 
 ## Status
 
-Completed research-only host study. Build44 remains the latest qualified production milestone. Build59 changes no production encoder/decoder path, proposal score, threshold, quorum, pilot, ECC/Hamming, whitening or HMAC domain.
+Completed research-only host study. At this research checkpoint, Build44 was the latest qualified production milestone. Build59 changes no production encoder/decoder path, proposal score, threshold, quorum, pilot, ECC/Hamming, whitening or HMAC domain.
 
 ## Evidence entering Build59
 

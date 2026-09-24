@@ -127,7 +127,7 @@ for spec in "${specs[@]}"; do
 done
 
 {
-    echo '# PixSeal Build64 deep-recovery production-candidate matrix'
+    echo '# PixSeal Build64 qualified deep-recovery matrix'
     echo
     echo 'Build64 preserves every Build44-qualified path and adds the frozen Build63 deep recovery only as a final fallback after all existing phone decode paths fail.'
     echo
@@ -151,12 +151,12 @@ b_mild_pass="$(awk -F '\t' 'NR>1 && $1=="phone-b-mild.jpg" && $16=="PASS" {n++} 
 b_angle_pass="$(awk -F '\t' 'NR>1 && $1=="phone-b-angle.jpg" && $16=="PASS" {n++} END{print n+0}' "$tsv")"
 
 echo "Build64 staged result: controls=${control_passes}/3 A/front=${a_front_pass}/1 A/mild=${a_mild_pass}/1 A/angle=${a_angle_pass}/1 B/front=${b_front_pass}/1 B/mild=${b_mild_pass}/1 B/angle-reject=${b_angle_pass}/1"
-echo "Build64 phone candidate matrix written to:"
+echo "Build64 qualified phone matrix written to:"
 echo "  $tsv"
 echo "  $md"
 
 if (( control_passes != 3 || a_front_pass != 1 || a_mild_pass != 1 || a_angle_pass != 1 || b_front_pass != 1 || b_mild_pass != 1 || b_angle_pass != 1 )); then
-    echo 'error: Build64 production-candidate physical gate not met' >&2
+    echo 'error: Build64 qualified physical gate not met' >&2
     exit 1
 fi
-echo 'Build64 production-candidate physical gate: PASS'
+echo 'Build64 qualified physical gate: PASS'

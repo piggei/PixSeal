@@ -1,6 +1,6 @@
 # Format-v4 Build48 — proposal-only local projective refinement
 
-Build48 is a research-only diagnostic checkpoint. **Build44 remains the latest qualified production milestone.** No Format-v4 encoding, strength, pilot, protected-data mapping, ECC/Hamming, whitening/HMAC, Build42 list logic, Build43 production candidate cap, side-pair count, qualification threshold or quorum changes.
+Build48 is a research-only diagnostic checkpoint. **At this research checkpoint, Build44 was the latest qualified production milestone.** No Format-v4 encoding, strength, pilot, protected-data mapping, ECC/Hamming, whitening/HMAC, Build42 list logic, Build43 production candidate cap, side-pair count, qualification threshold or quorum changes.
 
 ## Evidence entering Build48
 

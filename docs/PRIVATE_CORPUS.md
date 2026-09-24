@@ -212,6 +212,6 @@ these JSON/TSV/Markdown artifacts may be included in public source archives.
 
 Build63 writes private post-fourth-pair continuation outputs under `v4-phone private/build63-diagnostics/`. These remain private research artifacts and are excluded from source/release archives.
 
-## Build64 private production-candidate qualification
+## Build64 private qualified physical matrix
 
-Build64 reuses the complete retained nine-photo Build38 smartphone corpus. Its physical-gate output belongs under `v4-phone private/build64-diagnostics/` and contains per-image stderr logs plus `build64-phone-matrix.tsv` / `.md`. No acquisition image, payload dump or Build64 private matrix is included in source/release archives. The Build64 candidate gate is explicitly private because it validates the new deep fallback against controls and the difficult B captures before any production-baseline promotion.
+Build64 reuses the complete retained nine-photo Build38 smartphone corpus. Its physical-gate output belongs under `v4-phone private/build64-diagnostics/` and contains per-image stderr logs plus `build64-phone-matrix.tsv` / `.md`. No acquisition image, payload dump or Build64 private matrix is included in source/release archives. The Build64 qualification gate is explicitly private because it validates the deep fallback against controls and the difficult B captures. The complete gate passed and promoted Build64 to the qualified smartphone baseline; the private matrix remains excluded from source/release archives.

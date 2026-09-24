@@ -1,6 +1,6 @@
 # Format-v4 Build58 — sibling stencil after Build57 continuation
 
-Build58 is a **research-only optimizer diagnostic**. Build44 remains the latest qualified production milestone. No production path changes.
+Build58 is a **research-only optimizer diagnostic**. At this research checkpoint, Build44 was the latest qualified production milestone. No production path changes.
 
 ## Evidence entering Build58
 
@@ -88,4 +88,4 @@ The Go 1.26.0 host closes Build58 as `second-pair-sibling-qualified-gain`.
 - Exact target sibling movement: dimension 6 / corner 3 / x `-1 px`.
 - B/angle complete sibling bank: **542 states, 0 qualified, 0 authenticated**; target candidate 18 remains not triggered.
 
-This confirms another optimizer-only qualified geometry gain and motivates Build59's proposal-local third pair escape. It does not promote Build58 to production; Build44 remains the qualified milestone.
+This confirms another optimizer-only qualified geometry gain and motivates Build59's proposal-local third pair escape. It does not promote Build58 to production; At that checkpoint, Build44 was the qualified milestone.

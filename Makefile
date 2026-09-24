@@ -1046,14 +1046,14 @@ v4-build44-go126-phone-physical-test:
 # toolchain; the historical go126-named target remains as an explicit alias.
 v4-build44-phone-physical-test: v4-build44-go126-phone-physical-test
 
-# Build64 production-candidate regression. The deep recovery is additive and
+# Build64 qualified-baseline regression. The deep recovery is additive and
 # must preserve every Build44-qualified production constant and bound.
 v4-build64-phone-recovery-test:
-	@echo "Running Build64 deep-recovery candidate regressions..."
+	@echo "Running Build64 qualified deep-recovery regressions..."
 	@$(GO) test ./watermark -run '^TestExperimentalV4Build64' -count=1
 	@$(GO) test ./cmd/pixseal -run '^TestSubcommandHelpReturnsFlagErrHelp$$' -count=1
 
-# Build64 production-candidate physical gate over the complete nine-photo
+# Build64 qualified physical regression gate over the complete nine-photo
 # Build38 corpus. Existing Build44 passes must return before Build64; controls
 # and B/angle must exercise the fallback and reject; B/mild must authenticate.
 v4-build64-phone-physical-test: build

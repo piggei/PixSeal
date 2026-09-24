@@ -2,7 +2,7 @@
 
 ## Status
 
-Research-only. Build44 remains the latest qualified production milestone. Build61 changes no production encoder/decoder path, proposal score, threshold, quorum, pilot, ECC/Hamming, whitening or HMAC domain.
+Research-only. At this research checkpoint, Build44 was the latest qualified production milestone. Build61 changes no production encoder/decoder path, proposal score, threshold, quorum, pilot, ECC/Hamming, whitening or HMAC domain.
 
 ## Evidence entering Build61
 

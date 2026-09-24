@@ -2,7 +2,7 @@
 
 ## Status
 
-Completed research diagnostic on the qualified Go 1.26.0 host. Build44 remains the latest qualified production milestone. Build62 changes no production encoder/decoder path, proposal score, threshold, quorum, pilot, ECC/Hamming, whitening or HMAC domain.
+Completed research diagnostic on the qualified Go 1.26.0 host. At this research checkpoint, Build44 was the latest qualified production milestone. Build62 changes no production encoder/decoder path, proposal score, threshold, quorum, pilot, ECC/Hamming, whitening or HMAC domain.
 
 ## Evidence entering Build62
 

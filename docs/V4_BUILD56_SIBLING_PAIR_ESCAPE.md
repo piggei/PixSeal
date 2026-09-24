@@ -1,6 +1,6 @@
 # Format-v4 Build56 — pair escape from proposal-local Build55 siblings
 
-Build56 is a **research-only optimizer diagnostic**. Build44 remains the latest qualified production milestone. No production path changes.
+Build56 is a **research-only optimizer diagnostic**. At this research checkpoint, Build44 was the latest qualified production milestone. No production path changes.
 
 ## Evidence entering Build56
 

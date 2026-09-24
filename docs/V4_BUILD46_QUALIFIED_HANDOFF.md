@@ -1,6 +1,6 @@
 # Format-v4 Build46 — qualified-geometry handoff diagnostic
 
-Build46 is a research-only diagnostic checkpoint. **Build44 remains the latest qualified production milestone.** No production geometry threshold, data decoder, Format-v4 field, encoder parameter, pilot, ECC/Hamming rule, whitening/HMAC domain or strength value changes in this build.
+Build46 is a research-only diagnostic checkpoint. **At this research checkpoint, Build44 was the latest qualified production milestone.** No production geometry threshold, data decoder, Format-v4 field, encoder parameter, pilot, ECC/Hamming rule, whitening/HMAC domain or strength value changes in this build.
 
 ## Starting evidence
 

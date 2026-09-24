@@ -1,6 +1,6 @@
 # Format-v4 Build51 — local proposal-surface / refinement-trajectory observability
 
-Build51 is a research-only diagnostic checkpoint. **Build44 remains the latest qualified production milestone.** Production Build43 candidate generation, pair count, 32-candidate cap, proposal score, qualification thresholds, Build42 data path, Format-v4 framing, strength 48, ECC/Hamming, whitening and HMAC domains remain unchanged.
+Build51 is a research-only diagnostic checkpoint. **At this research checkpoint, Build44 was the latest qualified production milestone.** Production Build43 candidate generation, pair count, 32-candidate cap, proposal score, qualification thresholds, Build42 data path, Format-v4 framing, strength 48, ECC/Hamming, whitening and HMAC domains remain unchanged.
 
 ## Evidence entering Build51
 

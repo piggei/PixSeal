@@ -1,6 +1,6 @@
 # Format-v4 Build53 — coupled pair escape at coordinate-local roots
 
-Build53 is a research-only optimizer-neighborhood experiment. **Build44 remains the latest qualified production milestone.** Encoder, Format-v4 layout, locked public pilot, strength 48, ECC/Hamming, whitening/HMAC domains, JPEG ingest, production geometry thresholds and quorum are unchanged.
+Build53 is a research-only optimizer-neighborhood experiment. **At this research checkpoint, Build44 was the latest qualified production milestone.** Encoder, Format-v4 layout, locked public pilot, strength 48, ECC/Hamming, whitening/HMAC domains, JPEG ingest, production geometry thresholds and quorum are unchanged.
 
 ## Evidence entering Build53
 

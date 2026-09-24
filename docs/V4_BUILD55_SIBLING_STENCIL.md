@@ -1,6 +1,6 @@
 # Format-v4 Build55 — continuation sibling-stencil observability
 
-Build55 is a **research-only optimizer diagnostic**. Build44 remains the latest qualified production milestone. No production path changes.
+Build55 is a **research-only optimizer diagnostic**. At this research checkpoint, Build44 was the latest qualified production milestone. No production path changes.
 
 ## Evidence entering Build55
 

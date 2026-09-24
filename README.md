@@ -28,13 +28,13 @@ rights granted with those copies; the licensing change is prospective.
 
 Current development snapshot: **v0.3.0-build64**.
 
-Latest qualified milestone: **v0.3.0-build44**. Build63 is research-only and does not change the qualified production decoder.
+Latest qualified milestone: **v0.3.0-build64**. Build64 supersedes Build44 as the qualified smartphone physical-recovery baseline after passing the complete retained nine-photo gate under Go 1.26.0.
 
 Stable release baseline: **v0.2.0**.
 
 > **Build44 qualified milestone:** JPEG input now uses a project-controlled pure-Go pre-Go-1.26 decoder, eliminating the accidental dependency on the compiler standard library without retuning geometry. **Go 1.26.0 is now the qualified Build44 toolchain**: the deterministic-raster regression and the complete private Build43 smartphone matrix both pass unchanged. See [`docs/V4_BUILD44_DETERMINISTIC_JPEG.md`](docs/V4_BUILD44_DETERMINISTIC_JPEG.md) and [`docs/GO_TOOLCHAIN_COMPATIBILITY.md`](docs/GO_TOOLCHAIN_COMPATIBILITY.md).
 
-> **Build45 completed diagnostic checkpoint:** Build44 remains the latest qualified milestone. Build45 changes no production decoder decision; it decomposes the remaining `B/mild` failure into blind geometry, held-out qualification or post-geometry data-channel stages, and adds an explicitly lab-only supplied-geometry oracle. Retained-corpus oracle evidence already authenticates both `B/mild` and `B/angle` exactly under independently supplied geometry, so the next justified work is blind geometry rather than strength/ECC/HMAC changes. See [`docs/V4_BUILD45_PHONE_FAILURE_DECOMPOSITION.md`](docs/V4_BUILD45_PHONE_FAILURE_DECOMPOSITION.md).
+> **Build45 completed diagnostic checkpoint:** At this research checkpoint, Build44 was the latest qualified milestone. Build45 changes no production decoder decision; it decomposes the remaining `B/mild` failure into blind geometry, held-out qualification or post-geometry data-channel stages, and adds an explicitly lab-only supplied-geometry oracle. Retained-corpus oracle evidence already authenticates both `B/mild` and `B/angle` exactly under independently supplied geometry, so the next justified work is blind geometry rather than strength/ECC/HMAC changes. See [`docs/V4_BUILD45_PHONE_FAILURE_DECOMPOSITION.md`](docs/V4_BUILD45_PHONE_FAILURE_DECOMPOSITION.md).
 
 > **Build46 research snapshot:** the qualification-host Build45 run shows 32/28 frozen Build43 candidates but only one held-out-qualified candidate for `B/mild`/`B/angle`, while the Build42 bank remains empty because production requires a two-geometry direct ensemble before promoting the Build43 bank. Build46 therefore inspects that already-qualified singleton without changing production thresholds: it tests post-qualification single-candidate channel viability and, only afterwards, compares its corners to the isolated reference oracle. See [`docs/V4_BUILD46_QUALIFIED_HANDOFF.md`](docs/V4_BUILD46_QUALIFIED_HANDOFF.md).
 
@@ -49,10 +49,7 @@ Current Format-v4 development is focused on blind physical recovery from smartph
 photographs. Build39 introduced the global projective phone path, Build40 added a
 strictly bounded public-pilot-only residual field, Build41 closed the first blind A/B
 basin milestone, Build42 improved only post-geometry data recovery, and Build43 added
-a bounded side-pair geometry fallback for A/front. The qualified strength-48 matrix is
-controls 3/3 reject; `A/front`, `A/mild`, `A/angle` and `B/front` authenticate;
-`B/mild` and `B/angle` remain informational rejects. Build44 changes only JPEG ingest
-so that this matrix can be reproduced across Go toolchains. Build45 is diagnostic-only:
+a bounded side-pair geometry fallback for A/front. The historical Build44 strength-48 matrix was controls 3/3 reject; `A/front`, `A/mild`, `A/angle` and `B/front` authenticate; `B/mild` and `B/angle` reject. Build44 changed only JPEG ingest so that matrix could be reproduced across Go toolchains. Build64 preserves every Build44-qualified path and extends the qualified smartphone matrix so `B/mild` now authenticates through the additive deep-recovery fallback while `B/angle` remains rejected. Build45 is diagnostic-only:
 it records where the unchanged phone path stops and uses an isolated reference-assisted
 oracle to prove both difficult B captures remain inside the protected data-channel envelope
 when geometry is supplied independently. The qualification-host blind run further shows one
@@ -61,7 +58,7 @@ required by the production ensemble. Build46 measures whether that qualified sin
 already data-viable and how far it lies from the oracle, without changing any production
 quorum. Build47 then shows that lower-ranked side pairs expose a materially closer B/mild
 basin (34.049 px), Build48 shows that top2 seed pruning prevents that basin from being
-refined, and Build49 measures it at raw-proposal rank 3 within its side pair. Build50 then tested a research top4-per-pair seed depth under the unchanged proposal score: the 34.049 px seed entered the blind refinement but moved away from the oracle to 43.168 px while qualification count increased and HMAC remained zero. Build51 closed that question: B/mild has an `optimizer-opportunity`, including a `corner-2-x +2` state that improves both proposal and post-hoc oracle error, while B/angle remains `proposal-surface-misaligned`. Build52 then confirmed a partial optimizer gain: its fine restart preserves B/mild states down to 31.747 px and a qualified 32.442 px state, but no state authenticates; B/angle shows no fine-restart gain. The qualified Build53 host run then confirmed a coupled escape from the qualified 32.442 px coordinate-local root: four proposal-improving pair states remain qualified and the best post-hoc pair geometry reaches 31.842 px, still without HMAC. Build54 then confirmed `continuation-qualified-gain`: B/mild reaches a qualified 30.539 px intermediate but still does not authenticate, while later Gauss-Seidel proposal ascent can move away again. The qualified Build55 host artifact then confirms `sibling-qualified-gain`: candidate 10 exposes 91 proposal-improving siblings, with a qualified state at 29.778 px and still no HMAC; B/angle remains `sibling-not-triggered` on the target. Build56 then confirms `sibling-pair-qualified-gain`: the target retains 65 second-pair states and a qualified pair state reaches 28.514 px while proposal rises to 0.273793; no second-pair state authenticates. Build57 closes the next step as `second-pair-continuation-qualified-gain`: target candidate 10 produces 154 continuation states, 147 qualified, with the best qualified intermediate at 26.968 px and no HMAC; B/angle target remains not triggered and its complete continuation bank has no qualified state. Build58 then confirms `second-pair-sibling-qualified-gain`: target candidate 10 produces 275 sibling states overall on B/mild (271 qualified, 0 authenticated), and the best target sibling moves from 26.968 px to 26.149 px while proposal rises from 0.276536 to 0.285435; B/angle produces 542 siblings with 0 qualified. Build59 then confirmed `third-pair-qualified-gain`: B/mild retains 180 third-pair states, 175 qualified and 0 authenticated, with the best qualified target state at 25.407 px; B/angle target remains not triggered and its full third-pair bank has no qualified state. Build60 then confirmed `third-pair-continuation-qualified-gain`: B/mild retains 406 continuation states, 397 qualified and 0 authenticated, with the best qualified state at 25.150 px; B/angle target remains not triggered, although two non-target continuation states pass qualification at roughly 5665 px and still fail HMAC. Build61 then confirmed `third-pair-sibling-qualified-gain`: B/mild retains 593 proposal-improving siblings, 591 qualified and 0 authenticated; the best qualified sibling reaches 24.614 px from its exact 25.359 px parent while proposal rises to 0.288064. B/angle produces 1902 siblings but returns to 0 qualified and 0 authenticated. Build62 then confirmed `fourth-pair-qualified-gain`: B/mild freezes 492 fourth-pair states, 491 qualify and 0 authenticate; the best qualified target state reaches 24.056 px from its exact 25.641 px parent, a -1.585 px local gain, while B/angle freezes 3746 fourth-pair states with 0 qualified and 0 authenticated. Build63 then produced the first blind authenticated B/mild recovery: 937 fourth-pair continuation states were frozen, 935 qualified and exactly one authenticated; the successful state is 28.868 px from the independent oracle and is not the oracle-minimum state. B/angle freezes 6198 continuation states with 0 qualified/authenticated. Build64 promotes that exact blind search family only as a final production candidate fallback and must pass the full Build44-derived physical matrix before qualification. Protected
+refined, and Build49 measures it at raw-proposal rank 3 within its side pair. Build50 then tested a research top4-per-pair seed depth under the unchanged proposal score: the 34.049 px seed entered the blind refinement but moved away from the oracle to 43.168 px while qualification count increased and HMAC remained zero. Build51 closed that question: B/mild has an `optimizer-opportunity`, including a `corner-2-x +2` state that improves both proposal and post-hoc oracle error, while B/angle remains `proposal-surface-misaligned`. Build52 then confirmed a partial optimizer gain: its fine restart preserves B/mild states down to 31.747 px and a qualified 32.442 px state, but no state authenticates; B/angle shows no fine-restart gain. The qualified Build53 host run then confirmed a coupled escape from the qualified 32.442 px coordinate-local root: four proposal-improving pair states remain qualified and the best post-hoc pair geometry reaches 31.842 px, still without HMAC. Build54 then confirmed `continuation-qualified-gain`: B/mild reaches a qualified 30.539 px intermediate but still does not authenticate, while later Gauss-Seidel proposal ascent can move away again. The qualified Build55 host artifact then confirms `sibling-qualified-gain`: candidate 10 exposes 91 proposal-improving siblings, with a qualified state at 29.778 px and still no HMAC; B/angle remains `sibling-not-triggered` on the target. Build56 then confirms `sibling-pair-qualified-gain`: the target retains 65 second-pair states and a qualified pair state reaches 28.514 px while proposal rises to 0.273793; no second-pair state authenticates. Build57 closes the next step as `second-pair-continuation-qualified-gain`: target candidate 10 produces 154 continuation states, 147 qualified, with the best qualified intermediate at 26.968 px and no HMAC; B/angle target remains not triggered and its complete continuation bank has no qualified state. Build58 then confirms `second-pair-sibling-qualified-gain`: target candidate 10 produces 275 sibling states overall on B/mild (271 qualified, 0 authenticated), and the best target sibling moves from 26.968 px to 26.149 px while proposal rises from 0.276536 to 0.285435; B/angle produces 542 siblings with 0 qualified. Build59 then confirmed `third-pair-qualified-gain`: B/mild retains 180 third-pair states, 175 qualified and 0 authenticated, with the best qualified target state at 25.407 px; B/angle target remains not triggered and its full third-pair bank has no qualified state. Build60 then confirmed `third-pair-continuation-qualified-gain`: B/mild retains 406 continuation states, 397 qualified and 0 authenticated, with the best qualified state at 25.150 px; B/angle target remains not triggered, although two non-target continuation states pass qualification at roughly 5665 px and still fail HMAC. Build61 then confirmed `third-pair-sibling-qualified-gain`: B/mild retains 593 proposal-improving siblings, 591 qualified and 0 authenticated; the best qualified sibling reaches 24.614 px from its exact 25.359 px parent while proposal rises to 0.288064. B/angle produces 1902 siblings but returns to 0 qualified and 0 authenticated. Build62 then confirmed `fourth-pair-qualified-gain`: B/mild freezes 492 fourth-pair states, 491 qualify and 0 authenticate; the best qualified target state reaches 24.056 px from its exact 25.641 px parent, a -1.585 px local gain, while B/angle freezes 3746 fourth-pair states with 0 qualified and 0 authenticated. Build63 then produced the first blind authenticated B/mild recovery: 937 fourth-pair continuation states were frozen, 935 qualified and exactly one authenticated; the successful state is 28.868 px from the independent oracle and is not the oracle-minimum state. B/angle freezes 6198 continuation states with 0 qualified/authenticated. Build64 promotes that exact blind search family only as a final additive production fallback. The complete Build44-derived nine-photo physical matrix passed on the qualified Go 1.26.0 host: all controls reject; all historical Build44 PASS cases remain on their existing paths; `B/mild` authenticates through Build64; and `B/angle` remains rejected. Build64 is therefore the new qualified smartphone baseline. Protected
 payload contents, secret key and HMAC remain excluded from production geometry search/ranking;
 HMAC is only the final frame authenticator.
 
@@ -80,11 +77,11 @@ future builds do not silently repeat abandoned experiments.
 
 Build63 produced the first blind authenticated recovery of the retained `B/mild` capture. Its complete fourth-pair continuation bank contains **937 states, 935 qualified and exactly 1 HMAC-authenticated state**. The authenticated state has proposal `0.302815`, validation `0.240486` and post-hoc oracle error `28.868 px`; it is not the geometry-minimum state, which independently confirms that oracle geometry did not choose the successful frame. `B/angle` freezes **6198** continuation states with **0 qualified and 0 authenticated**. Build63 is therefore closed as `fourth-pair-continuation-recovery`.
 
-Build64 is the first **production-candidate promotion** of that evidence. It leaves every Build44-qualified path first and unchanged, then invokes the exact bounded Build63-derived deep geometry bank only after the historical phone path fails. Geometry is generated entirely from public proposal evidence and the complete bank is frozen before held-out/full-pilot qualification or data/HMAC. HMAC remains final frame authentication only.
+Build64 is the first **qualified production promotion** of that evidence. It leaves every Build44-qualified path first and unchanged, then invokes the exact bounded Build63-derived deep geometry bank only after the historical phone path fails. Geometry is generated entirely from public proposal evidence and the complete bank is frozen before held-out/full-pilot qualification or data/HMAC. HMAC remains final frame authentication only.
 
-The candidate gate requires the complete nine-photo Build38 corpus: all three controls must still reject; `A/front`, `A/mild`, `A/angle` and `B/front` must authenticate through their existing paths without invoking Build64; `B/mild` must authenticate exact `v4-b38-phone-b` through Build64; and `B/angle` must remain rejected after the fallback. Run `make v4-build64-phone-recovery-test` followed by `make v4-build64-phone-physical-test`. See [`docs/V4_BUILD64_PHONE_RECOVERY_CANDIDATE.md`](docs/V4_BUILD64_PHONE_RECOVERY_CANDIDATE.md).
+The complete nine-photo Build38 qualification gate passed: all three controls reject; `A/front`, `A/mild`, `A/angle` and `B/front` authenticate through their historical paths without invoking Build64; `B/mild` authenticates exact `v4-b38-phone-b` through Build64; and `B/angle` remains rejected after the fallback. Re-run with `make v4-build64-phone-recovery-test` followed by `make v4-build64-phone-physical-test`. See [`docs/V4_BUILD64_PHONE_RECOVERY_QUALIFIED.md`](docs/V4_BUILD64_PHONE_RECOVERY_QUALIFIED.md).
 
-**Build44 remains the latest qualified milestone until that complete Build64 physical gate passes.**
+**Build64 is the latest qualified milestone and supersedes Build44 as the smartphone physical-recovery baseline.**
 
 ## What v0.3.0-build59 adds
 
@@ -102,7 +99,7 @@ On the qualified host, Build58 produces 275 B/mild sibling states, 271 qualified
 
 The new command is `v4-diagnose-phone-second-pair-sibling`; the private host study is `make v4-build58-phone-second-pair-sibling-stencil-diagnostic`. See [`docs/V4_BUILD58_SECOND_PAIR_SIBLING_STENCIL.md`](docs/V4_BUILD58_SECOND_PAIR_SIBLING_STENCIL.md).
 
-Build58 changes no production path. **Build44 remains the latest qualified milestone.**
+Build58 changes no production path. **At this research checkpoint, Build44 was the latest qualified milestone.**
 
 ## What v0.3.0-build57 adds
 
@@ -120,7 +117,7 @@ Build56 reproduces the complete Build55 blind bank. Every frozen Build55 sibling
 
 The new command is `v4-diagnose-phone-sibling-pair-escape`; the private host study is `make v4-build56-phone-sibling-pair-escape-diagnostic`. See [`docs/V4_BUILD56_SIBLING_PAIR_ESCAPE.md`](docs/V4_BUILD56_SIBLING_PAIR_ESCAPE.md).
 
-Build56 changes no production path. **Build44 remains the latest qualified milestone.**
+Build56 changes no production path. **At this research checkpoint, Build44 was the latest qualified milestone.**
 
 ## What v0.3.0-build55 adds
 
@@ -130,7 +127,7 @@ The qualified Go 1.26.0 host artifact confirms the order-bias hypothesis. On B/m
 
 The new command is `v4-diagnose-phone-sibling-stencil`; the private host study is `make v4-build55-phone-sibling-stencil-diagnostic`. See [`docs/V4_BUILD55_SIBLING_STENCIL.md`](docs/V4_BUILD55_SIBLING_STENCIL.md).
 
-Build55 changes no production path. **Build44 remains the latest qualified milestone.**
+Build55 changes no production path. **At this research checkpoint, Build44 was the latest qualified milestone.**
 
 ## What v0.3.0-build54 adds
 
@@ -142,7 +139,7 @@ The new command is `v4-diagnose-phone-pair-continue`; the private host study is 
 
 The qualified Go 1.26.0 host run confirms the mechanism: B/mild retains 34 continuation states and reaches a held-out-qualified state at 30.539 px, improving the pair-rank-1 parent by 1.908 px. HMAC remains false. The B/angle target remains `continuation-not-triggered`. Later proposal-improving Gauss-Seidel updates move away from the 30.539 px geometry, motivating Build55's order-independent sibling stencil.
 
-Build54 changes no production path. **Build44 remains the latest qualified milestone.**
+Build54 changes no production path. **At this research checkpoint, Build44 was the latest qualified milestone.**
 
 ## What v0.3.0-build53 adds
 
@@ -154,7 +151,7 @@ The new command is `v4-diagnose-phone-pair-escape`; the private host study is `m
 
 The qualified Go 1.26.0 host run confirms the hypothesis. On B/mild, the target has exactly one coordinate-local root and four retained pair states; all four pair states remain held-out-qualified. Pair rank 2 (`corner-1-y -1` + `corner-2-x +1`) reduces post-hoc oracle error from 32.442 px to 31.842 px while improving proposal. No pair state authenticates, so the classification is `pair-qualified-gain`. The B/angle target has no coordinate-local root and is `pair-not-triggered`.
 
-Build53 changes no production path. **Build44 remains the latest qualified milestone.**
+Build53 changes no production path. **At this research checkpoint, Build44 was the latest qualified milestone.**
 
 ## What v0.3.0-build52 adds
 
@@ -164,7 +161,7 @@ The new `v4-diagnose-phone-restart` command keeps the exact Build50/51 top4-per-
 
 The qualified Go 1.26.0 host run closes Build52 as `optimizer-partial-gain` for B/mild and `optimizer-no-gain` for B/angle. B/mild fine restart preserves 8 states; the best oracle state is 31.747 px (not qualified), while state 1 is held-out-qualified at 32.442 px. `any_fine_better_both=true`, but no fine state authenticates. B/angle retains no better-both fine state and no HMAC.
 
-Build52 changes no production path. **Build44 remains the latest qualified milestone.**
+Build52 changes no production path. **At this research checkpoint, Build44 was the latest qualified milestone.**
 
 ## What v0.3.0-build51 adds
 

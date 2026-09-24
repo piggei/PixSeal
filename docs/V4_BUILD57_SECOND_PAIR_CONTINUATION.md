@@ -1,6 +1,6 @@
 # Format-v4 Build57 — continuation after Build56 second-pair escape
 
-Build57 is a **research-only optimizer diagnostic**. Build44 remains the latest qualified production milestone. No production path changes.
+Build57 is a **research-only optimizer diagnostic**. At this research checkpoint, Build44 was the latest qualified production milestone. No production path changes.
 
 ## Evidence entering Build57
 
@@ -95,4 +95,4 @@ The Go 1.26.0 host run closes Build57 as `second-pair-continuation-qualified-gai
 - a later accepted state on the same branch raises proposal further but moves oracle error back to 27.820 px, demonstrating another order-dependent divergence between greedy proposal ascent and independent geometry;
 - B/angle target candidate 18 remains `second-pair-continuation-not-triggered`; across the complete B/angle bank 347 continuation states are produced, none qualified or authenticated.
 
-No Build57 state authenticates, so Build44 remains the latest qualified production milestone.
+No Build57 state authenticates, so At this research checkpoint, Build44 was the latest qualified production milestone.
