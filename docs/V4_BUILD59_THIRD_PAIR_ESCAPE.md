@@ -2,7 +2,7 @@
 
 ## Status
 
-Research-only. Build44 remains the latest qualified production milestone. Build59 changes no production encoder/decoder path, proposal score, threshold, quorum, pilot, ECC/Hamming, whitening or HMAC domain.
+Completed research-only host study. Build44 remains the latest qualified production milestone. Build59 changes no production encoder/decoder path, proposal score, threshold, quorum, pilot, ECC/Hamming, whitening or HMAC domain.
 
 ## Evidence entering Build59
 
@@ -10,7 +10,7 @@ The qualified Go 1.26.0 Build58 host artifact closes B/mild as `second-pair-sibl
 
 - complete B/mild sibling bank: 275 states, 271 qualified, 0 HMAC;
 - target candidate 10: exact Build57 parent 26.968 px;
-- best qualified Build58 sibling: 26.149 px;
+- best qualified Build58 sibling anywhere in the target bank: 26.149 px;
 - proposal: 0.276536 -> 0.285435;
 - HMAC: false;
 - B/angle: 542 sibling states, 0 qualified, 0 HMAC.
@@ -29,6 +29,12 @@ For every frozen Build58 second-pair sibling, Build59:
 6. freezes the complete B/mild and B/angle geometry banks before qualification or protected-data work.
 
 After the freeze barrier, unchanged held-out/full-pilot qualification and diagnostic single-candidate HMAC are attached. SIFT/reference geometry is generated only after both blind JSON outputs are complete and is used exclusively for post-hoc interpretation.
+
+## Qualified-host result
+
+On Go 1.26.0, B/mild freezes 180 third-pair states; 175 pass the unchanged qualification gate and none authenticates. Target candidate 10 closes as `third-pair-qualified-gain`: the best qualified third-pair state reaches 25.407 px post-hoc oracle error, 1.664 px better than its exact 27.071 px Build58 sibling parent, while proposal is also improved. B/angle target candidate 18 remains `third-pair-not-triggered`; the full B/angle bank contains 914 third-pair states, 0 qualified and 0 authenticated.
+
+The blind B/mild JSON from the original run and the later oracle/report artifact were reconciled after a subsequent rerun accidentally truncated that one JSON file to 0 bytes. Counts and target telemetry match exactly; this transfer artifact does not change the research result.
 
 ## Outputs
 

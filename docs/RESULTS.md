@@ -1353,3 +1353,43 @@ Across the complete Build56 banks, B/mild freezes 68 second-pair states (51 qual
 **Build59 hypothesis.** The unchanged proposal objective may still contain useful geometry beyond the Build58 sibling bank, but the next transition should only occur after proving one-coordinate locality. Build59 must not oracle-select the 26.149 px state. It reproduces every Build58 sibling, probes the complete independent +/-1px one-coordinate stencil from that exact sibling, and only for proposal-local siblings evaluates the bounded 112 coupled two-coordinate +/-1px moves, retaining at most eight by proposal. Freeze both image banks before qualification/HMAC and generate SIFT/reference only afterwards.
 
 **Leakage barrier.** All local-max tests, pair generation and pair ranking are proposal-only. Qualification, secret key, payload, ECC/HMAC and oracle geometry cannot affect the Build59 bank. No production score, threshold, quorum, encoder, pilot, ECC/Hamming or HMAC domain changes.
+
+## Build59 host result and Build60 continuation hypothesis — 2026-09-24
+
+**Build59 result.** The qualified Go 1.26.0 host confirms `third-pair-qualified-gain` on B/mild. The full blind B/mild bank contains 180 third-pair states, 175 qualified and 0 authenticated. Target candidate 10 reaches a best qualified third-pair state at 25.407 px post-hoc oracle error, 1.664 px better than its exact 27.071 px Build58 sibling parent while the unchanged proposal also improves. B/angle target candidate 18 remains `third-pair-not-triggered`; its full Build59 bank contains 914 third-pair states, 0 qualified and 0 authenticated.
+
+**Build60 hypothesis.** The third pair escape may cross another proposal-local barrier without reaching the terminal useful basin. Build60 therefore continues every retained Build59 third-pair state, not an oracle-selected subset, with bounded 1px proposal-only coordinate descent and retains every accepted intermediate. The complete B/mild+B/angle continuation bank is frozen before qualification/HMAC; SIFT/reference remains post-hoc only.
+
+**Leakage barrier.** Third-pair continuation generation, acceptance, stopping and retention use only the unchanged proposal objective. Qualification, secret key, payload, ECC/HMAC and oracle geometry cannot affect the Build60 geometry bank. No production score, threshold, quorum, encoder, pilot, ECC/Hamming or HMAC domain changes.
+
+
+
+## Build60 host result and Build61 sibling hypothesis — 2026-09-24
+
+**Build60 host result.** The qualified Go 1.26.0 artifact closes B/mild as `third-pair-continuation-qualified-gain`: 406 continuation states are retained, 397 qualify, none authenticate, and the best qualified state reaches 25.150 px. That state improves its exact 29.938 px third-pair parent by 4.788 px while proposal also improves. B/angle target candidate 18 remains not triggered; across the full non-target bank 1467 continuation states are retained, 2 qualify at about 5665 px oracle error and 0 authenticate.
+
+**Build61 hypothesis.** The continuation bank can still hide order-dependent one-coordinate alternatives because Gauss-Seidel updates alter later coordinate probes. Build61 therefore evaluates all 16 independent +/-1px siblings from every retained Build60 continuation state against the identical frozen parent, retains proposal-improving siblings, freezes both image banks, and only then applies qualification/HMAC.
+
+**Control escalation.** Build61 reports whole-bank qualification counts and rates explicitly. The two B/angle qualified states in Build60 are far from oracle and unauthenticated, but any material increase in such leakage is evidence against unconstrained further optimizer expansion.
+
+
+## Build61 host result and Build62 fourth-pair hypothesis — 2026-09-24
+
+**Build61 host result.** The qualified Go 1.26.0 artifact closes B/mild as `third-pair-sibling-qualified-gain`: 593 proposal-improving siblings are frozen, 591 qualify, none authenticate, and the best qualified sibling reaches 24.614 px. The exact parent of that sibling is 25.359 px, so the local oracle improvement is 0.745 px while proposal rises to 0.288064. The separate best Build60 continuation parent remains 25.150 px and is not the genealogy parent of the winning sibling. B/angle produces 1902 sibling states, 0 qualified and 0 authenticated, so the rare Build60 qualification leakage does not propagate through the sibling stage.
+
+**Build62 hypothesis.** A Build61 sibling may itself be proposal-local in the one-coordinate +/-1px neighborhood while a coupled two-coordinate move still improves the unchanged proposal objective. Build62 therefore probes every frozen Build61 third-pair sibling with the full one-coordinate stencil and applies the bounded 112-combination pair stencil only when zero one-coordinate improvements exist, retaining at most eight proposal-ranked fourth-pair states.
+
+**Leakage barrier.** Locality classification, pair generation, acceptance and ranking use proposal only. The complete B/mild+B/angle fourth-pair bank is frozen before qualification/HMAC; SIFT/reference remains post-hoc. Whole-bank B/angle qualification/HMAC rates remain explicit because Build60 demonstrated rare qualification leakage under larger banks.
+
+
+## Build62 host result -> Build63 fourth-pair continuation — 2026-09-24
+
+Build62 closes B/mild as `fourth-pair-qualified-gain`: 492 fourth-pair states are frozen on B/mild, 491 qualify and 0 authenticate. The best qualified target state reaches 24.056 px from its exact 25.641 px Build61 sibling parent, a -1.585 px local oracle gain. B/angle freezes 3746 fourth-pair states with 0 qualified and 0 authenticated. Build63 therefore continues every retained Build62 fourth-pair state with bounded proposal-only 1px coordinate descent, retains every accepted intermediate, freezes both image banks, and only then annotates qualification/HMAC and post-hoc oracle geometry.
+
+## Build63 first blind B/mild recovery -> Build64 production candidate — 2026-09-24
+
+The qualified Go 1.26.0 Build63 host artifact is the first blind recovery of retained `phone-b-mild.jpg`. The final fourth-pair continuation bank contains **937 states, 935 held-out/full-pilot-qualified states and exactly one authenticated state**. The authenticated state belongs to candidate 10 (`top+left`, side-pair rank 3, seed rank 3), fourth-pair rank 7, continuation index 7. Its proposal is `0.302815`, validation `0.240486`, post-hoc oracle error `28.868 px`, and HMAC is true.
+
+The same bank contains a geometrically closer state at `22.099 px` that does not authenticate. Therefore oracle closeness neither generated nor selected the successful state; it remains an independent post-hoc measurement. `B/angle` expands to **6198** fourth-pair continuation states with **0 qualified and 0 authenticated**.
+
+This is the first evidence strong enough to stop the optimizer-only diagnostic chain and open a production-candidate experiment. Build64 adds the exact Build63-derived search family only as a final fallback after the Build44-qualified paths. The complete deep geometry bank must be frozen proposal-only before qualification or HMAC, and the full nine-photo physical matrix must pass before any baseline promotion.

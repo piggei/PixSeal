@@ -1,3 +1,44 @@
+## v0.3.0-build64 — 2026-09-24
+
+- Closes Build63 as `fourth-pair-continuation-recovery`: B/mild freezes 937 fourth-pair continuation states, 935 qualify and exactly one authenticates; the authenticated state has proposal 0.302815, validation 0.240486 and post-hoc oracle error 28.868 px. B/angle freezes 6198 continuation states with 0 qualified and 0 authenticated.
+- Adds the first production-candidate deep recovery fallback. Every Build44-qualified path remains first and unchanged; Build64 runs only after the historical phone path fails or cannot form its required geometry ensemble.
+- Reproduces the complete Build63-derived geometry bank proposal-only, freezes it before held-out/full-pilot qualification, and attempts protected-data/list decoding only after the complete qualified subset is fixed. HMAC remains final authentication only.
+- Adds Build64 recovery telemetry to `v4-extract-phone`, `v4-build64-phone-recovery-test`, a complete nine-photo `v4-build64-phone-physical-test`, and `docs/V4_BUILD64_PHONE_RECOVERY_CANDIDATE.md`.
+- The Build64 physical gate promotes B/mild from informational reject to required authenticated recovery while requiring B/angle and all three controls to remain rejected. Build44 remains the latest qualified production milestone until that gate passes.
+
+## v0.3.0-build63 — 2026-09-24
+
+- Closes Build62 as `fourth-pair-qualified-gain`: B/mild retains 492 fourth-pair states, 491 qualified and 0 authenticated; the best target state reaches 24.056 px from its exact 25.641 px parent. B/angle retains 3746 fourth-pair states with 0 qualified and 0 authenticated.
+- Adds proposal-only 1px continuation from every frozen Build62 fourth-pair state, retaining every accepted intermediate before qualification/HMAC.
+- Adds `v4-diagnose-phone-fourth-pair-continue`, `v4-build63-phone-fourth-pair-continuation-test`, private `v4-build63-phone-fourth-pair-continuation-diagnostic`, and `docs/V4_BUILD63_FOURTH_PAIR_CONTINUATION.md`.
+- Production Build44 behavior remains unchanged.
+
+## v0.3.0-build62 — 2026-09-24
+
+- Closes Build61 on the qualified Go 1.26.0 host as `third-pair-sibling-qualified-gain`: B/mild freezes 593 sibling states, 591 qualify, none authenticate, and the best qualified sibling reaches 24.614 px from its exact 25.359 px parent while proposal improves; B/angle freezes 1902 siblings with 0 qualified and 0 authenticated.
+- Adds a research-only fourth-pair escape stage: every frozen Build61 third-pair sibling is probed with the complete independent +/-1px one-coordinate stencil, and only proposal-local siblings receive the bounded 112-combination coupled pair stencil with at most eight retained proposal-ranked states.
+- Freezes the complete B/mild+B/angle Build62 fourth-pair bank before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference geometry remains post-hoc only.
+- Adds `v4-diagnose-phone-fourth-pair-escape`, `v4-build62-phone-fourth-pair-escape-test`, private `v4-build62-phone-fourth-pair-escape-diagnostic`, and `docs/V4_BUILD62_FOURTH_PAIR_ESCAPE.md`.
+- Keeps Build44 as the latest qualified production milestone; no encoder, wire-format, pilot, proposal-score, threshold, ECC/Hamming, whitening or HMAC-domain changes.
+
+## v0.3.0-build61 — 2026-09-24
+
+- Closes Build60 on the qualified Go 1.26.0 host as `third-pair-continuation-qualified-gain`: B/mild retains 406 post-third-pair continuation states, 397 qualified and 0 authenticated, with the best qualified state at 25.150 px; target B/angle remains not triggered, while two non-target B/angle continuation states pass qualification at ~5665 px and still fail HMAC.
+- Adds a research-only third-pair continuation sibling stencil: every frozen Build60 continuation state is probed independently in all eight coordinates at +/-1 px from the identical parent using only the unchanged proposal objective.
+- Freezes the complete B/mild+B/angle Build61 sibling bank before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference geometry remains external and post-hoc.
+- Adds `v4-diagnose-phone-third-pair-sibling`, `v4-build61-phone-third-pair-sibling-stencil-test`, private `v4-build61-phone-third-pair-sibling-stencil-diagnostic`, and `docs/V4_BUILD61_THIRD_PAIR_SIBLING_STENCIL.md`.
+- Tracks full-bank sibling qualification counts explicitly so the first non-target B/angle qualification leakage observed in Build60 cannot be hidden by target-only summaries.
+- Changes no production encoder/decoder path, proposal score, threshold, quorum, pilot, ECC/Hamming, whitening or HMAC domain. Build44 remains the qualified production baseline.
+
+## v0.3.0-build60 — 2026-09-24
+
+- Closes the qualified-host Build59 study as `third-pair-qualified-gain`: B/mild freezes 180 third-pair states, 175 qualified and 0 authenticated; target candidate 10 reaches a best qualified post-hoc geometry of 25.407 px, 1.664 px better than its exact 27.071 px Build58 sibling parent.
+- Records B/angle as the control: target candidate 18 remains `third-pair-not-triggered`; the complete B/angle Build59 third-pair bank contains 914 states, 0 qualified and 0 authenticated.
+- Adds a research-only continuation from **every** retained Build59 third-pair state using the unchanged proposal-only 1px coordinate descent for at most eight passes, retaining every accepted intermediate.
+- Freezes the complete B/mild+B/angle Build60 continuation bank before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference geometry remains external and post-hoc.
+- Adds `v4-diagnose-phone-third-pair-continue`, `v4-build60-phone-third-pair-continuation-test`, private `v4-build60-phone-third-pair-continuation-diagnostic`, and `docs/V4_BUILD60_THIRD_PAIR_CONTINUATION.md`.
+- No production encoder/decoder, score, threshold, quorum, pilot, ECC/Hamming or HMAC domain changes. Build44 remains the qualified production baseline.
+
 ## v0.3.0-build59 — 2026-09-24
 
 - Closes the qualified-host Build58 study as `second-pair-sibling-qualified-gain`: B/mild contains 275 frozen sibling states, 271 qualified and 0 authenticated; target candidate 10 improves from 26.968 px to 26.149 px while proposal rises from 0.276536 to 0.285435.

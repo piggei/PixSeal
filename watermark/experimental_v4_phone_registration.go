@@ -78,6 +78,15 @@ type ExperimentalV4PhoneInfo struct {
 	Build43Pair1               string
 	Build43Authenticated       bool
 	Build43PairRanking         []ExperimentalV4PhonePairScore
+	Build64Attempted           bool
+	Build64SeedsSelected       int
+	Build64GeometryEvaluations int
+	Build64BankCandidates      int
+	Build64QualifiedCandidates int
+	Build64DecodeCandidates    int
+	Build64ListFramesTried     int
+	Build64MaxDataConfidence   float64
+	Build64Authenticated       bool
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -961,12 +970,11 @@ func experimentalV4PhoneDecodeEnsemble(src image.Image, key []byte, cw, ch int, 
 	return nil, info, telemetry, errors.New("experimental v4 phone payload authentication failed")
 }
 
-// ExperimentalV4ExtractPhone is the Build42 blind smartphone path. Build41
-// remains the geometry baseline: it resolves the bounded global projective
-// basin using only structure/public-pilot evidence with a frozen held-out
-// split. Build42 changes only fallback order and post-geometry data recovery:
-// first try the untouched Build41 global ensemble, then the bounded Build42
-// qualified-bank/list decoder, and only then the older Build40 residual warp.
+// ExperimentalV4ExtractPhone preserves the Build44-qualified smartphone path:
+// Build41/43 geometry, Build42 post-geometry data recovery and Build40 residual
+// warp remain first and unchanged. Build64 adds only a final bounded deep
+// recovery candidate. Its geometry bank is generated from public proposal
+// evidence and frozen before held-out qualification or HMAC are consulted.
 func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte, ExperimentalV4ExtractInfo, ExperimentalV4PhoneInfo, error) {
 	if src == nil {
 		return nil, ExperimentalV4ExtractInfo{}, ExperimentalV4PhoneInfo{}, errors.New("nil image")
@@ -1031,6 +1039,17 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
+		// Build64 recovery is allowed to run even when Build41/43 cannot form the
+		// historical two-geometry production ensemble. Its complete deep bank is
+		// frozen proposal-only before held-out qualification or HMAC are read.
+		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild64Recover(work, boundary, key, cw, ch)
+		experimentalV4PhoneBuild64ApplyTelemetry(&public, recovery64)
+		if err64 == nil {
+			public.ProjectiveBasinFound = true
+			public.Accepted = true
+			public.HMACAuthenticated = true
+			return payload64, info64, public, nil
+		}
 		candidate := experimentalV4Prototype2Candidate()
 		info := ExperimentalV4ExtractInfo{Version: experimentalV4Version, PilotName: candidate.name, PilotHash: experimentalV4PilotCandidateHash(candidate), PilotScore: public.PilotScore, PilotMargin: public.PilotMargin, OriginXBlocks: public.OriginXBlocks, OriginYBlocks: public.OriginYBlocks}
 		return nil, info, public, errors.New("experimental v4 phone geometry not accepted")
@@ -1121,6 +1140,19 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 			}
 			return payloadR, infoR, public, nil
 		}
+	}
+
+	// Build64 production-candidate recovery. This is deliberately last so all
+	// Build44-qualified paths remain untouched. The complete deep geometry bank
+	// is generated proposal-only and frozen before held-out qualification or
+	// HMAC are consulted. HMAC remains final frame authentication only.
+	payload64, info64, recovery64, err64 := experimentalV4PhoneBuild64Recover(work, boundary, key, cw, ch)
+	experimentalV4PhoneBuild64ApplyTelemetry(&public, recovery64)
+	if err64 == nil {
+		public.ProjectiveBasinFound = true
+		public.Accepted = true
+		public.HMACAuthenticated = true
+		return payload64, info64, public, nil
 	}
 	return nil, info, public, baseErr
 }

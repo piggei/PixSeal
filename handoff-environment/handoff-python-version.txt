@@ -1,8 +1,0 @@
-=== python version ===
-Python 3.14.4
-
-=== python executable ===
-/home/pj/repo/pixseal/.venv/bin/python3
-
-=== pip version ===
-pip 26.2.1 from /home/pj/repo/pixseal/.venv/lib/python3.14/site-packages/pip (python 3.14)

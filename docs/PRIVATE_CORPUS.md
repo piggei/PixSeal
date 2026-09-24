@@ -200,3 +200,18 @@ Build51 reuses only the retained `phone-b-mild.jpg`, `phone-b-angle.jpg` acquisi
 ## Build52 private fine-restart diagnostics
 
 Build52 reuses only retained `phone-b-mild.jpg`, `phone-b-angle.jpg` and the marked-B digital reference already required by Builds45–51. The blind `v4-diagnose-phone-restart` outputs for both captures are written under `v4-phone private/build52-diagnostics/blind/` before the reference/SIFT helper is invoked. Each blind record contains the unchanged coarse-to-fine baseline plus the proposal-only `2 -> 1 px` restart state bank generated from the same untouched top4 seeds. Held-out/full-pilot qualification and diagnostic HMAC are annotated only after geometry freeze; SIFT/reference error is post-hoc only. All Build52 JSON/TSV/Markdown diagnostic outputs remain private and must never be packaged in a source release.
+
+## Build61/62 private deep-optimizer diagnostics
+
+Build61 writes private sibling-stencil outputs under `v4-phone private/build61-diagnostics/`.
+Build62 writes private fourth-pair escape outputs under `v4-phone private/build62-diagnostics/`.
+Both reuse only the retained B/mild and B/angle acquisitions plus the marked-B reference.
+Blind JSON for both images must exist before SIFT/reference oracle generation. Qualification
+and diagnostic HMAC are attached only after the complete geometry bank is frozen. None of
+these JSON/TSV/Markdown artifacts may be included in public source archives.
+
+Build63 writes private post-fourth-pair continuation outputs under `v4-phone private/build63-diagnostics/`. These remain private research artifacts and are excluded from source/release archives.
+
+## Build64 private production-candidate qualification
+
+Build64 reuses the complete retained nine-photo Build38 smartphone corpus. Its physical-gate output belongs under `v4-phone private/build64-diagnostics/` and contains per-image stderr logs plus `build64-phone-matrix.tsv` / `.md`. No acquisition image, payload dump or Build64 private matrix is included in source/release archives. The Build64 candidate gate is explicitly private because it validates the new deep fallback against controls and the difficult B captures before any production-baseline promotion.
