@@ -961,3 +961,21 @@ The fixed Build51 stencil contains a different and more actionable point: `corne
 
 **Build56 rule.** Do not change the score and do not oracle-select a sibling. For every frozen Build55 sibling, evaluate all 16 independent single-coordinate neighbors proposal-only. Only siblings with zero improvements receive the full 112 coupled pair stencil; retain at most eight proposal-improving pair states ordered by proposal. Freeze the complete B/mild+B/angle geometry bank before qualification/HMAC. Generate/reference SIFT only after both blind outputs exist.
 
+## Build56 host result -> Build57 post-second-pair continuation — 2026-09-24
+
+**Observation.** Build56 confirms `sibling-pair-qualified-gain` on B/mild: the exact 29.778 px Build55 sibling is one-coordinate local, but second-pair rank 2 improves proposal `0.266832 -> 0.273793` and post-hoc oracle `29.778 -> 28.514 px`, remains qualified and does not authenticate. Target B/mild retains 65 second-pair states; the full B/mild bank has 68 second-pair states (51 qualified, 0 authenticated). B/angle has 176 second-pair states outside the target, all unqualified; target candidate 18 remains not triggered.
+
+**Build57 rule.** Do not select the 28.514 px state using oracle, qualification or HMAC. Reproduce the entire Build56 blind bank and continue every retained second-pair state with the established 1px proposal-only coordinate descent for at most eight passes. Retain every accepted intermediate. Freeze the complete B/mild+B/angle continuation bank before qualification/HMAC, and generate SIFT/reference only after both blind JSON outputs exist.
+
+
+## Build57 host result -> Build58 independent sibling stencil — 2026-09-24
+
+**Observation.** Build57 continues the entire Build56 second-pair bank and confirms additional qualified geometry gain on B/mild. Candidate 10 produces 154 continuation states; 147 qualify and 0 authenticate. The best qualified state reaches 26.968 px, but later proposal-improving updates on the same branch move away from that minimum. B/angle remains a negative control with no qualified continuation state.
+
+**Build58 rule.** Do not oracle-select the 26.968 px state. Reproduce the complete Build57 blind bank and, from every retained continuation state, evaluate the full independent 16-neighbor +/-1px coordinate stencil against the exact same parent. Retain every proposal-improving sibling. Freeze the complete B/mild+B/angle sibling bank before qualification/HMAC; generate SIFT/reference only after both blind JSON outputs exist. This tests coordinate-order bias without changing the proposal observable.
+
+## Build58 host result -> Build59 proposal-local third pair escape — 2026-09-24
+
+**Observation.** Build58 confirms another qualified geometry gain without changing the proposal score. B/mild freezes 275 second-pair sibling states, 271 qualified and 0 authenticated. The target candidate 10 best qualified sibling reaches 26.149 px from its exact 26.968 px continuation parent while proposal increases. B/angle freezes 542 siblings and none qualifies.
+
+**Build59 rule.** Do not select the 26.149 px sibling using oracle, qualification or HMAC. Reproduce the complete Build58 blind bank. For every frozen Build58 sibling, evaluate all 16 independent +/-1px one-coordinate neighbors from the exact same parent using proposal only. Only if no single neighbor improves proposal may the bounded coupled pair stencil run; retain at most eight pair states by proposal. Freeze the complete B/mild+B/angle bank before qualification/HMAC and generate SIFT/reference only after both blind JSON files exist.

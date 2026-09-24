@@ -26,6 +26,12 @@ A deterministic post-hoc design probe around the exact 29.778 px Build55 sibling
 
 This probe is motivation only, not qualification evidence.
 
+## Qualified host result
+
+The Build56 host diagnostic confirms the probe without oracle-guided selection. For the primary B/mild target, 16 of 91 frozen siblings are proposal-local and emit 65 retained second-pair states. The best qualified state is second-pair rank 2 (`dimension 2 -1 px` + `dimension 4 +1 px`): proposal improves `0.266832 -> 0.273793`, post-hoc oracle error improves `29.778 -> 28.514 px`, qualification remains true and HMAC remains false. The target classification is `sibling-pair-qualified-gain`.
+
+Across the complete Build56 bank, B/mild freezes 68 second-pair states (51 qualified, 0 authenticated). B/angle freezes 176 second-pair states (0 qualified, 0 authenticated), while target candidate 18 remains `sibling-pair-not-triggered`. This result motivates Build57 continuation from every retained second-pair state.
+
 ## Question
 
 Do proposal-local Build55 siblings hide additional coupled two-coordinate directions under the **same unchanged proposal score**, analogous to the earlier Build53 escape but deeper in the optimizer trajectory?

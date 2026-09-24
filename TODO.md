@@ -364,8 +364,40 @@ and `CHANGELOG.md`.
 - [x] Only for siblings with zero proposal-improving single-coordinate neighbors, scan all 112 coupled +/-1px two-coordinate moves and retain at most eight proposal-improving states by proposal alone.
 - [x] Freeze all second-pair geometry before held-out/full-pilot qualification; keep key/HMAC and SIFT/reference oracle strictly downstream.
 - [x] Add `v4-diagnose-phone-sibling-pair-escape`, source regressions, private diagnostic script and Build56 documentation.
-- [ ] Run `make v4-build56-phone-sibling-pair-escape-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build56-phone-sibling-pair-escape-diagnostic` on retained B/mild and B/angle.
-- [ ] Classify B/mild as `sibling-pair-recovery`, `sibling-pair-qualified-gain`, `sibling-pair-geometric-gain`, `sibling-pair-proposal-only` or `sibling-pair-not-triggered`; keep B/angle informational.
-- [ ] Only if a blind frozen second-pair state authenticates, design a separate production candidate and rerun the complete unchanged Build44 physical gate before promotion.
+- [x] Run `make v4-build56-phone-sibling-pair-escape-test` on the qualified Go 1.26.0 host.
+- [x] Run `make v4-build56-phone-sibling-pair-escape-diagnostic` on retained B/mild and B/angle; diagnostic artifacts received and analyzed.
+- [x] Classify Build56: B/mild = `sibling-pair-qualified-gain` (65 target second-pair states; best qualified 28.514 px; no HMAC), B/angle target = `sibling-pair-not-triggered`.
+- [x] Do not promote Build56: no blind frozen second-pair state authenticates, so no production candidate is opened from Build56.
 
+### Build57 research
+
+- [x] Keep the complete Build56 second-pair bank, top4 seed bank, proposal score and Build44 production path frozen.
+- [x] Continue every retained Build56 second-pair state with the established 1px proposal-only coordinate descent for at most eight passes.
+- [x] Retain every accepted continuation intermediate and freeze the complete B/mild+B/angle bank before held-out/full-pilot qualification or HMAC.
+- [x] Keep SIFT/reference oracle strictly post-hoc and excluded from continuation generation, acceptance, stopping and ranking.
+- [x] Add `v4-diagnose-phone-sibling-pair-continue`, source regressions, private diagnostic script and Build57 documentation.
+- [x] Run `make v4-build57-phone-sibling-pair-continuation-test` on the qualified Go 1.26.0 host.
+- [x] Run `make v4-build57-phone-sibling-pair-continuation-diagnostic` on retained B/mild and B/angle.
+- [x] Classify B/mild as `second-pair-continuation-qualified-gain`; B/angle target is `second-pair-continuation-not-triggered`.
+- [ ] Only if a blind frozen continuation state authenticates, design a separate production candidate and rerun the complete unchanged Build44 physical gate before promotion.
+
+### Build58 research
+
+- [x] Preserve Build44 production behavior, score, threshold, quorum, encoder, pilot, ECC/Hamming and HMAC domains unchanged.
+- [x] Reproduce the complete Build57 blind bank and evaluate all 16 independent +/-1px siblings from every retained post-second-pair continuation state against the identical frozen parent.
+- [x] Freeze both B/mild and B/angle sibling banks before qualification/HMAC and keep SIFT/reference post-hoc only.
+- [x] Add `v4-diagnose-phone-second-pair-sibling`, source regressions, private diagnostic script and Build58 documentation.
+- [x] Run `make v4-build58-phone-second-pair-sibling-stencil-test` on the qualified Go 1.26.0 host.
+- [x] Run `make v4-build58-phone-second-pair-sibling-stencil-diagnostic` on retained B/mild and B/angle.
+- [x] Record host result: B/mild 275 sibling states / 271 qualified / 0 HMAC; target best qualified sibling 26.149 px. B/angle 542 / 0 / 0.
+- [ ] Classify B/mild as `second-pair-sibling-recovery`, `second-pair-sibling-qualified-gain`, `second-pair-sibling-geometric-gain`, `second-pair-sibling-proposal-only` or `second-pair-sibling-not-triggered`; keep B/angle informational.
+
+### Build59 research
+
+- [x] Reproduce the complete Build58 blind bank and probe all 16 independent +/-1px neighbors of every frozen second-pair sibling using proposal only.
+- [x] Apply the unchanged bounded pair stencil only at proposal-local Build58 siblings; retain at most eight pair states by proposal.
+- [x] Keep qualification/HMAC and SIFT/reference oracle strictly after the complete B/mild+B/angle freeze barrier.
+- [x] Add `v4-diagnose-phone-third-pair-escape`, source regressions, private diagnostic script and Build59 documentation.
+- [ ] Run `make v4-build59-phone-third-pair-escape-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build59-phone-third-pair-escape-diagnostic` on retained B/mild and B/angle.
+- [ ] Classify the target as `third-pair-recovery`, `third-pair-qualified-gain`, `third-pair-geometric-gain`, `third-pair-proposal-only`, or `third-pair-not-triggered`.

@@ -1,3 +1,17 @@
+## Build59 — third pair escape from proposal-local Build58 siblings
+
+The qualified Build58 host artifact closes B/mild as `second-pair-sibling-qualified-gain`: 275 sibling states are frozen, 271 qualify, none authenticate, and target candidate 10 improves from 26.968 px to 26.149 px while proposal also rises. B/angle freezes 542 siblings with no qualified state. Build59 reproduces the complete Build58 blind bank, tests every frozen second-pair sibling against the complete independent +/-1px one-coordinate stencil, and applies the bounded coupled pair stencil only at proposal-local siblings. The full B/mild+B/angle bank is frozen before qualification/HMAC and oracle geometry remains post-hoc. Build59 is research-only; Build44 remains the latest qualified production milestone.
+
+## Build58 — sibling stencil after second-pair continuation
+
+The qualified Build57 host artifact closes B/mild as `second-pair-continuation-qualified-gain`: target candidate 10 has 154 continuation states, 147 qualified, and no HMAC; the best qualified intermediate reaches 26.968 px. B/angle target remains not triggered and its complete continuation bank has no qualified state. Build58 reproduces the full Build57 blind bank and evaluates all 16 independent +/-1px coordinate siblings from every retained post-second-pair continuation state against the same frozen parent. The expanded bank is frozen before qualification/HMAC and oracle geometry remains post-hoc. Build58 is research-only; Build44 remains the latest qualified production milestone.
+
+## Build57 — continuation after the second pair escape
+
+The qualified-host Build56 artifact confirms `sibling-pair-qualified-gain` on B/mild. Target candidate 10 retains 65 second-pair states; second-pair rank 2 from the 29.778 px sibling raises proposal `0.266832 -> 0.273793`, lowers post-hoc oracle error to 28.514 px, remains qualified and does not authenticate. Across the full bank, B/mild freezes 68 second-pair states (51 qualified, 0 authenticated) and B/angle freezes 176 (0 qualified, 0 authenticated); the B/angle target remains `sibling-pair-not-triggered`.
+
+Build57 reproduces the entire Build56 blind bank and continues every retained second-pair state with bounded 1px proposal-only coordinate descent for at most eight passes, retaining every accepted intermediate. No state is selected using qualification, HMAC or oracle geometry. The full B/mild+B/angle continuation bank is frozen before qualification/HMAC and SIFT/reference remains post-hoc. Build57 is research-only; Build44 remains the latest qualified production milestone.
+
 ## Build56 — second pair escape from proposal-local siblings
 
 The qualified Build55 host artifact closes B/mild as `sibling-qualified-gain`: candidate 10 retains 91 target sibling states and reaches a held-out-qualified 29.778 px state from a 30.539 px continuation parent while proposal improves `0.257772 -> 0.266832`. HMAC remains false. B/angle target candidate 18 remains `sibling-not-triggered`. Complete-bank Build55 counts are 93 frozen / 76 qualified / 0 authenticated siblings for B/mild and 106 / 0 / 0 for B/angle.

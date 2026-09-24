@@ -49,6 +49,9 @@ Commands:
   v4-diagnose-phone-pair-continue EXPERIMENTAL: Build54 proposal-only 1px continuation from retained Build53 pair states
   v4-diagnose-phone-sibling-stencil EXPERIMENTAL: Build55 independent +/-1px sibling stencil around retained Build54 states
   v4-diagnose-phone-sibling-pair-escape EXPERIMENTAL: Build56 pairwise escape from proposal-local Build55 siblings
+  v4-diagnose-phone-sibling-pair-continue EXPERIMENTAL: Build57 proposal-only continuation from retained Build56 second-pair states
+  v4-diagnose-phone-second-pair-sibling EXPERIMENTAL: Build58 independent +/-1px siblings around retained Build57 continuation states
+  v4-diagnose-phone-third-pair-escape EXPERIMENTAL: Build59 pairwise escape from proposal-local Build58 second-pair siblings
   capacity   Show the usable payload capacity of an image
   analyze    Recommend a v3 profile and embedding settings
   diagnose   Experimental bounded local-lattice diagnostics (v0.3 research)
@@ -89,6 +92,9 @@ Experimental v4 options:
   v4-diagnose-phone-pair-continue continues every retained Build53 pair state with bounded proposal-only 1px coordinate descent and retains every accepted intermediate before held-out qualification.
   v4-diagnose-phone-sibling-stencil evaluates all independent +/-1px coordinate siblings from every retained Build54 continuation state before held-out qualification.
   v4-diagnose-phone-sibling-pair-escape tests each frozen Build55 sibling for one-coordinate locality, then scans bounded coupled +/-1px escapes only from proposal-local siblings before held-out qualification.
+  v4-diagnose-phone-sibling-pair-continue continues every retained Build56 second-pair state with bounded proposal-only 1px coordinate descent and retains every accepted intermediate before held-out qualification.
+  v4-diagnose-phone-second-pair-sibling evaluates all independent +/-1px coordinate siblings from every retained Build57 continuation state before held-out qualification.
+  v4-diagnose-phone-third-pair-escape tests each frozen Build58 sibling for one-coordinate locality, then scans bounded coupled +/-1px escapes only from proposal-local siblings before held-out qualification.
 
 Capacity options:
   -in FILE           Input JPEG or PNG (required)
@@ -178,6 +184,12 @@ func main() {
 		err = v4DiagnosePhoneSiblingStencil(os.Args[2:])
 	case "v4-diagnose-phone-sibling-pair-escape":
 		err = v4DiagnosePhoneSiblingPairEscape(os.Args[2:])
+	case "v4-diagnose-phone-sibling-pair-continue":
+		err = v4DiagnosePhoneSiblingPairContinue(os.Args[2:])
+	case "v4-diagnose-phone-second-pair-sibling":
+		err = v4DiagnosePhoneSecondPairSibling(os.Args[2:])
+	case "v4-diagnose-phone-third-pair-escape":
+		err = v4DiagnosePhoneThirdPairEscape(os.Args[2:])
 	case "capacity":
 		err = capacity(os.Args[2:])
 	case "analyze":
@@ -1902,10 +1914,205 @@ func v4DiagnosePhoneSiblingPairEscape(args []string) error {
 	return nil
 }
 
+type v4Build57SiblingPairContinuationOutput struct {
+	Version      string                                     `json:"version"`
+	InputDecoder string                                     `json:"input_decoder"`
+	Continuation watermark.ExperimentalV4PhoneBuild57Report `json:"second_pair_continuation"`
+}
+
+func v4DiagnosePhoneSiblingPairContinue(args []string) error {
+	fs := newFlagSet("v4-diagnose-phone-sibling-pair-continue", "EXPERIMENTAL Build57 diagnostic: reproduce the unchanged Build56 blind sibling/second-pair bank, then continue every retained Build56 second-pair state with bounded proposal-only 1px coordinate descent while retaining every accepted intermediate. The complete geometry bank is frozen before held-out qualification or diagnostic HMAC. Reference/oracle geometry is not accepted by this command.")
+	in := fs.String("in", "", "smartphone JPEG or PNG (required)")
+	key := fs.String("key", "", "secret key used only after geometry freeze/qualification for diagnostic authentication (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	jsonOut := fs.Bool("json", false, "emit machine-readable JSON")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	report, err := watermark.ExperimentalV4PhoneBuild57Diagnose(img, []byte(*key), *width, *height)
+	if err != nil {
+		return err
+	}
+	out := v4Build57SiblingPairContinuationOutput{Version: buildinfo.String(), InputDecoder: inputDecoderID(format), Continuation: report}
+	if *jsonOut {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(out)
+	}
+	fmt.Printf("Build57 phone second-pair continuation diagnostic\n")
+	fmt.Printf("input-decoder: %s\n", out.InputDecoder)
+	fmt.Printf("frozen=%d seeds=%d second-pair-states=%d continuation-evals=%d continuation-states=%d continuation-qualified=%d continuation-authenticated=%d\n", report.FrozenCandidates, report.SeedsSelected, report.SiblingPairStatesFrozen, report.SecondPairContinuationEvaluations, report.SecondPairContinuationStatesFrozen, report.SecondPairContinuationQualified, report.SecondPairContinuationAuthenticated)
+	for _, c := range report.Candidates {
+		for _, root := range c.Roots {
+			for _, branch := range root.Branches {
+				for _, st := range branch.ContinuationStates {
+					for _, sib := range st.Siblings {
+						for _, ps := range sib.PairStates {
+							if len(ps.ContinuationStates) == 0 {
+								continue
+							}
+							fmt.Printf("candidate-%d root-%d pair-%d state-%d sibling-%d second-pair-%d: proposal=%.6f qualified=%t continuation=%d\n", c.Index, root.RootIndex, branch.PairRank, st.Parent.Index, sib.Rank, ps.Rank, ps.Proposal, ps.Qualified, len(ps.ContinuationStates))
+							for _, cs := range ps.ContinuationStates {
+								fmt.Printf("  continuation-%d: pass=%d dim=%d delta=%.0f proposal=%.6f validation=%.6f qualified=%t hmac=%t\n", cs.Index, cs.Pass, cs.Dimension, cs.DeltaPx, cs.Proposal, cs.Validation, cs.Qualified, cs.SingleHMACAuthenticated)
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return nil
+}
+
 type v4Build49RankingOutput struct {
 	Version      string                                     `json:"version"`
 	InputDecoder string                                     `json:"input_decoder"`
 	Ranking      watermark.ExperimentalV4PhoneBuild49Report `json:"ranking"`
+}
+
+type v4Build58SecondPairSiblingOutput struct {
+	Version      string                                     `json:"version"`
+	InputDecoder string                                     `json:"input_decoder"`
+	Stencil      watermark.ExperimentalV4PhoneBuild58Report `json:"second_pair_sibling_stencil"`
+}
+
+func v4DiagnosePhoneSecondPairSibling(args []string) error {
+	fs := newFlagSet("v4-diagnose-phone-second-pair-sibling", "EXPERIMENTAL Build58 diagnostic: reproduce the unchanged Build57 blind bank, then evaluate every independent +/-1px coordinate sibling from each retained Build57 post-second-pair continuation state. Every sibling starts from the identical frozen parent. The complete geometry bank is frozen before held-out qualification or diagnostic HMAC. Reference/oracle geometry is not accepted by this command.")
+	in := fs.String("in", "", "smartphone JPEG or PNG (required)")
+	key := fs.String("key", "", "secret key used only after geometry freeze/qualification for diagnostic authentication (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	jsonOut := fs.Bool("json", false, "emit machine-readable JSON")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	report, err := watermark.ExperimentalV4PhoneBuild58Diagnose(img, []byte(*key), *width, *height)
+	if err != nil {
+		return err
+	}
+	out := v4Build58SecondPairSiblingOutput{Version: buildinfo.String(), InputDecoder: inputDecoderID(format), Stencil: report}
+	if *jsonOut {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(out)
+	}
+	fmt.Printf("Build58 phone second-pair sibling-stencil diagnostic\n")
+	fmt.Printf("input-decoder: %s\n", out.InputDecoder)
+	fmt.Printf("frozen=%d seeds=%d continuation-states=%d sibling-evals=%d sibling-states=%d sibling-qualified=%d sibling-authenticated=%d\n", report.FrozenCandidates, report.SeedsSelected, report.SecondPairContinuationStatesFrozen, report.SecondPairSiblingEvaluations, report.SecondPairSiblingStatesFrozen, report.SecondPairSiblingQualified, report.SecondPairSiblingAuthenticated)
+	for _, c := range report.Candidates {
+		for _, root := range c.Roots {
+			for _, branch := range root.Branches {
+				for _, st := range branch.ContinuationStates {
+					for _, sib := range st.Siblings {
+						for _, ps := range sib.PairStates {
+							for _, cs := range ps.ContinuationStates {
+								if len(cs.SiblingStates) == 0 {
+									continue
+								}
+								fmt.Printf("candidate-%d root-%d pair-%d state-%d sibling-%d second-pair-%d continuation-%d: proposal=%.6f qualified=%t siblings=%d\n", c.Index, root.RootIndex, branch.PairRank, st.Parent.Index, sib.Rank, ps.Rank, cs.Index, cs.Proposal, cs.Qualified, len(cs.SiblingStates))
+								for _, ss := range cs.SiblingStates {
+									fmt.Printf("  sibling-%d: dim=%d delta=%.0f proposal=%.6f validation=%.6f qualified=%t hmac=%t\n", ss.Rank, ss.Dimension, ss.DeltaPx, ss.Proposal, ss.Validation, ss.Qualified, ss.SingleHMACAuthenticated)
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return nil
+}
+
+type v4Build59ThirdPairEscapeOutput struct {
+	Version      string                                     `json:"version"`
+	InputDecoder string                                     `json:"input_decoder"`
+	Escape       watermark.ExperimentalV4PhoneBuild59Report `json:"third_pair_escape"`
+}
+
+func v4DiagnosePhoneThirdPairEscape(args []string) error {
+	fs := newFlagSet("v4-diagnose-phone-third-pair-escape", "EXPERIMENTAL Build59 diagnostic: reproduce the unchanged Build58 blind bank, probe each frozen Build58 second-pair sibling with the complete independent +/-1px stencil, and scan bounded coupled +/-1px pair escapes only from proposal-local siblings. The complete geometry bank is frozen before held-out qualification or diagnostic HMAC. Reference/oracle geometry is not accepted by this command.")
+	in := fs.String("in", "", "smartphone JPEG or PNG (required)")
+	key := fs.String("key", "", "secret key used only after geometry freeze/qualification for diagnostic authentication (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	jsonOut := fs.Bool("json", false, "emit machine-readable JSON")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	report, err := watermark.ExperimentalV4PhoneBuild59Diagnose(img, []byte(*key), *width, *height)
+	if err != nil {
+		return err
+	}
+	out := v4Build59ThirdPairEscapeOutput{Version: buildinfo.String(), InputDecoder: inputDecoderID(format), Escape: report}
+	if *jsonOut {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(out)
+	}
+	fmt.Printf("Build59 phone third-pair escape diagnostic\n")
+	fmt.Printf("input-decoder: %s\n", out.InputDecoder)
+	fmt.Printf("frozen=%d seeds=%d second-pair-siblings=%d local=%d third-pair-states=%d third-pair-qualified=%d third-pair-authenticated=%d\n", report.FrozenCandidates, report.SeedsSelected, report.SecondPairSiblingStatesFrozen, report.CoordinateLocalSecondPairSiblings, report.ThirdPairStatesFrozen, report.ThirdPairQualified, report.ThirdPairAuthenticated)
+	for _, c := range report.Candidates {
+		for _, root := range c.Roots {
+			for _, branch := range root.Branches {
+				for _, st := range branch.ContinuationStates {
+					for _, sib := range st.Siblings {
+						for _, ps := range sib.PairStates {
+							for _, cs := range ps.ContinuationStates {
+								for _, ss := range cs.SiblingStates {
+									if len(ss.PairStates) == 0 {
+										continue
+									}
+									fmt.Printf("candidate-%d root-%d pair-%d state-%d sibling-%d second-pair-%d continuation-%d second-sibling-%d: proposal=%.6f qualified=%t third-pairs=%d\n", c.Index, root.RootIndex, branch.PairRank, st.Parent.Index, sib.Rank, ps.Rank, cs.Index, ss.Rank, ss.Parent.Proposal, ss.Parent.Qualified, len(ss.PairStates))
+									for _, tp := range ss.PairStates {
+										fmt.Printf("  third-pair-%d: dims=%d,%d deltas=%.0f,%.0f proposal=%.6f validation=%.6f qualified=%t hmac=%t\n", tp.Rank, tp.DimensionA, tp.DimensionB, tp.DeltaAPx, tp.DeltaBPx, tp.Proposal, tp.Validation, tp.Qualified, tp.SingleHMACAuthenticated)
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return nil
 }
 
 func v4DiagnosePhoneRanking(args []string) error {

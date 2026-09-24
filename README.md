@@ -26,9 +26,9 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build56**.
+Current development snapshot: **v0.3.0-build59**.
 
-Latest qualified milestone: **v0.3.0-build44**. Build56 is research-only and does not change the qualified production decoder.
+Latest qualified milestone: **v0.3.0-build44**. Build59 is research-only and does not change the qualified production decoder.
 
 Stable release baseline: **v0.2.0**.
 
@@ -61,7 +61,7 @@ required by the production ensemble. Build46 measures whether that qualified sin
 already data-viable and how far it lies from the oracle, without changing any production
 quorum. Build47 then shows that lower-ranked side pairs expose a materially closer B/mild
 basin (34.049 px), Build48 shows that top2 seed pruning prevents that basin from being
-refined, and Build49 measures it at raw-proposal rank 3 within its side pair. Build50 then tested a research top4-per-pair seed depth under the unchanged proposal score: the 34.049 px seed entered the blind refinement but moved away from the oracle to 43.168 px while qualification count increased and HMAC remained zero. Build51 closed that question: B/mild has an `optimizer-opportunity`, including a `corner-2-x +2` state that improves both proposal and post-hoc oracle error, while B/angle remains `proposal-surface-misaligned`. Build52 then confirmed a partial optimizer gain: its fine restart preserves B/mild states down to 31.747 px and a qualified 32.442 px state, but no state authenticates; B/angle shows no fine-restart gain. The qualified Build53 host run then confirmed a coupled escape from the qualified 32.442 px coordinate-local root: four proposal-improving pair states remain qualified and the best post-hoc pair geometry reaches 31.842 px, still without HMAC. Build54 then confirmed `continuation-qualified-gain`: B/mild reaches a qualified 30.539 px intermediate but still does not authenticate, while later Gauss-Seidel proposal ascent can move away again. The qualified Build55 host artifact then confirms `sibling-qualified-gain`: candidate 10 exposes 91 proposal-improving siblings, with a qualified state at 29.778 px and still no HMAC; B/angle remains `sibling-not-triggered` on the target. Build56 therefore tests whether proposal-local Build55 siblings hide another coupled two-coordinate escape, without changing the score or any production path. Protected
+refined, and Build49 measures it at raw-proposal rank 3 within its side pair. Build50 then tested a research top4-per-pair seed depth under the unchanged proposal score: the 34.049 px seed entered the blind refinement but moved away from the oracle to 43.168 px while qualification count increased and HMAC remained zero. Build51 closed that question: B/mild has an `optimizer-opportunity`, including a `corner-2-x +2` state that improves both proposal and post-hoc oracle error, while B/angle remains `proposal-surface-misaligned`. Build52 then confirmed a partial optimizer gain: its fine restart preserves B/mild states down to 31.747 px and a qualified 32.442 px state, but no state authenticates; B/angle shows no fine-restart gain. The qualified Build53 host run then confirmed a coupled escape from the qualified 32.442 px coordinate-local root: four proposal-improving pair states remain qualified and the best post-hoc pair geometry reaches 31.842 px, still without HMAC. Build54 then confirmed `continuation-qualified-gain`: B/mild reaches a qualified 30.539 px intermediate but still does not authenticate, while later Gauss-Seidel proposal ascent can move away again. The qualified Build55 host artifact then confirms `sibling-qualified-gain`: candidate 10 exposes 91 proposal-improving siblings, with a qualified state at 29.778 px and still no HMAC; B/angle remains `sibling-not-triggered` on the target. Build56 then confirms `sibling-pair-qualified-gain`: the target retains 65 second-pair states and a qualified pair state reaches 28.514 px while proposal rises to 0.273793; no second-pair state authenticates. Build57 closes the next step as `second-pair-continuation-qualified-gain`: target candidate 10 produces 154 continuation states, 147 qualified, with the best qualified intermediate at 26.968 px and no HMAC; B/angle target remains not triggered and its complete continuation bank has no qualified state. Build58 then confirms `second-pair-sibling-qualified-gain`: target candidate 10 produces 275 sibling states overall on B/mild (271 qualified, 0 authenticated), and the best target sibling moves from 26.968 px to 26.149 px while proposal rises from 0.276536 to 0.285435; B/angle produces 542 siblings with 0 qualified. Build59 therefore probes every frozen Build58 sibling for one-coordinate locality and applies the bounded pair stencil only at proposal-local siblings, without changing the score or any production path. Protected
 payload contents, secret key and HMAC remain excluded from production geometry search/ranking;
 HMAC is only the final frame authenticator.
 
@@ -76,11 +76,37 @@ records hypotheses, rejected variants, threshold decisions and negative results 
 future builds do not silently repeat abandoned experiments.
 
 
+## What v0.3.0-build59 adds
+
+Build59 is a diagnostic-only **third pair-escape** study. The qualified Go 1.26.0 Build58 artifact closes B/mild as `second-pair-sibling-qualified-gain`: the target candidate 10 sibling bank improves the best qualified geometry from **26.968 px to 26.149 px** while proposal rises from `0.276536` to `0.285435`; the complete B/mild Build58 sibling bank contains **275 states, 271 qualified and 0 authenticated**. B/angle contains **542 sibling states, 0 qualified and 0 authenticated**.
+
+Build59 does **not** oracle-select the 26.149 px state. It reproduces every Build58 sibling, probes all 16 independent +/-1px coordinate neighbors from that exact sibling using proposal only, and applies the established bounded 112-combination pair stencil only when the sibling is a proposal-local maximum. At most eight pair escapes are retained per local sibling, ordered solely by proposal. The complete B/mild+B/angle bank is frozen before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference geometry remains post-hoc only.
+
+The new command is `v4-diagnose-phone-third-pair-escape`; the private host study is `make v4-build59-phone-third-pair-escape-diagnostic`. See [`docs/V4_BUILD59_THIRD_PAIR_ESCAPE.md`](docs/V4_BUILD59_THIRD_PAIR_ESCAPE.md).
+
+Build59 changes no production path. **Build44 remains the latest qualified milestone.**
+
+## What v0.3.0-build58 adds
+
+Build58 is now a completed diagnostic-only **post-second-pair continuation sibling-stencil** study. Its qualified Go 1.26.0 host artifact closes B/mild as `second-pair-sibling-qualified-gain`. The preceding Build57 artifact had established that target candidate 10 retains 65 second-pair parents and 154 continuation states; 147 target continuation states qualify, none authenticate, and the best qualified intermediate reaches **26.968 px** post-hoc oracle error, `-7.080 px` from the original 34.049 px seed. B/angle target candidate 18 remains `second-pair-continuation-not-triggered`; its complete Build57 continuation bank has 347 states, none qualified or authenticated.
+
+On the qualified host, Build58 produces 275 B/mild sibling states, 271 qualified and 0 authenticated. Target candidate 10 reaches a qualified **26.149 px** sibling from the 26.968 px Build57 parent while proposal improves from `0.276536` to `0.285435`. B/angle produces 542 sibling states, none qualified or authenticated. The generation remained proposal-only and the bank was frozen before qualification/HMAC; oracle geometry was post-hoc.
+
+The new command is `v4-diagnose-phone-second-pair-sibling`; the private host study is `make v4-build58-phone-second-pair-sibling-stencil-diagnostic`. See [`docs/V4_BUILD58_SECOND_PAIR_SIBLING_STENCIL.md`](docs/V4_BUILD58_SECOND_PAIR_SIBLING_STENCIL.md).
+
+Build58 changes no production path. **Build44 remains the latest qualified milestone.**
+
+## What v0.3.0-build57 adds
+
+Build57 is now a completed diagnostic-only **post-second-pair continuation** study. On the qualified Go 1.26.0 host, B/mild target candidate 10 produces 154 continuation states from 65 retained second-pair parents; 147 are qualified, none authenticate, and the best qualified continuation reaches 26.968 px. Later proposal-improving states on the same branch move away from that geometric minimum, leaving an order-dependence question for Build58. B/angle target remains not triggered.
+
+The command is `v4-diagnose-phone-sibling-pair-continue`; see [`docs/V4_BUILD57_SECOND_PAIR_CONTINUATION.md`](docs/V4_BUILD57_SECOND_PAIR_CONTINUATION.md). Build57 changed no production path.
+
 ## What v0.3.0-build56 adds
 
 Build56 is a diagnostic-only **second pair-escape optimizer study**. The qualified Build55 host artifact closes B/mild as `sibling-qualified-gain`: target candidate 10 contains 91 proposal-improving siblings, the best qualified sibling reduces post-hoc oracle error from its 30.539 px parent to 29.778 px while raising proposal from 0.257772 to 0.266832, and HMAC remains false. The B/angle target remains `sibling-not-triggered`. Across the complete blind banks, B/mild freezes 93 siblings (76 qualified, 0 authenticated) and B/angle freezes 106 siblings (0 qualified, 0 authenticated).
 
-A deterministic post-hoc design probe shows that the 29.778 px sibling is itself a complete 1px coordinate-local maximum: none of its 16 independent +/-1px single-coordinate neighbors improves the unchanged proposal score. The same frozen state nevertheless has five proposal-improving coupled +/-1px two-coordinate escapes. One retained escape (`dimension 2 -1 px` + `dimension 4 +1 px`) improves the proposal from 0.266832 to 0.273793 and reduces post-hoc oracle error to about 28.514 px while remaining qualified; HMAC is still false. This probe motivates Build56 but is not qualification evidence.
+The qualified-host Build56 artifact confirms the design probe. On the B/mild target, 16 of 91 siblings are proposal-local and emit 65 retained second-pair states. The best qualified state is second-pair rank 2 (`dimension 2 -1 px` + `dimension 4 +1 px`): proposal rises `0.266832 -> 0.273793`, post-hoc oracle error falls `29.778 -> 28.514 px`, qualification remains true and HMAC remains false. Across the complete bank, B/mild freezes 68 second-pair states (51 qualified, 0 authenticated); B/angle freezes 176 (0 qualified, 0 authenticated), while target candidate 18 remains `sibling-pair-not-triggered`.
 
 Build56 reproduces the complete Build55 blind bank. Every frozen Build55 sibling is first tested against all 16 independent +/-1px single-coordinate moves using proposal only. **Only siblings with zero proposal-improving single-coordinate neighbors** receive the deterministic 112-combination coupled +/-1px pair stencil; at most eight pair states are retained, ordered only by proposal. The complete expanded bank for B/mild and B/angle is frozen before held-out/full-pilot qualification or diagnostic HMAC. SIFT/reference geometry remains post-hoc only.
 

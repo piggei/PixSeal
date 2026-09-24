@@ -1,3 +1,34 @@
+## v0.3.0-build59 — 2026-09-24
+
+- Closes the qualified-host Build58 study as `second-pair-sibling-qualified-gain`: B/mild contains 275 frozen sibling states, 271 qualified and 0 authenticated; target candidate 10 improves from 26.968 px to 26.149 px while proposal rises from 0.276536 to 0.285435.
+- Records B/angle as the control: 542 Build58 sibling states, 0 qualified and 0 authenticated; target candidate 18 remains not triggered.
+- Adds a research-only local-max probe around every frozen Build58 sibling and applies the unchanged bounded 112-combination coupled +/-1px pair stencil only at proposal-local siblings, retaining at most eight states by proposal.
+- Freezes the complete B/mild+B/angle Build59 bank before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference geometry remains external and post-hoc.
+- Adds `v4-diagnose-phone-third-pair-escape`, `v4-build59-phone-third-pair-escape-test`, private `v4-build59-phone-third-pair-escape-diagnostic`, and `docs/V4_BUILD59_THIRD_PAIR_ESCAPE.md`.
+- No production encoder/decoder, score, threshold, quorum, pilot, ECC/Hamming or HMAC domain changes. Build44 remains the qualified production baseline.
+
+## v0.3.0-build58 — 2026-09-24
+
+### Research / Format-v4 phone geometry
+
+- Closes the qualified-host Build57 study: B/mild is `second-pair-continuation-qualified-gain`; target candidate 10 retains 154 post-second-pair continuation states, 147 qualified and 0 authenticated. The best qualified intermediate reaches 26.968 px post-hoc oracle error, `-2.581 px` relative to its exact Build56 second-pair parent and `-7.080 px` relative to the original 34.049 px seed.
+- Records B/angle as the control: target candidate 18 remains `second-pair-continuation-not-triggered`; the complete B/angle Build57 bank contains 347 continuation states, 0 qualified and 0 authenticated.
+- Adds a research-only independent +/-1px sibling stencil from every retained Build57 post-second-pair continuation state. All 16 siblings use the identical frozen parent; every proposal-improving sibling is retained.
+- Freezes the complete B/mild+B/angle Build58 bank before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference geometry remains external and post-hoc.
+- Adds `v4-diagnose-phone-second-pair-sibling`, `v4-build58-phone-second-pair-sibling-stencil-test`, private `v4-build58-phone-second-pair-sibling-stencil-diagnostic`, and `docs/V4_BUILD58_SECOND_PAIR_SIBLING_STENCIL.md`.
+- No production path changes. Build44 remains the latest qualified milestone.
+
+## v0.3.0-build57 — 2026-09-24
+
+### Research / Format-v4 phone geometry
+
+- Closes the qualified-host Build56 study: B/mild is `sibling-pair-qualified-gain`; target candidate 10 retains 65 second-pair states and a qualified second-pair state improves oracle error `29.778 -> 28.514 px` while proposal rises `0.266832 -> 0.273793`; HMAC remains false. B/angle target remains `sibling-pair-not-triggered`.
+- Records complete-bank Build56 counts: B/mild freezes 68 second-pair states (51 qualified, 0 authenticated); B/angle freezes 176 (0 qualified, 0 authenticated).
+- Adds a research-only continuation bank from **every** retained Build56 second-pair state using the unchanged 1px proposal-only coordinate descent for at most eight passes, retaining every accepted intermediate rather than privileging the endpoint.
+- Freezes the complete B/mild+B/angle second-pair + continuation bank before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference geometry remains external and post-hoc.
+- Adds `v4-diagnose-phone-sibling-pair-continue`, `v4-build57-phone-sibling-pair-continuation-test`, private `v4-build57-phone-sibling-pair-continuation-diagnostic`, and `docs/V4_BUILD57_SECOND_PAIR_CONTINUATION.md`.
+- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, score, threshold or quorum changes. Build44 remains the latest qualified milestone.
+
 ## v0.3.0-build56 — 2026-09-24
 
 ### Research / Format-v4 phone geometry

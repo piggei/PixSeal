@@ -1329,3 +1329,27 @@ Build54 therefore reproduces the full Build53 pair bank, continues **every** ret
 
 **Build56 hypothesis.** The unchanged proposal objective still contains useful directions beyond the Build55 sibling local maximum, but they require another coupled move. Build56 must not choose the 29.778 px state using oracle or held-out evidence. Instead it reproduces every Build55 sibling, tests complete one-coordinate locality proposal-only, and runs the pair stencil on every proposal-local sibling. Retain at most eight pair states by proposal alone, freeze both image banks, then annotate qualification/HMAC and finally oracle.
 
+## Build56 host result -> Build57 second-pair continuation hypothesis — 2026-09-24
+
+The qualified-host Build56 artifact confirms the second pair escape on the primary B/mild target. Candidate 10 (`top+left`, pair rank 3, seed rank 3) contains 91 Build55 siblings, 16 proposal-local target siblings and 65 retained second-pair states. The best qualified second-pair state is root 1 / first-pair rank 1 / continuation state 7 / sibling rank 3 / second-pair rank 2 (`dimension 2 -1 px` + `dimension 4 +1 px`): proposal `0.266832 -> 0.273793`, post-hoc oracle `29.778 -> 28.514 px`, qualification true, HMAC false. This is `sibling-pair-qualified-gain`.
+
+Across the complete Build56 banks, B/mild freezes 68 second-pair states (51 qualified, 0 authenticated) and B/angle freezes 176 (0 qualified, 0 authenticated). Target B/angle candidate 18 remains `sibling-pair-not-triggered`.
+
+**Build57 hypothesis.** The unchanged proposal objective still contains useful geometry after the second pair escape. Build57 must not oracle-select the 28.514 px state. Instead it reproduces every retained Build56 second-pair state and continues each with the established bounded 1px proposal-only coordinate descent, retaining every accepted intermediate. Freeze both image banks before qualification/HMAC; generate/reference SIFT only after both blind outputs exist.
+
+
+## Build57 host result -> Build58 second-pair sibling-stencil hypothesis — 2026-09-24
+
+**Build57 result.** The qualified Go 1.26.0 host closes B/mild as `second-pair-continuation-qualified-gain`. Target candidate 10 retains 65 Build56 second-pair parents and 154 Build57 continuation states; 147 target continuation states pass unchanged qualification and none authenticate. The best qualified continuation reaches 26.968 px post-hoc oracle error, `-2.581 px` relative to its exact second-pair parent and `-7.080 px` relative to the original 34.049 px seed. The same branch then accepts further proposal-improving coordinates while moving away from that geometric minimum. B/angle target candidate 18 remains `second-pair-continuation-not-triggered`; the complete B/angle continuation bank contains 347 states, 0 qualified and 0 authenticated.
+
+**Build58 hypothesis.** The repeated divergence after the geometric minimum may again be caused by Gauss-Seidel coordinate order rather than by the proposal observable itself. Build58 therefore must not select the 26.968 px state. It reproduces every Build57 continuation state and evaluates all 16 independent +/-1px coordinate siblings from the identical frozen parent. Retain every proposal-improving sibling, freeze both image banks, then apply unchanged qualification/HMAC and only afterwards generate SIFT/reference oracle geometry.
+
+**Leakage barrier.** Sibling generation and retention are proposal-only. Held-out/full-pilot qualification, secret key, payload, ECC/HMAC and oracle geometry cannot affect the sibling bank. No production score, threshold, quorum, encoder, pilot, ECC/Hamming or HMAC domain changes in Build58.
+
+## Build58 host result -> Build59 third-pair escape hypothesis — 2026-09-24
+
+**Build58 result.** The qualified Go 1.26.0 host closes B/mild as `second-pair-sibling-qualified-gain`. Across the complete B/mild bank, Build58 freezes 275 sibling states; 271 pass unchanged qualification and 0 authenticate. Target candidate 10 improves from its exact Build57 parent at 26.968 px to a qualified sibling at 26.149 px while proposal rises from 0.276536 to 0.285435. B/angle freezes 542 siblings, 0 qualified and 0 authenticated; target candidate 18 remains not triggered.
+
+**Build59 hypothesis.** The unchanged proposal objective may still contain useful geometry beyond the Build58 sibling bank, but the next transition should only occur after proving one-coordinate locality. Build59 must not oracle-select the 26.149 px state. It reproduces every Build58 sibling, probes the complete independent +/-1px one-coordinate stencil from that exact sibling, and only for proposal-local siblings evaluates the bounded 112 coupled two-coordinate +/-1px moves, retaining at most eight by proposal. Freeze both image banks before qualification/HMAC and generate SIFT/reference only afterwards.
+
+**Leakage barrier.** All local-max tests, pair generation and pair ranking are proposal-only. Qualification, secret key, payload, ECC/HMAC and oracle geometry cannot affect the Build59 bank. No production score, threshold, quorum, encoder, pilot, ECC/Hamming or HMAC domain changes.
