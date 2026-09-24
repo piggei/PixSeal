@@ -1,8 +1,14 @@
+## Build56 — second pair escape from proposal-local siblings
+
+The qualified Build55 host artifact closes B/mild as `sibling-qualified-gain`: candidate 10 retains 91 target sibling states and reaches a held-out-qualified 29.778 px state from a 30.539 px continuation parent while proposal improves `0.257772 -> 0.266832`. HMAC remains false. B/angle target candidate 18 remains `sibling-not-triggered`. Complete-bank Build55 counts are 93 frozen / 76 qualified / 0 authenticated siblings for B/mild and 106 / 0 / 0 for B/angle.
+
+A deterministic post-hoc design probe shows that the 29.778 px sibling has zero proposal-improving independent +/-1px single-coordinate neighbors, yet a bounded coupled two-coordinate stencil contains five proposal-improving states. One retained pair reaches about 28.514 px while remaining qualified; HMAC is still false. Build56 therefore reproduces the complete Build55 blind bank, classifies sibling locality using proposal only, and applies the 112-combination pair stencil only to proposal-local siblings. At most eight pair states are retained by proposal. Geometry is frozen before qualification/HMAC and SIFT/reference remains post-hoc. Build56 is research-only; Build44 remains the latest qualified production milestone.
+
 ## Build55 — continuation sibling-stencil observability
 
-The qualified Build54 host run closes B/mild as `continuation-qualified-gain`: candidate 10 retains 34 continuation states and reaches a held-out-qualified intermediate at 30.539 px, 1.908 px better than its pair-rank-1 parent. HMAC remains false. The B/angle target remains `continuation-not-triggered`.
+The qualified Build54 host run closes B/mild as `continuation-qualified-gain`: candidate 10 retains 34 continuation states and reaches a held-out-qualified intermediate at 30.539 px, 1.908 px better than its pair-rank-1 parent. HMAC remains false. The B/angle target remains `continuation-not-triggered`. Build55 freezes each continuation parent and evaluates the complete independent 16-point +/-1px sibling stencil from that exact parent, eliminating Gauss-Seidel coordinate-order dependence while keeping the proposal score unchanged.
 
-Build54 also exposes coordinate-order bias inside the unchanged proposal optimizer. Its 1 px continuation accepts improving coordinates immediately, so later coordinates are evaluated from an already modified geometry. A deterministic post-hoc design probe at the frozen 30.539 px state finds an independent `corner 2 / x +1 px` sibling that improves proposal from 0.257772 to 0.266832 and oracle error from 30.539 to about 29.778 px while remaining qualified; HMAC is still false. Build55 therefore reproduces Build54 and probes all 16 independent +/-1 px single-coordinate siblings from every retained continuation parent, retaining proposal-improving siblings before any held-out/full-pilot qualification, HMAC or SIFT/reference oracle annotation. Build55 is research-only; Build44 remains the latest qualified production milestone.
+The qualified Go 1.26.0 Build55 host artifact confirms the hypothesis. B/mild target candidate 10 retains 91 proposal-improving siblings and the best qualified sibling reaches 29.778 px while proposal improves `0.257772 -> 0.266832`; HMAC remains false. B/angle target remains `sibling-not-triggered`. Across the complete blind banks, B/mild freezes 93 siblings (76 qualified, 0 authenticated) and B/angle freezes 106 (0 qualified, 0 authenticated). Build55 is research-only; Build44 remains the latest qualified production milestone.
 
 ## Build54 — post-pair accepted-state continuation
 
@@ -925,10 +931,3 @@ Build51 instrumented that path without changing scoring or geometry. For the tar
 ## v0.3.0-build52 — fine-restart optimizer study
 
 Build52 preserves the Build50/51 top4 seed bank and unchanged proposal score. For every untouched seed it records the normal Build41 coarse-to-fine endpoint and independently runs a bounded `2 px -> 1 px` proposal-only restart, retaining the seed plus every accepted intermediate state. The entire baseline/restart geometry bank is frozen before held-out/full-pilot qualification; diagnostic HMAC is downstream of qualification and SIFT/reference error remains external/post-hoc. Build52 is research-only and Build44 remains the latest qualified milestone.
-
-
-## v0.3.0-build55 — continuation sibling-stencil observability
-
-The Build54 host diagnostic confirms that the post-pair continuation can improve B/mild further without changing the proposal score: candidate 10 retains 34 accepted continuation states and reaches a held-out-qualified 30.539 px geometry, but no state authenticates. B/angle remains not triggered on its target. The trajectory reveals that the remaining failure is still partly optimizer-order dependent: later Gauss-Seidel updates increase proposal while moving away from the oracle.
-
-Build55 therefore freezes each Build54 continuation state as an independent parent and evaluates the complete 16-point +/-1px single-coordinate stencil from that exact parent. Unlike the sequential continuation, no earlier coordinate update can alter the state seen by a later coordinate. All sibling generation remains proposal-only; qualification, protected data/HMAC and reference/SIFT evidence are downstream. Build44 remains the qualified production baseline.

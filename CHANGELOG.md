@@ -1,3 +1,15 @@
+## v0.3.0-build56 — 2026-09-24
+
+### Research / Format-v4 phone geometry
+
+- Closes the qualified Build55 host study: B/mild is `sibling-qualified-gain` with 91 target sibling states and a best held-out-qualified sibling at 29.778 px; HMAC remains false. The B/angle target is `sibling-not-triggered`.
+- Records complete-bank Build55 counts: B/mild freezes 93 sibling states (76 qualified, 0 authenticated); B/angle freezes 106 (0 qualified, 0 authenticated).
+- Adds a research-only second pair-escape diagnostic: every frozen Build55 sibling is first tested against all 16 independent +/-1px single-coordinate neighbors using proposal only; only proposal-local siblings receive the deterministic 112-combination coupled +/-1px two-coordinate stencil.
+- Retains at most eight proposal-improving pair states per proposal-local sibling, ordered only by the unchanged proposal score. The complete bank is frozen before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference oracle remains external and post-hoc.
+- Adds `v4-diagnose-phone-sibling-pair-escape`, `v4-build56-phone-sibling-pair-escape-test`, private `v4-build56-phone-sibling-pair-escape-diagnostic`, and `docs/V4_BUILD56_SIBLING_PAIR_ESCAPE.md`.
+- Design probe (not qualification evidence): the Build55 29.778 px sibling is coordinate-local under all 16 single moves, yet five coupled proposal-improving escapes exist; one retained state reaches about 28.514 px while remaining qualified, with HMAC still false.
+- No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, score, threshold or quorum changes. Build44 remains the latest qualified milestone.
+
 ## v0.3.0-build55 — 2026-09-24
 
 ### Research / Format-v4 phone geometry
@@ -6,7 +18,7 @@
 - Adds a research-only independent sibling stencil around every retained Build54 continuation state: all 8 corner coordinates are evaluated at both `-1 px` and `+1 px` from the exact same parent geometry.
 - Retains every proposal-improving sibling before held-out/full-pilot qualification or diagnostic HMAC; SIFT/reference oracle remains external and post-hoc.
 - Adds `v4-diagnose-phone-sibling-stencil`, `v4-build55-phone-sibling-stencil-test`, private `v4-build55-phone-sibling-stencil-diagnostic`, and `docs/V4_BUILD55_SIBLING_STENCIL.md`.
-- Local design probe (not qualification evidence) shows a qualified sibling at about 29.778 px from the oracle with proposal improvement, but no HMAC.
+- Qualified Go 1.26.0 host result: B/mild target candidate 10 freezes 91 siblings; the best qualified sibling improves oracle error `30.539 -> 29.778 px` and proposal `0.257772 -> 0.266832`, with HMAC false. B/angle target remains `sibling-not-triggered`. Complete-bank counts are 93/76/0 frozen-qualified-authenticated on B/mild and 106/0/0 on B/angle.
 - No production decoder, encoder, Format-v4 field, pilot, strength, ECC/Hamming, whitening/HMAC domain, score, threshold or quorum changes. Build44 remains the latest qualified milestone.
 
 ## v0.3.0-build54 — 2026-09-24

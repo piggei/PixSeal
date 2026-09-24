@@ -353,6 +353,19 @@ and `CHANGELOG.md`.
 - [x] Freeze all sibling geometry before held-out/full-pilot qualification; keep key/HMAC and SIFT/reference oracle strictly downstream.
 - [x] Add `v4-diagnose-phone-sibling-stencil`, source regressions, private diagnostic script and Build55 documentation.
 - [ ] Run `make v4-build55-phone-sibling-stencil-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build55-phone-sibling-stencil-diagnostic` on retained B/mild and B/angle.
-- [ ] Classify B/mild as `sibling-recovery`, `sibling-qualified-gain`, `sibling-geometric-gain`, `sibling-proposal-only` or `sibling-not-triggered`; keep B/angle informational.
-- [ ] Only if a blind frozen sibling authenticates, design a separate production candidate and rerun the complete unchanged Build44 physical gate before promotion.
+- [x] Run `make v4-build55-phone-sibling-stencil-diagnostic` on retained B/mild and B/angle; diagnostic artifacts received and analyzed.
+- [x] Classify Build55: B/mild = `sibling-qualified-gain` (91 target siblings; best qualified 29.778 px; no HMAC), B/angle target = `sibling-not-triggered`.
+- [x] Do not promote Build55: no blind frozen sibling authenticates, so no production candidate is opened from Build55.
+
+### Build56 research
+
+- [x] Keep the complete Build55 sibling bank, top4 seed bank, proposal score and Build44 production path frozen.
+- [x] Probe every frozen Build55 sibling with the complete 16-neighbor independent +/-1px single-coordinate stencil using proposal only.
+- [x] Only for siblings with zero proposal-improving single-coordinate neighbors, scan all 112 coupled +/-1px two-coordinate moves and retain at most eight proposal-improving states by proposal alone.
+- [x] Freeze all second-pair geometry before held-out/full-pilot qualification; keep key/HMAC and SIFT/reference oracle strictly downstream.
+- [x] Add `v4-diagnose-phone-sibling-pair-escape`, source regressions, private diagnostic script and Build56 documentation.
+- [ ] Run `make v4-build56-phone-sibling-pair-escape-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build56-phone-sibling-pair-escape-diagnostic` on retained B/mild and B/angle.
+- [ ] Classify B/mild as `sibling-pair-recovery`, `sibling-pair-qualified-gain`, `sibling-pair-geometric-gain`, `sibling-pair-proposal-only` or `sibling-pair-not-triggered`; keep B/angle informational.
+- [ ] Only if a blind frozen second-pair state authenticates, design a separate production candidate and rerun the complete unchanged Build44 physical gate before promotion.
+

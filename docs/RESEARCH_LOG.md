@@ -952,3 +952,12 @@ The fixed Build51 stencil contains a different and more actionable point: `corne
 **Optimizer-order evidence.** The Build54 continuation uses immediate Gauss-Seidel acceptance. Around the frozen 30.539 px state, an independent `corner 2 / x +1 px` move improves the unchanged proposal and post-hoc oracle simultaneously, stays qualified, and still fails HMAC. Because Build54 accepts an earlier coordinate before reaching that axis, the same move is evaluated from a different geometry and is lost.
 
 **Build55 rule.** Do not change the score. For every retained Build54 continuation state, evaluate all 16 +/-1px single-coordinate siblings from the identical frozen parent and retain every proposal-improving sibling. Qualification, HMAC and oracle remain strictly downstream of the complete sibling bank.
+
+## Build55 host result -> Build56 second pair escape — 2026-09-24
+
+**Observed host result.** B/mild candidate 10 closes Build55 as `sibling-qualified-gain`: 91 target sibling states are frozen; continuation state 7 / pair-rank 1 produces a qualified `dimension 4 +1 px` sibling at 29.778 px post-hoc oracle error, with proposal `0.266832`, validation `0.163706` and no HMAC. B/angle target remains `sibling-not-triggered`. Complete-bank counts are 93/76/0 frozen-qualified-authenticated siblings for B/mild and 106/0/0 for B/angle.
+
+**Optimizer evidence.** The 29.778 px sibling has zero proposal-improving independent +/-1px single-coordinate neighbors. It is therefore a one-coordinate proposal local maximum. The same exact frozen parent has five proposal-improving coupled +/-1px pair moves in a deterministic 112-state scan. The strongest post-hoc geometric improvement among the retained proposal-ranked states reaches about 28.514 px and remains qualified; no pair probe authenticates.
+
+**Build56 rule.** Do not change the score and do not oracle-select a sibling. For every frozen Build55 sibling, evaluate all 16 independent single-coordinate neighbors proposal-only. Only siblings with zero improvements receive the full 112 coupled pair stencil; retain at most eight proposal-improving pair states ordered by proposal. Freeze the complete B/mild+B/angle geometry bank before qualification/HMAC. Generate/reference SIFT only after both blind outputs exist.
+

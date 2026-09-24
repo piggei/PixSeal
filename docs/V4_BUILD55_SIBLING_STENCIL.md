@@ -69,3 +69,28 @@ Only HMAC-authenticated blind recovery can justify a later production candidate.
 ## Frozen invariants
 
 Build55 does not change the encoder, Format-v4 wire format, public pilot, strength 48, ECC/Hamming/list decoder, whitening/HMAC domains, proposal score, qualification thresholds, production candidate depth/quorum, Build37 scanner path or deterministic Build44 JPEG/toolchain baseline.
+
+## Qualified host result — 2026-09-24
+
+The Go 1.26.0 qualification host confirms the sibling-stencil hypothesis on the primary `B/mild` target (candidate 10, `top+left`, side-pair rank 3, seed rank 3):
+
+- retained target continuation states: 34;
+- proposal-improving target siblings: **91**;
+- best parent geometry: continuation state 7 of pair-rank 1 at **30.539 px** post-hoc mean corner error;
+- best sibling: sibling rank 3, `dimension 4`, `+1 px` (`corner 2 / x +1 px` in the diagnostic coordinate convention);
+- proposal: `0.257772 -> 0.266832`;
+- post-hoc oracle error: `30.539 -> 29.778 px` (`-0.761 px`);
+- held-out validation: `0.163706`;
+- qualified: **true**;
+- HMAC: **false**.
+
+The target classification is therefore **`sibling-qualified-gain`**. `B/angle` target candidate 18 has no continuation bank and remains **`sibling-not-triggered`**.
+
+Across the complete blind outputs, not only the target candidate:
+
+- B/mild: 93 frozen siblings, 76 qualified, 0 authenticated;
+- B/angle: 106 frozen siblings, 0 qualified, 0 authenticated.
+
+This closes Build55 as evidence that coordinate-order bias was real and that the unchanged proposal objective still contains locally useful geometry. It does **not** justify production promotion because no sibling authenticates.
+
+A follow-up post-hoc design probe shows that the 29.778 px sibling is itself a one-coordinate local maximum: none of the complete 16 independent +/-1px single-coordinate moves improves proposal. A bounded coupled two-coordinate stencil around exactly that frozen sibling nevertheless contains proposal-improving qualified states, motivating Build56.

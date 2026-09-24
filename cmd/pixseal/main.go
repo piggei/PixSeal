@@ -48,6 +48,7 @@ Commands:
   v4-diagnose-phone-pair-escape EXPERIMENTAL: Build53 coupled 1px escape diagnostic at coordinate-local 2px roots
   v4-diagnose-phone-pair-continue EXPERIMENTAL: Build54 proposal-only 1px continuation from retained Build53 pair states
   v4-diagnose-phone-sibling-stencil EXPERIMENTAL: Build55 independent +/-1px sibling stencil around retained Build54 states
+  v4-diagnose-phone-sibling-pair-escape EXPERIMENTAL: Build56 pairwise escape from proposal-local Build55 siblings
   capacity   Show the usable payload capacity of an image
   analyze    Recommend a v3 profile and embedding settings
   diagnose   Experimental bounded local-lattice diagnostics (v0.3 research)
@@ -87,6 +88,7 @@ Experimental v4 options:
   v4-diagnose-phone-pair-escape finds proposal-only 1px coordinate-local 2px roots, then scans bounded coupled +/-1px two-coordinate escapes before held-out qualification.
   v4-diagnose-phone-pair-continue continues every retained Build53 pair state with bounded proposal-only 1px coordinate descent and retains every accepted intermediate before held-out qualification.
   v4-diagnose-phone-sibling-stencil evaluates all independent +/-1px coordinate siblings from every retained Build54 continuation state before held-out qualification.
+  v4-diagnose-phone-sibling-pair-escape tests each frozen Build55 sibling for one-coordinate locality, then scans bounded coupled +/-1px escapes only from proposal-local siblings before held-out qualification.
 
 Capacity options:
   -in FILE           Input JPEG or PNG (required)
@@ -174,6 +176,8 @@ func main() {
 		err = v4DiagnosePhonePairContinue(os.Args[2:])
 	case "v4-diagnose-phone-sibling-stencil":
 		err = v4DiagnosePhoneSiblingStencil(os.Args[2:])
+	case "v4-diagnose-phone-sibling-pair-escape":
+		err = v4DiagnosePhoneSiblingPairEscape(os.Args[2:])
 	case "capacity":
 		err = capacity(os.Args[2:])
 	case "analyze":
@@ -1829,6 +1833,67 @@ func v4DiagnosePhoneSiblingStencil(args []string) error {
 					fmt.Printf("candidate-%d root-%d pair-%d state-%d: proposal=%.6f qualified=%t siblings=%d\n", c.Index, root.RootIndex, branch.PairRank, st.Index, st.Proposal, st.Qualified, len(st.SiblingStates))
 					for _, sib := range st.SiblingStates {
 						fmt.Printf("  sibling-%d: dim=%d delta=%.0f proposal=%.6f validation=%.6f qualified=%t movement=%.2fpx hmac=%t\n", sib.Rank, sib.Dimension, sib.DeltaPx, sib.Proposal, sib.Validation, sib.Qualified, sib.MeanMovementFromSeedPx, sib.SingleHMACAuthenticated)
+					}
+				}
+			}
+		}
+	}
+	return nil
+}
+
+type v4Build56SiblingPairEscapeOutput struct {
+	Version      string                                     `json:"version"`
+	InputDecoder string                                     `json:"input_decoder"`
+	PairEscape   watermark.ExperimentalV4PhoneBuild56Report `json:"pair_escape"`
+}
+
+func v4DiagnosePhoneSiblingPairEscape(args []string) error {
+	fs := newFlagSet("v4-diagnose-phone-sibling-pair-escape", "EXPERIMENTAL Build56 diagnostic: reproduce the unchanged Build55 blind sibling bank, identify proposal-local siblings using the complete independent +/-1px single-coordinate stencil, then scan bounded coupled +/-1px two-coordinate escapes only from those siblings. The complete geometry bank is frozen before held-out qualification or diagnostic HMAC. Reference/oracle geometry is not accepted by this command.")
+	in := fs.String("in", "", "smartphone JPEG or PNG (required)")
+	key := fs.String("key", "", "secret key used only after geometry freeze/qualification for diagnostic authentication (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	jsonOut := fs.Bool("json", false, "emit machine-readable JSON")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	report, err := watermark.ExperimentalV4PhoneBuild56Diagnose(img, []byte(*key), *width, *height)
+	if err != nil {
+		return err
+	}
+	out := v4Build56SiblingPairEscapeOutput{Version: buildinfo.String(), InputDecoder: inputDecoderID(format), PairEscape: report}
+	if *jsonOut {
+		enc := json.NewEncoder(os.Stdout)
+		enc.SetIndent("", "  ")
+		return enc.Encode(out)
+	}
+	fmt.Printf("Build56 phone sibling pair-escape diagnostic\n")
+	fmt.Printf("input-decoder: %s\n", out.InputDecoder)
+	fmt.Printf("frozen=%d seeds=%d siblings=%d sibling-local=%d sibling-pair-evals=%d sibling-pair-states=%d sibling-pair-qualified=%d sibling-pair-authenticated=%d\n", report.FrozenCandidates, report.SeedsSelected, report.SiblingStatesFrozen, report.CoordinateLocalSiblings, report.SiblingPairEvaluations, report.SiblingPairStatesFrozen, report.SiblingPairQualified, report.SiblingPairAuthenticated)
+	for _, c := range report.Candidates {
+		for _, root := range c.Roots {
+			for _, branch := range root.Branches {
+				for _, st := range branch.ContinuationStates {
+					for _, sib := range st.Siblings {
+						if !sib.CoordinateLocal || len(sib.PairStates) == 0 {
+							continue
+						}
+						fmt.Printf("candidate-%d root-%d pair-%d state-%d sibling-%d: proposal=%.6f qualified=%t pair-states=%d\n", c.Index, root.RootIndex, branch.PairRank, st.Parent.Index, sib.Rank, sib.Parent.Proposal, sib.Parent.Qualified, len(sib.PairStates))
+						for _, ps := range sib.PairStates {
+							fmt.Printf("  pair-%d: dims=%d,%d deltas=%.0f,%.0f proposal=%.6f validation=%.6f qualified=%t hmac=%t\n", ps.Rank, ps.DimensionA, ps.DimensionB, ps.DeltaAPx, ps.DeltaBPx, ps.Proposal, ps.Validation, ps.Qualified, ps.SingleHMACAuthenticated)
+						}
 					}
 				}
 			}
