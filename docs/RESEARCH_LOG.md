@@ -1050,3 +1050,11 @@ The fixed Build51 stencil contains a different and more actionable point: `corne
 **Observation.** Build66 reproduces every Build64/65 semantic counter and outcome exactly on the complete retained nine-photo Go 1.26.0 gate. The decode-bound B/mild path falls from 828036 ms to 544038 ms (1.522x, -34.3%), while the whole matrix falls from 2372255 ms to 2175687 ms (-8.3%). Control/mild and B/angle are slower in this single run, but B/angle schedules zero Build66 decode workers and therefore cannot attribute its variation to ordered parallel decode.
 
 **Decision.** Promote Build66 as the current qualified smartphone baseline. Preserve the ordered-batch first-HMAC semantics, exact logical telemetry, Build64 deep-search freeze barrier and Build65 seed-stable geometry scheduling. Further optimization must start from Build66 and remain equivalence-preserving unless new evidence justifies a separate research branch.
+
+## Build66 qualified baseline -> Build67 profiling hypothesis — 2026-09-25
+
+**Observation.** Build66 is now qualified and materially reduces the decode-bound B/mild case, but B/mild still requires 544038 ms and the complete retained matrix 2175687 ms. The current evidence does not identify whether the remaining cost is primarily blind geometry generation, serial qualification, projective protected-data sampling, deterministic list/Hamming/HMAC enumeration, or speculative physical work inside ordered batches.
+
+**Build67 hypothesis.** Before changing implementation, reproduce Build66 exactly and add timing/physical-work observability only. Measure geometry wall time, qualification wall time, decode wall time, summed protected-margin sampling worker time, summed list/Hamming/HMAC worker time, physical decode/profile/list-frame counts, and the speculative candidate suffix inside the winning batch. Keep Build64 logical telemetry untouched so the physical profile cannot alter semantic qualification.
+
+**Decision rule.** Build67 itself is not promotable. Its retained-corpus profile selects the Build68 implementation target. No score, threshold, bank pruning, profile order, list order, ECC/Hamming rule, whitening/HMAC domain or fallback order may change.

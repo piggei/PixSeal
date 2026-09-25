@@ -29,68 +29,80 @@ type ExperimentalV4PhonePairScore struct {
 }
 
 type ExperimentalV4PhoneInfo struct {
-	WorkingWidth               int
-	WorkingHeight              int
-	Downsampled                bool
-	BoundaryDetected           bool
-	BoundaryConfidence         float64
-	ProjectiveBasinFound       bool
-	Accepted                   bool
-	ProposalScore              float64
-	ValidationScore            float64
-	PilotScore                 float64
-	PilotMargin                float64
-	OriginXBlocks              int
-	OriginYBlocks              int
-	EnsembleCandidates         int
-	HypothesesEvaluated        int
-	ResidualAttempted          bool
-	ResidualFitted             bool
-	ResidualApplied            bool
-	ResidualControls           int
-	ResidualRMSPixels          float64
-	ResidualProposalBefore     float64
-	ResidualProposalAfter      float64
-	ResidualValidationBefore   float64
-	ResidualValidationAfter    float64
-	DataDecodeAttempted        bool
-	SoftHammingProfiles        int
-	MaxDataConfidence          float64
-	HMACAuthenticated          bool
-	FallbackAttempted          bool
-	FallbackAuthenticated      bool
-	Build42DataAttempted       bool
-	Build42BankCandidates      int
-	Build42EnsemblesTried      int
-	Build42ListFramesTried     int
-	Build42DataAuthenticated   bool
-	Build41DirectAccepted      bool
-	Build41QualifiedCandidates int
-	Build43Attempted           bool
-	Build43EdgeRefined         bool
-	Build43PairsScanned        int
-	Build43PairsSelected       int
-	Build43GeometryEvaluations int
-	Build43ProposalCandidates  int
-	Build43FrozenCandidates    int
-	Build43QualifiedCandidates int
-	Build43Pair0               string
-	Build43Pair1               string
-	Build43Authenticated       bool
-	Build43PairRanking         []ExperimentalV4PhonePairScore
-	Build64Attempted           bool
-	Build64SeedsSelected       int
-	Build64GeometryEvaluations int
-	Build64BankCandidates      int
-	Build64QualifiedCandidates int
-	Build64DecodeCandidates    int
-	Build64ListFramesTried     int
-	Build64MaxDataConfidence   float64
-	Build64Authenticated       bool
-	Build65Attempted           bool
-	Build65Workers             int
-	Build66Attempted           bool
-	Build66DecodeWorkers       int
+	WorkingWidth                       int
+	WorkingHeight                      int
+	Downsampled                        bool
+	BoundaryDetected                   bool
+	BoundaryConfidence                 float64
+	ProjectiveBasinFound               bool
+	Accepted                           bool
+	ProposalScore                      float64
+	ValidationScore                    float64
+	PilotScore                         float64
+	PilotMargin                        float64
+	OriginXBlocks                      int
+	OriginYBlocks                      int
+	EnsembleCandidates                 int
+	HypothesesEvaluated                int
+	ResidualAttempted                  bool
+	ResidualFitted                     bool
+	ResidualApplied                    bool
+	ResidualControls                   int
+	ResidualRMSPixels                  float64
+	ResidualProposalBefore             float64
+	ResidualProposalAfter              float64
+	ResidualValidationBefore           float64
+	ResidualValidationAfter            float64
+	DataDecodeAttempted                bool
+	SoftHammingProfiles                int
+	MaxDataConfidence                  float64
+	HMACAuthenticated                  bool
+	FallbackAttempted                  bool
+	FallbackAuthenticated              bool
+	Build42DataAttempted               bool
+	Build42BankCandidates              int
+	Build42EnsemblesTried              int
+	Build42ListFramesTried             int
+	Build42DataAuthenticated           bool
+	Build41DirectAccepted              bool
+	Build41QualifiedCandidates         int
+	Build43Attempted                   bool
+	Build43EdgeRefined                 bool
+	Build43PairsScanned                int
+	Build43PairsSelected               int
+	Build43GeometryEvaluations         int
+	Build43ProposalCandidates          int
+	Build43FrozenCandidates            int
+	Build43QualifiedCandidates         int
+	Build43Pair0                       string
+	Build43Pair1                       string
+	Build43Authenticated               bool
+	Build43PairRanking                 []ExperimentalV4PhonePairScore
+	Build64Attempted                   bool
+	Build64SeedsSelected               int
+	Build64GeometryEvaluations         int
+	Build64BankCandidates              int
+	Build64QualifiedCandidates         int
+	Build64DecodeCandidates            int
+	Build64ListFramesTried             int
+	Build64MaxDataConfidence           float64
+	Build64Authenticated               bool
+	Build65Attempted                   bool
+	Build65Workers                     int
+	Build66Attempted                   bool
+	Build66DecodeWorkers               int
+	Build67Attempted                   bool
+	Build67TotalMs                     int64
+	Build67GeometryMs                  int64
+	Build67PlanePrepMs                 int64
+	Build67QualificationMs             int64
+	Build67DecodeWallMs                int64
+	Build67PhysicalDecodeCandidates    int
+	Build67SpeculativeDecodeCandidates int
+	Build67PhysicalProfiles            int
+	Build67PhysicalListFrames          int
+	Build67SamplingWorkerMs            int64
+	Build67ListWorkerMs                int64
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -1043,11 +1055,11 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
-		// Build66 candidate uses the exact Build64 recovery bank and is allowed to run even when Build41/43 cannot form the
+		// Build67 profiling candidate uses the exact qualified Build66 recovery path and is allowed to run even when Build41/43 cannot form the
 		// historical two-geometry production ensemble. Its complete deep bank is
 		// frozen proposal-only before held-out qualification or HMAC are read.
-		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild66Recover(work, boundary, key, cw, ch)
-		experimentalV4PhoneBuild66ApplyTelemetry(&public, recovery64)
+		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild67Recover(work, boundary, key, cw, ch)
+		experimentalV4PhoneBuild67ApplyTelemetry(&public, recovery64)
 		if err64 == nil {
 			public.ProjectiveBasinFound = true
 			public.Accepted = true
@@ -1146,12 +1158,12 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 
-	// Build66 ordered-parallel decode candidate for the qualified Build64 deep-recovery fallback. This remains deliberately last so all
+	// Build67 profiling wrapper for the qualified Build66 ordered-parallel deep-recovery fallback. This remains deliberately last so all
 	// Build44-qualified paths remain untouched. The complete deep geometry bank
 	// is generated proposal-only and frozen before held-out qualification or
 	// HMAC are consulted. HMAC remains final frame authentication only.
-	payload64, info64, recovery64, err64 := experimentalV4PhoneBuild66Recover(work, boundary, key, cw, ch)
-	experimentalV4PhoneBuild66ApplyTelemetry(&public, recovery64)
+	payload64, info64, recovery64, err64 := experimentalV4PhoneBuild67Recover(work, boundary, key, cw, ch)
+	experimentalV4PhoneBuild67ApplyTelemetry(&public, recovery64)
 	if err64 == nil {
 		public.ProjectiveBasinFound = true
 		public.Accepted = true

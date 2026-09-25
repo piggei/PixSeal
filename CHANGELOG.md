@@ -1,3 +1,12 @@
+## v0.3.0-build67 — 2026-09-25
+
+- Starts from the qualified Build66 smartphone baseline and changes observability only; Build66 remains the qualified baseline.
+- Adds stage wall-clock profiling for the deep fallback: seed-parallel geometry generation, serial qualification and ordered-parallel protected-data decode.
+- Adds physical-work telemetry separate from qualified logical telemetry: executed decode candidates, speculative winning-batch candidates, physical profile/list-frame counts, summed projective-margin sampling worker time and summed list/Hamming/HMAC worker time.
+- Preserves Build64 logical counters, Build65 seed-stable bank reconstruction, Build66 candidate-stable batches and first-logical-HMAC semantics exactly.
+- Adds `v4-build67-phone-profile-test`, `v4-build67-phone-physical-test`, `scripts/test-v4-build67-phone-corpus.sh` and `docs/V4_BUILD67_DEEP_RECOVERY_PROFILE.md`.
+- Build67 is deliberately non-promotable on timing alone; its retained-corpus profile is used only to choose the first Build68 implementation optimization.
+
 ## v0.3.0-build66 — 2026-09-25
 
 - Preserves Build65's seed-parallel blind geometry generation and exact Build64 geometry/evaluation/bank/qualification semantics.

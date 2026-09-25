@@ -1,3 +1,9 @@
+## Build67 — deep-recovery stage profiling
+
+Build67 starts from the qualified Build66 smartphone baseline and adds observability only. The exact Build65 seed-parallel blind bank, serial qualification, Build66 ordered candidate batches, profile order, list/Hamming/HMAC logic and first-logical-HMAC behavior are unchanged. Build64 semantic telemetry remains the authoritative logical view.
+
+The new profile separates deep-fallback wall time into geometry generation, qualification and protected-data decode, and separately counts physical candidate/profile/list-frame work including speculative candidates already executing after the logical winner inside a Build66 batch. It also records summed worker time in projective protected-margin sampling versus the unchanged Build42 list/Hamming/HMAC stage. Build67 is not a new baseline; the host profile decides which equivalence-preserving Build68 implementation change is justified.
+
 ## Build66 — deterministic ordered-parallel protected-data decode qualified baseline
 
 Build66 preserves the exact qualified Build64/65 semantics and changes only scheduling. The complete retained nine-photo gate on the same Go 1.26.0 host used for Build65 reproduced every deep seed/evaluation/bank/qualification/logical-decode/logical-list-frame counter and every payload/HMAC outcome exactly. B/mild remained `937/935/691/2120047` and authenticated `v4-b38-phone-b`; B/angle remained `6198/0` and rejected.

@@ -1418,3 +1418,9 @@ The next measurable bottleneck is protected-data decoding rather than blind geom
 The complete Build66 nine-photo gate passed on the same Go 1.26.0 host used for Build65. Semantic equivalence is exact: every deep fallback reproduces Build64/65 seed, geometry-evaluation, bank, qualification, logical decode-candidate and logical list-frame counts, and every payload/HMAC outcome is unchanged. B/mild remains `937/935/691/2120047` and authenticates exact `v4-b38-phone-b`; B/angle remains `6198/0` and rejects.
 
 Performance is materially better on the decode-bound success path: B/mild drops from 828036 ms to 544038 ms, a 1.522x speedup / 34.3% wall-clock reduction. Across the complete nine-photo matrix, total time drops from 2372255 ms to 2175687 ms, an 8.3% reduction. Build66 therefore supersedes Build64 as the current qualified smartphone baseline.
+
+## Build67 profiling candidate — 2026-09-25
+
+Build67 is an observability-only successor to the qualified Build66 smartphone baseline. It preserves the exact Build64/65/66 logical search/decode behavior and adds stage wall timing plus physical-work counters around the deep fallback. In particular, Build67 distinguishes the qualified logical candidate/list-frame prefix from physically executed speculative candidates in the winning Build66 batch and separates summed projective-margin sampling worker time from summed list/Hamming/HMAC worker time.
+
+No Build67 physical result is recorded in this source snapshot yet. Build66 remains the qualified baseline until the Build67 retained-corpus profiling run is returned and a separate Build68 optimization is justified from that evidence.

@@ -123,6 +123,9 @@ V4_PHONE_BUILD65_TIMEOUT ?= 86400
 V4_PHONE_BUILD66_DIAGNOSTIC_DIR ?= v4-phone private/build66-diagnostics
 V4_PHONE_BUILD66_TIMEOUT ?= 86400
 V4_PHONE_BUILD65_BASELINE_TSV ?= v4-phone private/build65-diagnostics/build65-phone-matrix.tsv
+V4_PHONE_BUILD67_DIAGNOSTIC_DIR ?= v4-phone private/build67-diagnostics
+V4_PHONE_BUILD67_TIMEOUT ?= 86400
+V4_PHONE_BUILD66_BASELINE_TSV ?= v4-phone private/build66-diagnostics/build66-phone-matrix.tsv
 V4_PHONE_CANONICAL_WIDTH ?= 1632
 V4_PHONE_CANONICAL_HEIGHT ?= 1632
 V4_PHONE_TIMEOUT ?= 600
@@ -1120,6 +1123,30 @@ v4-build66-phone-physical-test: build
 	V4_PHONE_MESSAGE_A="$(V4_PHONE_MESSAGE_A)" \
 	V4_PHONE_MESSAGE_B="$(V4_PHONE_MESSAGE_B)" \
 	bash ./scripts/test-v4-build66-phone-corpus.sh
+
+# Build67 is an observability-only successor to the qualified Build66 baseline.
+# It must preserve Build66 scheduling and exact Build64 logical semantics while
+# exposing stage timings and physical-vs-logical decode work.
+v4-build67-phone-profile-test:
+	@echo "Running Build67 deep-recovery profiling regressions..."
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build6[4567]' -count=1
+	@$(GO) test ./cmd/pixseal -run '^TestSubcommandHelpReturnsFlagErrHelp$$' -count=1
+	@$(MAKE) --no-print-directory version-check
+
+# Full retained nine-photo semantic-equivalence + profiling gate. The Build66
+# timing baseline is informational only; Build67 is not promoted by this gate.
+v4-build67-phone-physical-test: build
+	@PIXSEAL="$(abspath $(PIXSEAL))" \
+	V4_PHONE_ACQUISITION_DIR="$(V4_PHONE_ACQUISITION_DIR)" \
+	V4_PHONE_BUILD67_DIAGNOSTIC_DIR="$(V4_PHONE_BUILD67_DIAGNOSTIC_DIR)" \
+	V4_PHONE_BUILD67_TIMEOUT="$(V4_PHONE_BUILD67_TIMEOUT)" \
+	V4_PHONE_BUILD66_BASELINE_TSV="$(V4_PHONE_BUILD66_BASELINE_TSV)" \
+	V4_PHONE_KEY="$(V4_PHONE_KEY)" \
+	V4_PHONE_CANONICAL_WIDTH="$(V4_PHONE_CANONICAL_WIDTH)" \
+	V4_PHONE_CANONICAL_HEIGHT="$(V4_PHONE_CANONICAL_HEIGHT)" \
+	V4_PHONE_MESSAGE_A="$(V4_PHONE_MESSAGE_A)" \
+	V4_PHONE_MESSAGE_B="$(V4_PHONE_MESSAGE_B)" \
+	bash ./scripts/test-v4-build67-phone-corpus.sh
 
 print-scan-test: build
 	@PIXSEAL="$(abspath $(PIXSEAL))" \

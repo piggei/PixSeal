@@ -26,9 +26,9 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build66**.
+Current development snapshot: **v0.3.0-build67**.
 
-Latest qualified milestone: **v0.3.0-build66**. Build66 preserves the complete qualified Build64 smartphone semantics while adding deterministic seed-parallel geometry scheduling and ordered-parallel protected-data decode. On the same Go 1.26.0 host used for Build65, the complete nine-photo matrix remained semantically identical while total wall time fell from 2,372,255 ms to 2,175,687 ms (-8.3%); the decode-bound B/mild case fell from 828,036 ms to 544,038 ms (-34.3%, 1.522x speedup).
+Latest qualified milestone: **v0.3.0-build66**. Build67 is an observability-only research snapshot; Build66 preserves the complete qualified Build64 smartphone semantics while adding deterministic seed-parallel geometry scheduling and ordered-parallel protected-data decode. On the same Go 1.26.0 host used for Build65, the complete nine-photo matrix remained semantically identical while total wall time fell from 2,372,255 ms to 2,175,687 ms (-8.3%); the decode-bound B/mild case fell from 828,036 ms to 544,038 ms (-34.3%, 1.522x speedup).
 
 Stable release baseline: **v0.2.0**.
 
@@ -72,6 +72,14 @@ The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
 
+
+## What v0.3.0-build67 adds
+
+Build67 starts from the qualified Build66 smartphone path and changes **observability only**. It keeps the exact Build65 seed-parallel bank, serial qualification, Build66 ordered candidate batches, profile order, list/Hamming/HMAC logic and first-logical-HMAC semantics. The current qualified baseline therefore remains **Build66**.
+
+The deep fallback now reports wall time for geometry generation, shared pixel-plane preparation, qualification and ordered-parallel decode, plus physical protected-data work: candidates actually executed, speculative candidates in the winning batch, physical profile/list-frame counts, summed projective-margin sampling worker time and summed list/Hamming/HMAC worker time. Logical Build64 counters remain unchanged and exclude speculative work exactly as before.
+
+Run `make v4-build67-phone-profile-test` and then, on the qualified Go 1.26.0 host with the retained private corpus, `make v4-build67-phone-physical-test`. The resulting profile decides the first Build68 optimization target; Build67 itself is not promoted based on timing. See [`docs/V4_BUILD67_DEEP_RECOVERY_PROFILE.md`](docs/V4_BUILD67_DEEP_RECOVERY_PROFILE.md).
 
 ## What v0.3.0-build66 adds
 

@@ -481,3 +481,14 @@ and `CHANGELOG.md`.
 - [x] Run `make v4-build66-phone-physical-test` with the retained Build65 matrix available for same-host timing comparison: PASS.
 - [x] Confirm exact Build64 semantic telemetry and payload/HMAC outcomes across the complete nine-photo matrix.
 - [x] Promote Build66: B/mild 828036 -> 544038 ms (1.522x) and full matrix 2372255 -> 2175687 ms (-8.3%), with exact semantics.
+
+### Build67 deep-recovery profiling snapshot
+
+- [x] Keep Build66 as the qualified smartphone baseline and preserve Build64/65/66 semantics exactly.
+- [x] Add observability-only wall timers for blind geometry generation, qualification and ordered-parallel decode.
+- [x] Separate physical decode/profile/list-frame work from the qualified logical Build64 counters, including winning-batch speculative work.
+- [x] Measure summed projective protected-margin sampling worker time separately from deterministic list/Hamming/HMAC worker time.
+- [x] Add `v4-build67-phone-profile-test`, private `v4-build67-phone-physical-test`, profile reports and Build67 documentation.
+- [ ] Run `make v4-build67-phone-profile-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build67-phone-physical-test` on the complete retained Build38 corpus.
+- [ ] Use the returned B/mild/negative-case profile to select one equivalence-preserving Build68 implementation optimization; do not promote Build67 based on timing alone.
