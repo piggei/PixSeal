@@ -1400,3 +1400,21 @@ This is the first evidence strong enough to stop the optimizer-only diagnostic c
 The complete retained nine-photo Build38 smartphone matrix passes under Go 1.26.0 with the Build64 deep fallback enabled. All three controls reject. A/front authenticates through the historical Build43 path; A/mild, A/angle and B/front authenticate through their existing paths without invoking Build64. B/mild reaches Build64 after the historical path fails and authenticates exact `v4-b38-phone-b` from a bank of 937 frozen states / 935 qualified states. B/angle reaches Build64, freezes 6198 states, qualifies none and remains rejected.
 
 This closes the Build45–63 optimizer research line as a successful production promotion. Build64 supersedes Build44 as the qualified smartphone physical-recovery baseline while preserving Build44's deterministic JPEG ingest, Go 1.26.0 toolchain qualification and all previously qualified recovery behavior.
+
+
+## Build64 qualified baseline -> Build65 scheduling-only candidate — 2026-09-24
+
+Build64 closes the difficult B/mild recovery and becomes the qualified smartphone baseline, but its deep fallback is intentionally exhaustive and expensive. Build65 changes no search or acceptance rule. It runs the same already-selected Build48 seed branches concurrently, stores each branch by seed index, concatenates them in Build64 order, then runs unchanged qualification and protected-data/HMAC decode serially. The private Build65 gate requires exact Build64 deep-recovery telemetry counts and the same nine-photo outcomes before performance is considered. At candidate creation time no Build65 host result had been recorded; the qualified-host result is documented immediately below.
+
+## Build65 equivalence host result -> Build66 ordered-decode candidate — 2026-09-24
+
+The complete Build65 nine-photo gate passes and reproduces the qualified Build64 semantics exactly. Every fallback case matches the Build64 seed count, geometry-evaluation count, frozen bank, qualified bank, logical decode-candidate count and logical list-frame count; the four historical fast authenticated cases still return before deep recovery. B/mild remains `937/935/691/2120047` for bank/qualified/decode-candidates/list-frames and authenticates exact `v4-b38-phone-b`; B/angle remains a reject at `6198/0`. Build65 uses 8 seed workers on this host, but it is not promoted: Build64 did not record matched `elapsed_ms`, and Build65 B/mild still costs 828036 ms, so the performance case is insufficiently strong.
+
+The next measurable bottleneck is protected-data decoding rather than blind geometry generation. Build66 therefore preserves Build65's exact seed-parallel bank and runs qualified single-candidate decodes in bounded parallel batches. Results are committed only in original Build64 order, preserving the first logical HMAC success and exact logical telemetry. Build64 remains the qualified baseline while Build66 is evaluated.
+
+
+## Build66 same-host qualification -> qualified performance baseline — 2026-09-25
+
+The complete Build66 nine-photo gate passed on the same Go 1.26.0 host used for Build65. Semantic equivalence is exact: every deep fallback reproduces Build64/65 seed, geometry-evaluation, bank, qualification, logical decode-candidate and logical list-frame counts, and every payload/HMAC outcome is unchanged. B/mild remains `937/935/691/2120047` and authenticates exact `v4-b38-phone-b`; B/angle remains `6198/0` and rejects.
+
+Performance is materially better on the decode-bound success path: B/mild drops from 828036 ms to 544038 ms, a 1.522x speedup / 34.3% wall-clock reduction. Across the complete nine-photo matrix, total time drops from 2372255 ms to 2175687 ms, an 8.3% reduction. Build66 therefore supersedes Build64 as the current qualified smartphone baseline.

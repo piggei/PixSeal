@@ -5,7 +5,7 @@
 - [x] Route CLI JPEG ingest through the deterministic decoder instead of the toolchain standard library.
 - [x] Qualify the unchanged private strength-48 phone matrix with Go 1.26.0; controls 3/3 reject and A/front, A/mild, A/angle, B/front authenticate.
 - [x] Promote Go 1.26.0 as the qualified Build44 toolchain after the deterministic JPEG and physical gates pass.
-- [ ] Resume geometry research on B/mild and B/angle from the now-qualified deterministic JPEG / Go 1.26 baseline, without relaxing Build41 gates or using secret/data evidence.
+- [x] Resume geometry research on B/mild and B/angle from the deterministic JPEG / Go 1.26 baseline; Builds45–64 close this line with qualified B/mild recovery without secret/data-guided geometry.
 
 # PixSeal TODO
 
@@ -458,3 +458,26 @@ and `CHANGELOG.md`.
 - [x] Run `make v4-build64-phone-recovery-test` on the qualified Go 1.26.0 host — PASS.
 - [x] Run `make v4-build64-phone-physical-test` on the complete retained Build38 corpus — PASS, complete nine-photo matrix.
 - [x] Promote Build64 over Build44 after the complete physical gate passes; Build64 is now the qualified smartphone baseline.
+
+
+### Build65 deterministic seed-parallel performance candidate
+
+- [x] Preserve Build64 geometry generation, proposal score, bounds, final bank order, qualification, decode order and HMAC semantics exactly.
+- [x] Isolate the qualified Build64 per-seed deep search and schedule only the already-selected independent seed branches concurrently.
+- [x] Reassemble worker results by original seed index before qualification/decode.
+- [x] Add Build65 scheduling telemetry, source regressions and an exact-telemetry nine-photo equivalence gate with per-image timing.
+- [x] Run `make v4-build65-phone-parallel-test` on the qualified Go 1.26.0 host.
+- [x] Run `make v4-build65-phone-physical-test` on the complete retained Build38 corpus.
+- [x] Confirm exact Build64 deep-recovery telemetry and nine-photo outcomes: PASS, including 691 decode candidates / 2,120,047 list frames on B/mild.
+- [x] Review performance evidence: semantic equivalence is exact, but no matched Build64 `elapsed_ms` baseline exists and B/mild remains 828036 ms; do not promote Build65.
+
+### Build66 deterministic ordered-parallel decode qualified baseline
+
+- [x] Preserve Build65 seed-parallel blind geometry, Build64 bank order, qualification order, proposal score, bounds and HMAC semantics exactly.
+- [x] Decode already-qualified candidates in bounded parallel batches while consuming results strictly in Build64 candidate order.
+- [x] Exclude speculative results after the first logical success from semantic telemetry and selection.
+- [x] Add Build66 decode-worker telemetry, source regressions and a nine-photo exact-telemetry gate with optional Build65 timing comparison.
+- [x] Run `make v4-build66-phone-parallel-decode-test` on the qualified Go 1.26.0 host: PASS.
+- [x] Run `make v4-build66-phone-physical-test` with the retained Build65 matrix available for same-host timing comparison: PASS.
+- [x] Confirm exact Build64 semantic telemetry and payload/HMAC outcomes across the complete nine-photo matrix.
+- [x] Promote Build66: B/mild 828036 -> 544038 ms (1.522x) and full matrix 2372255 -> 2175687 ms (-8.3%), with exact semantics.

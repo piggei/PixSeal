@@ -1030,3 +1030,23 @@ The fixed Build51 stencil contains a different and more actionable point: `corne
 **Observation.** The complete retained nine-photo gate passes under Go 1.26.0. Controls front/mild/angle reject. A/front, A/mild, A/angle and B/front authenticate through their historical paths without invoking Build64. B/mild invokes Build64 and authenticates exact `v4-b38-phone-b` with a frozen bank of 937 states / 935 qualified states. B/angle invokes Build64, freezes 6198 states, qualifies none and remains rejected.
 
 **Decision.** Promote Build64 over Build44 as the qualified smartphone physical-recovery baseline. Preserve the deep recovery ordering and freeze barrier exactly as qualified. Further physical-channel work, including any future screen-camera corpus, starts from Build64 and must not silently retune the qualified production path.
+
+
+## Build64 qualification -> Build65 deterministic seed-parallel candidate — 2026-09-24
+
+**Observation.** Build64 is functionally qualified, but the deep-recovery fallback is computationally expensive. Its 24 proposal-selected seed branches are independent after the frozen seed selection and before final bank concatenation.
+
+**Build65 rule.** Do not prune, deduplicate, rescore or reorder any geometry. Execute the exact Build64 per-seed search concurrently, store results in original seed slots, concatenate only after all workers finish, then preserve Build64 qualification and decode order exactly. The nine-photo gate must match Build64 seed/evaluation/bank/qualification/decode/list-frame telemetry on every fallback case. Promote only after semantic equivalence and useful same-host wall-clock improvement are both demonstrated.
+
+## Build65 host result -> Build66 ordered parallel decode candidate — 2026-09-24
+
+**Observation.** Build65 passes the complete Go 1.26.0 nine-photo equivalence gate. Deep fallback telemetry is exactly Build64-identical on all five fallback cases. B/mild still logically tries 691 candidates and 2,120,047 list frames and takes 828036 ms in the Build65 run; B/angle takes 852740 ms. Build64 did not record matched per-image elapsed milliseconds, so no rigorous speedup claim can be made from the two artifacts.
+
+**Decision.** Do not promote Build65; keep Build64 as the qualified baseline. Preserve Build65's seed-parallel bank because semantic equivalence is proven, but move the next performance experiment to the dominant B/mild protected-data loop. Build66 may evaluate qualified candidates concurrently only in bounded batches. It must consume batch results strictly in the original candidate order and must report only the logical Build64 prefix through the first HMAC success. Speculative later results may affect physical work only; they must never affect payload selection, HMAC semantics, max-confidence or logical candidate/list-frame telemetry. Qualification remains serial and unchanged.
+
+
+## Build66 same-host result -> performance baseline promotion — 2026-09-25
+
+**Observation.** Build66 reproduces every Build64/65 semantic counter and outcome exactly on the complete retained nine-photo Go 1.26.0 gate. The decode-bound B/mild path falls from 828036 ms to 544038 ms (1.522x, -34.3%), while the whole matrix falls from 2372255 ms to 2175687 ms (-8.3%). Control/mild and B/angle are slower in this single run, but B/angle schedules zero Build66 decode workers and therefore cannot attribute its variation to ordered parallel decode.
+
+**Decision.** Promote Build66 as the current qualified smartphone baseline. Preserve the ordered-batch first-HMAC semantics, exact logical telemetry, Build64 deep-search freeze barrier and Build65 seed-stable geometry scheduling. Further optimization must start from Build66 and remain equivalence-preserving unless new evidence justifies a separate research branch.

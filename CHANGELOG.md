@@ -1,3 +1,22 @@
+## v0.3.0-build66 — 2026-09-25
+
+- Preserves Build65's seed-parallel blind geometry generation and exact Build64 geometry/evaluation/bank/qualification semantics.
+- Adds deterministic ordered-parallel protected-data decode: qualified candidates are evaluated in bounded batches, but results are consumed strictly in original Build64 candidate order.
+- Preserves the first logical HMAC success, payload, logical decode-candidate count, logical list-frame count and max-confidence telemetry; speculative results after a winning candidate inside the same batch are discarded from semantic telemetry.
+- **Qualified same-host gate PASS:** all nine outcomes and every deep semantic counter match Build64/65 exactly.
+- **Performance:** B/mild improves from 828036 ms to 544038 ms (1.522x, -34.3%); complete matrix improves from 2372255 ms to 2175687 ms (-8.3%).
+- Promotes Build66 as the current qualified smartphone baseline. Build64 remains the historical deep-recovery qualification checkpoint.
+- Corrects the Build66 physical-gate report filenames from accidental `build65-phone-matrix.*` to `build66-phone-matrix.*`; this packaging fix does not change the qualified decoder binary or runtime semantics.
+
+## v0.3.0-build65 — 2026-09-24
+
+- Starts from the qualified Build64 smartphone baseline and changes only deep-recovery scheduling.
+- Refactors the unchanged Build64 per-seed search into a shared helper, then executes the already-selected independent Build48 seed branches concurrently while reassembling results in original seed order.
+- Preserves the complete Build64 proposal/search bounds, geometry bank order, held-out/full-pilot qualification, protected-data/list decode order and HMAC semantics.
+- Adds `build65-parallel` telemetry, `v4-build65-phone-parallel-test`, and a complete nine-photo `v4-build65-phone-physical-test` that requires exact Build64 deep-recovery telemetry counts for every fallback case.
+- Records per-image elapsed milliseconds for host-side performance evaluation. Build64 remains the qualified baseline until correctness equivalence and useful wall-clock improvement are both confirmed.
+- **Build65 host gate PASS for semantic equivalence:** the complete nine-photo matrix matches Build64 exactly, including all deep seed/evaluation/bank/qualification/decode/list-frame counts and payload/HMAC outcomes. The run used 8 seed workers on fallback cases. Build65 is not promoted because the historical Build64 gate did not record matched `elapsed_ms`, and the measured Build65 B/mild time remains 828036 ms; performance benefit is therefore not established rigorously enough to replace Build64.
+
 ## v0.3.0-build64 — 2026-09-24
 
 - Closes Build63 as `fourth-pair-continuation-recovery`: B/mild freezes 937 fourth-pair continuation states, 935 qualify and exactly one authenticates; the authenticated state has proposal 0.302815, validation 0.240486 and post-hoc oracle error 28.868 px. B/angle freezes 6198 continuation states with 0 qualified and 0 authenticated.

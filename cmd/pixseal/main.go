@@ -36,7 +36,7 @@ Commands:
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
-  v4-extract-phone EXPERIMENTAL: Build44 phone path + Build64 deep-recovery candidate + authenticated v4 decode
+  v4-extract-phone EXPERIMENTAL: Build64 qualified phone path + Build66 ordered parallel deep recovery + authenticated v4 decode
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
   v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
@@ -861,7 +861,7 @@ func printV4ScannerDiagnostics(w io.Writer, info watermark.ExperimentalV4Extract
 }
 
 func v4ExtractPhone(args []string) error {
-	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build64 phone production candidate: preserve the qualified Build44 path first, then use the frozen Build63-derived deep proposal-only recovery bank only as a final fallback before unchanged HMAC authentication.")
+	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build64 qualified phone path with Build66 performance-candidate scheduling: preserve all qualified recovery semantics and use deterministic ordered parallelism only inside the final deep fallback.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
@@ -934,6 +934,12 @@ func printV4PhoneDiagnostics(w io.Writer, decoderID string, info watermark.Exper
 	}
 	if p.Build64Attempted {
 		fmt.Fprintf(w, "build64-recovery: attempted=true seeds=%d geometry-evals=%d bank=%d qualified=%d decode-candidates=%d list-frames=%d max-confidence=%.2f authenticated=%t\n", p.Build64SeedsSelected, p.Build64GeometryEvaluations, p.Build64BankCandidates, p.Build64QualifiedCandidates, p.Build64DecodeCandidates, p.Build64ListFramesTried, p.Build64MaxDataConfidence, p.Build64Authenticated)
+	}
+	if p.Build65Attempted {
+		fmt.Fprintf(w, "build65-parallel: attempted=true workers=%d order=seed-stable\n", p.Build65Workers)
+	}
+	if p.Build66Attempted {
+		fmt.Fprintf(w, "build66-decode-parallel: attempted=true workers=%d order=candidate-stable-batches\n", p.Build66DecodeWorkers)
 	}
 	fmt.Fprintf(w, "hmac: authenticated=%t fallback-attempted=%t fallback-authenticated=%t\n", p.HMACAuthenticated, p.FallbackAttempted, p.FallbackAuthenticated)
 	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)

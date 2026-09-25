@@ -24,6 +24,90 @@ type experimentalV4PhoneBuild64RecoveryTelemetry struct {
 	Profile                  Profile
 }
 
+// experimentalV4PhoneBuild64SeedBank executes the qualified Build64 blind
+// search for one already-selected Build48 seed. It is deliberately isolated so
+// later performance builds can schedule independent seeds without changing any
+// proposal, refinement, retention or ordering rule inside a seed.
+func experimentalV4PhoneBuild64SeedBank(plane *pixelPlane, pilot experimentalV4PilotCandidate, cw, ch int, anchor [4]ImagePoint, seed experimentalV4PhoneBuild48Seed) ([]experimentalV4PhoneHypothesis, int) {
+	bank := make([]experimentalV4PhoneHypothesis, 0, 64)
+	evals := 0
+	baseline, n := experimentalV4PhoneBuild41Refine(plane, pilot, cw, ch, anchor, seed.frozen.h.quad, 0)
+	evals += n
+	roots, n := experimentalV4PhoneBuild53TwoPxRoots(plane, pilot, cw, ch, anchor, seed.frozen.h.quad, 0)
+	evals += n
+	if baseline.h.h[8] == 0 || len(roots) == 0 {
+		return bank, evals
+	}
+	for _, root := range roots {
+		se, si := experimentalV4PhoneBuild53SingleProbe(plane, pilot, cw, ch, anchor, root.hyp, 0)
+		evals += se
+		if si != 0 {
+			continue
+		}
+		pairs, pe, _ := experimentalV4PhoneBuild53PairStencil(plane, pilot, cw, ch, anchor, root.hyp, 0)
+		evals += pe
+		for _, pair := range pairs {
+			cont, ce := experimentalV4PhoneBuild55Continue(plane, pilot, cw, ch, anchor, pair.hyp, 0)
+			evals += ce
+			for _, cs := range cont {
+				sibs, ne := experimentalV4PhoneBuild55SiblingStencil(plane, pilot, cw, ch, anchor, cs.hyp, 0)
+				evals += ne
+				for _, sib := range sibs {
+					se2, si2 := experimentalV4PhoneBuild53SingleProbe(plane, pilot, cw, ch, anchor, sib.hyp, 0)
+					evals += se2
+					if si2 != 0 {
+						continue
+					}
+					pairs2, pe2, _ := experimentalV4PhoneBuild53PairStencil(plane, pilot, cw, ch, anchor, sib.hyp, 0)
+					evals += pe2
+					for _, pair2 := range pairs2 {
+						cont2, ce2 := experimentalV4PhoneBuild55Continue(plane, pilot, cw, ch, anchor, pair2.hyp, 0)
+						evals += ce2
+						for _, c2 := range cont2 {
+							sibs2, ne2 := experimentalV4PhoneBuild55SiblingStencil(plane, pilot, cw, ch, anchor, c2.hyp, 0)
+							evals += ne2
+							for _, s2 := range sibs2 {
+								se3, si3 := experimentalV4PhoneBuild53SingleProbe(plane, pilot, cw, ch, anchor, s2.hyp, 0)
+								evals += se3
+								if si3 != 0 {
+									continue
+								}
+								pairs3, pe3, _ := experimentalV4PhoneBuild53PairStencil(plane, pilot, cw, ch, anchor, s2.hyp, 0)
+								evals += pe3
+								for _, pair3 := range pairs3 {
+									cont3, ce3 := experimentalV4PhoneBuild55Continue(plane, pilot, cw, ch, anchor, pair3.hyp, 0)
+									evals += ce3
+									for _, c3 := range cont3 {
+										sibs3, ne3 := experimentalV4PhoneBuild55SiblingStencil(plane, pilot, cw, ch, anchor, c3.hyp, 0)
+										evals += ne3
+										for _, s3 := range sibs3 {
+											se4, si4 := experimentalV4PhoneBuild53SingleProbe(plane, pilot, cw, ch, anchor, s3.hyp, 0)
+											evals += se4
+											if si4 != 0 {
+												continue
+											}
+											pairs4, pe4, _ := experimentalV4PhoneBuild53PairStencil(plane, pilot, cw, ch, anchor, s3.hyp, 0)
+											evals += pe4
+											for _, pair4 := range pairs4 {
+												cont4, ce4 := experimentalV4PhoneBuild55Continue(plane, pilot, cw, ch, anchor, pair4.hyp, 0)
+												evals += ce4
+												for _, c4 := range cont4 {
+													bank = append(bank, c4.hyp)
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	return bank, evals
+}
+
 // experimentalV4PhoneBuild64BlindBank reproduces only the blind geometry phase
 // of Build63 and returns the final fourth-pair continuation bank. It never reads
 // held-out validation, key material, payload/ECC or HMAC evidence.
@@ -37,82 +121,10 @@ func experimentalV4PhoneBuild64BlindBank(work image.Image, boundary PrintBoundar
 	frozen, _, evals := experimentalV4PhoneBuild47Freeze(work, boundary, cw, ch, 128)
 	seeds := experimentalV4PhoneBuild48SelectSeeds(frozen, experimentalV4PhoneBuild63SeedsPerPair)
 	bank := make([]experimentalV4PhoneHypothesis, 0, 1024)
-
 	for _, seed := range seeds {
-		baseline, n := experimentalV4PhoneBuild41Refine(plane, pilot, cw, ch, anchor, seed.frozen.h.quad, 0)
-		evals += n
-		roots, n := experimentalV4PhoneBuild53TwoPxRoots(plane, pilot, cw, ch, anchor, seed.frozen.h.quad, 0)
-		evals += n
-		if baseline.h.h[8] == 0 || len(roots) == 0 {
-			continue
-		}
-		for _, root := range roots {
-			se, si := experimentalV4PhoneBuild53SingleProbe(plane, pilot, cw, ch, anchor, root.hyp, 0)
-			evals += se
-			if si != 0 {
-				continue
-			}
-			pairs, pe, _ := experimentalV4PhoneBuild53PairStencil(plane, pilot, cw, ch, anchor, root.hyp, 0)
-			evals += pe
-			for _, pair := range pairs {
-				cont, ce := experimentalV4PhoneBuild55Continue(plane, pilot, cw, ch, anchor, pair.hyp, 0)
-				evals += ce
-				for _, cs := range cont {
-					sibs, ne := experimentalV4PhoneBuild55SiblingStencil(plane, pilot, cw, ch, anchor, cs.hyp, 0)
-					evals += ne
-					for _, sib := range sibs {
-						se2, si2 := experimentalV4PhoneBuild53SingleProbe(plane, pilot, cw, ch, anchor, sib.hyp, 0)
-						evals += se2
-						if si2 != 0 {
-							continue
-						}
-						pairs2, pe2, _ := experimentalV4PhoneBuild53PairStencil(plane, pilot, cw, ch, anchor, sib.hyp, 0)
-						evals += pe2
-						for _, pair2 := range pairs2 {
-							cont2, ce2 := experimentalV4PhoneBuild55Continue(plane, pilot, cw, ch, anchor, pair2.hyp, 0)
-							evals += ce2
-							for _, c2 := range cont2 {
-								sibs2, ne2 := experimentalV4PhoneBuild55SiblingStencil(plane, pilot, cw, ch, anchor, c2.hyp, 0)
-								evals += ne2
-								for _, s2 := range sibs2 {
-									se3, si3 := experimentalV4PhoneBuild53SingleProbe(plane, pilot, cw, ch, anchor, s2.hyp, 0)
-									evals += se3
-									if si3 != 0 {
-										continue
-									}
-									pairs3, pe3, _ := experimentalV4PhoneBuild53PairStencil(plane, pilot, cw, ch, anchor, s2.hyp, 0)
-									evals += pe3
-									for _, pair3 := range pairs3 {
-										cont3, ce3 := experimentalV4PhoneBuild55Continue(plane, pilot, cw, ch, anchor, pair3.hyp, 0)
-										evals += ce3
-										for _, c3 := range cont3 {
-											sibs3, ne3 := experimentalV4PhoneBuild55SiblingStencil(plane, pilot, cw, ch, anchor, c3.hyp, 0)
-											evals += ne3
-											for _, s3 := range sibs3 {
-												se4, si4 := experimentalV4PhoneBuild53SingleProbe(plane, pilot, cw, ch, anchor, s3.hyp, 0)
-												evals += se4
-												if si4 != 0 {
-													continue
-												}
-												pairs4, pe4, _ := experimentalV4PhoneBuild53PairStencil(plane, pilot, cw, ch, anchor, s3.hyp, 0)
-												evals += pe4
-												for _, pair4 := range pairs4 {
-													cont4, ce4 := experimentalV4PhoneBuild55Continue(plane, pilot, cw, ch, anchor, pair4.hyp, 0)
-													evals += ce4
-													for _, c4 := range cont4 {
-														bank = append(bank, c4.hyp)
-													}
-												}
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-			}
-		}
+		seedBank, seedEvals := experimentalV4PhoneBuild64SeedBank(plane, pilot, cw, ch, anchor, seed)
+		evals += seedEvals
+		bank = append(bank, seedBank...)
 	}
 	return bank, evals, len(seeds)
 }

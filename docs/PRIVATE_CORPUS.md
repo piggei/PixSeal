@@ -215,3 +215,12 @@ Build63 writes private post-fourth-pair continuation outputs under `v4-phone pri
 ## Build64 private qualified physical matrix
 
 Build64 reuses the complete retained nine-photo Build38 smartphone corpus. Its physical-gate output belongs under `v4-phone private/build64-diagnostics/` and contains per-image stderr logs plus `build64-phone-matrix.tsv` / `.md`. No acquisition image, payload dump or Build64 private matrix is included in source/release archives. The Build64 qualification gate is explicitly private because it validates the deep fallback against controls and the difficult B captures. The complete gate passed and promoted Build64 to the qualified smartphone baseline; the private matrix remains excluded from source/release archives.
+
+
+## Build65 private equivalence/performance matrix
+
+Build65 reuses the complete retained Build38 nine-photo smartphone corpus and writes only private telemetry/logs under `v4-phone private/build65-diagnostics/`. The Build65 gate compares every deep-fallback case against the qualified Build64 telemetry counts and records elapsed milliseconds per image. No acquisition image or Build65 private matrix belongs in source/release archives.
+
+## Build66 private equivalence/performance matrix
+
+Build66 reuses the same retained nine-photo Build38 smartphone corpus. Its gate writes only private logs/telemetry under `v4-phone private/build66-diagnostics/`. Correctness still requires exact Build64 semantic counts and outcomes; when the retained Build65 matrix is available the report also includes same-host Build65 timing and per-image speedup. No acquisition image, private timing matrix or Build66 diagnostic log belongs in source/release archives.

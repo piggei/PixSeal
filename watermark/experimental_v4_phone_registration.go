@@ -87,6 +87,10 @@ type ExperimentalV4PhoneInfo struct {
 	Build64ListFramesTried     int
 	Build64MaxDataConfidence   float64
 	Build64Authenticated       bool
+	Build65Attempted           bool
+	Build65Workers             int
+	Build66Attempted           bool
+	Build66DecodeWorkers       int
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -1039,11 +1043,11 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
-		// Build64 recovery is allowed to run even when Build41/43 cannot form the
+		// Build66 candidate uses the exact Build64 recovery bank and is allowed to run even when Build41/43 cannot form the
 		// historical two-geometry production ensemble. Its complete deep bank is
 		// frozen proposal-only before held-out qualification or HMAC are read.
-		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild64Recover(work, boundary, key, cw, ch)
-		experimentalV4PhoneBuild64ApplyTelemetry(&public, recovery64)
+		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild66Recover(work, boundary, key, cw, ch)
+		experimentalV4PhoneBuild66ApplyTelemetry(&public, recovery64)
 		if err64 == nil {
 			public.ProjectiveBasinFound = true
 			public.Accepted = true
@@ -1142,12 +1146,12 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 
-	// Build64 qualified deep-recovery fallback. This is deliberately last so all
+	// Build66 ordered-parallel decode candidate for the qualified Build64 deep-recovery fallback. This remains deliberately last so all
 	// Build44-qualified paths remain untouched. The complete deep geometry bank
 	// is generated proposal-only and frozen before held-out qualification or
 	// HMAC are consulted. HMAC remains final frame authentication only.
-	payload64, info64, recovery64, err64 := experimentalV4PhoneBuild64Recover(work, boundary, key, cw, ch)
-	experimentalV4PhoneBuild64ApplyTelemetry(&public, recovery64)
+	payload64, info64, recovery64, err64 := experimentalV4PhoneBuild66Recover(work, boundary, key, cw, ch)
+	experimentalV4PhoneBuild66ApplyTelemetry(&public, recovery64)
 	if err64 == nil {
 		public.ProjectiveBasinFound = true
 		public.Accepted = true
