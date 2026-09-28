@@ -1284,7 +1284,7 @@ v4-build72-phone-physical-test: build
 	V4_PHONE_MESSAGE_B="$(V4_PHONE_MESSAGE_B)" \
 	bash ./scripts/test-v4-build72-phone-corpus.sh
 
-# Build73 is an equivalence-preserving performance candidate selected from the
+# Build73 is the qualified equivalence-preserving smartphone baseline selected from the
 # physical Build72 prefix profile. It freezes the exact Build64 prefix through
 # sibling2, evaluates independent generation-three subtrees in one bounded pool,
 # commits in original order, then uses the qualified Build71 generation-four pool.
@@ -1295,7 +1295,7 @@ v4-build73-phone-gen3-parallel-test:
 	@$(MAKE) --no-print-directory version-check
 
 # Full retained nine-photo semantic-equivalence + performance gate for Build73.
-# Build71 remains the qualified baseline until reproducible Build73 evidence exists.
+# Build73 is qualified by two independent retained Go 1.26.0 physical runs; this target remains the regression/qualification gate.
 v4-build73-phone-physical-test: build
 	@PIXSEAL="$(abspath $(PIXSEAL))" \
 	V4_PHONE_ACQUISITION_DIR="$(V4_PHONE_ACQUISITION_DIR)" \

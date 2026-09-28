@@ -12,18 +12,12 @@
 This file contains open work only. Completed milestones belong in `HISTORY.md`
 and `CHANGELOG.md`.
 
-## Build73 ordered generation-three parallel candidate
+## Build73 qualified ordered generation-three parallel baseline
 
-- [x] Close Build72 physical prefix profiling with exact 9/9 semantic equivalence.
-- [x] Select generation three from public-only evidence: `pair3 + continuation3 + sibling3` dominates remaining prefix worker time on `B/angle` and materially dominates `B/mild`.
-- [x] Preserve exact Build64 prefix semantics through `sibling2`, freeze generation-three inputs in original order and evaluate them with one bounded global worker pool.
-- [x] Commit generation-three outputs strictly by frozen task index before reusing the qualified Build71 generation-four pool.
-- [x] Add exact seed-reassembly equivalence, race/vet/compile checks and retained-corpus gate tooling.
-- [ ] Run `make v4-build73-phone-gen3-parallel-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build73-phone-physical-test` and archive `v4-phone private/build73-diagnostics`.
-- [ ] Require exact semantic equivalence to Build71 before comparing performance.
-- [ ] If the benefit is material, repeat the Build73 physical run before any promotion.
-- [ ] Keep Build71 qualified until reproducible Build73 evidence exists.
+- [x] `make v4-build73-phone-gen3-parallel-test` passed on the qualified Go 1.26.0 host.
+- [x] Two independent `make v4-build73-phone-physical-test` runs passed exact 9/9 semantic equivalence.
+- [x] Performance gain reproduced; Build73 promoted as current qualified smartphone baseline.
+- [ ] Preserve Build73 unchanged while the next snapshot profiles the remaining freeze/prefix2/gen3/gen4 cost before any further optimization.
 
 ## v0.3.0 — geometry research
 

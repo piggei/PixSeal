@@ -9,8 +9,8 @@ import (
 	"time"
 )
 
-// Build73 is an equivalence-preserving performance candidate over the qualified
-// Build71 baseline, selected from Build72 physical prefix profiling. It moves
+// Build73 is the qualified smartphone performance baseline selected from Build72
+// physical prefix profiling and two independent Go 1.26.0 physical gates. It moves
 // the ordered parallel barrier one generation earlier: each seed executes the
 // exact Build64 prefix through sibling2, all generation-three inputs are then
 // frozen in original seed/traversal order and processed by one bounded global

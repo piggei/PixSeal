@@ -1,8 +1,8 @@
-# Format-v4 Build73 — ordered generation-three parallel candidate
+# Format-v4 Build73 — qualified ordered generation-three parallel baseline
 
 ## Status
 
-Build73 is an **equivalence-preserving performance candidate** over the qualified Build71 smartphone baseline. Build71 remains qualified until Build73 passes exact physical equivalence and its performance benefit is reproduced.
+Build73 is the **current qualified smartphone baseline**. Promotion is supported by two independent retained Go 1.26.0 physical runs with exact 9/9 semantic equivalence and reproducible performance.
 
 ## Evidence from Build72
 
@@ -80,4 +80,18 @@ v4-phone private/build73-diagnostics/build73-phone-gen3-parallel.tsv
 v4-phone private/build73-diagnostics/build73-phone-gen3-parallel.md
 ```
 
-Correctness is authoritative. Performance is compared only after the complete 9/9 semantic gate passes. A first strong result is not sufficient for promotion; the run must be repeated before Build73 can supersede Build71.
+Correctness remained authoritative. Both independent retained Go 1.26.0 runs passed the complete 9/9 semantic gate.
+
+## Qualification result
+
+| metric | run 1 | run 2 | retained Build71 |
+|---|---:|---:|---:|
+| full matrix elapsed ms | 1,014,434 | 1,047,729 | 1,263,623 |
+| B/mild elapsed ms | 250,790 | 247,690 | 282,958 |
+| B/angle elapsed ms | 276,966 | 306,153 | 412,755 |
+| B/mild geometry ms | 120,532 | 113,919 | 153,775 |
+| B/angle geometry ms | 236,300 | 258,973 | 367,572 |
+
+Two-run mean full-matrix elapsed is **1,031,081.5 ms** (~1.226x / -18.4% versus Build71). `B/mild` averages **249,240 ms** (~1.135x / -11.9%); `B/angle` averages **291,559.5 ms** (~1.416x / -29.4%).
+
+Semantic counters remain exact: `B/mild` 79,259 / 937 / 935 / 691 / 2,120,047 with HMAC/payload PASS; `B/angle` 334,857 / 6,198 / 0 with REJECT. Build73 is promoted as the current qualified smartphone baseline.

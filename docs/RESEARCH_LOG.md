@@ -1116,3 +1116,12 @@ The retained Go 1.26.0 Build70 gate passed exact Build68 semantics and identifie
 **Build73 rule.** Do not prune or retune. Preserve the exact Build64 traversal but stop the per-seed prefix after `sibling2`; freeze all resulting inputs in seed/traversal order; evaluate independent generation-three subtrees with one bounded global pool; store by frozen task index; commit in exact order; then run the already-qualified Build71 generation-four pool unchanged.
 
 **Promotion rule.** Build71 remains qualified. Build73 may be considered only after exact semantic equivalence is proven on the physical matrix and a material performance benefit is reproduced in a second run.
+
+
+## Build73 two-run qualification -> baseline promotion — 2026-09-28
+
+**Correctness.** Two independent retained Go 1.26.0 runs pass the complete 9/9 smartphone gate with exact Build71/Build68/Build66/Build64 semantics. `B/mild` remains 79259 geometry evaluations / 937 bank / 935 qualified / 691 logical decode candidates / 2120047 logical list frames, with 696 physical decode candidates / 5 speculative candidates and HMAC/payload PASS. `B/angle` remains 334857 / 6198 / 0 and rejects. Controls and historical positives remain unchanged.
+
+**Performance.** Full-matrix elapsed is 1014434 / 1047729 ms versus retained Build71 1263623 ms. `B/mild` is 250790 / 247690 ms versus 282958 ms; `B/angle` is 276966 / 306153 ms versus 412755 ms. The two-run means correspond to ~1.226x full-matrix, ~1.135x B/mild and ~1.416x B/angle speedup.
+
+**Decision.** Promote Build73 as the current qualified smartphone baseline. Preserve exact prefix2/gen3/gen4 ordered commits, Build68 qualification-plane reuse and Build66 first-logical-HMAC semantics. The next snapshot must profile the residual freeze/prefix2/gen3/gen4 cost before further optimization.

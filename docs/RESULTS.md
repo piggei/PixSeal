@@ -1,6 +1,6 @@
-## v0.3.0-build73 ordered generation-three parallel candidate — physical run pending
+## v0.3.0-build73 qualified ordered generation-three parallel baseline — 2026-09-28
 
-Build73 is selected from the completed Build72 prefix profile. It preserves the exact qualified Build71 search/bank/order and changes scheduling only: seed prefixes stop after `sibling2`; all frozen generation-three subtrees run in one bounded global pool and commit in original order; the qualified Build71 generation-four pool then runs unchanged. Build71 remains the qualified baseline until exact equivalence and performance are reproduced.
+Two independent retained Go 1.26.0 runs pass exact 9/9 semantic equivalence. `B/mild` remains 79,259 geometry evaluations / 937 bank / 935 qualified / 691 logical decode / 2,120,047 logical frames with HMAC/payload PASS; `B/angle` remains 334,857 / 6,198 / 0 and REJECT. Full-matrix elapsed is 1,014,434 / 1,047,729 ms versus retained Build71 1,263,623 ms. Two-run means are 1,031,081.5 ms full matrix (~1.226x / -18.4%), 249,240 ms `B/mild` (~1.135x / -11.9%) and 291,559.5 ms `B/angle` (~1.416x / -29.4%). Build73 is promoted as the current qualified smartphone baseline.
 
 ## v0.3.0-build72 prefix-stage profile — 2026-09-28
 
@@ -48,7 +48,7 @@ The median seed duration remains only 660–893 ms across these cases. Adding mo
 
 ## v0.3.0-build68 qualified plane-reuse result — 2026-09-28
 
-Two independent Go 1.26.0 retained-corpus runs preserved exact Build66/Build64 semantics. `B/mild` remained `79259` geometry evaluations, `937` bank, `935` qualified, `691` logical decode candidates and `2120047` logical list frames with HMAC/payload PASS; `B/angle` remained `6198/0` reject. Qualification measured `58374` and `64253` ms versus Build67 `307583` ms (mean `61313.5` ms, about `5.02x` faster / `-80.1%`). Build68 is the current qualified smartphone baseline.
+Two independent Go 1.26.0 retained-corpus runs preserved exact Build66/Build64 semantics. `B/mild` remained `79259` geometry evaluations, `937` bank, `935` qualified, `691` logical decode candidates and `2120047` logical list frames with HMAC/payload PASS; `B/angle` remained `6198/0` reject. Qualification measured `58374` and `64253` ms versus Build67 `307583` ms (mean `61313.5` ms, about `5.02x` faster / `-80.1%`). Build68 was the qualified smartphone baseline at that checkpoint and was later superseded by Build71 and Build73.
 
 ## v0.3.0-build44 deterministic JPEG / Go 1.26 qualification — 2026-09-23
 
