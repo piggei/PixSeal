@@ -12,17 +12,18 @@
 This file contains open work only. Completed milestones belong in `HISTORY.md`
 and `CHANGELOG.md`.
 
-## Build71 ordered generation-four parallel candidate
+## Build73 ordered generation-three parallel candidate
 
-- [x] Close Build70 physical profiling as semantic-equivalence PASS on the qualified Go 1.26.0 host.
-- [x] Identify the dominant seed deterministically from public geometry evaluations.
-- [x] Establish that generation four (`single4 + pair4 + continuation4`) accounts for 56.5% of dominant-seed work on `B/mild` and 73.4% on `B/angle`.
-- [x] Preserve exact Build64/68 semantics while freezing generation-four inputs in original seed/traversal order.
-- [x] Evaluate generation-four subtrees with one bounded global worker pool and commit results strictly by frozen index.
-- [x] Add exact seed-reassembly regression, race/vet checks and a retained nine-photo gate.
-- [ ] Run `make v4-build71-phone-gen4-parallel-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build71-phone-physical-test` and archive `v4-phone private/build71-diagnostics`.
-- [ ] Promote Build71 only if the full semantic matrix and logical counters remain identical to Build68 and the performance benefit is reproducible.
+- [x] Close Build72 physical prefix profiling with exact 9/9 semantic equivalence.
+- [x] Select generation three from public-only evidence: `pair3 + continuation3 + sibling3` dominates remaining prefix worker time on `B/angle` and materially dominates `B/mild`.
+- [x] Preserve exact Build64 prefix semantics through `sibling2`, freeze generation-three inputs in original order and evaluate them with one bounded global worker pool.
+- [x] Commit generation-three outputs strictly by frozen task index before reusing the qualified Build71 generation-four pool.
+- [x] Add exact seed-reassembly equivalence, race/vet/compile checks and retained-corpus gate tooling.
+- [ ] Run `make v4-build73-phone-gen3-parallel-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build73-phone-physical-test` and archive `v4-phone private/build73-diagnostics`.
+- [ ] Require exact semantic equivalence to Build71 before comparing performance.
+- [ ] If the benefit is material, repeat the Build73 physical run before any promotion.
+- [ ] Keep Build71 qualified until reproducible Build73 evidence exists.
 
 ## v0.3.0 — geometry research
 

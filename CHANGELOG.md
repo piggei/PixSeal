@@ -1,3 +1,29 @@
+## v0.3.0-build73 — ordered generation-three parallel performance candidate
+
+- Closes the Build72 Go 1.26.0 physical profile as semantic-equivalence PASS on the complete nine-photo matrix.
+- Records the new prefix bottleneck: `pair3 + continuation3 + sibling3` account for 194,940 / 293,120 ms cumulative prefix worker time on `B/angle` (~66.5%) and 41,319 / 89,863 ms on `B/mild` (~46.0%); within the deterministic dominant prefix seeds those shares rise to ~73.6% and ~57.4%.
+- Splits geometry into three deterministic barriers: exact Build64 prefix through `sibling2`, one bounded global pool for independent `single3 -> pair3 -> continuation3 -> sibling3` subtrees, then the already-qualified Build71 generation-four pool.
+- Freezes both generation-three and generation-four task inputs in exact original seed/traversal order and commits result slices strictly by frozen task index.
+- Adds exact Build73 seed-reassembly-vs-Build64 regression, race/vet/compile coverage, `v4-build73-phone-gen3-parallel-test` and the retained nine-photo `v4-build73-phone-physical-test`.
+- Changes no encoder, wire format, pilot, score, threshold, keep count, qualification, ECC/Hamming, whitening/HMAC domain, candidate order or first-logical-HMAC semantics. Build71 remains the qualified baseline pending reproducible Build73 physical evidence.
+
+## v0.3.0-build72 — Build71 prefix-stage profiling snapshot
+
+- Starts from the qualified Build71 smartphone baseline and changes observability only.
+- Preserves the exact Build71 two-barrier geometry scheduler, final bank/order, Build68 qualification plane reuse, Build66 ordered decode and first-logical-HMAC semantics.
+- Adds per-stage evaluation and cumulative-worker-time profiling for the 14 prefix stages through `sibling3`.
+- Identifies the maximum-evaluation prefix seed deterministically and records its identity, output count, elapsed time and per-stage eval/state/time genealogy.
+- Adds direct Build72-vs-Build71 prefix equivalence regressions, race/vet coverage, `v4-build72-phone-prefix-profile-test` and a retained nine-photo semantic gate.
+- Build72 is diagnostic only; fine-grained timing overhead makes it non-promotable. Build71 remains the qualified baseline.
+
+## v0.3.0-build71 — qualified ordered generation-four parallel baseline
+
+- Promotes Build71 as the current qualified smartphone baseline after **two independent retained Go 1.26.0 physical runs** pass the complete 9/9 semantic matrix.
+- Preserves exact Build68/Build66/Build64 logical semantics. `B/mild` remains 79,259 geometry evaluations / 937 bank / 935 qualified / 691 logical decode / 2,120,047 logical list frames with HMAC/payload PASS; `B/angle` remains 334,857 / 6,198 / 0 and REJECT.
+- Reproduces the scheduling benefit: full-matrix wall time is 1,233,478 and 1,263,623 ms (1,248,550.5 ms mean) versus the retained Build68 reference 1,902,847 ms (~1.524x / -34.4%). `B/angle` averages ~2.120x faster and `B/mild` ~1.292x faster.
+- Leaves the qualified algorithm unchanged from the tested Build71 candidate; final consolidation changes status/help/documentation only.
+- Makes the remaining geometry prefix through `sibling3`, especially on `B/angle`, the next measured performance target.
+
 ## v0.3.0-build71 — 2026-09-28
 
 - Closes Build70 physical profiling as semantic-equivalence PASS over the qualified Build68 smartphone baseline.

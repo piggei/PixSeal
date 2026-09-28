@@ -1,115 +1,104 @@
-# Format-v4 Build71 — ordered generation-four parallel scheduling
+# Format-v4 Build71 — qualified ordered generation-four parallel baseline
 
 ## Status
 
-Build71 is an **equivalence-preserving performance candidate** over the current qualified smartphone baseline, **Build68**. Build71 is not promoted by construction; promotion requires the retained nine-photo Go 1.26.0 physical gate and reproducible performance evidence.
+Build71 is the **current qualified smartphone physical-recovery baseline**. It preserves the complete Build68/Build66/Build64 semantics and changes only proposal-only scheduling inside the deep-recovery geometry search. Promotion is supported by two independent retained nine-photo runs on the qualified Go 1.26.0 host.
 
-## Evidence from Build69/70
+Build68 remains an important historical qualified milestone for qualification-plane reuse; Build66 remains the historical ordered-parallel decode milestone; Build64 remains the historical deep-recovery semantic checkpoint.
 
-Build69 showed that top-level seed parallelism is strongly load-imbalanced. Build70 then identified the dominant branch deterministically by public geometry-evaluation count and decomposed it by generation.
+## Why Build71 exists
 
-Physical Build70 results:
+Build69 and Build70 showed that the post-Build68 geometry bottleneck was not broadly distributed work. A single seed dominated the seed-parallel critical path, and within that branch the exact fourth generation (`single4 + pair4 + continuation4`) contributed 56.5% of dominant-seed evaluations on `B/mild` and 73.4% on `B/angle`, fed by 593 and 1363 independent `sibling3` inputs respectively.
 
-| case | seed evals | dominant seed | pair/rank | dominant evals | dominant share | `sibling3` inputs | gen4 evals | gen4 share of dominant |
-|---|---:|---:|---|---:|---:|---:|---:|---:|
-| control/front | 17901 | 93 | 5/2 | 12782 | 71.4% | 33 | 2864 | 22.4% |
-| control/mild | 117483 | 98 | 5/4 | 112978 | 96.2% | 666 | 57120 | 50.6% |
-| control/angle | 21075 | 64 | 3/1 | 6962 | 33.0% | 10 | 800 | 11.5% |
-| B/mild | 79131 | 67 | 3/3 | 73922 | 93.4% | 593 | 41776 | 56.5% |
-| B/angle | 334749 | 98 | 6/4 | 267775 | 80.0% | 1363 | 196641 | 73.4% |
-
-`gen4 evals` means the exact Build64 `single4 + pair4 + continuation4` work. These stages are attractive because each `sibling3` hypothesis defines an independent proposal-only subtree and the current algorithm merely appends each subtree output in traversal order.
-
-## Scheduling change
-
-Build71 changes **only scheduling**.
-
-Qualified Build64/68 logical traversal:
+Build71 therefore changes **scheduling only**:
 
 ```text
-seed 0 prefix ... sibling3[0] -> generation4 -> append
-                     sibling3[1] -> generation4 -> append
-...
-seed 1 prefix ...
+24 selected seeds
+      ↓
+bounded parallel prefix through sibling3
+      ↓
+freeze every sibling3 input in exact seed/traversal order
+      ↓
+one bounded global generation-four worker pool
+      ↓
+single4 → pair4 → continuation4
+      ↓
+store each result by frozen task index
+      ↓
+strict original-index concatenation
+      ↓
+complete bank FREEZE
+      ↓
+unchanged Build68 qualification plane reuse
+      ↓
+unchanged Build66 ordered protected-data decode
+      ↓
+HMAC final authentication only
 ```
 
-Build71:
+The design deliberately avoids nested pools. CPUs released by short prefixes can assist the expensive fourth-generation region without changing the qualified logical traversal or final bank order.
 
-```text
-all selected seeds
-      |
-      +-- bounded parallel prefix through sibling3
-      |
-      +-- freeze every sibling3 input in exact seed/traversal order
-      |
-      +-- one bounded global generation-four worker pool
-      |      single4 -> pair4 -> continuation4
-      |
-      +-- store each result by frozen task index
-      |
-      +-- concatenate strictly by original task index
-      |
-      +-- complete bank FREEZE
-             |
-             +-- unchanged Build68 qualification plane reuse
-             +-- unchanged Build66 ordered protected-data decode
-             +-- HMAC final authentication only
-```
+## Frozen invariants
 
-This two-barrier design avoids nested worker pools. It lets the CPUs that became idle after short seed prefixes assist the expensive generation-four region without changing the qualified bank order.
+Build71 preserves exactly:
 
-## Invariants
-
-Build71 must preserve exactly:
-
-- Build47 freeze and Build48 seed selection;
-- 24 selected seeds in retained deep-recovery cases;
-- every Build64 proposal-only operation and bound;
-- total geometry-evaluation count;
-- final bank size, hypothesis values and ordering;
-- Build68 full-pilot qualification and plane reuse;
-- qualification counts and order;
-- Build66 candidate-stable decode batches;
+- Build47 freeze and Build48 seed selection/order;
+- 24 selected seeds on retained deep-recovery cases;
+- every Build64 proposal-only operation, bound and keep count;
+- total geometry-evaluation counts;
+- final bank contents and ordering;
+- Build68 full-pilot qualification, thresholds and pixel-plane reuse;
+- qualification counts/order;
+- Build66 candidate-stable decode batching;
 - logical decode-candidate and list-frame counts;
-- payload/HMAC outcomes;
+- payload/HMAC outcomes and first-logical-HMAC semantics;
 - control rejection and `B/angle` rejection.
 
-Build71 does **not** use protected payload, ECC, HMAC, key material, reference/oracle geometry or expected messages to choose tasks or schedule geometry.
+Secret key, payload, ECC and HMAC never create, rank, stop or schedule geometry.
 
-## Telemetry
+## Exact semantic result
 
-Build71 reports:
+Both qualification runs preserve the retained matrix exactly. The deep cases remain:
 
-- prefix worker count;
-- generation-four worker count;
-- generation-four task count;
-- geometry plane-prep and freeze time;
-- prefix wall and cumulative worker time;
-- generation-four wall and cumulative worker time;
-- generation-four task min/median/max duration;
-- generation-four task min/max evaluation count;
-- generation-four task min/max bank contribution.
+| case | geometry evals | bank | qualified | logical decode | logical frames | result |
+|---|---:|---:|---:|---:|---:|---|
+| `control/front` | 18,021 | 26 | 0 | 0 | 0 | REJECT |
+| `control/mild` | 117,609 | 810 | 6 | 6 | 18,432 | REJECT |
+| `control/angle` | 21,203 | 11 | 0 | 0 | 0 | REJECT |
+| `B/mild` | 79,259 | 937 | 935 | 691 | 2,120,047 | HMAC/PAYLOAD PASS |
+| `B/angle` | 334,857 | 6,198 | 0 | 0 | 0 | REJECT |
 
-The inherited Build64/65/66/68 logical telemetry remains authoritative for semantic equivalence.
+Historical positive cases `A/front`, `A/mild`, `A/angle` and `B/front` remain authenticated through their earlier qualified paths.
 
-## Regressions
+## Two-run performance evidence
 
-The Build71 unit regression reconstructs a complete seed serially from:
+The same Build68 timing baseline retained by the gate is used for both Build71 runs.
+
+| metric | Build68 | Build71 run 1 | Build71 run 2 | two-run mean |
+|---|---:|---:|---:|---:|
+| `B/mild` geometry | 242,405 ms | 150,469 ms | 153,775 ms | 152,122 ms |
+| `B/mild` command | 362,286 ms | 277,693 ms | 282,958 ms | 280,325.5 ms |
+| `B/angle` geometry | 839,049 ms | 352,838 ms | 367,572 ms | 360,205 ms |
+| `B/angle` command | 857,452 ms | 396,068 ms | 412,755 ms | 404,411.5 ms |
+| full 9-photo matrix | 1,902,847 ms | 1,233,478 ms | 1,263,623 ms | 1,248,550.5 ms |
+
+Two-run mean improvement versus Build68:
+
+- full matrix: about **1.524x**, **-34.4%**;
+- `B/mild` command: about **1.292x**, **-22.6%**;
+- `B/angle` command: about **2.120x**, **-52.8%**.
+
+The fourth-generation worker pool scales close to the eight-worker limit in the first run: `B/mild` compresses 147,565 ms cumulative worker time into 18,586 ms wall time (~7.94x), while `B/angle` compresses 918,031 ms into 115,083 ms (~7.98x). The second run reproduces the same scheduling behavior and overall speedup.
+
+## Regression guarantees
+
+The deterministic regression reconstructs a full seed as:
 
 ```text
 Build71 prefix + ordered Build71 generation-four subtrees
 ```
 
-and compares it directly to `experimentalV4PhoneBuild64SeedBank` for:
-
-- evaluation count;
-- bank size;
-- hypothesis order;
-- quad;
-- homography;
-- proposal score.
-
-Race detection is also required because the generation-four workers share one read-only `pixelPlane`.
+and compares it directly with `experimentalV4PhoneBuild64SeedBank` for evaluation count, bank size, hypothesis order, quad, homography and proposal score. Race detection is also required because workers share a read-only `pixelPlane`.
 
 ## Qualified-host commands
 
@@ -126,14 +115,6 @@ v4-phone private/build71-diagnostics/build71-phone-gen4-parallel.tsv
 v4-phone private/build71-diagnostics/build71-phone-gen4-parallel.md
 ```
 
-## Promotion rule
+## Decision
 
-Build68 remains the baseline unless Build71:
-
-1. reproduces the complete 9/9 retained physical semantic matrix;
-2. preserves every Build64 logical counter exactly;
-3. preserves Build68 qualification/decode behavior and HMAC outcomes;
-4. provides a useful performance gain on the same qualified host;
-5. reproduces that gain before promotion.
-
-If Build71 is semantically exact but the generation-four wall region remains imbalanced, the next experiment should profile the generation-four task distribution before introducing another scheduling layer.
+**Build71 is promoted as the current qualified smartphone baseline.** Future performance work must start from Build71 semantics. The next measured bottleneck is the geometry prefix through `sibling3`, especially on `B/angle`; any Build72+ work must remain separate until exact equivalence is proven.

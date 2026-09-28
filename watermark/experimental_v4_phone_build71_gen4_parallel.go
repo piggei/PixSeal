@@ -9,9 +9,9 @@ import (
 	"time"
 )
 
-// Build71 is an equivalence-preserving performance experiment selected from
-// Build69/70 physical profiling. The qualified Build68 semantics remain the
-// reference. Build71 changes only proposal-only scheduling: every seed executes
+// Build71 is the qualified equivalence-preserving performance baseline selected
+// from Build69/70 physical profiling and confirmed by two retained Go 1.26.0
+// physical runs. Build71 changes only proposal-only scheduling: every seed executes
 // the exact Build64 prefix through the third sibling stencil, the resulting
 // fourth-generation inputs are frozen in original seed/traversal order, and the
 // independent single4 -> pair4 -> cont4 subtrees are evaluated in one bounded

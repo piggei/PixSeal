@@ -1090,3 +1090,29 @@ The retained Go 1.26.0 nine-photo Build69 gate preserved exact Build68 semantics
 ## Build70 physical result / Build71 selection — 2026-09-28
 
 The retained Go 1.26.0 Build70 gate passed exact Build68 semantics and identified the dominant seed genealogically. `B/mild` seed 67 (pair/rank 3/3) contributes 73922/79131 seed evaluations; `B/angle` seed 98 (6/4) contributes 267775/334749. The exact fourth-generation region (`single4 + pair4 + continuation4`) contributes 41776 evaluations (56.5%) on dominant `B/mild` and 196641 (73.4%) on dominant `B/angle`, with 593 and 1363 independent `sibling3` inputs. Build71 therefore tests a scheduling-only two-barrier design: seed prefixes through `sibling3`, then one bounded global generation-four pool with strict original-index commit. Build68 remains qualified until the physical gate proves exact equivalence and reproducible performance.
+
+
+## Build71 two-run qualification -> baseline promotion — 2026-09-28
+
+**Correctness.** Two independent retained Go 1.26.0 runs pass the complete 9/9 smartphone gate with exact Build68 semantics. `B/mild` remains 79259 geometry evaluations / 937 bank / 935 qualified / 691 logical decode candidates / 2120047 logical list frames and HMAC/payload PASS. `B/angle` remains 334857 / 6198 / 0 and rejects. Controls remain rejected and historical positive cases remain authenticated.
+
+**Performance.** Run 1 / run 2 full-matrix elapsed is 1233478 / 1263623 ms versus the retained Build68 reference 1902847 ms. `B/mild` is 277693 / 282958 ms versus 362286 ms; `B/angle` is 396068 / 412755 ms versus 857452 ms. The two-run means correspond to about 1.524x full-matrix, 1.292x `B/mild` and 2.120x `B/angle` speedup.
+
+**Decision.** Promote Build71 as the current qualified smartphone baseline. Preserve its two-barrier scheduling, strict original-order bank commit, Build68 qualification-plane reuse and Build66 first-logical-HMAC decode semantics. Future work must profile the remaining prefix before optimization.
+
+
+## Build71 qualification -> Build72 prefix-stage profile — 2026-09-28
+
+**Observation.** Two independent Build71 qualification runs preserve exact semantics and reduce the retained full matrix by about 34.4% versus Build68. The generation-four pool is no longer the dominant region. The remaining prefix wall is 74480/76105 ms on `B/mild` and 184439/194499 ms on `B/angle`.
+
+**Build72 rule.** Preserve the exact qualified Build71 two-barrier scheduler and add timers/counters only around the existing prefix calls. Measure fourteen prefix stages, aggregate public-only eval/time across all seeds, and identify the maximum-evaluation prefix seed deterministically. Do not use timing or protected data to alter scheduling or search.
+
+**Decision rule.** Build72 is non-promotable. Its physical output selects a later Build73 implementation target; Build71 remains qualified throughout.
+
+## Build72 physical prefix profile -> Build73 ordered generation-three parallel — 2026-09-28
+
+**Build72 result.** The retained Go 1.26.0 nine-photo gate passed exact Build71 semantic equivalence. Fine-grained timing confirms that the third prefix generation is the new common critical region: `pair3 + continuation3 + sibling3` contributes 194940/293120 ms cumulative prefix worker time on `B/angle` (66.5%), 41319/89863 ms on `B/mild` (46.0%) and 80980/156234 ms on `control/mild` (51.8%). In the deterministic maximum-evaluation prefix seed those shares are 73.6%, 57.4% and 58.3% respectively.
+
+**Build73 rule.** Do not prune or retune. Preserve the exact Build64 traversal but stop the per-seed prefix after `sibling2`; freeze all resulting inputs in seed/traversal order; evaluate independent generation-three subtrees with one bounded global pool; store by frozen task index; commit in exact order; then run the already-qualified Build71 generation-four pool unchanged.
+
+**Promotion rule.** Build71 remains qualified. Build73 may be considered only after exact semantic equivalence is proven on the physical matrix and a material performance benefit is reproduced in a second run.

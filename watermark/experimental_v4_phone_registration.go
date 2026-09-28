@@ -155,6 +155,46 @@ type ExperimentalV4PhoneInfo struct {
 	Build71Gen4MaxEvals                int
 	Build71Gen4MinBank                 int
 	Build71Gen4MaxBank                 int
+	Build72Attempted                   bool
+	Build72PrefixMinMs                 int64
+	Build72PrefixMedianMs              int64
+	Build72PrefixMaxMs                 int64
+	Build72PrefixMinEvals              int
+	Build72PrefixMaxEvals              int
+	Build72PrefixMinInputs             int
+	Build72PrefixMaxInputs             int
+	Build72PrefixStageEvals            string
+	Build72PrefixStageWorkerMs         string
+	Build72MaxPrefixSeedIndex          int
+	Build72MaxPrefixSeedPairRank       int
+	Build72MaxPrefixSeedRankWithinPair int
+	Build72MaxPrefixSeedEvals          int
+	Build72MaxPrefixSeedInputs         int
+	Build72MaxPrefixSeedMs             int64
+	Build72MaxPrefixSeedStageEvals     string
+	Build72MaxPrefixSeedStageStates    string
+	Build72MaxPrefixSeedStageMs        string
+	Build73Attempted                   bool
+	Build73Prefix2Workers              int
+	Build73Gen3Workers                 int
+	Build73Gen4Workers                 int
+	Build73Gen3Tasks                   int
+	Build73Gen4Tasks                   int
+	Build73GeometryPlanePrepMs         int64
+	Build73GeometryFreezeMs            int64
+	Build73Prefix2WallMs               int64
+	Build73Prefix2WorkerMs             int64
+	Build73Gen3WallMs                  int64
+	Build73Gen3WorkerMs                int64
+	Build73Gen4WallMs                  int64
+	Build73Gen4WorkerMs                int64
+	Build73Gen3MinMs                   int64
+	Build73Gen3MedianMs                int64
+	Build73Gen3MaxMs                   int64
+	Build73Gen3MinEvals                int
+	Build73Gen3MaxEvals                int
+	Build73Gen3MinOutputs              int
+	Build73Gen3MaxOutputs              int
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -1107,12 +1147,11 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
-		// Build71 generation-four scheduling preserves the exact qualified Build68 recovery semantics and is allowed to run even when Build41/43 cannot form the
+		// Build73 ordered generation-three parallelism preserves the exact qualified Build71 recovery semantics and is allowed to run even when Build41/43 cannot form the
 		// historical two-geometry production ensemble. Its complete deep bank is
-		// frozen proposal-only before qualification or HMAC are read. Build71 only
-		// parallelizes independent fourth-generation proposal-only subtrees and commits them in original order.
-		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild71Recover(work, boundary, key, cw, ch)
-		experimentalV4PhoneBuild71ApplyTelemetry(&public, recovery64)
+		// frozen proposal-only before qualification or HMAC are read. Build73 changes only public-only scheduling: generation-three and generation-four task results are committed in the exact original order before qualification or HMAC are read.
+		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild73Recover(work, boundary, key, cw, ch)
+		experimentalV4PhoneBuild73ApplyTelemetry(&public, recovery64)
 		if err64 == nil {
 			public.ProjectiveBasinFound = true
 			public.Accepted = true
@@ -1211,12 +1250,12 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 
-	// Build71 ordered generation-four parallel wrapper for the qualified Build68 deep-recovery fallback. This remains deliberately last so all
+	// Build73 ordered generation-three parallel candidate wraps the qualified Build71 deep-recovery fallback. This remains deliberately last so all
 	// Build44-qualified paths remain untouched. The complete deep geometry bank
 	// is generated proposal-only and frozen before held-out qualification or
 	// HMAC are consulted. HMAC remains final frame authentication only.
-	payload64, info64, recovery64, err64 := experimentalV4PhoneBuild71Recover(work, boundary, key, cw, ch)
-	experimentalV4PhoneBuild71ApplyTelemetry(&public, recovery64)
+	payload64, info64, recovery64, err64 := experimentalV4PhoneBuild73Recover(work, boundary, key, cw, ch)
+	experimentalV4PhoneBuild73ApplyTelemetry(&public, recovery64)
 	if err64 == nil {
 		public.ProjectiveBasinFound = true
 		public.Accepted = true

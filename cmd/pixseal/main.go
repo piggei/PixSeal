@@ -36,7 +36,7 @@ Commands:
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
-  v4-extract-phone EXPERIMENTAL: Build68 qualified phone semantics + Build71 ordered generation-four scheduling candidate + authenticated v4 decode
+  v4-extract-phone EXPERIMENTAL: Build71 qualified phone semantics + Build73 ordered generation-three parallel candidate + authenticated v4 decode
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
   v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
@@ -861,7 +861,7 @@ func printV4ScannerDiagnostics(w io.Writer, info watermark.ExperimentalV4Extract
 }
 
 func v4ExtractPhone(args []string) error {
-	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build71 ordered generation-four parallel performance candidate over the qualified Build68 phone baseline; geometry bank/order and recovery semantics remain unchanged.")
+	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build73 ordered generation-three parallel candidate over the qualified Build71 phone baseline; geometry bank/order and recovery semantics remain unchanged.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
@@ -955,6 +955,12 @@ func printV4PhoneDiagnostics(w io.Writer, decoderID string, info watermark.Exper
 	}
 	if p.Build71Attempted {
 		fmt.Fprintf(w, "build71-gen4-parallel: attempted=true prefix-workers=%d gen4-workers=%d gen4-tasks=%d geometry-plane-prep-ms=%d geometry-freeze-ms=%d prefix-wall-ms=%d prefix-worker-ms=%d gen4-wall-ms=%d gen4-worker-ms=%d gen4-min-ms=%d gen4-median-ms=%d gen4-max-ms=%d gen4-min-evals=%d gen4-max-evals=%d gen4-min-bank=%d gen4-max-bank=%d\n", p.Build71PrefixWorkers, p.Build71Gen4Workers, p.Build71Gen4Tasks, p.Build71GeometryPlanePrepMs, p.Build71GeometryFreezeMs, p.Build71PrefixWallMs, p.Build71PrefixWorkerMs, p.Build71Gen4WallMs, p.Build71Gen4WorkerMs, p.Build71Gen4MinMs, p.Build71Gen4MedianMs, p.Build71Gen4MaxMs, p.Build71Gen4MinEvals, p.Build71Gen4MaxEvals, p.Build71Gen4MinBank, p.Build71Gen4MaxBank)
+	}
+	if p.Build72Attempted {
+		fmt.Fprintf(w, "build72-prefix-profile: attempted=true prefix-min-ms=%d prefix-median-ms=%d prefix-max-ms=%d prefix-min-evals=%d prefix-max-evals=%d prefix-min-inputs=%d prefix-max-inputs=%d prefix-stage-evals=%s prefix-stage-worker-ms=%s max-prefix-seed-index=%d max-prefix-seed-pair-rank=%d max-prefix-seed-rank-within-pair=%d max-prefix-seed-evals=%d max-prefix-seed-inputs=%d max-prefix-seed-ms=%d max-prefix-seed-stage-evals=%s max-prefix-seed-stage-states=%s max-prefix-seed-stage-ms=%s\n", p.Build72PrefixMinMs, p.Build72PrefixMedianMs, p.Build72PrefixMaxMs, p.Build72PrefixMinEvals, p.Build72PrefixMaxEvals, p.Build72PrefixMinInputs, p.Build72PrefixMaxInputs, p.Build72PrefixStageEvals, p.Build72PrefixStageWorkerMs, p.Build72MaxPrefixSeedIndex, p.Build72MaxPrefixSeedPairRank, p.Build72MaxPrefixSeedRankWithinPair, p.Build72MaxPrefixSeedEvals, p.Build72MaxPrefixSeedInputs, p.Build72MaxPrefixSeedMs, p.Build72MaxPrefixSeedStageEvals, p.Build72MaxPrefixSeedStageStates, p.Build72MaxPrefixSeedStageMs)
+	}
+	if p.Build73Attempted {
+		fmt.Fprintf(w, "build73-gen3-parallel: attempted=true prefix2-workers=%d gen3-workers=%d gen4-workers=%d gen3-tasks=%d gen4-tasks=%d plane-prep-ms=%d freeze-ms=%d prefix2-wall-ms=%d prefix2-worker-ms=%d gen3-wall-ms=%d gen3-worker-ms=%d gen4-wall-ms=%d gen4-worker-ms=%d gen3-min-ms=%d gen3-median-ms=%d gen3-max-ms=%d gen3-min-evals=%d gen3-max-evals=%d gen3-min-outputs=%d gen3-max-outputs=%d\n", p.Build73Prefix2Workers, p.Build73Gen3Workers, p.Build73Gen4Workers, p.Build73Gen3Tasks, p.Build73Gen4Tasks, p.Build73GeometryPlanePrepMs, p.Build73GeometryFreezeMs, p.Build73Prefix2WallMs, p.Build73Prefix2WorkerMs, p.Build73Gen3WallMs, p.Build73Gen3WorkerMs, p.Build73Gen4WallMs, p.Build73Gen4WorkerMs, p.Build73Gen3MinMs, p.Build73Gen3MedianMs, p.Build73Gen3MaxMs, p.Build73Gen3MinEvals, p.Build73Gen3MaxEvals, p.Build73Gen3MinOutputs, p.Build73Gen3MaxOutputs)
 	}
 	fmt.Fprintf(w, "hmac: authenticated=%t fallback-attempted=%t fallback-authenticated=%t\n", p.HMACAuthenticated, p.FallbackAttempted, p.FallbackAuthenticated)
 	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)

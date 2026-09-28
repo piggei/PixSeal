@@ -193,7 +193,7 @@ done
 {
     echo '# PixSeal Build71 ordered generation-four parallel matrix'
     echo
-    echo 'Build71 is an equivalence-preserving performance candidate over the qualified Build68 smartphone baseline. It executes the exact Build64 prefix through sib3, freezes all generation-four inputs in original seed/traversal order, evaluates independent single4/pair4/cont4 subtrees with one bounded global worker pool, then commits results strictly in original order.'
+    echo 'Build71 is the qualified smartphone baseline. It executes the exact Build64 prefix through sib3, freezes all generation-four inputs in original seed/traversal order, evaluates independent single4/pair4/cont4 subtrees with one bounded global worker pool, then commits results strictly in original order.'
     echo
     echo '| image | role | evals | bank | qual | logical decode | logical frames | prefix workers | gen4 workers | gen4 tasks | freeze ms | prefix wall ms | gen4 wall ms | geometry ms | HMAC | telemetry eq | elapsed ms | B68 ms | speedup | B68 geometry ms | geom speedup | gate |'
     echo '|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|'
@@ -201,7 +201,7 @@ done
         echo "| $image | $role | $b64_evals | $b64_bank | $b64_qualified | $b64_decode | $b64_frames | $b71_prefix_workers | $b71_gen4_workers | $b71_gen4_tasks | $b71_freeze | $b71_prefix_wall | $b71_gen4_wall | $b68_geometry_ms | $hmac | $telemetry_equivalent | $elapsed_ms | $base_elapsed | $speedup | $base_geometry | $geometry_speedup | $qualification |"
     done
     echo
-    echo 'Correctness is authoritative: Build64/65/66/68 logical counters, payload/HMAC outcomes, bank size and bank order must remain unchanged. Performance is reported separately and does not make Build71 a baseline automatically.'
+    echo 'Correctness is authoritative: Build64/65/66/68 logical counters, payload/HMAC outcomes, bank size and bank order must remain unchanged. Timing is reported separately as a reproducibility check for the qualified Build71 baseline.'
     [[ -f "$BUILD68_BASELINE_TSV" ]] && echo "Build68 timing baseline: $BUILD68_BASELINE_TSV" || echo 'Build68 timing baseline: unavailable'
 } > "$md"
 

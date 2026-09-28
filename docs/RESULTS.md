@@ -1,6 +1,22 @@
-## v0.3.0-build71 ordered generation-four parallel candidate — pending physical run
+## v0.3.0-build73 ordered generation-three parallel candidate — physical run pending
 
-Build70 closed with exact semantic-equivalence PASS and identified generation four as the largest common independent region in the dominant branch. Build71 preserves the qualified Build68 bank/order and changes only scheduling: exact seed prefixes through `sibling3`, one frozen global task list, bounded parallel `single4 -> pair4 -> continuation4`, then strict original-index commit. Build68 remains the qualified baseline pending the Build71 physical gate.
+Build73 is selected from the completed Build72 prefix profile. It preserves the exact qualified Build71 search/bank/order and changes scheduling only: seed prefixes stop after `sibling2`; all frozen generation-three subtrees run in one bounded global pool and commit in original order; the qualified Build71 generation-four pool then runs unchanged. Build71 remains the qualified baseline until exact equivalence and performance are reproduced.
+
+## v0.3.0-build72 prefix-stage profile — 2026-09-28
+
+The retained Go 1.26.0 gate passed semantic equivalence on all nine smartphone cases. Timing is diagnostic because fine-grained timers add overhead. The key public-only prefix measurements are:
+
+| case | total prefix worker ms | `pair3+cont3+sib3` ms | share | dominant prefix seed ms | dominant gen3-tail ms | dominant share |
+|---|---:|---:|---:|---:|---:|---:|
+| control/mild | 156234 | 80980 | 51.8% | 138912 | 80980 | 58.3% |
+| B/mild | 89863 | 41319 | 46.0% | 72021 | 41319 | 57.4% |
+| B/angle | 293120 | 194940 | 66.5% | 203169 | 149514 | 73.6% |
+
+This selects ordered generation-three scheduling for Build73; no pruning, score retuning or bank reduction is justified.
+
+## v0.3.0-build71 qualified ordered generation-four baseline — 2026-09-28
+
+Two independent retained Go 1.26.0 runs preserve exact Build68 semantics. `B/mild` remains 79,259 geometry evaluations / 937 bank / 935 qualified / 691 logical decode / 2,120,047 logical frames with HMAC/payload PASS; `B/angle` remains 334,857 / 6,198 / 0 and REJECT. Full-matrix elapsed is 1,233,478 and 1,263,623 ms versus the retained Build68 reference 1,902,847 ms, so Build71 is promoted as the current qualified smartphone baseline.
 
 ## v0.3.0-build70 dominant-seed genealogy profile — 2026-09-28
 
@@ -1481,3 +1497,12 @@ The profile therefore rejects list/Hamming/HMAC and Build66 speculative batching
 Build68 tests one implementation-only change selected from Build67: the full-pilot detector may consume the already-built post-freeze `pixelPlane` rather than reconstructing the identical raster per candidate. A separate detector/qualifier path is used so historical Build41/64/66/67 code remains available for direct equivalence tests.
 
 The complete retained-corpus gate subsequently passed twice on Go 1.26.0 with exact semantic equivalence. `B/mild` stayed at 79259 geometry evaluations / 937 frozen / 935 qualified / 691 logical decode candidates / 2120047 logical list frames with HMAC/payload PASS; `B/angle` stayed 6198 / 0 reject; controls and historical positive paths were unchanged. Qualification fell from Build67 307583 ms to 58374 / 64253 ms (61313.5 ms mean, ~5.02x faster), while B/mild command time averaged 339687.5 ms versus Build66 544038 ms and the complete matrix averaged 1865221.5 ms versus Build66 2175687 ms. Build68 is promoted as the current qualified smartphone baseline.
+
+
+## Build71 qualified ordered-generation-four result — 2026-09-28
+
+**Correctness.** Two independent retained Go 1.26.0 runs pass the complete 9/9 smartphone gate with exact Build68 semantics. `B/mild` remains 79259 geometry evaluations / 937 bank / 935 qualified / 691 logical decode candidates / 2120047 logical list frames and HMAC/payload PASS. `B/angle` remains 334857 / 6198 / 0 and rejects. Controls remain rejected and historical positive cases remain authenticated.
+
+**Performance.** Run 1 / run 2 full-matrix elapsed is 1233478 / 1263623 ms versus the retained Build68 reference 1902847 ms. `B/mild` is 277693 / 282958 ms versus 362286 ms; `B/angle` is 396068 / 412755 ms versus 857452 ms. The two-run means correspond to about 1.524x full-matrix, 1.292x `B/mild` and 2.120x `B/angle` speedup.
+
+**Decision.** Promote Build71 as the current qualified smartphone baseline. Preserve its two-barrier scheduling, strict original-order bank commit, Build68 qualification-plane reuse and Build66 first-logical-HMAC decode semantics. Future work must profile the remaining prefix before optimization.

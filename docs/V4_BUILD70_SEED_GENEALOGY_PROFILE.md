@@ -2,7 +2,7 @@
 
 ## Status
 
-Build70 is **observability-only**. The current qualified smartphone baseline remains **Build68**.
+Build70 is **observability-only**. At the Build70 checkpoint, the qualified smartphone baseline was **Build68**.
 
 The qualified Go 1.26.0 Build69 gate preserved the complete Build68 semantic matrix and showed that the seed-parallel geometry region is dominated by one branch: `B/mild` measured 168398 ms max-seed time inside 169014 ms seed wall time, while `B/angle` measured 693395/695422 ms. Similar concentration appears in all deep-recovery controls. The median seed is below one second, so simply increasing the number of top-level seed workers cannot remove the critical path.
 
