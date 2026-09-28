@@ -36,7 +36,7 @@ Commands:
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
-  v4-extract-phone EXPERIMENTAL: Build66 qualified phone path + Build67 deep-recovery profiling + authenticated v4 decode
+  v4-extract-phone EXPERIMENTAL: Build66 qualified phone semantics + Build68 qualification plane reuse + authenticated v4 decode
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
   v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
@@ -861,7 +861,7 @@ func printV4ScannerDiagnostics(w io.Writer, info watermark.ExperimentalV4Extract
 }
 
 func v4ExtractPhone(args []string) error {
-	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build66 qualified phone path with Build67 observability: preserve all qualified recovery semantics while profiling the final deep fallback by stage.")
+	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build68 qualified phone baseline: preserve qualified Build66 recovery semantics while reusing the frozen post-bank pixel plane during full-pilot qualification.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
@@ -943,6 +943,9 @@ func printV4PhoneDiagnostics(w io.Writer, decoderID string, info watermark.Exper
 	}
 	if p.Build67Attempted {
 		fmt.Fprintf(w, "build67-profile: attempted=true total-ms=%d geometry-ms=%d plane-prep-ms=%d qualification-ms=%d decode-wall-ms=%d physical-decode-candidates=%d speculative-candidates=%d physical-profiles=%d physical-list-frames=%d sampling-worker-ms=%d list-worker-ms=%d\n", p.Build67TotalMs, p.Build67GeometryMs, p.Build67PlanePrepMs, p.Build67QualificationMs, p.Build67DecodeWallMs, p.Build67PhysicalDecodeCandidates, p.Build67SpeculativeDecodeCandidates, p.Build67PhysicalProfiles, p.Build67PhysicalListFrames, p.Build67SamplingWorkerMs, p.Build67ListWorkerMs)
+	}
+	if p.Build68Attempted {
+		fmt.Fprintf(w, "build68-plane-reuse: attempted=true total-ms=%d geometry-ms=%d plane-prep-ms=%d qualification-ms=%d decode-wall-ms=%d physical-decode-candidates=%d speculative-candidates=%d physical-profiles=%d physical-list-frames=%d sampling-worker-ms=%d list-worker-ms=%d\n", p.Build68TotalMs, p.Build68GeometryMs, p.Build68PlanePrepMs, p.Build68QualificationMs, p.Build68DecodeWallMs, p.Build68PhysicalDecodeCandidates, p.Build68SpeculativeDecodeCandidates, p.Build68PhysicalProfiles, p.Build68PhysicalListFrames, p.Build68SamplingWorkerMs, p.Build68ListWorkerMs)
 	}
 	fmt.Fprintf(w, "hmac: authenticated=%t fallback-attempted=%t fallback-authenticated=%t\n", p.HMACAuthenticated, p.FallbackAttempted, p.FallbackAuthenticated)
 	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)

@@ -1058,3 +1058,20 @@ The fixed Build51 stencil contains a different and more actionable point: `corne
 **Build67 hypothesis.** Before changing implementation, reproduce Build66 exactly and add timing/physical-work observability only. Measure geometry wall time, qualification wall time, decode wall time, summed protected-margin sampling worker time, summed list/Hamming/HMAC worker time, physical decode/profile/list-frame counts, and the speculative candidate suffix inside the winning batch. Keep Build64 logical telemetry untouched so the physical profile cannot alter semantic qualification.
 
 **Decision rule.** Build67 itself is not promotable. Its retained-corpus profile selects the Build68 implementation target. No score, threshold, bank pruning, profile order, list order, ECC/Hamming rule, whitening/HMAC domain or fallback order may change.
+
+
+## Build67 host profile -> Build68 qualification plane reuse — 2026-09-25
+
+**Observation.** Build67 passes the complete retained nine-photo semantic gate. `B/mild` remains exactly 79259 geometry evaluations / 937 frozen / 935 qualified / 691 logical decode candidates / 2120047 logical list frames with the expected HMAC-authenticated payload. The profiled deep fallback takes 631733 ms: 288049 ms geometry, 272 ms for the single post-freeze plane construction, 307583 ms qualification and 35828 ms ordered decode wall. Only five candidates are speculative beyond the logical winner, and list/Hamming/HMAC worker time is only 7061 ms. `B/angle` remains reject and is geometry-dominated.
+
+**Implementation finding.** The existing `experimentalV4PhoneBuild41Qualify` already receives a `pixelPlane` for held-out fold scoring, but its full-pilot gate calls `experimentalV4DetectPilotProjective(img, ...)`, which constructs a fresh `pixelPlane` internally. On `B/mild`, nearly the complete 937-state bank reaches qualification, so this same raster is materialized hundreds of times.
+
+**Build68 rule.** Add a separate plane-consuming full-pilot detector with arithmetic identical to the historical detector and use it only from a separate Build68 qualifier. Reuse the one post-freeze plane for every full-pilot qualification candidate and protected-data sampling. Do not modify Build41/64/66/67 helpers, geometry, bank order, thresholds, evaluation count, candidate order, Build66 batch scheduling, list/Hamming/HMAC logic or first-HMAC semantics. Build66 remains qualified until exact detector/qualifier regressions and the complete Go 1.26.0 physical gate both pass.
+
+## Build68 two-run qualification -> baseline promotion — 2026-09-28
+
+**Observation.** Two independent Go 1.26.0 retained-corpus runs pass the complete nine-photo semantic gate. `B/mild` remains exactly 79259 geometry evaluations / 937 frozen / 935 qualified / 691 logical decode candidates / 2120047 logical list frames, with 696 physical candidates and 5 speculative candidates in both runs. HMAC/payload remain PASS. `B/angle` remains 6198 / 0 and rejected; all controls and historical positive paths are unchanged.
+
+**Performance evidence.** Qualification falls from Build67 307583 ms to 58374 and 64253 ms (61313.5 ms mean, ~5.02x faster / -80.1%). B/mild command time is 317089 and 362286 ms (339687.5 ms mean) versus Build66 544038 ms (~1.60x / -37.6%). Full-matrix time is 1827596 and 1902847 ms (1865221.5 ms mean) versus Build66 2175687 ms (~1.166x / -14.3%). Geometry time varies substantially between runs and was not changed by Build68, so the promotion is grounded in exact semantics plus the repeated qualification reduction rather than attributing all wall-clock variation to the implementation change.
+
+**Decision.** Promote Build68 as the current qualified smartphone baseline. Preserve Build66 as the historical qualified ordered-parallel milestone and Build64 as the historical deep-recovery semantic checkpoint. Future Build69 work may target geometry-generation cost, especially the negative `B/angle` path, but must start from Build68 semantics and remain separate from this qualification promotion.

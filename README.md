@@ -26,9 +26,9 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build67**.
+Current development snapshot: **v0.3.0-build68**.
 
-Latest qualified milestone: **v0.3.0-build66**. Build67 is an observability-only research snapshot; Build66 preserves the complete qualified Build64 smartphone semantics while adding deterministic seed-parallel geometry scheduling and ordered-parallel protected-data decode. On the same Go 1.26.0 host used for Build65, the complete nine-photo matrix remained semantically identical while total wall time fell from 2,372,255 ms to 2,175,687 ms (-8.3%); the decode-bound B/mild case fell from 828,036 ms to 544,038 ms (-34.3%, 1.522x speedup).
+Latest qualified milestone: **v0.3.0-build68**. Build68 preserves the complete qualified Build66/Build64 smartphone semantics and removes repeated pixel-plane materialization from full-pilot qualification. Two independent Go 1.26.0 retained-corpus runs reproduced exact semantic equivalence. On `B/mild`, qualification fell from 307,583 ms in Build67 to 58,374 / 64,253 ms (61,313.5 ms mean, about 5.02x faster), while command wall time averaged 339,687.5 ms versus the Build66 baseline of 544,038 ms. The full nine-photo matrix averaged 1,865,221.5 ms versus 2,175,687 ms for Build66 (-14.3%).
 
 Stable release baseline: **v0.2.0**.
 
@@ -73,13 +73,13 @@ records hypotheses, rejected variants, threshold decisions and negative results 
 future builds do not silently repeat abandoned experiments.
 
 
-## What v0.3.0-build67 adds
+## What v0.3.0-build68 adds
 
-Build67 starts from the qualified Build66 smartphone path and changes **observability only**. It keeps the exact Build65 seed-parallel bank, serial qualification, Build66 ordered candidate batches, profile order, list/Hamming/HMAC logic and first-logical-HMAC semantics. The current qualified baseline therefore remains **Build66**.
+Build67 completed the retained Go 1.26.0 stage profile without changing semantics. On `B/mild`, 307583 ms of the 631733 ms deep fallback was spent in serial qualification, while the single post-freeze pixel-plane construction cost only 272 ms. Code inspection showed that the full-pilot detector rebuilt that same plane for every candidate that reached the final qualification gate.
 
-The deep fallback now reports wall time for geometry generation, shared pixel-plane preparation, qualification and ordered-parallel decode, plus physical protected-data work: candidates actually executed, speculative candidates in the winning batch, physical profile/list-frame counts, summed projective-margin sampling worker time and summed list/Hamming/HMAC worker time. Logical Build64 counters remain unchanged and exclude speculative work exactly as before.
+Build68 applies one implementation-only optimization: a separate plane-consuming full-pilot detector reuses the already-built post-freeze `pixelPlane`. Full-pilot arithmetic, thresholds, candidate order, Build64/65 geometry, Build66 ordered decode, protected-data sampling and HMAC semantics remain unchanged. Two independent retained-corpus gates passed exact semantic equivalence and reproduced the qualification speedup, so Build68 is now the current qualified smartphone baseline.
 
-Run `make v4-build67-phone-profile-test` and then, on the qualified Go 1.26.0 host with the retained private corpus, `make v4-build67-phone-physical-test`. The resulting profile decides the first Build68 optimization target; Build67 itself is not promoted based on timing. See [`docs/V4_BUILD67_DEEP_RECOVERY_PROFILE.md`](docs/V4_BUILD67_DEEP_RECOVERY_PROFILE.md).
+Run `make v4-build68-phone-plane-reuse-test` and then `make v4-build68-phone-physical-test` on the qualified Go 1.26.0 host. See [`docs/V4_BUILD68_QUALIFICATION_PLANE_REUSE.md`](docs/V4_BUILD68_QUALIFICATION_PLANE_REUSE.md).
 
 ## What v0.3.0-build66 adds
 
@@ -87,7 +87,7 @@ Build65 closed as an **equivalence PASS but non-promoted performance experiment*
 
 Build66 keeps that proven seed-parallel bank and parallelizes only already-qualified protected-data candidates in deterministic ordered batches. Batch results are consumed strictly in original Build64 order; only the logical prefix through the first HMAC success contributes to payload selection and semantic telemetry. The complete same-host Build66 gate again reproduced every Build64/65 semantic counter and all nine outcomes exactly. B/mild fell from **828036 ms to 544038 ms** (**1.522x**, **-34.3%**), while the full nine-photo matrix fell from **2372255 ms to 2175687 ms** (**1.090x**, **-8.3%**).
 
-**Build66 is now the latest qualified smartphone baseline.** The packaging-only correction from accidental `build65-phone-matrix.*` output names to `build66-phone-matrix.*` changes no decoder or scheduling behavior. See [`docs/V4_BUILD66_PARALLEL_DECODE.md`](docs/V4_BUILD66_PARALLEL_DECODE.md).
+**Build66 became the qualified ordered-parallel milestone and is now superseded by Build68 as the current qualified smartphone baseline.** The packaging-only correction from accidental `build65-phone-matrix.*` output names to `build66-phone-matrix.*` changes no decoder or scheduling behavior. See [`docs/V4_BUILD66_PARALLEL_DECODE.md`](docs/V4_BUILD66_PARALLEL_DECODE.md).
 
 ## What v0.3.0-build64 adds
 
@@ -97,9 +97,9 @@ Build64 is the first **qualified production promotion** of that evidence. It lea
 
 The complete nine-photo Build38 qualification gate passed: all three controls reject; `A/front`, `A/mild`, `A/angle` and `B/front` authenticate through their historical paths without invoking Build64; `B/mild` authenticates exact `v4-b38-phone-b` through Build64; and `B/angle` remains rejected after the fallback. Re-run with `make v4-build64-phone-recovery-test` followed by `make v4-build64-phone-physical-test`. See [`docs/V4_BUILD64_PHONE_RECOVERY_QUALIFIED.md`](docs/V4_BUILD64_PHONE_RECOVERY_QUALIFIED.md).
 
-**Build64 was the qualified deep-recovery milestone that superseded Build44; Build66 now supersedes Build64 as the current qualified smartphone baseline while preserving its semantics exactly.**
+**Build64 was the qualified deep-recovery milestone that superseded Build44; Build66 later qualified ordered-parallel decode; Build68 now supersedes Build66 as the current qualified smartphone baseline while preserving those semantics exactly.**
 
-> **Build65/66 performance line:** Build65 proved exact Build64 semantic equivalence but was not promoted. Build66 preserved that exact geometry bank and added deterministic ordered-parallel decode of qualified candidates; the same-host gate then delivered a 1.522x B/mild speedup and an 8.3% full-matrix wall-clock reduction with exact semantics. Build66 is now the qualified baseline. See [`docs/V4_BUILD65_PARALLEL_RECOVERY.md`](docs/V4_BUILD65_PARALLEL_RECOVERY.md) and [`docs/V4_BUILD66_PARALLEL_DECODE.md`](docs/V4_BUILD66_PARALLEL_DECODE.md).
+> **Build65/66 performance line:** Build65 proved exact Build64 semantic equivalence but was not promoted. Build66 preserved that exact geometry bank and added deterministic ordered-parallel decode of qualified candidates; the same-host gate then delivered a 1.522x B/mild speedup and an 8.3% full-matrix wall-clock reduction with exact semantics. Build66 remains the historical qualified ordered-parallel milestone; Build68 is the current qualified baseline. See [`docs/V4_BUILD65_PARALLEL_RECOVERY.md`](docs/V4_BUILD65_PARALLEL_RECOVERY.md), [`docs/V4_BUILD66_PARALLEL_DECODE.md`](docs/V4_BUILD66_PARALLEL_DECODE.md), and [`docs/V4_BUILD68_QUALIFICATION_PLANE_REUSE.md`](docs/V4_BUILD68_QUALIFICATION_PLANE_REUSE.md).
 
 ## What v0.3.0-build59 adds
 

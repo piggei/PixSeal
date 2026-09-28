@@ -1,6 +1,6 @@
 # Build66 deterministic ordered-parallel protected-data decode
 
-Build66 is the **current qualified smartphone performance baseline**, derived from the qualified Build64 recovery semantics and the semantically equivalent Build65 seed-parallel experiment. It does not change the Format-v4 encoder, public pilot, strength 48, proposal score, geometry search bounds, held-out qualification, ECC/Hamming logic, whitening/HMAC domains, thresholds, quorums or fallback ordering.
+Build66 is the **historical qualified ordered-parallel smartphone milestone**, later superseded by Build68, derived from the qualified Build64 recovery semantics and the semantically equivalent Build65 seed-parallel experiment. It does not change the Format-v4 encoder, public pilot, strength 48, proposal score, geometry search bounds, held-out qualification, ECC/Hamming logic, whitening/HMAC domains, thresholds, quorums or fallback ordering.
 
 ## Build65 result
 

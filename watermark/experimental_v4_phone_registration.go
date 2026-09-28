@@ -103,6 +103,18 @@ type ExperimentalV4PhoneInfo struct {
 	Build67PhysicalListFrames          int
 	Build67SamplingWorkerMs            int64
 	Build67ListWorkerMs                int64
+	Build68Attempted                   bool
+	Build68TotalMs                     int64
+	Build68GeometryMs                  int64
+	Build68PlanePrepMs                 int64
+	Build68QualificationMs             int64
+	Build68DecodeWallMs                int64
+	Build68PhysicalDecodeCandidates    int
+	Build68SpeculativeDecodeCandidates int
+	Build68PhysicalProfiles            int
+	Build68PhysicalListFrames          int
+	Build68SamplingWorkerMs            int64
+	Build68ListWorkerMs                int64
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -1055,11 +1067,12 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
-		// Build67 profiling candidate uses the exact qualified Build66 recovery path and is allowed to run even when Build41/43 cannot form the
+		// Build68 qualified plane-reuse path preserves the exact qualified Build66 recovery semantics and is allowed to run even when Build41/43 cannot form the
 		// historical two-geometry production ensemble. Its complete deep bank is
-		// frozen proposal-only before held-out qualification or HMAC are read.
-		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild67Recover(work, boundary, key, cw, ch)
-		experimentalV4PhoneBuild67ApplyTelemetry(&public, recovery64)
+		// frozen proposal-only before qualification or HMAC are read. Build68 only
+		// reuses the already-built pixel plane inside full-pilot qualification.
+		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild68Recover(work, boundary, key, cw, ch)
+		experimentalV4PhoneBuild68ApplyTelemetry(&public, recovery64)
 		if err64 == nil {
 			public.ProjectiveBasinFound = true
 			public.Accepted = true
@@ -1158,12 +1171,12 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 
-	// Build67 profiling wrapper for the qualified Build66 ordered-parallel deep-recovery fallback. This remains deliberately last so all
+	// Build68 plane-reuse wrapper for the qualified Build66 ordered-parallel deep-recovery fallback. This remains deliberately last so all
 	// Build44-qualified paths remain untouched. The complete deep geometry bank
 	// is generated proposal-only and frozen before held-out qualification or
 	// HMAC are consulted. HMAC remains final frame authentication only.
-	payload64, info64, recovery64, err64 := experimentalV4PhoneBuild67Recover(work, boundary, key, cw, ch)
-	experimentalV4PhoneBuild67ApplyTelemetry(&public, recovery64)
+	payload64, info64, recovery64, err64 := experimentalV4PhoneBuild68Recover(work, boundary, key, cw, ch)
+	experimentalV4PhoneBuild68ApplyTelemetry(&public, recovery64)
 	if err64 == nil {
 		public.ProjectiveBasinFound = true
 		public.Accepted = true

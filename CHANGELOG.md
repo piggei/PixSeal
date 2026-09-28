@@ -1,3 +1,14 @@
+## v0.3.0-build68 — 2026-09-25; qualified 2026-09-28
+
+- Selects the first implementation optimization directly from the completed Build67 physical profile.
+- Adds an exact `pixelPlane`-consuming full-pilot detector used only by the Build68 deep fallback, avoiding repeated raster materialization during qualification.
+- Keeps Build41/64/66/67 semantics intact; no geometry, threshold, ECC/Hamming, HMAC, candidate-order or fallback-order change.
+- Adds exact detector/qualification equivalence regressions plus `v4-build68-phone-plane-reuse-test` and private `v4-build68-phone-physical-test`.
+- Adds Build68 stage telemetry and reports comparison against both qualified Build66 wall time and the returned Build67 qualification profile.
+- **Qualified physical gate:** two independent Go 1.26.0 retained-corpus runs pass exact nine-photo semantic equivalence. `B/mild` remains `937/935/691/2120047` with HMAC/payload PASS and `B/angle` remains `6198/0` reject.
+- **Reproducible performance:** B/mild qualification is 58,374 / 64,253 ms versus Build67 307,583 ms (61,313.5 ms mean; ~5.02x faster, -80.1%). B/mild elapsed is 317,089 / 362,286 ms versus Build66 544,038 ms (339,687.5 ms mean; ~1.60x, -37.6%). Full-matrix elapsed is 1,827,596 / 1,902,847 ms versus Build66 2,175,687 ms (1,865,221.5 ms mean; ~1.166x, -14.3%).
+- Promotes Build68 as the current qualified smartphone baseline. Build66 remains the historical qualified ordered-parallel milestone; Build64 remains the historical deep-recovery semantic checkpoint.
+
 ## v0.3.0-build67 — 2026-09-25
 
 - Starts from the qualified Build66 smartphone baseline and changes observability only; Build66 remains the qualified baseline.

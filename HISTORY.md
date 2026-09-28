@@ -1,3 +1,11 @@
+## Build68 — qualified qualification pixel-plane reuse baseline
+
+Build67 returned a semantic PASS on all nine smartphone cases and showed that `B/mild` spent 307583 ms in qualification versus 35828 ms in ordered protected-data decode. The post-freeze plane itself took only 272 ms to create, but the historical full-pilot detector rebuilt that raster internally for every candidate reaching the full-pilot qualification gate.
+
+Build68 isolates that redundancy without changing recovery behavior. A new plane-consuming full-pilot detector reproduces the historical residue/origin/score arithmetic exactly and the Build68 qualifier reuses the already-built post-freeze plane. Geometry generation, bank freeze, qualification thresholds/order, Build66 ordered decode, logical telemetry and first-HMAC semantics remain unchanged.
+
+Two independent Go 1.26.0 retained-corpus gates then reproduced exact semantic equivalence. `B/mild` remained 79259 geometry evaluations / 937 frozen / 935 qualified / 691 logical decode candidates / 2120047 logical list frames, with 696 physical candidates and 5 speculative candidates in both runs; HMAC and payload remained PASS. `B/angle` remained 6198 / 0 and rejected, all controls remained rejected, and historical positive paths remained authenticated. Qualification fell to 58374 and 64253 ms (61313.5 ms mean, about 5.02x faster than Build67), while B/mild command time averaged 339687.5 ms versus 544038 ms in Build66. Build68 is therefore promoted as the current qualified smartphone baseline.
+
 ## Build67 — deep-recovery stage profiling
 
 Build67 starts from the qualified Build66 smartphone baseline and adds observability only. The exact Build65 seed-parallel blind bank, serial qualification, Build66 ordered candidate batches, profile order, list/Hamming/HMAC logic and first-logical-HMAC behavior are unchanged. Build64 semantic telemetry remains the authoritative logical view.

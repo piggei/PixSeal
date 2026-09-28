@@ -489,6 +489,16 @@ and `CHANGELOG.md`.
 - [x] Separate physical decode/profile/list-frame work from the qualified logical Build64 counters, including winning-batch speculative work.
 - [x] Measure summed projective protected-margin sampling worker time separately from deterministic list/Hamming/HMAC worker time.
 - [x] Add `v4-build67-phone-profile-test`, private `v4-build67-phone-physical-test`, profile reports and Build67 documentation.
-- [ ] Run `make v4-build67-phone-profile-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build67-phone-physical-test` on the complete retained Build38 corpus.
-- [ ] Use the returned B/mild/negative-case profile to select one equivalence-preserving Build68 implementation optimization; do not promote Build67 based on timing alone.
+- [x] Run `make v4-build67-phone-profile-test` on the qualified Go 1.26.0 host.
+- [x] Run `make v4-build67-phone-physical-test` on the complete retained Build38 corpus: semantic PASS; B/mild geometry 288049 ms, qualification 307583 ms, decode wall 35828 ms.
+- [x] Use the returned profile to select Build68: remove repeated `newPixelPlane(img)` inside full-pilot qualification by reusing the existing frozen-raster plane.
+
+### Build68 qualified qualification plane-reuse baseline
+
+- [x] Add an exact plane-consuming full-pilot detector without changing the historical detector.
+- [x] Add direct detector and qualification equivalence regressions.
+- [x] Preserve Build64/65/66 logical telemetry and ordered decode while exposing Build68 stage timing.
+- [x] Add `v4-build68-phone-plane-reuse-test`, private `v4-build68-phone-physical-test` and documentation.
+- [x] Run the Build68 regressions on the qualified Go 1.26.0 host: PASS.
+- [x] Run the complete retained nine-photo Build68 physical gate twice: exact semantic PASS in both runs.
+- [x] Promote Build68: repeated semantic PASS; mean B/mild qualification 61313.5 ms versus Build67 307583 ms (~5.02x), mean B/mild elapsed 339687.5 ms versus Build66 544038 ms, and mean full matrix 1865221.5 ms versus 2175687 ms.

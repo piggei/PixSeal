@@ -1419,8 +1419,29 @@ The complete Build66 nine-photo gate passed on the same Go 1.26.0 host used for 
 
 Performance is materially better on the decode-bound success path: B/mild drops from 828036 ms to 544038 ms, a 1.522x speedup / 34.3% wall-clock reduction. Across the complete nine-photo matrix, total time drops from 2372255 ms to 2175687 ms, an 8.3% reduction. Build66 therefore supersedes Build64 as the current qualified smartphone baseline.
 
-## Build67 profiling candidate — 2026-09-25
+## Build67 retained profiling result — 2026-09-25
 
-Build67 is an observability-only successor to the qualified Build66 smartphone baseline. It preserves the exact Build64/65/66 logical search/decode behavior and adds stage wall timing plus physical-work counters around the deep fallback. In particular, Build67 distinguishes the qualified logical candidate/list-frame prefix from physically executed speculative candidates in the winning Build66 batch and separates summed projective-margin sampling worker time from summed list/Hamming/HMAC worker time.
+Build67 is an observability-only successor to the qualified Build66 smartphone baseline. The complete retained Go 1.26.0 nine-photo gate passed semantic equivalence: all outcomes and Build64/65/66 logical counters remained unchanged.
 
-No Build67 physical result is recorded in this source snapshot yet. Build66 remains the qualified baseline until the Build67 retained-corpus profiling run is returned and a separate Build68 optimization is justified from that evidence.
+The key `B/mild` profile was:
+
+- deep total: `631733 ms`;
+- geometry: `288049 ms`;
+- one post-freeze plane preparation: `272 ms`;
+- serial qualification: `307583 ms`;
+- ordered decode wall: `35828 ms`;
+- logical candidates/list frames: `691` / `2120047`;
+- physical candidates/list frames: `696` / `2135407`;
+- speculative candidates: `5`;
+- summed protected-margin sampling worker time: `263093 ms`;
+- summed list/Hamming/HMAC worker time: `7061 ms`.
+
+`B/angle` remained reject and was dominated by geometry (`807359 ms` of `814433 ms` deep total), with `6198` frozen states and `0` qualified candidates.
+
+The profile therefore rejects list/Hamming/HMAC and Build66 speculative batching as the first optimization target. Qualification is the dominant `B/mild` implementation cost. Code inspection identified repeated raster materialization inside `experimentalV4DetectPilotProjective`: although the qualifier already owns a `pixelPlane`, full-pilot detection rebuilds `newPixelPlane(img)` for every candidate that reaches that gate.
+
+## Build68 qualification plane-reuse qualified baseline — 2026-09-25 / qualified 2026-09-28
+
+Build68 tests one implementation-only change selected from Build67: the full-pilot detector may consume the already-built post-freeze `pixelPlane` rather than reconstructing the identical raster per candidate. A separate detector/qualifier path is used so historical Build41/64/66/67 code remains available for direct equivalence tests.
+
+The complete retained-corpus gate subsequently passed twice on Go 1.26.0 with exact semantic equivalence. `B/mild` stayed at 79259 geometry evaluations / 937 frozen / 935 qualified / 691 logical decode candidates / 2120047 logical list frames with HMAC/payload PASS; `B/angle` stayed 6198 / 0 reject; controls and historical positive paths were unchanged. Qualification fell from Build67 307583 ms to 58374 / 64253 ms (61313.5 ms mean, ~5.02x faster), while B/mild command time averaged 339687.5 ms versus Build66 544038 ms and the complete matrix averaged 1865221.5 ms versus Build66 2175687 ms. Build68 is promoted as the current qualified smartphone baseline.

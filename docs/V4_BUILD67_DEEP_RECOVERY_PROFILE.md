@@ -2,7 +2,7 @@
 
 Build67 is an **observability-only research build** derived from the qualified Build66 smartphone baseline. It is not a new baseline and it does not introduce a performance optimization. Its purpose is to determine where the remaining deep-recovery wall time is actually spent before Build68 changes implementation details.
 
-The current qualified smartphone baseline remains **Build66**.
+At the Build67 profiling checkpoint, the qualified smartphone baseline was **Build66**; Build68 later superseded it after the two-run qualification gate.
 
 ## Frozen semantics
 
@@ -154,3 +154,30 @@ Use the retained B/mild profile to select Build68:
 - if speculative work is material, consider a scheduling-only Build68 experiment that reduces wasted physical work while retaining strict Build66 logical order.
 
 No Build68 optimization should be chosen before the Build67 physical profile is available.
+
+## Returned qualified-host profile
+
+The retained Go 1.26.0 run has now been completed. The semantic-equivalence gate passed on all nine cases.
+
+For `B/mild` the returned profile is:
+
+```text
+bank:                       937
+qualified:                  935
+logical decode candidates:  691
+logical list frames:         2120047
+physical decode candidates:  696
+speculative candidates:      5
+physical list frames:        2135407
+geometry:                    288049 ms
+plane prep:                  272 ms
+qualification:               307583 ms
+decode wall:                 35828 ms
+sampling worker:             263093 ms
+list worker:                 7061 ms
+HMAC/payload:                PASS
+```
+
+For `B/angle`, geometry dominates (`807359 ms` of `814433 ms` deep time) and qualification remains small (`6824 ms`) because none of the `6198` frozen candidates survives to protected-data decode.
+
+The `B/mild` result selects qualification implementation overhead as the first Build68 target. Inspection shows that full-pilot qualification rebuilds `newPixelPlane(img)` inside `experimentalV4DetectPilotProjective` even though `experimentalV4PhoneBuild41Qualify` already owns a plane. Build68 therefore tests exact plane reuse only; see [`V4_BUILD68_QUALIFICATION_PLANE_REUSE.md`](V4_BUILD68_QUALIFICATION_PLANE_REUSE.md).
