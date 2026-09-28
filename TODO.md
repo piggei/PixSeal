@@ -12,6 +12,18 @@
 This file contains open work only. Completed milestones belong in `HISTORY.md`
 and `CHANGELOG.md`.
 
+## Build71 ordered generation-four parallel candidate
+
+- [x] Close Build70 physical profiling as semantic-equivalence PASS on the qualified Go 1.26.0 host.
+- [x] Identify the dominant seed deterministically from public geometry evaluations.
+- [x] Establish that generation four (`single4 + pair4 + continuation4`) accounts for 56.5% of dominant-seed work on `B/mild` and 73.4% on `B/angle`.
+- [x] Preserve exact Build64/68 semantics while freezing generation-four inputs in original seed/traversal order.
+- [x] Evaluate generation-four subtrees with one bounded global worker pool and commit results strictly by frozen index.
+- [x] Add exact seed-reassembly regression, race/vet checks and a retained nine-photo gate.
+- [ ] Run `make v4-build71-phone-gen4-parallel-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build71-phone-physical-test` and archive `v4-phone private/build71-diagnostics`.
+- [ ] Promote Build71 only if the full semantic matrix and logical counters remain identical to Build68 and the performance benefit is reproducible.
+
 ## v0.3.0 — geometry research
 
 - [x] Build a bounded diagnostic direct/local lattice estimator separated from

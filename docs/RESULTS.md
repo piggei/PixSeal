@@ -1,3 +1,39 @@
+## v0.3.0-build71 ordered generation-four parallel candidate — pending physical run
+
+Build70 closed with exact semantic-equivalence PASS and identified generation four as the largest common independent region in the dominant branch. Build71 preserves the qualified Build68 bank/order and changes only scheduling: exact seed prefixes through `sibling3`, one frozen global task list, bounded parallel `single4 -> pair4 -> continuation4`, then strict original-index commit. Build68 remains the qualified baseline pending the Build71 physical gate.
+
+## v0.3.0-build70 dominant-seed genealogy profile — 2026-09-28
+
+The private Go 1.26.0 retained-corpus gate passed semantic equivalence on all nine smartphone cases. Dominant public-only branches and fourth-generation work were:
+
+| case | seed evals | dominant seed | pair/rank | dominant evals | dominant share | `sibling3` inputs | gen4 evals | gen4 share |
+|---|---:|---:|---|---:|---:|---:|---:|---:|
+| control/front | 17901 | 93 | 5/2 | 12782 | 71.4% | 33 | 2864 | 22.4% |
+| control/mild | 117483 | 98 | 5/4 | 112978 | 96.2% | 666 | 57120 | 50.6% |
+| control/angle | 21075 | 64 | 3/1 | 6962 | 33.0% | 10 | 800 | 11.5% |
+| B/mild | 79131 | 67 | 3/3 | 73922 | 93.4% | 593 | 41776 | 56.5% |
+| B/angle | 334749 | 98 | 6/4 | 267775 | 80.0% | 1363 | 196641 | 73.4% |
+
+This selects Build71 ordered generation-four scheduling; no geometry pruning or retuning is justified by Build70.
+
+## v0.3.0-build69 geometry-generation profile — 2026-09-28
+
+The private Go 1.26.0 retained-corpus gate passed semantic equivalence on all nine smartphone cases. The remaining geometry cost is strongly load-imbalanced rather than broadly distributed:
+
+| case | freeze ms | seed wall ms | max seed ms | max/seed-wall | max seed evals / total geometry evals | max seed bank / final bank |
+|---|---:|---:|---:|---:|---:|---:|
+| control/front | 66981 | 40108 | 38572 | 96.2% | 12782 / 18021 | 26 / 26 |
+| control/mild | 75176 | 360285 | 358584 | 99.5% | 112978 / 117609 | 810 / 810 |
+| control/angle | 61116 | 17667 | 17182 | 97.3% | 6962 / 21203 | 9 / 11 |
+| B/mild | 56083 | 169014 | 168398 | 99.6% | 73922 / 79259 | 937 / 937 |
+| B/angle | 54826 | 695422 | 693395 | 99.7% | 267775 / 334857 | 5486 / 6198 |
+
+The median seed duration remains only 660–893 ms across these cases. Adding more top-level seed workers therefore cannot materially shorten the runaway branch. Build70 profiles that branch genealogically before any intra-seed scheduling, caching or deduplication is attempted.
+
+## v0.3.0-build68 qualified plane-reuse result — 2026-09-28
+
+Two independent Go 1.26.0 retained-corpus runs preserved exact Build66/Build64 semantics. `B/mild` remained `79259` geometry evaluations, `937` bank, `935` qualified, `691` logical decode candidates and `2120047` logical list frames with HMAC/payload PASS; `B/angle` remained `6198/0` reject. Qualification measured `58374` and `64253` ms versus Build67 `307583` ms (mean `61313.5` ms, about `5.02x` faster / `-80.1%`). Build68 is the current qualified smartphone baseline.
+
 ## v0.3.0-build44 deterministic JPEG / Go 1.26 qualification — 2026-09-23
 
 Build44 physically closes the toolchain reproducibility issue discovered during Build43. The PixSeal-owned `internal/jpeglegacy` decoder reproduces the frozen pre-Go-1.26 raster contract when the project itself is compiled with Go 1.26.0.

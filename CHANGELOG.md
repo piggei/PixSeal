@@ -1,3 +1,30 @@
+## v0.3.0-build71 — 2026-09-28
+
+- Closes Build70 physical profiling as semantic-equivalence PASS over the qualified Build68 smartphone baseline.
+- Records a deterministic dominant seed on the difficult paths: `B/mild` seed 67 (pair/rank 3/3) contributes 73922/79131 seed evaluations; `B/angle` seed 98 (6/4) contributes 267775/334749.
+- Shows that the fourth generation (`single4 + pair4 + continuation4`) is the largest common parallelizable region: 41776 evaluations (56.5%) on dominant `B/mild`, 196641 (73.4%) on dominant `B/angle`, with 593/1363 frozen `sibling3` inputs.
+- Adds ordered generation-four parallel scheduling: exact Build64 prefix through `sibling3`, one bounded global pool for independent generation-four subtrees, then strict original-index commit.
+- Adds `v4-build71-phone-gen4-parallel-test`, `v4-build71-phone-physical-test`, exact seed-reassembly regressions and Build71 scheduling telemetry.
+- Changes no encoder, Format-v4 wire format, pilot, proposal/validation score, search bounds, keep counts, qualification thresholds, ECC/Hamming, whitening/HMAC domains, bank order or candidate/HMAC order. Build68 remains the qualified baseline pending the physical gate.
+
+## v0.3.0-build70 — 2026-09-28
+
+- Records the completed Build69 Go 1.26.0 physical profile: exact semantic-equivalence PASS with a single seed dominating 96.2–99.7% of seed-parallel wall time in all deep-recovery cases.
+- Adds an observability-only dominant-seed genealogy profiler over the unchanged qualified Build68 search.
+- Separates Build47 freeze evaluations from the 24 seed-branch evaluations and identifies the maximum-evaluation seed by frozen index, side-pair rank and rank within pair.
+- Records per-stage evaluation/state counts for baseline/root plus four pair/continuation/sibling generations, without changing score, bounds, retention, order, qualification, decode or HMAC semantics.
+- Adds `v4-build70-phone-seed-genealogy-test`, private `v4-build70-phone-physical-test`, `scripts/test-v4-build70-phone-corpus.sh` and `docs/V4_BUILD70_SEED_GENEALOGY_PROFILE.md`.
+- Build68 remains the current qualified smartphone baseline; Build70 is diagnostic only.
+
+## v0.3.0-build69 — 2026-09-28
+
+- Starts from the qualified Build68 smartphone baseline and changes geometry **observability only**.
+- Wraps the unchanged Build65/64 geometry-generation path with timing for initial plane preparation, Build47 freeze and seed-parallel execution.
+- Records summed seed-worker time plus per-seed min/median/max duration, evaluation count and retained-bank size while preserving original seed-index reassembly.
+- Keeps Build68 qualification plane reuse, Build66 ordered parallel decode, Build64 logical telemetry, all thresholds, bank order and first-logical-HMAC semantics unchanged.
+- Adds `v4-build69-phone-geometry-profile-test`, private `v4-build69-phone-physical-test`, `scripts/test-v4-build69-phone-corpus.sh` and `docs/V4_BUILD69_GEOMETRY_PROFILE.md`.
+- Build69 is an observational research snapshot only. Build68 remains the current qualified smartphone baseline until a later implementation optimization is separately proven equivalent and qualified.
+
 ## v0.3.0-build68 — 2026-09-25; qualified 2026-09-28
 
 - Selects the first implementation optimization directly from the completed Build67 physical profile.

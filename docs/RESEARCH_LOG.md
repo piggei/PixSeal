@@ -17,6 +17,12 @@ Rules for future entries:
 - private print-camera/scanner images are referenced by regression-case name only and
   are never copied into source archives.
 
+## Build68 promotion and Build69 hypothesis — 2026-09-28
+
+Build68 was promoted only after two independent retained-corpus runs reproduced exact logical semantics and the qualification-plane reuse improvement. Geometry timing varied substantially between the two runs and Build68 did not change geometry, so that variation is treated as host/runtime noise rather than credited to the optimization.
+
+The remaining cost is now dominated by blind geometry generation, most visibly on `B/angle`. A code audit found another plane construction inside the geometry path, but a single plane build costs only a few hundred milliseconds and cannot explain geometry stages lasting hundreds of seconds. Build69 therefore performs **measurement before optimization**: it preserves the exact Build68 geometry bank and order while timing the freeze and the existing independent seed branches. The next optimization must be chosen from this evidence, not from protected data, oracle geometry or HMAC outcome.
+
 ## Compact chronology
 
 | Build | Main question | Outcome |
@@ -1075,3 +1081,12 @@ The fixed Build51 stencil contains a different and more actionable point: `corne
 **Performance evidence.** Qualification falls from Build67 307583 ms to 58374 and 64253 ms (61313.5 ms mean, ~5.02x faster / -80.1%). B/mild command time is 317089 and 362286 ms (339687.5 ms mean) versus Build66 544038 ms (~1.60x / -37.6%). Full-matrix time is 1827596 and 1902847 ms (1865221.5 ms mean) versus Build66 2175687 ms (~1.166x / -14.3%). Geometry time varies substantially between runs and was not changed by Build68, so the promotion is grounded in exact semantics plus the repeated qualification reduction rather than attributing all wall-clock variation to the implementation change.
 
 **Decision.** Promote Build68 as the current qualified smartphone baseline. Preserve Build66 as the historical qualified ordered-parallel milestone and Build64 as the historical deep-recovery semantic checkpoint. Future Build69 work may target geometry-generation cost, especially the negative `B/angle` path, but must start from Build68 semantics and remain separate from this qualification promotion.
+
+
+## 2026-09-28 — Build69 physical profile closes as extreme single-seed imbalance
+
+The retained Go 1.26.0 nine-photo Build69 gate preserved exact Build68 semantics. In every deep-recovery case the slowest seed consumed 96.2–99.7% of the seed-parallel wall region, while median seed durations remained below one second. `B/mild` measured 168398/169014 ms max-seed/seed-wall and `B/angle` 693395/695422 ms. This rejects the hypothesis that more top-level seed workers alone can materially improve the critical path. Build70 is therefore observational only and profiles dominant-seed genealogy by generation before any intra-seed optimization.
+
+## Build70 physical result / Build71 selection — 2026-09-28
+
+The retained Go 1.26.0 Build70 gate passed exact Build68 semantics and identified the dominant seed genealogically. `B/mild` seed 67 (pair/rank 3/3) contributes 73922/79131 seed evaluations; `B/angle` seed 98 (6/4) contributes 267775/334749. The exact fourth-generation region (`single4 + pair4 + continuation4`) contributes 41776 evaluations (56.5%) on dominant `B/mild` and 196641 (73.4%) on dominant `B/angle`, with 593 and 1363 independent `sibling3` inputs. Build71 therefore tests a scheduling-only two-barrier design: seed prefixes through `sibling3`, then one bounded global generation-four pool with strict original-index commit. Build68 remains qualified until the physical gate proves exact equivalence and reproducible performance.

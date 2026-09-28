@@ -26,11 +26,13 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build68**.
+Current development snapshot: **v0.3.0-build71** (equivalence-preserving ordered generation-four parallel performance candidate over the qualified Build68 baseline).
 
 Latest qualified milestone: **v0.3.0-build68**. Build68 preserves the complete qualified Build66/Build64 smartphone semantics and removes repeated pixel-plane materialization from full-pilot qualification. Two independent Go 1.26.0 retained-corpus runs reproduced exact semantic equivalence. On `B/mild`, qualification fell from 307,583 ms in Build67 to 58,374 / 64,253 ms (61,313.5 ms mean, about 5.02x faster), while command wall time averaged 339,687.5 ms versus the Build66 baseline of 544,038 ms. The full nine-photo matrix averaged 1,865,221.5 ms versus 2,175,687 ms for Build66 (-14.3%).
 
 Stable release baseline: **v0.2.0**.
+
+Build69/70 physical profiling identified the remaining geometry bottleneck precisely. Build70 preserved the full Build68 matrix and found that one seed accounts for 93.4% of seed evaluations on `B/mild` and 80.0% on `B/angle`. Within that dominant seed, the fourth generation (`single4 + pair4 + continuation4`) accounts for 56.5% and 73.4% of evaluations respectively, fed by 593 and 1363 independent third-sibling states. Build71 therefore makes one scheduling-only experiment: all seeds first execute the exact Build64 prefix through `sibling3`; the resulting generation-four inputs are frozen in original seed/traversal order, evaluated by one bounded global worker pool, and committed strictly in that same order. Build68 remains the qualified baseline until the retained physical gate proves exact equivalence and a reproducible benefit.
 
 > **Build44 qualified milestone:** JPEG input now uses a project-controlled pure-Go pre-Go-1.26 decoder, eliminating the accidental dependency on the compiler standard library without retuning geometry. **Go 1.26.0 is now the qualified Build44 toolchain**: the deterministic-raster regression and the complete private Build43 smartphone matrix both pass unchanged. See [`docs/V4_BUILD44_DETERMINISTIC_JPEG.md`](docs/V4_BUILD44_DETERMINISTIC_JPEG.md) and [`docs/GO_TOOLCHAIN_COMPATIBILITY.md`](docs/GO_TOOLCHAIN_COMPATIBILITY.md).
 
@@ -72,6 +74,20 @@ The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
 
+
+## What v0.3.0-build71 adds
+
+The retained Build70 gate passed exact Build68 semantics and localized the critical path. On `B/mild`, dominant seed 67 (pair/rank 3/3) accounts for 73922 of 79131 seed evaluations; on `B/angle`, seed 98 (6/4) accounts for 267775 of 334749. The exact fourth generation (`single4 + pair4 + continuation4`) contributes 56.5% and 73.4% of those dominant branches, fed by 593 and 1363 independent `sibling3` hypotheses.
+
+Build71 is therefore a **scheduling-only performance candidate**. All seeds first execute the exact Build64 prefix through `sibling3`; every generation-four input is frozen in original seed/traversal order; one bounded global worker pool evaluates the independent fourth-generation subtrees; and results are committed strictly by frozen index. This avoids nested worker pools and preserves the complete Build68 bank/order before unchanged qualification and ordered protected-data decode. Build68 remains the current qualified smartphone baseline pending the physical gate. See [`docs/V4_BUILD71_GEN4_PARALLEL.md`](docs/V4_BUILD71_GEN4_PARALLEL.md).
+
+## Build70 physical result
+
+Build70 passed the retained nine-photo semantic-equivalence gate. It confirmed that no geometry retuning is justified: the actionable opportunity is implementation-level scheduling of already-independent fourth-generation proposal-only work. See [`docs/V4_BUILD70_SEED_GENEALOGY_PROFILE.md`](docs/V4_BUILD70_SEED_GENEALOGY_PROFILE.md).
+
+## Build69 physical result
+
+Build69 passed the retained nine-photo semantic-equivalence gate. Its timing profile rules out a simple "add more workers" explanation: the maximum seed accounts for 96.2% to 99.7% of the seed-parallel wall time in every deep-recovery case, while the median seed remains below 1 second. The next question is therefore where inside that single genealogical branch the combinatorial expansion occurs.
 
 ## What v0.3.0-build68 adds
 
