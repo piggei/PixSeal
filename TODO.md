@@ -12,12 +12,17 @@
 This file contains open work only. Completed milestones belong in `HISTORY.md`
 and `CHANGELOG.md`.
 
-## Build73 qualified ordered generation-three parallel baseline
+## Build75 ordered-parallel Build47 basin candidate
 
-- [x] `make v4-build73-phone-gen3-parallel-test` passed on the qualified Go 1.26.0 host.
-- [x] Two independent `make v4-build73-phone-physical-test` runs passed exact 9/9 semantic equivalence.
-- [x] Performance gain reproduced; Build73 promoted as current qualified smartphone baseline.
-- [ ] Preserve Build73 unchanged while the next snapshot profiles the remaining freeze/prefix2/gen3/gen4 cost before any further optimization.
+- [x] Close Build74 physical profiling as exact 9/9 semantic-equivalence PASS on Go 1.26.0.
+- [x] Select basin generation from retained evidence (~77–79% of freeze; 16 independent tasks).
+- [x] Freeze the exact historical production/depth/all-pairs basin task order before parallel work.
+- [x] Add one bounded basin worker pool and strict original-index commit.
+- [x] Add direct Build75-vs-Build47 frozen-bank/order/proposal-count regression.
+- [x] Keep pair scoring, cells, all thresholds, qualification, ECC/Hamming and HMAC semantics unchanged.
+- [x] Run `make v4-build75-phone-basin-parallel-test` on the qualified Go 1.26.0 host.
+- [x] Run `make v4-build75-phone-physical-test` twice and archive both retained results.
+- [x] Promote after exact semantic equivalence and reproducible performance improvement: Build75 is the current qualified baseline.
 
 ## v0.3.0 — geometry research
 
@@ -509,3 +514,8 @@ and `CHANGELOG.md`.
 - [x] Run the Build68 regressions on the qualified Go 1.26.0 host: PASS.
 - [x] Run the complete retained nine-photo Build68 physical gate twice: exact semantic PASS in both runs.
 - [x] Promote Build68: repeated semantic PASS; mean B/mild qualification 61313.5 ms versus Build67 307583 ms (~5.02x), mean B/mild elapsed 339687.5 ms versus Build66 544038 ms, and mean full matrix 1865221.5 ms versus 2175687 ms.
+
+## Next research step after Build75
+
+- [ ] Re-evaluate residual geometry wall time before any further optimization.
+- [ ] Preserve Build75 as the immutable qualified baseline while testing later scheduling changes in separate builds.

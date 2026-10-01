@@ -36,7 +36,7 @@ Commands:
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
-  v4-extract-phone EXPERIMENTAL: Build73 qualified ordered generation-three parallel phone baseline + authenticated v4 decode
+  v4-extract-phone EXPERIMENTAL: Build75 qualified phone baseline + authenticated v4 decode
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
   v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
@@ -861,7 +861,7 @@ func printV4ScannerDiagnostics(w io.Writer, info watermark.ExperimentalV4Extract
 }
 
 func v4ExtractPhone(args []string) error {
-	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build73 qualified ordered generation-three parallel phone baseline; geometry bank/order and recovery semantics remain unchanged.")
+	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL qualified Build75 ordered-parallel Build47 basin generation; physical basin computation may finish out of order but frozen-bank commit remains historical and deterministic.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
@@ -961,6 +961,12 @@ func printV4PhoneDiagnostics(w io.Writer, decoderID string, info watermark.Exper
 	}
 	if p.Build73Attempted {
 		fmt.Fprintf(w, "build73-gen3-parallel: attempted=true prefix2-workers=%d gen3-workers=%d gen4-workers=%d gen3-tasks=%d gen4-tasks=%d plane-prep-ms=%d freeze-ms=%d prefix2-wall-ms=%d prefix2-worker-ms=%d gen3-wall-ms=%d gen3-worker-ms=%d gen4-wall-ms=%d gen4-worker-ms=%d gen3-min-ms=%d gen3-median-ms=%d gen3-max-ms=%d gen3-min-evals=%d gen3-max-evals=%d gen3-min-outputs=%d gen3-max-outputs=%d\n", p.Build73Prefix2Workers, p.Build73Gen3Workers, p.Build73Gen4Workers, p.Build73Gen3Tasks, p.Build73Gen4Tasks, p.Build73GeometryPlanePrepMs, p.Build73GeometryFreezeMs, p.Build73Prefix2WallMs, p.Build73Prefix2WorkerMs, p.Build73Gen3WallMs, p.Build73Gen3WorkerMs, p.Build73Gen4WallMs, p.Build73Gen4WorkerMs, p.Build73Gen3MinMs, p.Build73Gen3MedianMs, p.Build73Gen3MaxMs, p.Build73Gen3MinEvals, p.Build73Gen3MaxEvals, p.Build73Gen3MinOutputs, p.Build73Gen3MaxOutputs)
+	}
+	if p.Build74Attempted {
+		fmt.Fprintf(w, "build74-freeze-profile: attempted=true total-ms=%d structural-ms=%d plane-ms=%d pair-ms=%d cells-ms=%d basin-ms=%d production-basin-ms=%d depth-basin-ms=%d allpairs-basin-ms=%d pair-evals=%d cell-evals=%d basin-evals=%d production-evals=%d depth-evals=%d allpairs-evals=%d pair-tasks=%d cell-tasks=%d basin-tasks=%d production-tasks=%d depth-tasks=%d allpairs-tasks=%d basin-min-ms=%d basin-median-ms=%d basin-max-ms=%d basin-min-evals=%d basin-max-evals=%d basin-min-outputs=%d basin-max-outputs=%d\n", p.Build74FreezeTotalMs, p.Build74FreezeStructuralMs, p.Build74FreezePlanePrepMs, p.Build74FreezePairScoreMs, p.Build74FreezeCellsMs, p.Build74FreezeBasinMs, p.Build74FreezeProductionBasinMs, p.Build74FreezeDepthBasinMs, p.Build74FreezeAllPairsBasinMs, p.Build74FreezePairScoreEvals, p.Build74FreezeCellEvals, p.Build74FreezeBasinEvals, p.Build74FreezeProductionBasinEvals, p.Build74FreezeDepthBasinEvals, p.Build74FreezeAllPairsBasinEvals, p.Build74FreezePairScoreTasks, p.Build74FreezeCellTasks, p.Build74FreezeBasinTasks, p.Build74FreezeProductionBasinTasks, p.Build74FreezeDepthBasinTasks, p.Build74FreezeAllPairsBasinTasks, p.Build74FreezeBasinMinMs, p.Build74FreezeBasinMedianMs, p.Build74FreezeBasinMaxMs, p.Build74FreezeBasinMinEvals, p.Build74FreezeBasinMaxEvals, p.Build74FreezeBasinMinOutputs, p.Build74FreezeBasinMaxOutputs)
+	}
+	if p.Build75Attempted {
+		fmt.Fprintf(w, "build75-basin-parallel: attempted=true freeze-total-ms=%d structural-ms=%d plane-ms=%d pair-ms=%d cells-ms=%d basin-workers=%d basin-tasks=%d basin-wall-ms=%d basin-worker-ms=%d production-worker-ms=%d depth-worker-ms=%d allpairs-worker-ms=%d basin-evals=%d production-evals=%d depth-evals=%d allpairs-evals=%d production-tasks=%d depth-tasks=%d allpairs-tasks=%d basin-min-ms=%d basin-median-ms=%d basin-max-ms=%d basin-min-evals=%d basin-max-evals=%d basin-min-outputs=%d basin-max-outputs=%d\n", p.Build75FreezeTotalMs, p.Build75FreezeStructuralMs, p.Build75FreezePlanePrepMs, p.Build75FreezePairScoreMs, p.Build75FreezeCellsMs, p.Build75BasinWorkers, p.Build75BasinTasks, p.Build75BasinWallMs, p.Build75BasinWorkerMs, p.Build75ProductionBasinWorkerMs, p.Build75DepthBasinWorkerMs, p.Build75AllPairsBasinWorkerMs, p.Build75BasinEvals, p.Build75ProductionBasinEvals, p.Build75DepthBasinEvals, p.Build75AllPairsBasinEvals, p.Build75ProductionBasinTasks, p.Build75DepthBasinTasks, p.Build75AllPairsBasinTasks, p.Build75BasinMinMs, p.Build75BasinMedianMs, p.Build75BasinMaxMs, p.Build75BasinMinEvals, p.Build75BasinMaxEvals, p.Build75BasinMinOutputs, p.Build75BasinMaxOutputs)
 	}
 	fmt.Fprintf(w, "hmac: authenticated=%t fallback-attempted=%t fallback-authenticated=%t\n", p.HMACAuthenticated, p.FallbackAttempted, p.FallbackAuthenticated)
 	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)

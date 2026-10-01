@@ -1,3 +1,7 @@
+## v0.3.0-build75 ordered-parallel Build47 basin candidate — physical run pending
+
+Build75 is the current qualified smartphone baseline. Build74 first measured the residual Build47 freeze and showed basin generation at ~77–79% of freeze across the deep cases. Build75 then froze that exact 16-task production/depth/all-pairs stream, computed basin calls with one bounded pool and committed strictly in historical order. Two independent Go 1.26.0 physical runs passed the complete 9/9 semantic matrix with exact Build73 logical counters. Their full-matrix mean is 836,722.5 ms versus retained Build73 1,047,729 ms (-20.1%). No bank/order or recovery decision changed.
+
 ## v0.3.0-build73 qualified ordered generation-three parallel baseline — 2026-09-28
 
 Two independent retained Go 1.26.0 runs pass exact 9/9 semantic equivalence. `B/mild` remains 79,259 geometry evaluations / 937 bank / 935 qualified / 691 logical decode / 2,120,047 logical frames with HMAC/payload PASS; `B/angle` remains 334,857 / 6,198 / 0 and REJECT. Full-matrix elapsed is 1,014,434 / 1,047,729 ms versus retained Build71 1,263,623 ms. Two-run means are 1,031,081.5 ms full matrix (~1.226x / -18.4%), 249,240 ms `B/mild` (~1.135x / -11.9%) and 291,559.5 ms `B/angle` (~1.416x / -29.4%). Build73 is promoted as the current qualified smartphone baseline.

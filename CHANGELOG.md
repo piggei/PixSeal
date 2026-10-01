@@ -1,3 +1,36 @@
+## v0.3.0-build75 — qualified ordered-parallel Build47 basin baseline
+
+- Promotes Build75 after **two independent retained Go 1.26.0 nine-photo physical runs** passed exact semantic equivalence.
+- Preserves B/mild at `79259 / 937 / 935 / 691 / 2120047`, physical decode `696` with `5` speculative candidates, HMAC/payload PASS; B/angle remains `334857 / 6198 / 0` and REJECT.
+- Two-run mean full matrix: `836722.5 ms` vs Build73 reference `1047729 ms` (`1.252x`, `-20.1%`).
+- B/mild two-run mean `202688.5 ms` vs `247690 ms` (`1.222x`, `-18.2%`); B/angle `251578 ms` vs `306153 ms` (`1.217x`, `-17.8%`).
+- Build75 becomes the current qualified smartphone baseline; Build73 remains the historical qualified generation-three milestone.
+
+- Closes Build74 physical profiling as exact semantic-equivalence PASS on the retained nine-photo Go 1.26.0 matrix.
+- Records the dominant freeze cost: basin generation is ~77–79% of Build47 freeze across the deep cases, with 16 independent tasks (4 production, 4 depth, 8 all-pairs); pair scoring is the main remaining serial freeze cost.
+- Freezes the exact historical basin task stream in original tier/pair/cell order, computes it with one bounded worker pool, stores results by task index and commits strictly in original order.
+- Preserves pair ranking, cell generation, proposal count, frozen bank/order and provenance exactly; no pruning, score, threshold, qualification, ECC/Hamming, whitening/HMAC or candidate-order change.
+- Adds direct Build75-vs-Build47 frozen-bank equality regressions, basin scheduling telemetry, `v4-build75-phone-basin-parallel-test` and `v4-build75-phone-physical-test`.
+- Build75 is promoted as the current qualified smartphone baseline after two independent retained Go 1.26.0 physical runs.
+
+## v0.3.0-build74 — Build47 freeze-stage profiling snapshot
+
+- Starts from the qualified Build73 smartphone baseline and changes observability only.
+- Reproduces the exact Build47 freeze algorithm in a separate profiled helper and adds a direct candidate-by-candidate equality regression against the historical Build47 implementation.
+- Separates freeze wall time into structural-line seeding, pixel-plane construction, side-pair robust ranking, cell ranking and basin generation.
+- Separates basin generation by Build47 tier: production, selected-pair depth and all-pair extension; records task counts, helper-evaluation counts and basin min/median/max work.
+- Preserves Build73 prefix2/gen3/gen4 scheduling, final bank/order, Build68 qualification plane reuse, Build66 ordered decode and first-logical-HMAC semantics.
+- Adds `v4-build74-phone-freeze-profile-test` and retained `v4-build74-phone-physical-test`; Build73 remains qualified and Build74 is explicitly non-promotable.
+
+## v0.3.0-build73 — qualified ordered generation-three parallel smartphone baseline
+
+- Promotes Build73 after **two independent retained Go 1.26.0 nine-photo physical runs** passed exact semantic equivalence.
+- Preserves `B/mild` at 79,259 geometry evaluations / 937 bank / 935 qualified / 691 logical decode candidates / 2,120,047 logical list frames with HMAC and payload PASS; `B/angle` remains 334,857 / 6,198 / 0 and REJECT; all controls and historical positives remain unchanged.
+- Reproduces the performance benefit: full-matrix elapsed 1,014,434 / 1,047,729 ms versus retained Build71 1,263,623 ms (mean ~1.226x, -18.4%); `B/mild` mean 249,240 ms (~1.135x); `B/angle` mean 291,559.5 ms (~1.416x).
+- Build73 changes only public-only scheduling: exact prefix through `sibling2`, ordered global generation-three pool, then the already-qualified ordered generation-four pool.
+- Changes no encoder, Format-v4 wire format, pilot, score, threshold, keep count, qualification, ECC/Hamming, whitening/HMAC domain, candidate order or first-logical-HMAC semantics.
+- Build71 remains the historical qualified ordered-generation-four milestone; Build68 remains the historical qualified plane-reuse milestone; Build64 remains the deep-recovery semantic reference.
+
 ## v0.3.0-build73 — ordered generation-three parallel performance candidate
 
 - Closes the Build72 Go 1.26.0 physical profile as semantic-equivalence PASS on the complete nine-photo matrix.

@@ -195,6 +195,62 @@ type ExperimentalV4PhoneInfo struct {
 	Build73Gen3MaxEvals                int
 	Build73Gen3MinOutputs              int
 	Build73Gen3MaxOutputs              int
+	Build74Attempted                   bool
+	Build74FreezeTotalMs               int64
+	Build74FreezeStructuralMs          int64
+	Build74FreezePlanePrepMs           int64
+	Build74FreezePairScoreMs           int64
+	Build74FreezeCellsMs               int64
+	Build74FreezeBasinMs               int64
+	Build74FreezeProductionBasinMs     int64
+	Build74FreezeDepthBasinMs          int64
+	Build74FreezeAllPairsBasinMs       int64
+	Build74FreezePairScoreEvals        int
+	Build74FreezeCellEvals             int
+	Build74FreezeBasinEvals            int
+	Build74FreezeProductionBasinEvals  int
+	Build74FreezeDepthBasinEvals       int
+	Build74FreezeAllPairsBasinEvals    int
+	Build74FreezePairScoreTasks        int
+	Build74FreezeCellTasks             int
+	Build74FreezeBasinTasks            int
+	Build74FreezeProductionBasinTasks  int
+	Build74FreezeDepthBasinTasks       int
+	Build74FreezeAllPairsBasinTasks    int
+	Build74FreezeBasinMinMs            int64
+	Build74FreezeBasinMedianMs         int64
+	Build74FreezeBasinMaxMs            int64
+	Build74FreezeBasinMinEvals         int
+	Build74FreezeBasinMaxEvals         int
+	Build74FreezeBasinMinOutputs       int
+	Build74FreezeBasinMaxOutputs       int
+	Build75Attempted                   bool
+	Build75FreezeTotalMs               int64
+	Build75FreezeStructuralMs          int64
+	Build75FreezePlanePrepMs           int64
+	Build75FreezePairScoreMs           int64
+	Build75FreezeCellsMs               int64
+	Build75BasinWorkers                int
+	Build75BasinTasks                  int
+	Build75BasinWallMs                 int64
+	Build75BasinWorkerMs               int64
+	Build75ProductionBasinWorkerMs     int64
+	Build75DepthBasinWorkerMs          int64
+	Build75AllPairsBasinWorkerMs       int64
+	Build75BasinEvals                  int
+	Build75ProductionBasinEvals        int
+	Build75DepthBasinEvals             int
+	Build75AllPairsBasinEvals          int
+	Build75ProductionBasinTasks        int
+	Build75DepthBasinTasks             int
+	Build75AllPairsBasinTasks          int
+	Build75BasinMinMs                  int64
+	Build75BasinMedianMs               int64
+	Build75BasinMaxMs                  int64
+	Build75BasinMinEvals               int
+	Build75BasinMaxEvals               int
+	Build75BasinMinOutputs             int
+	Build75BasinMaxOutputs             int
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -1147,11 +1203,11 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
-		// Build73 ordered generation-three parallelism preserves the exact qualified Build71 recovery semantics and is allowed to run even when Build41/43 cannot form the
+		// Build75 ordered-parallel basin scheduling wraps the qualified Build73 recovery semantics and is allowed to run even when Build41/43 cannot form the
 		// historical two-geometry production ensemble. Its complete deep bank is
 		// frozen proposal-only before qualification or HMAC are read. Build73 changes only public-only scheduling: generation-three and generation-four task results are committed in the exact original order before qualification or HMAC are read.
-		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild73Recover(work, boundary, key, cw, ch)
-		experimentalV4PhoneBuild73ApplyTelemetry(&public, recovery64)
+		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild75Recover(work, boundary, key, cw, ch)
+		experimentalV4PhoneBuild75ApplyTelemetry(&public, recovery64)
 		if err64 == nil {
 			public.ProjectiveBasinFound = true
 			public.Accepted = true
@@ -1250,12 +1306,12 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 
-	// Build73 ordered generation-three parallel candidate wraps the qualified Build71 deep-recovery fallback. This remains deliberately last so all
+	// Build75 ordered-parallel basin scheduling wraps the qualified Build73 deep-recovery fallback. This remains deliberately last so all
 	// Build44-qualified paths remain untouched. The complete deep geometry bank
 	// is generated proposal-only and frozen before held-out qualification or
 	// HMAC are consulted. HMAC remains final frame authentication only.
-	payload64, info64, recovery64, err64 := experimentalV4PhoneBuild73Recover(work, boundary, key, cw, ch)
-	experimentalV4PhoneBuild73ApplyTelemetry(&public, recovery64)
+	payload64, info64, recovery64, err64 := experimentalV4PhoneBuild75Recover(work, boundary, key, cw, ch)
+	experimentalV4PhoneBuild75ApplyTelemetry(&public, recovery64)
 	if err64 == nil {
 		public.ProjectiveBasinFound = true
 		public.Accepted = true

@@ -1125,3 +1125,18 @@ The retained Go 1.26.0 Build70 gate passed exact Build68 semantics and identifie
 **Performance.** Full-matrix elapsed is 1014434 / 1047729 ms versus retained Build71 1263623 ms. `B/mild` is 250790 / 247690 ms versus 282958 ms; `B/angle` is 276966 / 306153 ms versus 412755 ms. The two-run means correspond to ~1.226x full-matrix, ~1.135x B/mild and ~1.416x B/angle speedup.
 
 **Decision.** Promote Build73 as the current qualified smartphone baseline. Preserve exact prefix2/gen3/gen4 ordered commits, Build68 qualification-plane reuse and Build66 first-logical-HMAC semantics. The next snapshot must profile the residual freeze/prefix2/gen3/gen4 cost before further optimization.
+
+
+## Build73 promotion -> Build74 freeze-stage profile — 2026-09-28
+
+**Observation.** Build73 is qualified after two exact-semantic physical runs. Residual deep geometry is no longer dominated by one serial prefix branch. The Build47 freeze remains comparatively stable at roughly 49–64 seconds across the deep cases; `B/angle` generation four remains larger but already scales close to the eight-worker limit.
+
+**Build74 rule.** Do not optimize yet. Preserve the exact Build73 scheduler and replace only the Build47 freeze call with a separately named, line-for-line equivalent profiled implementation. Measure structural seeding, plane materialization, pair robust ranking, cell generation and basin generation; split basin work by production/depth/all-pairs tier and record task/evaluation distributions. Preserve the historical proposal-count return contract so qualified geometry telemetry is unchanged.
+
+**Decision rule.** Build74 is non-promotable. Its retained Go 1.26.0 physical profile selects any later Build75 implementation target.
+
+## Build74 physical profile -> Build75 ordered basin pool — 2026-10-01
+
+**Build74 result.** The retained Go 1.26.0 nine-photo gate is semantic-equivalence PASS. Deep-case freeze totals are 54.945 s control/front, 55.203 s control/mild, 62.086 s control/angle, 61.776 s B/mild and 55.501 s B/angle. Basin generation accounts for 42.956, 43.126, 47.749, 47.712 and 43.836 s respectively (~77–79%); pair scoring is the next serial cost at 10.656–13.403 s. Every deep case executes 16 basin tasks: 4 production, 4 depth and 8 all-pairs.
+
+**Build75 rule.** Do not alter pair ranking, cell ranking, basin algorithm, proposal score, thresholds or bank retention. Freeze all basin inputs in exact Build47 traversal order, run the independent public-only basin calls in one bounded pool, store each result at its task index and perform the historical maxFrozen/proposal-count commit strictly in index order. Build73 remains qualified until the full physical gate is reproduced.

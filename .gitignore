@@ -34,3 +34,6 @@ Thumbs.db
 
 # Local comparative test reports
 /reports/
+
+# Local diagnostic/report archives
+*.zip
