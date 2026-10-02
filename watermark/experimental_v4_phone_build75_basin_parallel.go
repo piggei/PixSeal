@@ -10,8 +10,8 @@ import (
 	"time"
 )
 
-// Build75 is the qualified smartphone performance baseline. It preserves the
-// exact Build73 search semantics while changing only Build47 basin scheduling: the exact
+// Build75 is an equivalence-preserving performance candidate over the qualified
+// Build73 phone baseline. It changes only Build47 basin scheduling: the exact
 // historical basin task stream is frozen in original tier/pair/cell order,
 // computed by one bounded worker pool, then committed strictly by task index.
 // Pair ranking, cell generation, proposal counting, frozen-bank order and all

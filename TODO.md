@@ -1,16 +1,36 @@
-# Build44 status
+## Build79 checkpoint
 
-- [x] Preserve the qualified Build43 watermark/geometry/data path unchanged.
-- [x] Add a project-controlled pure-Go pre-Go-1.26 JPEG decoder and deterministic raster fixture.
-- [x] Route CLI JPEG ingest through the deterministic decoder instead of the toolchain standard library.
-- [x] Qualify the unchanged private strength-48 phone matrix with Go 1.26.0; controls 3/3 reject and A/front, A/mild, A/angle, B/front authenticate.
-- [x] Promote Go 1.26.0 as the qualified Build44 toolchain after the deterministic JPEG and physical gates pass.
-- [x] Resume geometry research on B/mild and B/angle from the deterministic JPEG / Go 1.26 baseline; Builds45–64 close this line with qualified B/mild recovery without secret/data-guided geometry.
+- [x] Keep Build76 immutable as the current qualified smartphone baseline.
+- [x] Record Build78 retained physical evidence: exact 9/9 semantic equivalence and FoldScore >99.9% of continuation4 worker time on B/mild/B/angle.
+- [x] Instrument continuation4 FoldScore with exact tile/pilot/block counters.
+- [x] Add deterministic public-order 1/64 block-read timing samples.
+- [x] Replay one successful sampled block after the authoritative score to separate mapPoint, bilinear luminance sampling and DCT accumulation.
+- [x] Prove FoldScore output equality, continuation state equality and complete Build79-vs-Build76 blind-bank equality.
+- [x] Add an atomic retained nine-photo semantic gate.
+- [ ] Run Build79 on the qualified Go 1.26.0 host.
+- [ ] Select or reject a Build80 implementation optimization from the measured map/sample/DCT shares.
+- [ ] Do not promote Build79 from timing; instrumentation intentionally perturbs runtime.
 
-# PixSeal TODO
+## Build78 checkpoint
 
-This file contains open work only. Completed milestones belong in `HISTORY.md`
-and `CHANGELOG.md`.
+- [x] Keep Build76 immutable as the current qualified smartphone baseline.
+- [x] Reproduce the exact Build76 scheduling and bank/order.
+- [x] Instrument only the existing Build55 continuation4 loop.
+- [x] Prove direct continuation output equality and complete Build78-vs-Build76 blind-bank equality.
+- [x] Add an atomic retained nine-photo semantic gate.
+- [x] Run Build78 on the qualified Go 1.26.0 host: exact 9/9 semantic-equivalence PASS.
+- [x] Conclude that FoldScore dominates continuation4: 99.92% B/mild and 99.91% B/angle.
+- [x] Keep Build78 non-promotable; fine-grained instrumentation intentionally perturbs runtime.
+
+## Build77 generation-four profiler
+
+- [x] Keep Build76 immutable as the current qualified smartphone baseline.
+- [x] Reproduce the exact Build76 freeze/prefix1/gen2/gen3/gen4 scheduling and ordered commits.
+- [x] Instrument only existing `single4`, `pair4` and `continuation4` work.
+- [x] Prove Build77 blind-bank equality against Build76 on synthetic regression.
+- [x] Add an atomic retained nine-photo semantic gate.
+- [x] Run Build77 on the qualified Go 1.26.0 host: exact 9/9 semantic equivalence PASS.
+- [x] Select Build78 from public-only evidence: continuation4 is the largest B/angle gen4 component while the outer pool is already saturated.
 
 ## Build75 ordered-parallel Build47 basin candidate
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-Build73 is the **current qualified smartphone baseline**. Promotion is supported by two independent retained Go 1.26.0 physical runs with exact 9/9 semantic equivalence and reproducible performance.
+Build73 is a **historical qualified smartphone milestone**, later superseded by Build75 and Build76. Promotion is supported by two independent retained Go 1.26.0 physical runs with exact 9/9 semantic equivalence and reproducible performance.
 
 ## Evidence from Build72
 
@@ -94,4 +94,4 @@ Correctness remained authoritative. Both independent retained Go 1.26.0 runs pas
 
 Two-run mean full-matrix elapsed is **1,031,081.5 ms** (~1.226x / -18.4% versus Build71). `B/mild` averages **249,240 ms** (~1.135x / -11.9%); `B/angle` averages **291,559.5 ms** (~1.416x / -29.4%).
 
-Semantic counters remain exact: `B/mild` 79,259 / 937 / 935 / 691 / 2,120,047 with HMAC/payload PASS; `B/angle` 334,857 / 6,198 / 0 with REJECT. Build73 is promoted as the current qualified smartphone baseline.
+Semantic counters remain exact: `B/mild` 79,259 / 937 / 935 / 691 / 2,120,047 with HMAC/payload PASS; `B/angle` 334,857 / 6,198 / 0 with REJECT. Build73 was promoted as the qualified smartphone baseline at this checkpoint and was later superseded by Build75 and Build76.

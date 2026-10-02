@@ -1,3 +1,44 @@
+## v0.3.0-build79 — FoldScore kernel profiling
+
+- Keep Build76 as the qualified smartphone baseline; Build79 is observability-only and non-promotable from timing.
+- Record the retained Build78 physical result: exact 9/9 semantic-equivalence PASS, with FoldScore accounting for 99.92% of B/mild continuation4 worker time and 99.91% of B/angle.
+- Add an exact arithmetic copy of Build41 FoldScore for continuation4 profiling, protected by direct score/visible equivalence regression.
+- Count every continuation4 FoldScore tile, pilot position and projective block read without changing score arithmetic or bank order.
+- Add a deterministic public-order 1/64 timing sample for block-read share.
+- Replay one successful sampled block only after the authoritative FoldScore completes, separating homography mapping, bilinear luminance sampling and DCT accumulation.
+- Add complete Build79-vs-Build76 blind-bank equality regression and an atomic retained nine-photo physical gate.
+- Add `make v4-build79-phone-foldscore-profile-test` and `make v4-build79-phone-physical-test`.
+- Keep `*.zip` ignored so local diagnostics archives are not committed accidentally.
+
+## v0.3.0-build78 — continuation4 internal profiling
+
+- Add an observability-only wrapper around the exact Build55 continuation4 coordinate-descent loop.
+- Record probe attempts, limit/homography rejects, score evaluations, invalid/non-improving/improving probes, accepted/duplicate states, pass counts and FoldScore-vs-preparation worker time.
+- Select the dominant continuation call deterministically by evaluation count and original traversal order.
+- Add direct continuation-output and complete blind-bank equivalence regressions against Build55/Build76.
+- Add atomic 9-photo Build78 diagnostics under `v4-phone private/build78-diagnostics/`.
+- Build76 remains the qualified smartphone baseline; Build78 is non-promotable profiling only.
+
+## v0.3.0-build77 — generation-four internal-cost profiling snapshot
+
+- Starts from the qualified Build76 smartphone baseline and changes observability only.
+- Preserves the exact Build76 freeze/prefix1/gen2/gen3/gen4 task stream, worker counts and original-index commits.
+- Decomposes existing generation-four work into `single4`, `pair4` and `continuation4` cumulative worker time, evaluation counts, call/output counts and a deterministic maximum-evaluation gen4 task.
+- Selects the dominant task only by public geometry evaluation count with original task index as tie-break; timing, oracle geometry, payload and HMAC are excluded.
+- Adds exact Build77-vs-Build76 blind-bank equality regression, `v4-build77-phone-gen4-profile-test` and the retained nine-photo `v4-build77-phone-physical-test`.
+- Build77 is diagnostic only and non-promotable from timing; Build76 remains the current qualified smartphone baseline.
+
+## v0.3.0-build76 — qualified ordered generation-two parallel baseline
+
+- Promotes Build76 after **two independent retained Go 1.26.0 nine-photo physical runs** passed exact semantic equivalence.
+- Preserves `B/mild` at `79259 / 937 / 935 / 691 / 2120047`, physical decode `696` with `5` speculative candidates, HMAC/payload PASS; `B/angle` remains `334857 / 6198 / 0` and REJECT.
+- Two-run mean full matrix: `758102 ms` versus the qualified Build75 two-run mean `836722.5 ms` (`~1.104x`, `-9.4%`).
+- `B/mild` two-run mean `188750.5 ms` versus Build75 `202688.5 ms` (`~1.074x`, `-6.9%`); `B/angle` `226813 ms` versus `251578 ms` (`~1.109x`, `-9.8%`).
+- Geometry mean improves from `76149` to `60351.5 ms` on `B/mild` (`~1.262x`, `-20.7%`) and from `209554.5` to `183806.5 ms` on `B/angle` (`~1.140x`, `-12.3%`).
+- Changes only public geometry scheduling: exact prefix through `sibling1`, ordered global generation-two pool, then the already-qualified generation-three and generation-four pools. Build75 ordered-parallel freeze and all downstream qualification/decode/HMAC semantics remain unchanged.
+- Hardens the Build76 physical diagnostic writer: each run is staged in a temporary sibling directory and only published after the complete 9/9 gate passes, preventing an interrupted rerun from truncating a previously valid TSV/Markdown/log set.
+- Build76 becomes the **current qualified smartphone baseline**; Build75 remains the historical qualified ordered-basin milestone.
+
 ## v0.3.0-build75 — qualified ordered-parallel Build47 basin baseline
 
 - Promotes Build75 after **two independent retained Go 1.26.0 nine-photo physical runs** passed exact semantic equivalence.

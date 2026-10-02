@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+set -euo pipefail
+PIXSEAL="${PIXSEAL:?set PIXSEAL to the built pixseal executable}"
+ACQUISITION_DIR="${V4_PHONE_ACQUISITION_DIR:-v4-phone private/build38-acquired}"
+OUTPUT_DIR="${V4_PHONE_BUILD77_DIAGNOSTIC_DIR:-v4-phone private/build77-diagnostics}"
+KEY="${V4_PHONE_KEY:-PixSeal-v4-TestKey-2026}"
+CANONICAL_WIDTH="${V4_PHONE_CANONICAL_WIDTH:-1632}"
+CANONICAL_HEIGHT="${V4_PHONE_CANONICAL_HEIGHT:-1632}"
+MESSAGE_A="${V4_PHONE_MESSAGE_A:-v4-b38-phone-a}"
+MESSAGE_B="${V4_PHONE_MESSAGE_B:-v4-b38-phone-b}"
+PHONE_TIMEOUT="${V4_PHONE_BUILD77_TIMEOUT:-86400}"
+[[ -x "$PIXSEAL" ]] || { echo "error: PIXSEAL is not executable: $PIXSEAL" >&2; exit 1; }
+command -v timeout >/dev/null 2>&1 || { echo "error: GNU timeout is required" >&2; exit 1; }
+[[ -d "$ACQUISITION_DIR" ]] || { echo "error: phone acquisition directory not found: $ACQUISITION_DIR" >&2; exit 1; }
+[[ "$PHONE_TIMEOUT" =~ ^[0-9]+$ ]] || { echo "error: V4_PHONE_BUILD77_TIMEOUT must be an integer number of seconds" >&2; exit 1; }
+specs=(
+ "phone-control-front.jpg|control|control|-"
+ "phone-control-mild.jpg|control|control|-"
+ "phone-control-angle.jpg|control|control|-"
+ "phone-a-front.jpg|A|required-build43|$MESSAGE_A"
+ "phone-a-mild.jpg|A|required-any|$MESSAGE_A"
+ "phone-a-angle.jpg|A|required-direct|$MESSAGE_A"
+ "phone-b-front.jpg|B|required-direct|$MESSAGE_B"
+ "phone-b-mild.jpg|B|required-build77|$MESSAGE_B"
+ "phone-b-angle.jpg|B|required-reject|$MESSAGE_B"
+)
+for spec in "${specs[@]}"; do IFS='|' read -r file _ <<< "$spec"; [[ -f "$ACQUISITION_DIR/$file" ]] || { echo "error: missing required acquisition: $ACQUISITION_DIR/$file" >&2; exit 1; }; done
+output_parent="$(dirname "$OUTPUT_DIR")"
+output_base="$(basename "$OUTPUT_DIR")"
+mkdir -p "$output_parent"
+stage_dir="$(mktemp -d "$output_parent/.${output_base}.build77.XXXXXX")"
+published=false
+cleanup_stage(){ if [[ "$published" != true && -d "$stage_dir" ]]; then rm -rf "$stage_dir"; fi; }
+trap cleanup_stage EXIT
+mkdir -p "$stage_dir/logs"
+tsv="$stage_dir/build77-phone-gen4-profile.tsv"; md="$stage_dir/build77-phone-gen4-profile.md"
+final_tsv="$OUTPUT_DIR/build77-phone-gen4-profile.tsv"; final_md="$OUTPUT_DIR/build77-phone-gen4-profile.md"
+printf 'image\tclass\trole\tbuild64_evals\tbuild64_bank\tbuild64_qualified\tbuild64_decode\tbuild64_frames\tbuild64_authenticated\tbuild68_physical_decode\tbuild68_speculative\tbuild75_attempted\tbuild76_attempted\tbuild77_attempted\tgen4_workers\tgen4_tasks\tgen4_wall_ms\tgen4_worker_ms\tsingle4_calls\tsingle4_accepted\tpair4_calls\tpair4_outputs\tcontinue4_calls\tcontinue4_outputs\tsingle4_evals\tpair4_evals\tcontinue4_evals\tsingle4_worker_ms\tpair4_worker_ms\tcontinue4_worker_ms\tdominant_task\tdominant_evals\tdominant_bank\tdominant_single4_ms\tdominant_pair4_ms\tdominant_continue4_ms\tdominant_single4_evals\tdominant_pair4_evals\tdominant_continue4_evals\thmac\tpayload_match\ttelemetry_equivalent\tqualification\texit_code\telapsed_ms\tgeometry_ms\tfreeze_ms\tprefix1_ms\tgen2_ms\tgen3_ms\n' > "$tsv"
+extract_re(){ local pattern="$1" file="$2" default_value="${3:-}" value; value="$(sed -nE "s/$pattern/\\1/p" "$file" | head -n1)"; [[ -n "$value" ]] && printf '%s' "$value" || printf '%s' "$default_value"; }
+for spec in "${specs[@]}"; do
+ IFS='|' read -r file class role expected_payload <<< "$spec"; input="$ACQUISITION_DIR/$file"; stem="${file%.*}"; log="$stage_dir/logs/$stem.stderr.txt"; payload_file="$stage_dir/logs/$stem.payload.bin"
+ start_ns="$(date +%s%N)"; set +e; timeout --foreground "${PHONE_TIMEOUT}s" "$PIXSEAL" v4-extract-phone -in "$input" -key "$KEY" -width "$CANONICAL_WIDTH" -height "$CANONICAL_HEIGHT" -raw >"$payload_file" 2>"$log"; rc=$?; set -e; end_ns="$(date +%s%N)"; elapsed_ms=$(( (end_ns-start_ns)/1000000 ))
+ hmac="$(extract_re 'hmac: authenticated=([^ ]+).*' "$log" false)"; b43_attempted=false; b43_auth=false; if grep -q '^build43-geometry:' "$log"; then b43_attempted=true; b43_auth="$(extract_re 'build43-geometry: .* authenticated=([^ ]+).*' "$log" false)"; fi
+ b64_attempted=false;b64_evals=0;b64_bank=0;b64_qualified=0;b64_decode=0;b64_frames=0;b64_auth=false
+ if grep -q '^build64-recovery:' "$log"; then b64_attempted=true; b64_evals="$(extract_re 'build64-recovery: .* geometry-evals=([0-9]+).*' "$log" 0)"; b64_bank="$(extract_re 'build64-recovery: .* bank=([0-9]+).*' "$log" 0)"; b64_qualified="$(extract_re 'build64-recovery: .* qualified=([0-9]+).*' "$log" 0)"; b64_decode="$(extract_re 'build64-recovery: .* decode-candidates=([0-9]+).*' "$log" 0)"; b64_frames="$(extract_re 'build64-recovery: .* list-frames=([0-9]+).*' "$log" 0)"; b64_auth="$(extract_re 'build64-recovery: .* authenticated=([^ ]+).*' "$log" false)"; fi
+ b65=false; grep -q '^build65-parallel:' "$log" && b65=true; b66=false;b66_workers=0; if grep -q '^build66-decode-parallel:' "$log"; then b66=true;b66_workers="$(extract_re 'build66-decode-parallel: .* workers=([0-9]+).*' "$log" 0)"; fi
+ b68=false;b68_physical=0;b68_spec=0;geometry_ms=0;if grep -q '^build68-plane-reuse:' "$log";then b68=true;b68_physical="$(extract_re 'build68-plane-reuse: .* physical-decode-candidates=([0-9]+).*' "$log" 0)";b68_spec="$(extract_re 'build68-plane-reuse: .* speculative-candidates=([0-9]+).*' "$log" 0)";geometry_ms="$(extract_re 'build68-plane-reuse: .* geometry-ms=([0-9]+).*' "$log" 0)";fi
+ b73=false;grep -q '^build73-gen3-parallel:' "$log"&&b73=true;b75=false;grep -q '^build75-basin-parallel:' "$log"&&b75=true;b76=false;grep -q '^build76-gen2-parallel:' "$log"&&b76=true;b77=false;grep -q '^build77-gen4-profile:' "$log"&&b77=true
+ gen4_workers=0;gen4_tasks=0;gen4_wall=0;gen4_worker=0;freeze=0;prefix1=0;gen2=0;gen3=0
+ if [[ "$b76" == true ]]; then gen4_workers="$(extract_re 'build76-gen2-parallel: .* gen4-workers=([0-9]+).*' "$log" 0)";gen4_tasks="$(extract_re 'build76-gen2-parallel: .* gen4-tasks=([0-9]+).*' "$log" 0)";gen4_wall="$(extract_re 'build76-gen2-parallel: .* gen4-wall-ms=([0-9]+).*' "$log" 0)";gen4_worker="$(extract_re 'build76-gen2-parallel: .* gen4-worker-ms=([0-9]+).*' "$log" 0)";freeze="$(extract_re 'build76-gen2-parallel: .* freeze-ms=([0-9]+).*' "$log" 0)";prefix1="$(extract_re 'build76-gen2-parallel: .* prefix1-wall-ms=([0-9]+).*' "$log" 0)";gen2="$(extract_re 'build76-gen2-parallel: .* gen2-wall-ms=([0-9]+).*' "$log" 0)";gen3="$(extract_re 'build76-gen2-parallel: .* gen3-wall-ms=([0-9]+).*' "$log" 0)";fi
+ single_calls=0;single_acc=0;pair_calls=0;pair_out=0;cont_calls=0;cont_out=0;single_e=0;pair_e=0;cont_e=0;single_ms=0;pair_ms=0;cont_ms=0;dom_task=0;dom_e=0;dom_bank=0;dom_single_ms=0;dom_pair_ms=0;dom_cont_ms=0;dom_single_e=0;dom_pair_e=0;dom_cont_e=0
+ if [[ "$b77" == true ]]; then single_calls="$(extract_re 'build77-gen4-profile: .* single4-calls=([0-9]+).*' "$log" 0)";single_acc="$(extract_re 'build77-gen4-profile: .* single4-accepted=([0-9]+).*' "$log" 0)";pair_calls="$(extract_re 'build77-gen4-profile: .* pair4-calls=([0-9]+).*' "$log" 0)";pair_out="$(extract_re 'build77-gen4-profile: .* pair4-outputs=([0-9]+).*' "$log" 0)";cont_calls="$(extract_re 'build77-gen4-profile: .* continue4-calls=([0-9]+).*' "$log" 0)";cont_out="$(extract_re 'build77-gen4-profile: .* continue4-outputs=([0-9]+).*' "$log" 0)";single_e="$(extract_re 'build77-gen4-profile: .* single4-evals=([0-9]+).*' "$log" 0)";pair_e="$(extract_re 'build77-gen4-profile: .* pair4-evals=([0-9]+).*' "$log" 0)";cont_e="$(extract_re 'build77-gen4-profile: .* continue4-evals=([0-9]+).*' "$log" 0)";single_ms="$(extract_re 'build77-gen4-profile: .* single4-worker-ms=([0-9]+).*' "$log" 0)";pair_ms="$(extract_re 'build77-gen4-profile: .* pair4-worker-ms=([0-9]+).*' "$log" 0)";cont_ms="$(extract_re 'build77-gen4-profile: .* continue4-worker-ms=([0-9]+).*' "$log" 0)";dom_task="$(extract_re 'build77-gen4-profile: .* dominant-task=([0-9]+).*' "$log" 0)";dom_e="$(extract_re 'build77-gen4-profile: .* dominant-evals=([0-9]+).*' "$log" 0)";dom_bank="$(extract_re 'build77-gen4-profile: .* dominant-bank=([0-9]+).*' "$log" 0)";dom_single_ms="$(extract_re 'build77-gen4-profile: .* dominant-single4-ms=([0-9]+).*' "$log" 0)";dom_pair_ms="$(extract_re 'build77-gen4-profile: .* dominant-pair4-ms=([0-9]+).*' "$log" 0)";dom_cont_ms="$(extract_re 'build77-gen4-profile: .* dominant-continue4-ms=([0-9]+).*' "$log" 0)";dom_single_e="$(extract_re 'build77-gen4-profile: .* dominant-single4-evals=([0-9]+).*' "$log" 0)";dom_pair_e="$(extract_re 'build77-gen4-profile: .* dominant-pair4-evals=([0-9]+).*' "$log" 0)";dom_cont_e="$(extract_re 'build77-gen4-profile: .* dominant-continue4-evals=([0-9]+).*' "$log" 0)";fi
+ case "$file" in phone-control-front.jpg) exp_evals=18021;exp_bank=26;exp_qual=0;exp_decode=0;exp_frames=0;; phone-control-mild.jpg) exp_evals=117609;exp_bank=810;exp_qual=6;exp_decode=6;exp_frames=18432;; phone-control-angle.jpg) exp_evals=21203;exp_bank=11;exp_qual=0;exp_decode=0;exp_frames=0;; phone-b-mild.jpg) exp_evals=79259;exp_bank=937;exp_qual=935;exp_decode=691;exp_frames=2120047;; phone-b-angle.jpg) exp_evals=334857;exp_bank=6198;exp_qual=0;exp_decode=0;exp_frames=0;; *) exp_evals=0;exp_bank=0;exp_qual=0;exp_decode=0;exp_frames=0;; esac
+ telemetry=true
+ if [[ "$exp_evals" -gt 0 ]];then [[ "$b64_attempted" == true && "$b64_evals" -eq "$exp_evals" && "$b64_bank" -eq "$exp_bank" && "$b64_qualified" -eq "$exp_qual" && "$b64_decode" -eq "$exp_decode" && "$b64_frames" -eq "$exp_frames" && "$b65" == true && "$b66" == true && "$b68" == true && "$b73" == true && "$b75" == true && "$b76" == true && "$b77" == true && "$gen4_tasks" -eq "$single_calls" && "$gen4_workers" -gt 0 ]]||telemetry=false; if [[ "$exp_qual" -gt 0 ]];then [[ "$b66_workers" -gt 0 && "$b68_physical" -ge "$b64_decode" && "$b68_spec" -eq $((b68_physical-b64_decode)) ]]||telemetry=false; [[ "$b64_auth" == false || "$b68_spec" -lt "$b66_workers" ]]||telemetry=false;else [[ "$b66_workers" -eq 0 && "$b68_physical" -eq 0 && "$b68_spec" -eq 0 ]]||telemetry=false;fi; else [[ "$b64_attempted" == false && "$b73" == false && "$b75" == false && "$b76" == false && "$b77" == false ]]||telemetry=false;fi
+ payload_match='-';qualification=INFO
+ if [[ "$role" == control ]];then [[ $rc -ne 0 && "$hmac" == false && "$b64_auth" == false ]]&&qualification=PASS||qualification=FAIL;else if [[ $rc -eq 0 ]];then actual="$(cat "$payload_file")";[[ "$actual" == "$expected_payload" ]]&&payload_match=true||payload_match=false;else payload_match=false;fi;case "$role" in required-direct) [[ $rc -eq 0 && "$payload_match" == true && "$hmac" == true && "$b43_attempted" == false && "$b64_attempted" == false ]]&&qualification=PASS||qualification=FAIL;; required-build43) [[ $rc -eq 0 && "$payload_match" == true && "$hmac" == true && "$b43_attempted" == true && "$b43_auth" == true && "$b64_attempted" == false ]]&&qualification=PASS||qualification=FAIL;; required-any) [[ $rc -eq 0 && "$payload_match" == true && "$hmac" == true && "$b64_attempted" == false ]]&&qualification=PASS||qualification=FAIL;; required-build77) [[ $rc -eq 0 && "$payload_match" == true && "$hmac" == true && "$b64_auth" == true && "$b77" == true ]]&&qualification=PASS||qualification=FAIL;; required-reject) [[ $rc -ne 0 && "$hmac" == false && "$b64_auth" == false && "$b77" == true ]]&&qualification=PASS||qualification=FAIL;; esac;fi
+ [[ "$telemetry" == true ]]||qualification=FAIL
+ printf '%s\t%s\t%s\t%d\t%d\t%d\t%d\t%d\t%s\t%d\t%d\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%d\t%s\t%s\t%s\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t%d\n' "$file" "$class" "$role" "$b64_evals" "$b64_bank" "$b64_qualified" "$b64_decode" "$b64_frames" "$b64_auth" "$b68_physical" "$b68_spec" "$b75" "$b76" "$b77" "$gen4_workers" "$gen4_tasks" "$gen4_wall" "$gen4_worker" "$single_calls" "$single_acc" "$pair_calls" "$pair_out" "$cont_calls" "$cont_out" "$single_e" "$pair_e" "$cont_e" "$single_ms" "$pair_ms" "$cont_ms" "$dom_task" "$dom_e" "$dom_bank" "$dom_single_ms" "$dom_pair_ms" "$dom_cont_ms" "$dom_single_e" "$dom_pair_e" "$dom_cont_e" "$hmac" "$payload_match" "$telemetry" "$qualification" "$rc" "$elapsed_ms" "$geometry_ms" "$freeze" "$prefix1" "$gen2" "$gen3" >> "$tsv"
+done
+{
+ echo '# PixSeal Build77 generation-four stage profile';echo
+ echo 'Build77 is observability-only over the qualified Build76 baseline. It preserves the exact Build76 geometry bank/order and scheduling while timing existing single4, pair4 and continuation4 work. Fine-grained timing overhead makes Build77 non-promotable.';echo
+ echo '| image | role | evals | bank | qual | decode | frames | gen4 tasks | gen4 wall | gen4 worker | single4 ms | pair4 ms | cont4 ms | single4 evals | pair4 evals | cont4 evals | dom task | dom evals | HMAC | telemetry eq | elapsed | geometry | gate |'
+ echo '|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|'
+ tail -n +2 "$tsv" | awk -F '\t' '{printf "| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |\n",$1,$3,$4,$5,$6,$7,$8,$16,$17,$18,$28,$29,$30,$25,$26,$27,$31,$32,$40,$42,$45,$46,$43}'
+ echo; echo 'Correctness is authoritative. Build76 remains the qualified baseline; Build77 timing exists only to select a later computational optimization.'
+} > "$md"
+rm -f "$stage_dir/logs/"*.payload.bin
+pass_count="$(awk -F '\t' 'NR>1&&$43=="PASS"{n++}END{print n+0}' "$tsv")";control_passes="$(awk -F '\t' 'NR>1&&$3=="control"&&$43=="PASS"{n++}END{print n+0}' "$tsv")";a_front_pass="$(awk -F '\t' 'NR>1&&$1=="phone-a-front.jpg"&&$43=="PASS"{n++}END{print n+0}' "$tsv")";a_mild_pass="$(awk -F '\t' 'NR>1&&$1=="phone-a-mild.jpg"&&$43=="PASS"{n++}END{print n+0}' "$tsv")";a_angle_pass="$(awk -F '\t' 'NR>1&&$1=="phone-a-angle.jpg"&&$43=="PASS"{n++}END{print n+0}' "$tsv")";b_front_pass="$(awk -F '\t' 'NR>1&&$1=="phone-b-front.jpg"&&$43=="PASS"{n++}END{print n+0}' "$tsv")";b_mild_pass="$(awk -F '\t' 'NR>1&&$1=="phone-b-mild.jpg"&&$43=="PASS"{n++}END{print n+0}' "$tsv")";b_angle_pass="$(awk -F '\t' 'NR>1&&$1=="phone-b-angle.jpg"&&$43=="PASS"{n++}END{print n+0}' "$tsv")"
+echo "Build77 staged result: controls=${control_passes}/3 A/front=${a_front_pass}/1 A/mild=${a_mild_pass}/1 A/angle=${a_angle_pass}/1 B/front=${b_front_pass}/1 B/mild=${b_mild_pass}/1 B/angle-reject=${b_angle_pass}/1"
+if ((pass_count!=9||control_passes!=3||a_front_pass!=1||a_mild_pass!=1||a_angle_pass!=1||b_front_pass!=1||b_mild_pass!=1||b_angle_pass!=1));then echo 'error: Build77 semantic-equivalence physical gate not met' >&2;exit 1;fi
+mkdir -p "$OUTPUT_DIR"; rm -rf "$OUTPUT_DIR/logs"; mv "$stage_dir/logs" "$OUTPUT_DIR/logs"; mv "$tsv" "$final_tsv"; mv "$md" "$final_md"; rmdir "$stage_dir"; published=true
+echo 'Build77 generation-four profile written to:'; echo "  $final_tsv"; echo "  $final_md"; echo 'Build77 semantic-equivalence physical gate: PASS'

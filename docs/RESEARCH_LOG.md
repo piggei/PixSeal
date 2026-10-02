@@ -1140,3 +1140,45 @@ The retained Go 1.26.0 Build70 gate passed exact Build68 semantics and identifie
 **Build74 result.** The retained Go 1.26.0 nine-photo gate is semantic-equivalence PASS. Deep-case freeze totals are 54.945 s control/front, 55.203 s control/mild, 62.086 s control/angle, 61.776 s B/mild and 55.501 s B/angle. Basin generation accounts for 42.956, 43.126, 47.749, 47.712 and 43.836 s respectively (~77–79%); pair scoring is the next serial cost at 10.656–13.403 s. Every deep case executes 16 basin tasks: 4 production, 4 depth and 8 all-pairs.
 
 **Build75 rule.** Do not alter pair ranking, cell ranking, basin algorithm, proposal score, thresholds or bank retention. Freeze all basin inputs in exact Build47 traversal order, run the independent public-only basin calls in one bounded pool, store each result at its task index and perform the historical maxFrozen/proposal-count commit strictly in index order. Build73 remains qualified until the full physical gate is reproduced.
+
+## Build76 qualification and Build77 hypothesis — 2026-10-01
+
+Two independent Go 1.26.0 physical runs reproduced exact Build75 semantics while confirming the ordered generation-two scheduling gain. The full nine-photo matrix measured 764,104 and 752,100 ms, for a 758,102 ms mean versus the Build75 two-run mean 836,722.5 ms (-9.4%). B/mild remains exactly 79,259 geometry evaluations / 937 bank / 935 qualified / 691 logical decode / 2,120,047 logical list frames with physical decode 696, five speculative candidates and HMAC/payload PASS. B/angle remains 334,857 / 6,198 / 0 and rejects.
+
+The residual profile changes the optimization question. On the second Build76 run, B/angle spends about 20.7 s in freeze, 5.5 s in prefix1, 8.9 s in gen2, 37.0 s in gen3 and **110.8 s in gen4**. Gen4 cumulative worker time is 884.3 s, giving ~7.98x effective utilization on eight workers. B/mild shows the same saturation pattern at gen4. Therefore another scheduling-barrier move is not justified by the evidence.
+
+A later interrupted invocation exposed a diagnostics publication issue: it truncated the already-completed second-run TSV while the successful Markdown matrix remained intact. This does not affect recovery evidence; the finalized gate now stages all diagnostics and publishes only after a complete 9/9 PASS.
+
+**Decision.** Promote Build76 as the current qualified smartphone baseline. Build77 must be observability-only and decompose internal generation-four work (`single4`, `pair4`, `continuation4`) without changing the Build76 bank, order, scheduling, qualification or protected-data semantics. Any later optimization must be selected from those public-only measurements.
+
+## Build77 generation-four profiling plan — 2026-10-01
+
+Build76 is now qualified after two independent exact-semantic runs. Its residual B/angle profile is dominated by generation four, but that region already reaches ~7.98x effective worker utilization on eight workers. This rules out another simple scheduling-barrier move as the evidence-based next step.
+
+Build77 therefore changes observability only. It preserves the exact Build76 bank and task order while timing the existing single4, pair4 and continuation4 operations. The deterministic maximum-evaluation task is reported by evaluation count/original index; timing, oracle geometry and HMAC cannot influence selection.
+
+**Decision rule.** Any Build78 optimization must target the operation that Build77 shows to dominate public-only gen4 work and must re-prove exact Build76 bank/order before physical qualification.
+
+## Build77 generation-four profiling hypothesis — 2026-10-01
+
+Build76 is now qualified after two independent exact 9/9 runs. Its second run leaves B/angle generation four at 110,801 ms wall / 884,306 ms worker (~7.98x on eight workers), while B/mild is 18,365 / 146,841 ms (~8.00x). Because the pool is already saturated, another scheduling barrier is not justified.
+
+Build77 therefore changes observability only. For every existing Build76 generation-four task it times the unchanged `single4`, `pair4` and `continuation4` calls, counts their geometry evaluations and call/output fan-out, and records the deterministic maximum-evaluation task. The task identity is selected by evaluation count and original index only. Protected data, oracle geometry and HMAC do not participate.
+
+**Decision rule.** Build78 may optimize only the internal operation shown by Build77 to dominate public-only gen4 work, and must separately re-prove exact Build76 bank/order and logical semantics.
+## 2026-10-02 — Build77 retained gen4 profile and Build78 decision
+
+Build77 passed the complete retained nine-photo Go 1.26.0 semantic-equivalence gate. `B/mild` preserved 79,259 geometry evaluations / 937 bank / 935 qualified / 691 logical decode / 2,120,047 logical frames and authenticated; `B/angle` preserved 334,857 / 6,198 / 0 and rejected.
+
+Generation-four scheduling is already effectively saturated: B/mild measured 20,868 ms wall / 165,708 ms worker (~7.94x) and B/angle 121,551 / 971,006 ms (~7.99x). The internal worker split was B/mild single4 39,065 ms, pair4 62,994 ms, continuation4 63,643 ms; B/angle single4 126,386 ms, pair4 355,904 ms, continuation4 488,696 ms.
+
+**Decision.** Do not move another scheduling barrier. Build78 is observability-only and profiles the exact Build55 continuation4 loop internally: coordinate probe attempts, movement-limit/homography rejects, score evaluations, invalid/non-improving/improving probes, accepted/duplicate states, pass counts and FoldScore-vs-control-flow time. Dominant-call selection is by evaluation count and original traversal order only. Build76 remains the qualified baseline.
+
+## Build78 physical result -> Build79 FoldScore kernel profiling — 2026-10-02
+
+The retained Go 1.26.0 Build78 physical gate passed exact 9/9 semantic equivalence against the qualified Build76 smartphone baseline. `B/mild` remains `79259 / 937 / 935 / 691 / 2120047` for geometry-evals / bank / qualified / logical-decode-candidates / logical-list-frames and authenticates the retained payload; `B/angle` remains `334857 / 6198 / 0` and rejects. Controls and historical positive paths remain unchanged.
+
+Build78 localized continuation4 cost almost entirely inside `experimentalV4PhoneBuild41FoldScore`: B/mild spent 67,777 of 67,832 ms continuation worker time in FoldScore (99.92%), while B/angle spent 500,211 of 500,652 ms (99.91%). B/mild executed 16,496 valid continuation score evaluations, of which 15,557 (94.31%) were non-improving; B/angle executed 118,004 FoldScore evaluations after 476 movement-limit rejects, with 111,801 valid non-improving scores (94.74%). Neither difficult case showed homography rejects, invalid scores or duplicate accepted states.
+
+This rules out continuation bookkeeping, homography construction failure and accepted-state deduplication as material optimization targets. Build79 therefore keeps the complete qualified Build76 recovery semantics frozen and profiles the FoldScore kernel itself, using exact low-overhead counters for every continuation FoldScore call plus a deterministic 1/64 timing sample and post-result block replay to separate homography mapping, bilinear luminance sampling and DCT accumulation. Build79 remains observability-only and non-promotable from timing.
+

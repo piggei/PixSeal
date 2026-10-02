@@ -1,6 +1,6 @@
 # Format-v4 Build75 — ordered-parallel Build47 basin generation
 
-Build75 is the **current qualified smartphone baseline**. It preserves the exact Build73 search semantics and changes only the physical scheduling of Build47 basin generation. Promotion is supported by two independent retained Go 1.26.0 physical runs.
+Build75 is a **historical qualified smartphone milestone**, superseded by Build76. It preserves the exact Build73 search semantics and changes only the physical scheduling of Build47 basin generation. Promotion is supported by two independent retained Go 1.26.0 physical runs.
 
 ## Evidence from Build74
 
@@ -64,7 +64,7 @@ v4-phone private/build75-diagnostics/build75-phone-basin-parallel.tsv
 v4-phone private/build75-diagnostics/build75-phone-basin-parallel.md
 ```
 
-The gate compares total/geometry time with retained Build73 and freeze/basin time with retained Build74. Correctness is authoritative; Build75 is the current qualified baseline after two independent retained Go 1.26.0 physical runs.
+The gate compares total/geometry time with retained Build73 and freeze/basin time with retained Build74. Correctness is authoritative; Build75 was promoted at this checkpoint after two independent retained Go 1.26.0 physical runs and was later superseded by Build76.
 
 ## Qualified physical result
 
