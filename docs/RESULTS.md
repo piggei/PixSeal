@@ -1,3 +1,11 @@
+## v0.3.0-build81 exact luminance LUT — physical run pending
+
+Build81 is the next equivalence-preserving performance candidate over qualified Build76. It replaces only the three RGB-to-luminance multiplications inside continuation4 FoldScore with exact 256-entry float64 product tables. Local regression requires exhaustive RGB equality and complete Build76 blind-bank equality.
+
+## v0.3.0-build80 exact local luminance cache — rejected
+
+The physical run preserved the qualified geometry but regressed runtime. Full matrix was 806,849 ms versus the Build76 mean 758,102 ms (+6.4%); B/angle geometry was 211,148 ms versus 183,806.5 ms (+14.9%). B/angle had zero cache hits and 149,370,664 valid fallbacks. The original gate also incorrectly treated zero cache hits as a telemetry failure; that harness bug did not affect recovery semantics. Build80 is rejected as a performance candidate.
+
 ## v0.3.0-build75 ordered-parallel Build47 basin candidate — physical run pending
 
 Build75 was the qualified smartphone baseline at that checkpoint and is now the historical ordered-basin milestone superseded by Build76. Build74 first measured the residual Build47 freeze and showed basin generation at ~77–79% of freeze across the deep cases. Build75 then froze that exact 16-task production/depth/all-pairs stream, computed basin calls with one bounded pool and committed strictly in historical order. Two independent Go 1.26.0 physical runs passed the complete 9/9 semantic matrix with exact Build73 logical counters. Their full-matrix mean is 836,722.5 ms versus retained Build73 1,047,729 ms (-20.1%). No bank/order or recovery decision changed.
@@ -1541,3 +1549,8 @@ Build78 localized continuation4 cost almost entirely inside `experimentalV4Phone
 
 This rules out continuation bookkeeping, homography construction failure and accepted-state deduplication as material optimization targets. Build79 therefore keeps the complete qualified Build76 recovery semantics frozen and profiles the FoldScore kernel itself, using exact low-overhead counters for every continuation FoldScore call plus a deterministic 1/64 timing sample and post-result block replay to separate homography mapping, bilinear luminance sampling and DCT accumulation. Build79 remains observability-only and non-promotable from timing.
 
+## Build79 physical result -> Build80 exact local luminance cache — 2026-10-02
+
+The retained Go 1.26.0 Build79 physical gate passed the exact 9/9 semantic-equivalence matrix against qualified Build76. B/mild remains 79,259 geometry evaluations / 937 bank / 935 qualified / 691 logical decode / 2,120,047 logical list frames with HMAC/payload PASS; B/angle remains 334,857 / 6,198 / 0 and REJECT. Build79 measured 21,114,880 authoritative projective block reads on B/mild and 151,045,120 on B/angle. In the deterministic FoldScore sample, block reads consumed 1,041 / 1,071 ms (97.20%) on B/mild and 7,236 / 7,424 ms (97.47%) on B/angle. Post-result replay indicated bilinear luminance sampling is the largest subcomponent inside `readProjectiveBlockValue`, while mapping and DCT are smaller.
+
+Build80 therefore changes only continuation4 FoldScore block sampling. For mapped 8x8 blocks whose integer-source bounding rectangle is at most 196 pixels, it computes each exact float64 RGB-to-luminance value once into a FoldScore-local scratch cache, then performs the same bilinear interpolation and DCT accumulation order as the historical reader. Larger footprints fall back to the untouched historical block reader. The cache decision depends only on public geometry. Local regressions require bit-identical block values and FoldScore output, exact Build55 continuation states/evaluation counts, and exact complete Build80-vs-Build76 blind-bank equality. Build76 remains the qualified smartphone baseline until Build80 passes and reproduces the retained physical gate.

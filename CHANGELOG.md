@@ -1,3 +1,25 @@
+## v0.3.0-build81 — exact luminance LUT candidate
+
+- Keep Build76 as the current qualified smartphone baseline.
+- Record Build80 as a rejected performance candidate: semantics remained exact, but full-matrix runtime regressed to 806,849 ms (+6.4% versus the Build76 mean) and B/angle geometry regressed to 211,148 ms (+14.9%).
+- Replace only continuation4 FoldScore RGB-to-luminance channel multiplications with three 256-entry `float64` product lookup tables.
+- Preserve source coordinates, floor/clamp, arithmetic addition order, bilinear interpolation, DCT accumulation, search thresholds, bank/order, qualification and protected-data semantics.
+- Add exhaustive 16,777,216 RGB-triplet equality, sample/block/FoldScore bit equality, Build55 continuation equality and complete Build81-vs-Build76 blind-bank equality regressions.
+- Add `make v4-build81-phone-luminance-lut-test` and `make v4-build81-phone-physical-test`; failed physical gates preserve diagnostics atomically.
+
+
+> Build80 harness revision: failed physical gates now preserve staged TSV/Markdown/logs in `v4-phone private/build80-diagnostics-failed/` and report a per-case gate reason. Recovery/cache logic is unchanged.
+## v0.3.0-build80 — exact local luminance cache candidate
+
+- Keep Build76 as the qualified smartphone baseline; Build80 is a performance candidate pending physical reproduction.
+- Use an exact bounded local integer-luminance cache only inside continuation4 FoldScore block reads.
+- Preserve homography coordinates, RGB→luma arithmetic, bilinear interpolation order, DCT accumulation order, thresholds, bank/order and all protected-data semantics.
+- Fall back to the original block reader when a mapped 8x8 block needs more than 196 integer source pixels.
+- Add bit-level block/FoldScore equivalence, Build55 continuation equality and complete Build80-vs-Build76 blind-bank equality regressions.
+- Add low-overhead cache hit/fallback/failure telemetry and atomic nine-photo physical diagnostics.
+- Fix the Build79 TSV-format failure mode in the new gate by emitting rows from field arrays rather than a manually counted printf format string.
+- Add `make v4-build80-phone-luminance-cache-test` and `make v4-build80-phone-physical-test`.
+
 ## v0.3.0-build79 — FoldScore kernel profiling
 
 - Keep Build76 as the qualified smartphone baseline; Build79 is observability-only and non-promotable from timing.

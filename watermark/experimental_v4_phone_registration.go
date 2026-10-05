@@ -437,6 +437,19 @@ type ExperimentalV4PhoneInfo struct {
 	Build79ReplaySampleMs                     int64
 	Build79ReplayDCTMs                        int64
 	Build79ReplayFailures                     int
+	Build80Attempted                          bool
+	Build80CacheBlockReads                    int
+	Build80CacheHits                          int
+	Build80CacheFallbacks                     int
+	Build80CacheFailed                        int
+	Build80CachePixelsPrepared                int64
+	Build80CacheMaxArea                       int
+	Build80CacheLimit                         int
+	Build81Attempted                          bool
+	Build81LUTFoldScores                      int
+	Build81LUTBlockReads                      int
+	Build81LUTBlockSuccess                    int
+	Build81LUTBlockFailed                     int
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -1389,11 +1402,12 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
-		// Build79 is an observability-only wrapper over the qualified Build76 recovery semantics.
-		// It preserves the exact public-only bank and ordered gen2/gen3/gen4 scheduling while
-		// profiling the FoldScore kernel used by continuation4 before qualification or HMAC are read.
-		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild79Recover(work, boundary, key, cw, ch)
-		experimentalV4PhoneBuild79ApplyTelemetry(&public, recovery64)
+		// Build81 is an equivalence-preserving performance candidate over the qualified
+		// Build76 recovery semantics. Only continuation4 FoldScore RGB->luminance
+		// products are replaced by exact float64 lookup tables; geometry ordering and
+		// all protected-data semantics remain unchanged.
+		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild81Recover(work, boundary, key, cw, ch)
+		experimentalV4PhoneBuild81ApplyTelemetry(&public, recovery64)
 		if err64 == nil {
 			public.ProjectiveBasinFound = true
 			public.Accepted = true

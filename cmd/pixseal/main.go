@@ -36,7 +36,7 @@ Commands:
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
-  v4-extract-phone EXPERIMENTAL: Build76 qualified phone baseline + Build79 FoldScore kernel profiling + authenticated v4 decode
+  v4-extract-phone EXPERIMENTAL: Build76 qualified phone baseline + Build81 exact luminance LUT candidate + authenticated v4 decode
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
   v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
@@ -861,7 +861,7 @@ func printV4ScannerDiagnostics(w io.Writer, info watermark.ExperimentalV4Extract
 }
 
 func v4ExtractPhone(args []string) error {
-	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build79 FoldScore kernel profiling over the qualified Build76 phone baseline; geometry bank/order and protected-data semantics remain unchanged.")
+	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build81 exact luminance LUT candidate over the qualified Build76 phone baseline; geometry bank/order and protected-data semantics remain unchanged.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
@@ -979,6 +979,12 @@ func printV4PhoneDiagnostics(w io.Writer, decoderID string, info watermark.Exper
 	}
 	if p.Build79Attempted {
 		fmt.Fprintf(w, "build79-foldscore-profile: attempted=true workers=%d gen4-tasks=%d continue4-calls=%d continue4-outputs=%d continue4-evals=%d continue4-worker-ms=%d score-worker-ms=%d prepare-worker-ms=%d fold-calls=%d tiles=%d pilot-positions=%d block-reads=%d block-success=%d block-failed=%d visible=%d fold-worker-ms=%d sample-mod=%d sampled-fold-calls=%d sampled-fold-ms=%d sampled-block-read-ms=%d sampled-overhead-ms=%d detailed-blocks=%d detailed-pixels=%d replay-map-ms=%d replay-sample-ms=%d replay-dct-ms=%d replay-failures=%d dominant-gen4-task=%d dominant-gen4-evals=%d dominant-call=%d dominant-call-evals=%d\n", p.Build79Gen4Workers, p.Build79Gen4Tasks, p.Build79Continue4Calls, p.Build79Continue4Outputs, p.Build79Continue4Evals, p.Build79Continue4WorkerMs, p.Build79Continue4ScoreWorkerMs, p.Build79Continue4PrepareWorkerMs, p.Build79FoldCalls, p.Build79FoldTiles, p.Build79FoldPilotPositions, p.Build79FoldBlockReads, p.Build79FoldBlockSuccess, p.Build79FoldBlockFailed, p.Build79FoldVisible, p.Build79FoldWorkerMs, p.Build79KernelSampleMod, p.Build79SampledFoldCalls, p.Build79SampledFoldMs, p.Build79SampledBlockReadMs, p.Build79SampledFoldOverheadMs, p.Build79DetailedBlocks, p.Build79DetailedPixels, p.Build79ReplayMapMs, p.Build79ReplaySampleMs, p.Build79ReplayDCTMs, p.Build79ReplayFailures, p.Build79DominantGen4Task, p.Build79DominantGen4Evals, p.Build79DominantContinueCall, p.Build79DominantContinueEvals)
+	}
+	if p.Build80Attempted {
+		fmt.Fprintf(w, "build80-luminance-cache: attempted=true block-reads=%d cache-hits=%d cache-fallbacks=%d cache-failed=%d cache-pixels=%d cache-max-area=%d cache-limit=%d\n", p.Build80CacheBlockReads, p.Build80CacheHits, p.Build80CacheFallbacks, p.Build80CacheFailed, p.Build80CachePixelsPrepared, p.Build80CacheMaxArea, p.Build80CacheLimit)
+	}
+	if p.Build81Attempted {
+		fmt.Fprintf(w, "build81-luminance-lut: attempted=true fold-scores=%d block-reads=%d block-success=%d block-failed=%d\n", p.Build81LUTFoldScores, p.Build81LUTBlockReads, p.Build81LUTBlockSuccess, p.Build81LUTBlockFailed)
 	}
 	fmt.Fprintf(w, "hmac: authenticated=%t fallback-attempted=%t fallback-authenticated=%t\n", p.HMACAuthenticated, p.FallbackAttempted, p.FallbackAuthenticated)
 	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)

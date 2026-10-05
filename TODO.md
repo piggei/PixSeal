@@ -1,15 +1,27 @@
-## Build79 checkpoint
+## Build81 checkpoint
 
 - [x] Keep Build76 immutable as the current qualified smartphone baseline.
-- [x] Record Build78 retained physical evidence: exact 9/9 semantic equivalence and FoldScore >99.9% of continuation4 worker time on B/mild/B/angle.
-- [x] Instrument continuation4 FoldScore with exact tile/pilot/block counters.
-- [x] Add deterministic public-order 1/64 block-read timing samples.
-- [x] Replay one successful sampled block after the authoritative score to separate mapPoint, bilinear luminance sampling and DCT accumulation.
-- [x] Prove FoldScore output equality, continuation state equality and complete Build79-vs-Build76 blind-bank equality.
-- [x] Add an atomic retained nine-photo semantic gate.
-- [ ] Run Build79 on the qualified Go 1.26.0 host.
-- [ ] Select or reject a Build80 implementation optimization from the measured map/sample/DCT shares.
-- [ ] Do not promote Build79 from timing; instrumentation intentionally perturbs runtime.
+- [x] Record Build80 as semantically exact but performance-regressing and reject it.
+- [x] Remove all Build80 bounding-box/cache/fallback work from the active candidate.
+- [x] Implement exact 256-entry float64 product LUTs only in continuation4 FoldScore luminance sampling.
+- [x] Exhaustively verify all 16,777,216 RGB triples bit-for-bit against the original expression.
+- [x] Verify sample, projective block, FoldScore, Build55 continuation and complete Build76 blind-bank equality.
+- [x] Add an atomic nine-photo semantic/performance gate with low-overhead integer telemetry.
+- [ ] Run Build81 on the qualified Go 1.26.0 host.
+- [ ] If the first run is exact and materially faster, run a second independent confirmation before promotion.
+- [ ] Do not alter Format-v4 wire format, locked pilot, strength 48, ECC/Hamming, whitening/HMAC domains or qualified thresholds without new evidence.
+
+## Build80 checkpoint
+
+- [x] Keep Build76 as the current qualified smartphone baseline.
+- [x] Use Build79 physical evidence to target projective block luminance sampling rather than more scheduling changes.
+- [x] Implement a bounded FoldScore-local exact luminance cache only for continuation4.
+- [x] Preserve exact arithmetic order and original-reader fallback for large local footprints.
+- [x] Prove cached block value and FoldScore bit equality, Build55 continuation equality and complete Build80-vs-Build76 blind-bank equality.
+- [x] Add low-overhead cache telemetry and an atomic nine-photo physical gate.
+- [x] Run Build80 on the qualified Go 1.26.0 host: semantic geometry remained exact.
+- [x] Reject Build80 for performance: full matrix 806,849 ms (+6.4% versus Build76 mean); B/angle geometry +14.9%.
+- [ ] Do not alter Format-v4 wire format, locked pilot, strength 48, ECC/Hamming, whitening/HMAC domains or qualified thresholds without new evidence.
 
 ## Build78 checkpoint
 

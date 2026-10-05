@@ -1,3 +1,11 @@
+## Build81 — exact luminance LUT performance candidate
+
+Build80 physically preserved the qualified B/mild and B/angle geometry counters but was slower: the nine-photo matrix took 806,849 ms versus the Build76 two-run mean 758,102 ms. The cause is structural: each cached block first maps all 64 destination samples to build a source bounding rectangle and, on fallback, the original reader maps the same 64 samples again. B/angle had zero cache hits, 149,370,664 valid fallbacks and 1,674,456 failed reads, so the candidate was rejected despite semantic equality. Build81 keeps the same Build76 scheduler/bank but removes all spatial-cache logic. It replaces only `.299*r`, `.587*g` and `.114*b` with exact 256-entry float64 product tables inside continuation4 FoldScore sampling.
+
+## Build80 — exact local luminance cache performance candidate
+
+Build79 passed the retained Go 1.26.0 9/9 semantic-equivalence gate and measured projective block reads at 1,041 / 1,071 ms (97.20%) of sampled B/mild FoldScore time and 7,236 / 7,424 ms (97.47%) on B/angle. Detailed replay indicated bilinear luminance sampling is the largest subcomponent. Build80 therefore changes only continuation4 FoldScore block sampling: a FoldScore-local scratch buffer caches exact float64 RGB→luminance values for mapped source rectangles up to 196 pixels and otherwise falls back to the unchanged reader. Local regressions require bit-identical block values/FoldScore outputs, exact Build55 continuation states and exact Build76 blind-bank equality. Build76 remains qualified until repeated physical evidence promotes Build80.
+
 ## Build79 — FoldScore kernel profiling
 
 Build78 passed the retained Go 1.26.0 9/9 semantic-equivalence matrix and showed that continuation4 bookkeeping is negligible: FoldScore consumed 67,777 / 67,832 ms on B/mild and 500,211 / 500,652 ms on B/angle. Build79 therefore keeps the complete qualified Build76 recovery schedule and bank/order frozen and instruments only the FoldScore kernel used by continuation4. Exact counters cover every FoldScore call; a deterministic 1/64 sample times authoritative block reads, and one successful block per sampled FoldScore is replayed after the score has completed to separate `mapPoint`, bilinear luminance sampling and DCT accumulation. Build79 is diagnostic-only; Build76 remains qualified.
