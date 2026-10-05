@@ -3,19 +3,19 @@ set -euo pipefail
 
 PIXSEAL="${PIXSEAL:?set PIXSEAL to the built pixseal executable}"
 ACQUISITION_DIR="${V4_PHONE_ACQUISITION_DIR:-v4-phone private/build38-acquired}"
-OUTPUT_DIR="${V4_PHONE_BUILD81_DIAGNOSTIC_DIR:-v4-phone private/build81-diagnostics}"
+OUTPUT_DIR="${V4_PHONE_BUILD82_DIAGNOSTIC_DIR:-v4-phone private/build82-diagnostics}"
 KEY="${V4_PHONE_KEY:-PixSeal-v4-TestKey-2026}"
 CANONICAL_WIDTH="${V4_PHONE_CANONICAL_WIDTH:-1632}"
 CANONICAL_HEIGHT="${V4_PHONE_CANONICAL_HEIGHT:-1632}"
 MESSAGE_A="${V4_PHONE_MESSAGE_A:-v4-b38-phone-a}"
 MESSAGE_B="${V4_PHONE_MESSAGE_B:-v4-b38-phone-b}"
-PHONE_TIMEOUT="${V4_PHONE_BUILD81_TIMEOUT:-86400}"
+PHONE_TIMEOUT="${V4_PHONE_BUILD82_TIMEOUT:-86400}"
 BUILD76_BASELINE_TSV="${V4_PHONE_BUILD76_BASELINE_TSV:-v4-phone private/build76-diagnostics/build76-phone-gen2-parallel.tsv}"
 
 [[ -x "$PIXSEAL" ]] || { echo "error: PIXSEAL is not executable: $PIXSEAL" >&2; exit 1; }
 command -v timeout >/dev/null 2>&1 || { echo "error: GNU timeout is required" >&2; exit 1; }
 [[ -d "$ACQUISITION_DIR" ]] || { echo "error: phone acquisition directory not found: $ACQUISITION_DIR" >&2; exit 1; }
-[[ "$PHONE_TIMEOUT" =~ ^[0-9]+$ ]] || { echo "error: V4_PHONE_BUILD81_TIMEOUT must be an integer number of seconds" >&2; exit 1; }
+[[ "$PHONE_TIMEOUT" =~ ^[0-9]+$ ]] || { echo "error: V4_PHONE_BUILD82_TIMEOUT must be an integer number of seconds" >&2; exit 1; }
 
 specs=(
  "phone-control-front.jpg|control|control|-"
@@ -25,7 +25,7 @@ specs=(
  "phone-a-mild.jpg|A|required-any|$MESSAGE_A"
  "phone-a-angle.jpg|A|required-direct|$MESSAGE_A"
  "phone-b-front.jpg|B|required-direct|$MESSAGE_B"
- "phone-b-mild.jpg|B|required-build81|$MESSAGE_B"
+ "phone-b-mild.jpg|B|required-build82|$MESSAGE_B"
  "phone-b-angle.jpg|B|required-reject|$MESSAGE_B"
 )
 for spec in "${specs[@]}"; do
@@ -36,18 +36,18 @@ done
 output_parent="$(dirname "$OUTPUT_DIR")"
 output_base="$(basename "$OUTPUT_DIR")"
 mkdir -p "$output_parent"
-stage_dir="$(mktemp -d "$output_parent/.${output_base}.build81.XXXXXX")"
+stage_dir="$(mktemp -d "$output_parent/.${output_base}.build82.XXXXXX")"
 published=false
 cleanup_stage(){ if [[ "$published" != true && -d "$stage_dir" ]]; then rm -rf "$stage_dir"; fi; }
 trap cleanup_stage EXIT
 mkdir -p "$stage_dir/logs"
-tsv="$stage_dir/build81-phone-luminance-lut.tsv"
-md="$stage_dir/build81-phone-luminance-lut.md"
-final_tsv="$OUTPUT_DIR/build81-phone-luminance-lut.tsv"
-final_md="$OUTPUT_DIR/build81-phone-luminance-lut.md"
+tsv="$stage_dir/build82-phone-inline-sampler.tsv"
+md="$stage_dir/build82-phone-inline-sampler.md"
+final_tsv="$OUTPUT_DIR/build82-phone-inline-sampler.tsv"
+final_md="$OUTPUT_DIR/build82-phone-inline-sampler.md"
 failed_output_dir="${OUTPUT_DIR}-failed"
 
-header=(image class role build64_evals build64_bank build64_qualified build64_decode build64_frames build64_authenticated build68_physical_decode build68_speculative build75_attempted build76_attempted build81_attempted prefix1_workers gen2_workers gen3_workers gen4_workers gen2_tasks gen3_tasks gen4_tasks freeze_ms prefix1_ms gen2_ms gen3_ms gen4_ms lut_fold_scores lut_block_reads lut_block_success lut_block_failed hmac payload_match telemetry_equivalent qualification exit_code elapsed_ms build76_elapsed_ms speedup_vs_build76 geometry_ms build76_geometry_ms geometry_speedup_vs_build76 gate_reason)
+header=(image class role build64_evals build64_bank build64_qualified build64_decode build64_frames build64_authenticated build68_physical_decode build68_speculative build75_attempted build76_attempted build82_attempted prefix1_workers gen2_workers gen3_workers gen4_workers gen2_tasks gen3_tasks gen4_tasks freeze_ms prefix1_ms gen2_ms gen3_ms gen4_ms inline_fold_scores inline_block_reads inline_block_success inline_block_failed hmac payload_match telemetry_equivalent qualification exit_code elapsed_ms build76_elapsed_ms speedup_vs_build76 geometry_ms build76_geometry_ms geometry_speedup_vs_build76 gate_reason)
 (IFS=$'\t'; echo "${header[*]}") > "$tsv"
 
 extract_re(){ local pattern="$1" file="$2" default_value="${3:-}" value; value="$(sed -nE "s/$pattern/\\1/p" "$file" | head -n1)"; [[ -n "$value" ]] && printf '%s' "$value" || printf '%s' "$default_value"; }
@@ -106,29 +106,29 @@ for spec in "${specs[@]}"; do
     g3wall="$(extract_re 'build76-gen2-parallel: .* gen3-wall-ms=([0-9]+).*' "$log" 0)"
     g4wall="$(extract_re 'build76-gen2-parallel: .* gen4-wall-ms=([0-9]+).*' "$log" 0)"
   fi
-  b81=false; lut_folds=0; lut_reads=0; lut_success=0; lut_failed=0
-  if grep -q '^build81-luminance-lut:' "$log"; then
-    b81=true
-    lut_folds="$(extract_re 'build81-luminance-lut: .* fold-scores=([0-9]+).*' "$log" 0)"
-    lut_reads="$(extract_re 'build81-luminance-lut: .* block-reads=([0-9]+).*' "$log" 0)"
-    lut_success="$(extract_re 'build81-luminance-lut: .* block-success=([0-9]+).*' "$log" 0)"
-    lut_failed="$(extract_re 'build81-luminance-lut: .* block-failed=([0-9]+).*' "$log" 0)"
+  b82=false; inline_folds=0; inline_reads=0; inline_success=0; inline_failed=0
+  if grep -q '^build82-inline-sampler:' "$log"; then
+    b82=true
+    inline_folds="$(extract_re 'build82-inline-sampler: .* fold-scores=([0-9]+).*' "$log" 0)"
+    inline_reads="$(extract_re 'build82-inline-sampler: .* block-reads=([0-9]+).*' "$log" 0)"
+    inline_success="$(extract_re 'build82-inline-sampler: .* block-success=([0-9]+).*' "$log" 0)"
+    inline_failed="$(extract_re 'build82-inline-sampler: .* block-failed=([0-9]+).*' "$log" 0)"
   fi
 
   case "$file" in
-    phone-control-front.jpg) exp_evals=18021; exp_bank=26; exp_qual=0; exp_decode=0; exp_frames=0;;
-    phone-control-mild.jpg) exp_evals=117609; exp_bank=810; exp_qual=6; exp_decode=6; exp_frames=18432;;
-    phone-control-angle.jpg) exp_evals=21203; exp_bank=11; exp_qual=0; exp_decode=0; exp_frames=0;;
-    phone-b-mild.jpg) exp_evals=79259; exp_bank=937; exp_qual=935; exp_decode=691; exp_frames=2120047;;
-    phone-b-angle.jpg) exp_evals=334857; exp_bank=6198; exp_qual=0; exp_decode=0; exp_frames=0;;
-    *) exp_evals=0; exp_bank=0; exp_qual=0; exp_decode=0; exp_frames=0;;
+    phone-control-front.jpg) exp_evals=18021; exp_bank=26; exp_qual=0; exp_decode=0; exp_frames=0; exp_inline_folds=1104; exp_inline_reads=1413120; exp_inline_success=1413120; exp_inline_failed=0;;
+    phone-control-mild.jpg) exp_evals=117609; exp_bank=810; exp_qual=6; exp_decode=6; exp_frames=18432; exp_inline_folds=20368; exp_inline_reads=26071040; exp_inline_success=26071040; exp_inline_failed=0;;
+    phone-control-angle.jpg) exp_evals=21203; exp_bank=11; exp_qual=0; exp_decode=0; exp_frames=0; exp_inline_folds=304; exp_inline_reads=389120; exp_inline_success=389120; exp_inline_failed=0;;
+    phone-b-mild.jpg) exp_evals=79259; exp_bank=937; exp_qual=935; exp_decode=691; exp_frames=2120047; exp_inline_folds=16496; exp_inline_reads=21114880; exp_inline_success=21114880; exp_inline_failed=0;;
+    phone-b-angle.jpg) exp_evals=334857; exp_bank=6198; exp_qual=0; exp_decode=0; exp_frames=0; exp_inline_folds=118004; exp_inline_reads=151045120; exp_inline_success=149370664; exp_inline_failed=1674456;;
+    *) exp_evals=0; exp_bank=0; exp_qual=0; exp_decode=0; exp_frames=0; exp_inline_folds=0; exp_inline_reads=0; exp_inline_success=0; exp_inline_failed=0;;
   esac
 
   telemetry=true
   if [[ "$exp_evals" -gt 0 ]]; then
-    [[ "$b64_attempted" == true && "$b64_evals" -eq "$exp_evals" && "$b64_bank" -eq "$exp_bank" && "$b64_qualified" -eq "$exp_qual" && "$b64_decode" -eq "$exp_decode" && "$b64_frames" -eq "$exp_frames" && "$b65" == true && "$b66" == true && "$b68" == true && "$b73" == true && "$b75" == true && "$b76" == true && "$b81" == true ]] || telemetry=false
+    [[ "$b64_attempted" == true && "$b64_evals" -eq "$exp_evals" && "$b64_bank" -eq "$exp_bank" && "$b64_qualified" -eq "$exp_qual" && "$b64_decode" -eq "$exp_decode" && "$b64_frames" -eq "$exp_frames" && "$b65" == true && "$b66" == true && "$b68" == true && "$b73" == true && "$b75" == true && "$b76" == true && "$b82" == true ]] || telemetry=false
     [[ "$p1w" -gt 0 && "$g2w" -gt 0 && "$g3w" -gt 0 && "$g4w" -gt 0 && "$g2t" -gt 0 && "$g3t" -gt 0 && "$g4t" -gt 0 ]] || telemetry=false
-    [[ "$lut_folds" -gt 0 && "$lut_reads" -gt 0 && $((lut_success+lut_failed)) -eq "$lut_reads" ]] || telemetry=false
+    [[ "$inline_folds" -eq "$exp_inline_folds" && "$inline_reads" -eq "$exp_inline_reads" && "$inline_success" -eq "$exp_inline_success" && "$inline_failed" -eq "$exp_inline_failed" && $((inline_success+inline_failed)) -eq "$inline_reads" ]] || telemetry=false
     if [[ "$exp_qual" -gt 0 ]]; then
       [[ "$b66_workers" -gt 0 && "$b68_physical" -ge "$b64_decode" && "$b68_spec" -eq $((b68_physical-b64_decode)) ]] || telemetry=false
       [[ "$b64_auth" == false || "$b68_spec" -lt "$b66_workers" ]] || telemetry=false
@@ -136,7 +136,7 @@ for spec in "${specs[@]}"; do
       [[ "$b66_workers" -eq 0 && "$b68_physical" -eq 0 && "$b68_spec" -eq 0 ]] || telemetry=false
     fi
   else
-    [[ "$b64_attempted" == false && "$b73" == false && "$b75" == false && "$b76" == false && "$b81" == false ]] || telemetry=false
+    [[ "$b64_attempted" == false && "$b73" == false && "$b75" == false && "$b76" == false && "$b82" == false ]] || telemetry=false
   fi
 
   payload_match='-'; qualification=INFO; gate_reason=ok
@@ -148,8 +148,8 @@ for spec in "${specs[@]}"; do
       required-direct) if [[ $rc -eq 0 && "$payload_match" == true && "$hmac" == true && "$b43_attempted" == false && "$b64_attempted" == false ]]; then qualification=PASS; else qualification=FAIL; gate_reason=direct-semantics; fi;;
       required-build43) if [[ $rc -eq 0 && "$payload_match" == true && "$hmac" == true && "$b43_attempted" == true && "$b43_auth" == true && "$b64_attempted" == false ]]; then qualification=PASS; else qualification=FAIL; gate_reason=build43-semantics; fi;;
       required-any) if [[ $rc -eq 0 && "$payload_match" == true && "$hmac" == true && "$b64_attempted" == false ]]; then qualification=PASS; else qualification=FAIL; gate_reason=any-semantics; fi;;
-      required-build81) if [[ $rc -eq 0 && "$payload_match" == true && "$hmac" == true && "$b64_auth" == true && "$b81" == true ]]; then qualification=PASS; else qualification=FAIL; gate_reason=build81-positive-semantics; fi;;
-      required-reject) if [[ $rc -ne 0 && "$hmac" == false && "$b64_auth" == false && "$b81" == true ]]; then qualification=PASS; else qualification=FAIL; gate_reason=reject-semantics; fi;;
+      required-build82) if [[ $rc -eq 0 && "$payload_match" == true && "$hmac" == true && "$b64_auth" == true && "$b82" == true ]]; then qualification=PASS; else qualification=FAIL; gate_reason=build82-positive-semantics; fi;;
+      required-reject) if [[ $rc -ne 0 && "$hmac" == false && "$b64_auth" == false && "$b82" == true ]]; then qualification=PASS; else qualification=FAIL; gate_reason=reject-semantics; fi;;
     esac
   fi
   if [[ "$telemetry" != true ]]; then
@@ -161,18 +161,22 @@ for spec in "${specs[@]}"; do
   base_geom="$(baseline_metric "$BUILD76_BASELINE_TSV" "$file" geometry_ms)"
   speed="$(speedup "$base_elapsed" "$elapsed_ms")"
   gspeed="$(speedup "$base_geom" "$geometry_ms")"
-  row=("$file" "$class" "$role" "$b64_evals" "$b64_bank" "$b64_qualified" "$b64_decode" "$b64_frames" "$b64_auth" "$b68_physical" "$b68_spec" "$b75" "$b76" "$b81" "$p1w" "$g2w" "$g3w" "$g4w" "$g2t" "$g3t" "$g4t" "$freeze" "$p1wall" "$g2wall" "$g3wall" "$g4wall" "$lut_folds" "$lut_reads" "$lut_success" "$lut_failed" "$hmac" "$payload_match" "$telemetry" "$qualification" "$rc" "$elapsed_ms" "$base_elapsed" "$speed" "$geometry_ms" "$base_geom" "$gspeed" "$gate_reason")
+  row=("$file" "$class" "$role" "$b64_evals" "$b64_bank" "$b64_qualified" "$b64_decode" "$b64_frames" "$b64_auth" "$b68_physical" "$b68_spec" "$b75" "$b76" "$b82" "$p1w" "$g2w" "$g3w" "$g4w" "$g2t" "$g3t" "$g4t" "$freeze" "$p1wall" "$g2wall" "$g3wall" "$g4wall" "$inline_folds" "$inline_reads" "$inline_success" "$inline_failed" "$hmac" "$payload_match" "$telemetry" "$qualification" "$rc" "$elapsed_ms" "$base_elapsed" "$speed" "$geometry_ms" "$base_geom" "$gspeed" "$gate_reason")
+  if (( ${#row[@]} != ${#header[@]} )); then
+    echo "error: Build82 TSV field mismatch for $file: header=${#header[@]} row=${#row[@]}" >&2
+    exit 1
+  fi
   (IFS=$'\t'; echo "${row[*]}") >> "$tsv"
 done
 
 {
-  echo '# PixSeal Build81 exact luminance-LUT matrix'; echo
-  echo 'Build81 is a closed equivalence-preserving performance experiment over qualified Build76. Only continuation4 FoldScore RGB->luminance products use exact 256-entry float64 lookup tables. Geometry, bank/order and protected-data semantics remain authoritative.'; echo
-  echo '| image | role | evals | bank | qual | LUT folds | block reads | success | failed | geometry | B76 geom | geom speedup | elapsed | B76 elapsed | speedup | HMAC | telemetry eq | gate |'
+  echo '# PixSeal Build82 exact inline sampler matrix'; echo
+  echo 'Build82 is an equivalence-preserving performance candidate over qualified Build76. Only continuation4 FoldScore projective block reads use a specialized reader that manually incorporates the historical samplePlaneLuminance arithmetic. homography.mapPoint, float64 formulas/order, geometry, bank/order and protected-data semantics remain authoritative.'; echo
+  echo '| image | role | evals | bank | qual | inline folds | block reads | success | failed | geometry | B76 geom | geom speedup | elapsed | B76 elapsed | speedup | HMAC | telemetry eq | gate |'
   echo '|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|'
   tail -n +2 "$tsv" | awk -F '\t' '{printf "| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |\n",$1,$3,$4,$5,$6,$27,$28,$29,$30,$39,$40,$41,$36,$37,$38,$31,$33,$34}'
   echo
-  echo 'Build76 remains the qualified baseline. Retained Build81 history records two semantic PASS runs but no repeatable speedup, so Build81 is not promoted.'
+  echo 'Build76 remains the qualified baseline. Build82 can be promoted only after two independent physical runs preserve exact semantics and show a material, repeatable speedup; Build81 remains a semantic PASS but non-promoted experiment.'
   [[ -f "$BUILD76_BASELINE_TSV" ]] && echo "Build76 timing baseline: $BUILD76_BASELINE_TSV" || echo 'Build76 timing baseline: unavailable'
 } > "$md"
 rm -f "$stage_dir/logs/"*.payload.bin
@@ -185,15 +189,15 @@ a_angle_pass="$(awk -F '\t' 'NR>1&&$1=="phone-a-angle.jpg"&&$34=="PASS"{n++}END{
 b_front_pass="$(awk -F '\t' 'NR>1&&$1=="phone-b-front.jpg"&&$34=="PASS"{n++}END{print n+0}' "$tsv")"
 b_mild_pass="$(awk -F '\t' 'NR>1&&$1=="phone-b-mild.jpg"&&$34=="PASS"{n++}END{print n+0}' "$tsv")"
 b_angle_pass="$(awk -F '\t' 'NR>1&&$1=="phone-b-angle.jpg"&&$34=="PASS"{n++}END{print n+0}' "$tsv")"
-echo "Build81 staged result: controls=${control_passes}/3 A/front=${a_front_pass}/1 A/mild=${a_mild_pass}/1 A/angle=${a_angle_pass}/1 B/front=${b_front_pass}/1 B/mild=${b_mild_pass}/1 B/angle-reject=${b_angle_pass}/1"
+echo "Build82 staged result: controls=${control_passes}/3 A/front=${a_front_pass}/1 A/mild=${a_mild_pass}/1 A/angle=${a_angle_pass}/1 B/front=${b_front_pass}/1 B/mild=${b_mild_pass}/1 B/angle-reject=${b_angle_pass}/1"
 if ((pass_count!=9 || control_passes!=3 || a_front_pass!=1 || a_mild_pass!=1 || a_angle_pass!=1 || b_front_pass!=1 || b_mild_pass!=1 || b_angle_pass!=1)); then
-  echo 'Build81 failing cases:' >&2
-  awk -F '\t' 'NR>1 && $34!="PASS" {printf "  %s role=%s reason=%s rc=%s hmac=%s telemetry=%s evals=%s bank=%s qual=%s decode=%s frames=%s lut=%s/%s/%s/%s\n",$1,$3,$42,$35,$31,$33,$4,$5,$6,$7,$8,$27,$28,$29,$30}' "$tsv" >&2
+  echo 'Build82 failing cases:' >&2
+  awk -F '\t' 'NR>1 && $34!="PASS" {printf "  %s role=%s reason=%s rc=%s hmac=%s telemetry=%s evals=%s bank=%s qual=%s decode=%s frames=%s inline=%s/%s/%s/%s\n",$1,$3,$42,$35,$31,$33,$4,$5,$6,$7,$8,$27,$28,$29,$30}' "$tsv" >&2
   rm -rf "$failed_output_dir"
   mv "$stage_dir" "$failed_output_dir"
   published=true
-  echo "Build81 FAILED diagnostics preserved in: $failed_output_dir" >&2
-  echo 'error: Build81 semantic-equivalence physical gate not met' >&2
+  echo "Build82 FAILED diagnostics preserved in: $failed_output_dir" >&2
+  echo 'error: Build82 semantic-equivalence physical gate not met' >&2
   exit 1
 fi
 mkdir -p "$OUTPUT_DIR"
@@ -203,7 +207,7 @@ mv "$tsv" "$final_tsv"
 mv "$md" "$final_md"
 rmdir "$stage_dir"
 published=true
-echo 'Build81 exact luminance-lut matrix written to:'
+echo 'Build82 exact inline sampler matrix written to:'
 echo "  $final_tsv"
 echo "  $final_md"
-echo 'Build81 semantic-equivalence physical gate: PASS'
+echo 'Build82 semantic-equivalence physical gate: PASS'

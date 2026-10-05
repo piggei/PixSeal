@@ -1,6 +1,25 @@
-## v0.3.0-build81 — exact luminance LUT candidate
+## v0.3.0-build83 — projective sampler CPU profiling
 
-- Keep Build76 as the current qualified smartphone baseline.
+- Close Build82 as **semantic PASS x2 / non-promoted**: two Go 1.26.0 9/9 physical runs preserved exact workload but averaged 831,375 ms versus the 758,102 ms qualified Build76 matrix mean.
+- Restore the active `v4-extract-phone` deep fallback to qualified Build76; Build82 remains only as archived exactness evidence and a benchmark comparator.
+- Add a public deterministic 1632x1632 projective-sampler fixture with bit-exact historical-vs-Build82 validation.
+- Add repeated `testing.B` benchmarks for the historical front/mild/angle-like block reader, Build82 inline comparator, `homography.mapPoint`, `samplePlaneLuminance`, and DCT accumulation.
+- Add `make v4-build83-projective-sampler-test` and `make v4-build83-projective-sampler-profile`; the profile target stages benchmark output, CPU pprof, pprof top, metadata and inliner evidence atomically.
+- Keep Build83 strictly observability-only: no private corpus, key, payload, ECC/HMAC result or protected-data outcome selects benchmark work.
+
+## v0.3.0-build82 — specialized exact inline block sampler candidate
+
+- Keep Build76 as the current qualified smartphone baseline; Build81 is closed as semantic PASS / non-promoted after two physical 9/9 runs showed no repeatable speedup.
+- Record the qualified Go 1.26.0 inliner result: `samplePlaneLuminance` (cost 348), `homography.mapPoint` (88) and `readProjectiveBlockValue` (263) all exceed the compiler inline budget 80.
+- Specialize only continuation4 FoldScore projective block reads by manually incorporating the exact historical `samplePlaneLuminance` body inside the block loop.
+- Retain the historical `homography.mapPoint` call in Build82 so this candidate tests one implementation hypothesis at a time; no manual projective-map recurrence or floating-point reordering is introduced.
+- Hoist immutable `width`, `height`, `rgb` and DCT row references out of the per-sample luminance path while preserving `float64`, `math.Floor`, boundary clamps, RGB→luminance operation order, bilinear interpolation order and DCT accumulation order.
+- Add bit-exact block-reader comparisons including edge/failure cases, Build41 FoldScore equality, Build55 continuation state/evaluation equality and complete Build82-vs-Build76 blind-bank equality regression.
+- Add low-overhead Build82 FoldScore/block-read counters and `make v4-build82-phone-inline-sampler-test` / `make v4-build82-phone-physical-test` with atomic diagnostics and explicit TSV field-count validation.
+
+## v0.3.0-build81 — exact luminance LUT experiment (semantic PASS / non-promoted)
+
+- Keep Build76 as the current qualified smartphone baseline. Two independent Build81 physical runs passed the complete 9/9 semantic gate but did not show a material, repeatable speedup, so Build81 is not promoted.
 - Record Build80 as a rejected performance candidate: semantics remained exact, but full-matrix runtime regressed to 806,849 ms (+6.4% versus the Build76 mean) and B/angle geometry regressed to 211,148 ms (+14.9%).
 - Replace only continuation4 FoldScore RGB-to-luminance channel multiplications with three 256-entry `float64` product lookup tables.
 - Preserve source coordinates, floor/clamp, arithmetic addition order, bilinear interpolation, DCT accumulation, search thresholds, bank/order, qualification and protected-data semantics.
@@ -11,7 +30,7 @@
 > Build80 harness revision: failed physical gates now preserve staged TSV/Markdown/logs in `v4-phone private/build80-diagnostics-failed/` and report a per-case gate reason. Recovery/cache logic is unchanged.
 ## v0.3.0-build80 — exact local luminance cache candidate
 
-- Keep Build76 as the qualified smartphone baseline; Build80 is a performance candidate pending physical reproduction.
+- Keep Build76 as the qualified smartphone baseline; Build80 is closed as exact semantic PASS / performance regression and is not promoted.
 - Use an exact bounded local integer-luminance cache only inside continuation4 FoldScore block reads.
 - Preserve homography coordinates, RGB→luma arithmetic, bilinear interpolation order, DCT accumulation order, thresholds, bank/order and all protected-data semantics.
 - Fall back to the original block reader when a mapped 8x8 block needs more than 196 integer source pixels.

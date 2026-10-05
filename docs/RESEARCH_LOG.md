@@ -1,3 +1,9 @@
+## Build82 closure and Build83 profiling checkpoint — 2026-10-05
+
+Build82 passed the complete physical semantic matrix twice with exact B/mild `79259 / 937 / 935 / 691 / 2120047` and B/angle `334857 / 6198 / 0`, plus exact FoldScore/block-read workload. Timing was not repeatable: the full matrices were 933,537 and 729,213 ms (831,375 ms mean) against the 758,102 ms Build76 mean. Build82 is therefore exact but non-promoted.
+
+Build83 restores Build76 as the active deep runtime and adds only public deterministic sampler benchmarks and CPU profiling. The purpose is to measure the historical `readProjectiveBlockValue` cost distribution before considering any separate `mapPoint`, luminance-memory-access, or DCT optimization.
+
 # PixSeal research log
 
 This file is an **append-only engineering/research notebook** for the v0.3 physical
@@ -16,6 +22,20 @@ Rules for future entries:
   deliberately *not* relaxed after a promising result;
 - private print-camera/scanner images are referenced by regression-case name only and
   are never copied into source archives.
+
+## Build81 closure and Build82 exact-inline hypothesis — 2026-10-05
+
+Build81 has now been reproduced twice on the qualified Go 1.26.0 host. Both runs pass the complete nine-photo semantic gate and preserve the authoritative B/mild/B/angle workload exactly, so the LUT is semantically valid. Timing is not promotable: the full matrix is 911,984 / 798,601 ms versus the Build76 two-run mean 758,102 ms, and the apparently favorable B/angle gen4 result in run 2 does not repeat in run 1. Build81 is therefore closed as **semantic PASS / non-promoted**.
+
+The next question was intentionally checked before writing code. On Go 1.26.0 the compiler reports:
+
+```text
+samplePlaneLuminance        cost 348 > inline budget 80
+homography.mapPoint         cost 88  > inline budget 80
+readProjectiveBlockValue    cost 263 > inline budget 80
+```
+
+Only the small luminance closure is inlined automatically. This supports a narrowly-scoped Build82 experiment. Build82 manually incorporates the exact `samplePlaneLuminance` body inside continuation4 projective block reads and hoists immutable plane/DCT references. `homography.mapPoint` remains a normal call so the candidate isolates one implementation hypothesis. No LUT, cache, bounding rectangle, fallback, coordinate recurrence or floating-point reordering is allowed. If Build82 does not show a repeatable gain, the next step is measurement/pprof rather than another speculative cache layer.
 
 ## Build80 rejection and Build81 hypothesis — 2026-10-05
 

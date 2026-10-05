@@ -1,15 +1,37 @@
-## Build81 checkpoint
+## Build83 checkpoint
+
+- [x] Close Build82 as **semantic PASS x2 / non-promoted** and restore active deep smartphone recovery to qualified Build76.
+- [x] Add a public deterministic projective-sampler benchmark fixture with no key/payload/HMAC/private-corpus dependency.
+- [x] Add repeated benchmarks for historical block read, Build82 exact-inline comparator, `mapPoint`, luminance sampling and DCT accumulation.
+- [x] Add atomic CPU-profile/pprof tooling and preserve the Go 1.26.0 inliner report.
+- [ ] Run `make v4-build83-projective-sampler-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build83-projective-sampler-profile` on an otherwise idle qualified host and return the complete `build83-profile` directory.
+- [ ] Use flat/cumulative profile evidence, not one microbenchmark number, to define or reject Build84.
+
+## Build82 checkpoint
+
+- [x] Keep Build76 immutable as the current qualified smartphone baseline.
+- [x] Close Build81 as semantic PASS / non-promoted after two independent 9/9 physical runs showed no repeatable speedup.
+- [x] Verify the real Go 1.26.0 inliner result before changing code: `samplePlaneLuminance`, `homography.mapPoint` and `readProjectiveBlockValue` are all above the inline budget.
+- [x] Implement one narrow optimization: manually incorporate the exact `samplePlaneLuminance` body only inside continuation4 projective block reads.
+- [x] Keep `homography.mapPoint` unchanged in Build82 so the candidate isolates one helper-call hypothesis.
+- [x] Preserve float64 arithmetic/order, `math.Floor`, clamps, bilinear interpolation, DCT accumulation, search order, qualification and protected-data semantics.
+- [x] Prove projective block bit equality including edge/failure cases, Build41 FoldScore equality, Build55 continuation equality and complete Build82-vs-Build76 blind-bank equality.
+- [x] Add low-overhead Build82 counters and an atomic nine-photo gate with explicit TSV header/row field-count validation.
+- [x] Run `make v4-build82-phone-inline-sampler-test` on the qualified Go 1.26.0 host.
+- [x] Run two independent `make v4-build82-phone-physical-test` gates on the complete retained 9-photo corpus; both are exact 9/9 PASS but performance is not repeatable.
+- [ ] If the first physical run is exact and materially faster than Build76, archive it and run a second independent confirmation before promotion.
+- [x] Close Build82 as exact but non-promoted and move to a dedicated benchmark/pprof build before considering manual `mapPoint` inlining.
+- [ ] Do not alter Format-v4 wire format, locked pilot, strength 48, ECC/Hamming, whitening/HMAC domains or qualified thresholds without new evidence.
+
+## Build81 checkpoint — closed
 
 - [x] Keep Build76 immutable as the current qualified smartphone baseline.
 - [x] Record Build80 as semantically exact but performance-regressing and reject it.
-- [x] Remove all Build80 bounding-box/cache/fallback work from the active candidate.
 - [x] Implement exact 256-entry float64 product LUTs only in continuation4 FoldScore luminance sampling.
-- [x] Exhaustively verify all 16,777,216 RGB triples bit-for-bit against the original expression.
 - [x] Verify sample, projective block, FoldScore, Build55 continuation and complete Build76 blind-bank equality.
-- [x] Add an atomic nine-photo semantic/performance gate with low-overhead integer telemetry.
-- [ ] Run Build81 on the qualified Go 1.26.0 host.
-- [ ] If the first run is exact and materially faster, run a second independent confirmation before promotion.
-- [ ] Do not alter Format-v4 wire format, locked pilot, strength 48, ECC/Hamming, whitening/HMAC domains or qualified thresholds without new evidence.
+- [x] Run Build81 twice on the qualified Go 1.26.0 host: both runs passed the complete 9/9 semantic gate.
+- [x] Do not promote Build81: timing was noisy and no material repeatable speedup was demonstrated.
 
 ## Build80 checkpoint
 
@@ -547,7 +569,9 @@
 - [x] Run the complete retained nine-photo Build68 physical gate twice: exact semantic PASS in both runs.
 - [x] Promote Build68: repeated semantic PASS; mean B/mild qualification 61313.5 ms versus Build67 307583 ms (~5.02x), mean B/mild elapsed 339687.5 ms versus Build66 544038 ms, and mean full matrix 1865221.5 ms versus 2175687 ms.
 
-## Next research step after Build75
+## Current research step after Build81
 
-- [ ] Re-evaluate residual geometry wall time before any further optimization.
-- [ ] Preserve Build75 as the immutable qualified baseline while testing later scheduling changes in separate builds.
+- [x] Verify Go 1.26.0 inlining for `samplePlaneLuminance`, `homography.mapPoint` and `readProjectiveBlockValue`; all three remain non-inlineable at the qualified toolchain.
+- [x] Implement Build82 as one isolated exact specialized continuation4 block-sampler candidate derived from Build76 semantics.
+- [x] Run the Build82 source/regression gate on the qualified Go 1.26.0 host.
+- [x] Run two independent Build82 nine-photo physical gates; exact semantics reproduce, but the 831,375 ms mean is slower than the 758,102 ms Build76 mean, so Build82 is not promoted.

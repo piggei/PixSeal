@@ -36,7 +36,7 @@ Commands:
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
-  v4-extract-phone EXPERIMENTAL: Build76 qualified phone baseline + Build81 exact luminance LUT candidate + authenticated v4 decode
+  v4-extract-phone EXPERIMENTAL: Build76 qualified phone baseline + authenticated v4 decode; Build83 profiling is offline-only
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
   v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
@@ -861,7 +861,7 @@ func printV4ScannerDiagnostics(w io.Writer, info watermark.ExperimentalV4Extract
 }
 
 func v4ExtractPhone(args []string) error {
-	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build81 exact luminance LUT candidate over the qualified Build76 phone baseline; geometry bank/order and protected-data semantics remain unchanged.")
+	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL qualified Build76 phone baseline. Build83 projective-sampler profiling is offline-only and does not alter runtime recovery semantics.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
@@ -985,6 +985,9 @@ func printV4PhoneDiagnostics(w io.Writer, decoderID string, info watermark.Exper
 	}
 	if p.Build81Attempted {
 		fmt.Fprintf(w, "build81-luminance-lut: attempted=true fold-scores=%d block-reads=%d block-success=%d block-failed=%d\n", p.Build81LUTFoldScores, p.Build81LUTBlockReads, p.Build81LUTBlockSuccess, p.Build81LUTBlockFailed)
+	}
+	if p.Build82Attempted {
+		fmt.Fprintf(w, "build82-inline-sampler: attempted=true fold-scores=%d block-reads=%d block-success=%d block-failed=%d\n", p.Build82InlineFoldScores, p.Build82InlineBlockReads, p.Build82InlineBlockSuccess, p.Build82InlineBlockFailed)
 	}
 	fmt.Fprintf(w, "hmac: authenticated=%t fallback-attempted=%t fallback-authenticated=%t\n", p.HMACAuthenticated, p.FallbackAttempted, p.FallbackAuthenticated)
 	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)

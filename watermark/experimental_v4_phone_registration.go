@@ -450,6 +450,11 @@ type ExperimentalV4PhoneInfo struct {
 	Build81LUTBlockReads                      int
 	Build81LUTBlockSuccess                    int
 	Build81LUTBlockFailed                     int
+	Build82Attempted                          bool
+	Build82InlineFoldScores                   int
+	Build82InlineBlockReads                   int
+	Build82InlineBlockSuccess                 int
+	Build82InlineBlockFailed                  int
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -1402,12 +1407,12 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
-		// Build81 is an equivalence-preserving performance candidate over the qualified
-		// Build76 recovery semantics. Only continuation4 FoldScore RGB->luminance
-		// products are replaced by exact float64 lookup tables; geometry ordering and
-		// all protected-data semantics remain unchanged.
-		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild81Recover(work, boundary, key, cw, ch)
-		experimentalV4PhoneBuild81ApplyTelemetry(&public, recovery64)
+		// Build83 is observability-only. The active deep smartphone fallback is
+		// restored to the qualified Build76 recovery semantics; Build82 remains in
+		// the tree only as a closed exact-equivalence performance experiment and as
+		// a controlled benchmark comparator.
+		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild76Recover(work, boundary, key, cw, ch)
+		experimentalV4PhoneBuild76ApplyTelemetry(&public, recovery64)
 		if err64 == nil {
 			public.ProjectiveBasinFound = true
 			public.Accepted = true

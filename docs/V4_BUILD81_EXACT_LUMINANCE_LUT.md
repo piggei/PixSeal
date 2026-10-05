@@ -1,76 +1,55 @@
 # Format-v4 Build81 — exact luminance LUT
 
-Build81 is an **equivalence-preserving performance candidate** over the qualified Build76 smartphone baseline. Build76 remains authoritative until two physical runs reproduce the complete semantic matrix and a material speedup.
+Build81 is a **closed equivalence-preserving performance experiment** over the qualified Build76 smartphone baseline. It passed semantic qualification twice but did not demonstrate a material, repeatable speedup and therefore was **not promoted**. Build76 remains authoritative.
 
-## Evidence
+## Optimization tested
 
-Build79 showed that projective block reads consume 97.20% of sampled continuation4 FoldScore time on B/mild and 97.47% on B/angle. Build80 then tested a spatial luminance cache. Its physical run preserved the qualified counters exactly but regressed performance:
-
-```text
-full matrix:      806,849 ms vs Build76 mean 758,102 ms   (+6.4%)
-B/mild elapsed:   191,873 ms vs 188,750.5 ms              (+1.7%)
-B/mild geometry:   62,344 ms vs 60,351.5 ms               (+3.3%)
-B/angle elapsed:  257,674 ms vs 226,813 ms                (+13.6%)
-B/angle geometry: 211,148 ms vs 183,806.5 ms              (+14.9%)
-```
-
-B/angle had `151,045,120` continuation4 block reads, zero cache hits, `149,370,664` valid fallbacks and `1,674,456` failed reads. The Build80 gate originally mislabeled that valid no-hit case as a telemetry failure; the retained diagnostics prove geometry itself remained `334857 / 6198 / 0` and REJECT. The implementation is rejected because of performance, not correctness.
-
-## Build81 optimization
-
-The original integer-source luminance expression is:
+Only continuation4 FoldScore luminance conversion changed. The historical expression:
 
 ```go
 .299*float64(r) + .587*float64(g) + .114*float64(b) - 128
 ```
 
-Each channel is 8-bit. Build81 therefore precomputes three process-wide tables:
+was replaced by three process-wide 256-entry `float64` product tables, preserving the original addition grouping, source coordinates, floor/clamp behavior, bilinear interpolation, DCT accumulation, geometry ordering and protected-data semantics. No cache, bounding rectangle or fallback path was used.
+
+## Exactness result
+
+Local regressions proved:
+
+1. every table entry equals direct multiplication bit-for-bit;
+2. all 16,777,216 RGB triples reproduce the original luminance expression bit-for-bit;
+3. sample, projective block and Build41 FoldScore equality;
+4. Build55 continuation4 state/evaluation equality;
+5. complete Build81-vs-Build76 blind-bank equality.
+
+Both retained Go 1.26.0 physical runs then passed the complete 9/9 semantic matrix. Deep workload remained exactly:
 
 ```text
-R[n] = .299 * float64(n)
-G[n] = .587 * float64(n)
-B[n] = .114 * float64(n)
+B/mild: 79259 evals / bank 937 / qualified 935 / decode 691 / 2120047 frames / HMAC PASS
+B/angle: 334857 evals / bank 6198 / qualified 0 / REJECT
 ```
 
-for `n = 0..255`. The hot path evaluates:
-
-```go
-value := R[r] + G[g]
-value += B[b]
-return value - 128
-```
-
-The grouping deliberately matches Go evaluation order of the original expression. No source coordinates, floor/clamp behavior, interpolation fractions, bilinear operations or DCT accumulation are changed. There is no bounding rectangle, no per-block scratch buffer and no fallback path. The LUT occupies 3 × 256 × 8 = 6,144 bytes.
-
-## Scope
-
-The LUT is used only by FoldScore calls inside generation-four `continuation4`. `single4`, `pair4`, Build76 prefix1/gen2, Build73 gen3, Build75 freeze, Build68 qualification and Build66 ordered protected-data decode remain unchanged. No key, payload, ECC, HMAC, oracle or timing data can influence geometry.
-
-## Exactness regressions
-
-Build81 requires:
-
-1. every table entry to equal the direct multiplication bit-for-bit;
-2. all 16,777,216 RGB triples to equal the original luminance expression bit-for-bit;
-3. bilinear `samplePlaneLuminance` equality at representative in-bounds/edge/out-of-bounds coordinates;
-4. projective block equality across multiple homographies and block positions;
-5. FoldScore equality against Build41;
-6. continuation4 state/evaluation equality against Build55;
-7. complete blind-bank equality against Build76.
-
-## Physical qualification
-
-```bash
-make clean
-make v4-build81-phone-luminance-lut-test
-make v4-build81-phone-physical-test
-```
-
-Outputs:
+Continuation4 workload also remained identical between runs:
 
 ```text
-v4-phone private/build81-diagnostics/build81-phone-luminance-lut.tsv
-v4-phone private/build81-diagnostics/build81-phone-luminance-lut.md
+B/mild:  16496 FoldScore /  21114880 block reads /  21114880 success /       0 failed
+B/angle: 118004 FoldScore / 151045120 block reads / 149370664 success / 1674456 failed
 ```
 
-The gate publishes diagnostics atomically on PASS and preserves them in `build81-diagnostics-failed/` on failure. Timing is evaluated only after semantic equivalence passes.
+## Performance result
+
+| metric | Build76 mean | Build81 run 1 | Build81 run 2 | Build81 mean | delta |
+|---|---:|---:|---:|---:|---:|
+| full matrix | 758,102 ms | 911,984 | 798,601 | 855,293 | +12.8% |
+| B/mild elapsed | 188,750.5 | 218,597 | 195,081 | 206,839 | +9.6% |
+| B/mild geometry | 60,351.5 | 73,443 | 64,148 | 68,796 | +14.0% |
+| B/mild gen4 | 18,473 | 22,342 | 18,385 | 20,364 | +10.2% |
+| B/angle elapsed | 226,813 | 285,826 | 228,901 | 257,364 | +13.5% |
+| B/angle geometry | 183,806.5 | 232,949 | 186,322 | 209,636 | +14.1% |
+| B/angle gen4 | 110,829.5 | 138,009 | 108,872 | 123,441 | +11.4% |
+
+Run 2 alone looked slightly favorable in B/angle gen4 and essentially neutral in B/mild gen4, but the result did not repeat in run 1 and the complete matrix was slower in both runs. The host/runtime variance is too large to attribute a benefit to the LUT.
+
+## Decision
+
+**NON PROMUOVERE / DO NOT PROMOTE.** Retain Build81 as evidence that exact scalar RGB product lookup is semantically safe but not a useful performance optimization for this workload. The next experiment must target helper-call/reader structure rather than another cache or lookup layer.

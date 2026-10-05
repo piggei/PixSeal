@@ -1,12 +1,32 @@
-## v0.3.0-build81 exact luminance LUT — physical run pending
+## v0.3.0-build83 projective sampler profiling — measurement pending
 
-Build81 is the next equivalence-preserving performance candidate over qualified Build76. It replaces only the three RGB-to-luminance multiplications inside continuation4 FoldScore with exact 256-entry float64 product tables. Local regression requires exhaustive RGB equality and complete Build76 blind-bank equality.
+Build82 is closed as **semantic PASS x2 / non-promoted**. The two physical matrices were 933,537 and 729,213 ms (831,375 ms mean) versus 758,102 ms for qualified Build76. B/mild generation four was 24,305 / 19,991 ms versus 18,473 ms Build76 mean; B/angle generation four was 136,040 / 107,359 ms versus 110,830 ms. Exact deep counters and workload were preserved in both runs, so the negative decision is performance-only.
+
+Build83 restores the active runtime to Build76 and adds public deterministic `testing.B` plus CPU `pprof` measurement. No new physical gate is required for Build83 because it does not alter runtime recovery semantics. The next optimization candidate, if any, must be justified by Build83 flat/cumulative profile evidence.
+
+## v0.3.0-build82 specialized exact inline block sampler — closed non-promoted
+
+Build82 tested the largest non-inlined helper first: continuation4 FoldScore projective block reads manually incorporated the exact historical `samplePlaneLuminance` body while retaining `homography.mapPoint`. Two independent Go 1.26.0 physical runs passed exact 9/9 semantics and reproduced the deep workload, but full-matrix elapsed was 933,537 / 729,213 ms (831,375 ms mean) versus the 758,102 ms Build76 mean. Build82 is therefore closed as semantic PASS x2 / non-promoted.
+
+## v0.3.0-build81 exact luminance LUT — semantic PASS / non-promoted
+
+Two independent Go 1.26.0 physical runs passed the complete 9/9 semantic gate. `B/mild` remained exactly `79259 / 937 / 935 / 691 / 2120047` with HMAC/payload PASS and `B/angle` remained `334857 / 6198 / 0` and REJECT. However performance did not improve repeatably: full-matrix elapsed was 911,984 and 798,601 ms (855,293 ms mean) versus the Build76 qualified mean 758,102 ms. Build81 is therefore retained as a semantic-valid negative performance experiment and Build76 remains the qualified baseline.
+
+| metric | Build76 mean | Build81 run 1 | Build81 run 2 | Build81 mean | delta |
+|---|---:|---:|---:|---:|---:|
+| full matrix | 758,102 ms | 911,984 | 798,601 | 855,293 | +12.8% |
+| B/mild elapsed | 188,750.5 ms | 218,597 | 195,081 | 206,839 | +9.6% |
+| B/mild geometry | 60,351.5 ms | 73,443 | 64,148 | 68,796 | +14.0% |
+| B/mild gen4 | 18,473 ms | 22,342 | 18,385 | 20,364 | +10.2% |
+| B/angle elapsed | 226,813 ms | 285,826 | 228,901 | 257,364 | +13.5% |
+| B/angle geometry | 183,806.5 ms | 232,949 | 186,322 | 209,636 | +14.1% |
+| B/angle gen4 | 110,829.5 ms | 138,009 | 108,872 | 123,441 | +11.4% |
 
 ## v0.3.0-build80 exact local luminance cache — rejected
 
 The physical run preserved the qualified geometry but regressed runtime. Full matrix was 806,849 ms versus the Build76 mean 758,102 ms (+6.4%); B/angle geometry was 211,148 ms versus 183,806.5 ms (+14.9%). B/angle had zero cache hits and 149,370,664 valid fallbacks. The original gate also incorrectly treated zero cache hits as a telemetry failure; that harness bug did not affect recovery semantics. Build80 is rejected as a performance candidate.
 
-## v0.3.0-build75 ordered-parallel Build47 basin candidate — physical run pending
+## v0.3.0-build75 ordered-parallel Build47 basin — qualified historical result
 
 Build75 was the qualified smartphone baseline at that checkpoint and is now the historical ordered-basin milestone superseded by Build76. Build74 first measured the residual Build47 freeze and showed basin generation at ~77–79% of freeze across the deep cases. Build75 then froze that exact 16-task production/depth/all-pairs stream, computed basin calls with one bounded pool and committed strictly in historical order. Two independent Go 1.26.0 physical runs passed the complete 9/9 semantic matrix with exact Build73 logical counters. Their full-matrix mean is 836,722.5 ms versus retained Build73 1,047,729 ms (-20.1%). No bank/order or recovery decision changed.
 

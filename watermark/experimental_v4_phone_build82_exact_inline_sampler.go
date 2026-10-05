@@ -10,26 +10,29 @@ import (
 	"time"
 )
 
-// Build81 is a closed equivalence-preserving performance experiment over the qualified
-// Build76 smartphone baseline; two physical 9/9 semantic PASS runs did not show repeatable speedup. Only continuation4 FoldScore RGB->luminance
-// products are replaced by exact 256-entry float64 lookup tables. mapPoint,
-// bilinear interpolation, DCT accumulation, geometry order and protected-data
-// semantics remain unchanged. Build76 stays qualified until physical evidence
-// confirms exact semantics and a material performance benefit.
+// Build82 is an equivalence-preserving performance candidate over the qualified
+// Build76 smartphone baseline. Go 1.26.0 confirms that samplePlaneLuminance,
+// homography.mapPoint and readProjectiveBlockValue are not inlined. Build82
+// changes only continuation4 FoldScore projective block reads: it specializes
+// the historical reader and manually incorporates the exact
+// samplePlaneLuminance body while retaining the historical homography.mapPoint
+// call, float64 arithmetic/order, floor/clamp rules, bilinear interpolation, DCT
+// accumulation, geometry order and protected-data semantics. Build76 stays
+// qualified until two physical runs prove exact semantics and repeatable speedup.
 
-type experimentalV4PhoneBuild81Prefix1Result struct {
+type experimentalV4PhoneBuild82Prefix1Result struct {
 	inputs  []experimentalV4PhoneHypothesis
 	evals   int
 	elapsed time.Duration
 }
 
-type experimentalV4PhoneBuild81Gen2Result struct {
+type experimentalV4PhoneBuild82Gen2Result struct {
 	outputs []experimentalV4PhoneHypothesis
 	evals   int
 	elapsed time.Duration
 }
 
-type experimentalV4PhoneBuild81GeometryTelemetry struct {
+type experimentalV4PhoneBuild82GeometryTelemetry struct {
 	PlanePrepElapsed     time.Duration
 	FreezeElapsed        time.Duration
 	Prefix1WallElapsed   time.Duration
@@ -68,20 +71,20 @@ type experimentalV4PhoneBuild81GeometryTelemetry struct {
 	Gen4MaxEvaluations   int
 	Gen4MinBank          int
 	Gen4MaxBank          int
-	LUTFoldScores        int
-	LUTBlockReads        int
-	LUTBlockSuccess      int
-	LUTBlockFailed       int
+	InlineFoldScores     int
+	InlineBlockReads     int
+	InlineBlockSuccess   int
+	InlineBlockFailed    int
 }
 
-type experimentalV4PhoneBuild81LUTTelemetry struct {
+type experimentalV4PhoneBuild82InlineTelemetry struct {
 	FoldScores   int
 	BlockReads   int
 	BlockSuccess int
 	BlockFailed  int
 }
 
-func experimentalV4PhoneBuild81MergeLUT(dst *experimentalV4PhoneBuild81LUTTelemetry, src experimentalV4PhoneBuild81LUTTelemetry) {
+func experimentalV4PhoneBuild82MergeInline(dst *experimentalV4PhoneBuild82InlineTelemetry, src experimentalV4PhoneBuild82InlineTelemetry) {
 	if dst == nil {
 		return
 	}
@@ -91,51 +94,14 @@ func experimentalV4PhoneBuild81MergeLUT(dst *experimentalV4PhoneBuild81LUTTeleme
 	dst.BlockFailed += src.BlockFailed
 }
 
-func experimentalV4PhoneBuild81ProductTable(scale float64) [256]float64 {
-	var table [256]float64
-	for i := range table {
-		table[i] = scale * float64(i)
-	}
-	return table
-}
-
-var (
-	experimentalV4PhoneBuild81LumaR = experimentalV4PhoneBuild81ProductTable(.299)
-	experimentalV4PhoneBuild81LumaG = experimentalV4PhoneBuild81ProductTable(.587)
-	experimentalV4PhoneBuild81LumaB = experimentalV4PhoneBuild81ProductTable(.114)
-)
-
-func experimentalV4PhoneBuild81RGBLuminance(r, g, b uint8) float64 {
-	value := experimentalV4PhoneBuild81LumaR[r] + experimentalV4PhoneBuild81LumaG[g]
-	value += experimentalV4PhoneBuild81LumaB[b]
-	return value - 128
-}
-
-func experimentalV4PhoneBuild81SamplePlaneLuminance(src *pixelPlane, x, y float64) (float64, bool) {
+func experimentalV4PhoneBuild82ReadProjectiveBlockValue(src *pixelPlane, h homography, originX, originY, size int) (float64, bool) {
+	// Specialized continuation4 reader. This is intentionally an exact manual
+	// expansion of samplePlaneLuminance inside the block loop; mapPoint remains
+	// the qualified historical helper so Build82 tests only one optimization.
 	width, height := src.bounds.Dx(), src.bounds.Dy()
-	if x < 0 || y < 0 || x > float64(width-1) || y > float64(height-1) {
-		return 0, false
-	}
-	x0, y0 := int(math.Floor(x)), int(math.Floor(y))
-	x1, y1 := x0+1, y0+1
-	if x1 >= width {
-		x1 = width - 1
-	}
-	if y1 >= height {
-		y1 = height - 1
-	}
-	fx, fy := x-float64(x0), y-float64(y0)
-	luma := func(px, py int) float64 {
-		index := (py*width + px) * 3
-		return experimentalV4PhoneBuild81RGBLuminance(src.rgb[index], src.rgb[index+1], src.rgb[index+2])
-	}
-	top := luma(x0, y0)*(1-fx) + luma(x1, y0)*fx
-	bottom := luma(x0, y1)*(1-fx) + luma(x1, y1)*fx
-	return top*(1-fy) + bottom*fy, true
-}
-
-func experimentalV4PhoneBuild81ReadProjectiveBlockValue(src *pixelPlane, h homography, originX, originY, size int) (float64, bool) {
+	rgb := src.rgb
 	table := readCosTables[size]
+	table2, table3 := table[2], table[3]
 	c23, c32 := 0.0, 0.0
 	for y := 0; y < size; y++ {
 		for x := 0; x < size; x++ {
@@ -143,27 +109,48 @@ func experimentalV4PhoneBuild81ReadProjectiveBlockValue(src *pixelPlane, h homog
 			if !ok {
 				return 0, false
 			}
-			l, ok := experimentalV4PhoneBuild81SamplePlaneLuminance(src, sx, sy)
-			if !ok {
+			if sx < 0 || sy < 0 || sx > float64(width-1) || sy > float64(height-1) {
 				return 0, false
 			}
-			c23 += l * table[3][x] * table[2][y]
-			c32 += l * table[2][x] * table[3][y]
+			x0, y0 := int(math.Floor(sx)), int(math.Floor(sy))
+			x1, y1 := x0+1, y0+1
+			if x1 >= width {
+				x1 = width - 1
+			}
+			if y1 >= height {
+				y1 = height - 1
+			}
+			fx, fy := sx-float64(x0), sy-float64(y0)
+
+			index00 := (y0*width + x0) * 3
+			l00 := .299*float64(rgb[index00]) + .587*float64(rgb[index00+1]) + .114*float64(rgb[index00+2]) - 128
+			index10 := (y0*width + x1) * 3
+			l10 := .299*float64(rgb[index10]) + .587*float64(rgb[index10+1]) + .114*float64(rgb[index10+2]) - 128
+			index01 := (y1*width + x0) * 3
+			l01 := .299*float64(rgb[index01]) + .587*float64(rgb[index01+1]) + .114*float64(rgb[index01+2]) - 128
+			index11 := (y1*width + x1) * 3
+			l11 := .299*float64(rgb[index11]) + .587*float64(rgb[index11+1]) + .114*float64(rgb[index11+2]) - 128
+			top := l00*(1-fx) + l10*fx
+			bottom := l01*(1-fx) + l11*fx
+			l := top*(1-fy) + bottom*fy
+
+			c23 += l * table3[x] * table2[y]
+			c32 += l * table2[x] * table3[y]
 		}
 	}
 	return math.Abs(c23) - math.Abs(c32), true
 }
 
-func experimentalV4PhoneBuild81FoldScoreLUT(plane *pixelPlane, candidate experimentalV4PilotCandidate, cw, ch int, h homography, heldout int, proposal bool, sparse bool) (float64, int, experimentalV4PhoneBuild81LUTTelemetry) {
-	var lut experimentalV4PhoneBuild81LUTTelemetry
-	lut.FoldScores = 1
+func experimentalV4PhoneBuild82FoldScoreInline(plane *pixelPlane, candidate experimentalV4PilotCandidate, cw, ch int, h homography, heldout int, proposal bool, sparse bool) (float64, int, experimentalV4PhoneBuild82InlineTelemetry) {
+	var inline experimentalV4PhoneBuild82InlineTelemetry
+	inline.FoldScores = 1
 	if plane == nil {
-		return math.Inf(-1), 0, lut
+		return math.Inf(-1), 0, inline
 	}
 	bw, bh := cw/blockSize, ch/blockSize
 	tilesX, tilesY := bw/experimentalV4TileWidthBlocks, bh/experimentalV4TileHeightBlocks
 	if tilesX < 1 || tilesY < 1 {
-		return math.Inf(-1), 0, lut
+		return math.Inf(-1), 0, inline
 	}
 	num, den := 0.0, 0.0
 	visible, usedTiles := 0, 0
@@ -188,13 +175,13 @@ func experimentalV4PhoneBuild81FoldScoreLUT(plane *pixelPlane, candidate experim
 					continue
 				}
 				px, py := pos%experimentalV4TileWidthBlocks, pos/experimentalV4TileWidthBlocks
-				lut.BlockReads++
-				v, ok := experimentalV4PhoneBuild81ReadProjectiveBlockValue(plane, h, (baseX+px)*blockSize, (baseY+py)*blockSize, blockSize)
+				inline.BlockReads++
+				v, ok := experimentalV4PhoneBuild82ReadProjectiveBlockValue(plane, h, (baseX+px)*blockSize, (baseY+py)*blockSize, blockSize)
 				if !ok {
-					lut.BlockFailed++
+					inline.BlockFailed++
 					continue
 				}
-				lut.BlockSuccess++
+				inline.BlockSuccess++
 				visible++
 				num += float64(candidate.signs[i]) * v
 				den += math.Abs(v)
@@ -202,16 +189,16 @@ func experimentalV4PhoneBuild81FoldScoreLUT(plane *pixelPlane, candidate experim
 		}
 	}
 	if den <= 0 {
-		return math.Inf(-1), visible, lut
+		return math.Inf(-1), visible, inline
 	}
-	return num / den, visible, lut
+	return num / den, visible, inline
 }
 
-func experimentalV4PhoneBuild81ContinueLUT(plane *pixelPlane, candidate experimentalV4PilotCandidate, cw, ch int, anchor [4]ImagePoint, start experimentalV4PhoneHypothesis, heldout int) ([]experimentalV4PhoneBuild55BlindContinuationState, int, experimentalV4PhoneBuild81LUTTelemetry) {
+func experimentalV4PhoneBuild82ContinueInline(plane *pixelPlane, candidate experimentalV4PilotCandidate, cw, ch int, anchor [4]ImagePoint, start experimentalV4PhoneHypothesis, heldout int) ([]experimentalV4PhoneBuild55BlindContinuationState, int, experimentalV4PhoneBuild82InlineTelemetry) {
 	q, h, score := start.quad, start.h, start.proposal
 	states := make([]experimentalV4PhoneBuild55BlindContinuationState, 0, experimentalV4PhoneBuild55MaxStatesBranch)
 	evals := 0
-	var lut experimentalV4PhoneBuild81LUTTelemetry
+	var inline experimentalV4PhoneBuild82InlineTelemetry
 	for pass := 0; pass < experimentalV4PhoneBuild55MaxPasses; pass++ {
 		improved := false
 		for dim := 0; dim < experimentalV4PhoneBuild55Dimensions; dim++ {
@@ -227,8 +214,8 @@ func experimentalV4PhoneBuild81ContinueLUT(plane *pixelPlane, candidate experime
 				if !ok {
 					continue
 				}
-				ss, _, lp := experimentalV4PhoneBuild81FoldScoreLUT(plane, candidate, cw, ch, hh, heldout, true, false)
-				experimentalV4PhoneBuild81MergeLUT(&lut, lp)
+				ss, _, ip := experimentalV4PhoneBuild82FoldScoreInline(plane, candidate, cw, ch, hh, heldout, true, false)
+				experimentalV4PhoneBuild82MergeInline(&inline, ip)
 				evals++
 				if !math.IsInf(ss, 0) && !math.IsNaN(ss) && ss > best+1e-7 {
 					bestQ, bestH, best, bestDelta = qq, hh, ss, delta
@@ -244,41 +231,41 @@ func experimentalV4PhoneBuild81ContinueLUT(plane *pixelPlane, candidate experime
 			break
 		}
 	}
-	return states, evals, lut
+	return states, evals, inline
 }
 
-type experimentalV4PhoneBuild81Gen4Result struct {
+type experimentalV4PhoneBuild82Gen4Result struct {
 	bank    []experimentalV4PhoneHypothesis
 	evals   int
 	elapsed time.Duration
-	lut     experimentalV4PhoneBuild81LUTTelemetry
+	inline  experimentalV4PhoneBuild82InlineTelemetry
 }
 
-func experimentalV4PhoneBuild81Generation4LUT(plane *pixelPlane, pilot experimentalV4PilotCandidate, cw, ch int, anchor [4]ImagePoint, input experimentalV4PhoneHypothesis) ([]experimentalV4PhoneHypothesis, int, experimentalV4PhoneBuild81LUTTelemetry) {
+func experimentalV4PhoneBuild82Generation4Inline(plane *pixelPlane, pilot experimentalV4PilotCandidate, cw, ch int, anchor [4]ImagePoint, input experimentalV4PhoneHypothesis) ([]experimentalV4PhoneHypothesis, int, experimentalV4PhoneBuild82InlineTelemetry) {
 	bank := make([]experimentalV4PhoneHypothesis, 0, 8)
 	evals := 0
-	var lut experimentalV4PhoneBuild81LUTTelemetry
+	var inline experimentalV4PhoneBuild82InlineTelemetry
 	se4, si4 := experimentalV4PhoneBuild53SingleProbe(plane, pilot, cw, ch, anchor, input, 0)
 	evals += se4
 	if si4 != 0 {
-		return bank, evals, lut
+		return bank, evals, inline
 	}
 	pairs4, pe4, _ := experimentalV4PhoneBuild53PairStencil(plane, pilot, cw, ch, anchor, input, 0)
 	evals += pe4
 	for _, pair4 := range pairs4 {
-		cont4, ce4, lp := experimentalV4PhoneBuild81ContinueLUT(plane, pilot, cw, ch, anchor, pair4.hyp, 0)
-		experimentalV4PhoneBuild81MergeLUT(&lut, lp)
+		cont4, ce4, ip := experimentalV4PhoneBuild82ContinueInline(plane, pilot, cw, ch, anchor, pair4.hyp, 0)
+		experimentalV4PhoneBuild82MergeInline(&inline, ip)
 		evals += ce4
 		for _, c4 := range cont4 {
 			bank = append(bank, c4.hyp)
 		}
 	}
-	return bank, evals, lut
+	return bank, evals, inline
 }
 
-// experimentalV4PhoneBuild81SeedPrefix1 reproduces Build64 exactly through the
+// experimentalV4PhoneBuild82SeedPrefix1 reproduces Build64 exactly through the
 // first sibling stencil and freezes sibling1 hypotheses in traversal order.
-func experimentalV4PhoneBuild81SeedPrefix1(plane *pixelPlane, pilot experimentalV4PilotCandidate, cw, ch int, anchor [4]ImagePoint, seed experimentalV4PhoneBuild48Seed) ([]experimentalV4PhoneHypothesis, int) {
+func experimentalV4PhoneBuild82SeedPrefix1(plane *pixelPlane, pilot experimentalV4PilotCandidate, cw, ch int, anchor [4]ImagePoint, seed experimentalV4PhoneBuild48Seed) ([]experimentalV4PhoneHypothesis, int) {
 	inputs := make([]experimentalV4PhoneHypothesis, 0, 32)
 	evals := 0
 	baseline, n := experimentalV4PhoneBuild41Refine(plane, pilot, cw, ch, anchor, seed.frozen.h.quad, 0)
@@ -311,9 +298,9 @@ func experimentalV4PhoneBuild81SeedPrefix1(plane *pixelPlane, pilot experimental
 	return inputs, evals
 }
 
-// experimentalV4PhoneBuild81Generation2 executes exactly the Build64 second
+// experimentalV4PhoneBuild82Generation2 executes exactly the Build64 second
 // single/pair/continuation/sibling subtree for one frozen sibling1 input.
-func experimentalV4PhoneBuild81Generation2(plane *pixelPlane, pilot experimentalV4PilotCandidate, cw, ch int, anchor [4]ImagePoint, input experimentalV4PhoneHypothesis) ([]experimentalV4PhoneHypothesis, int) {
+func experimentalV4PhoneBuild82Generation2(plane *pixelPlane, pilot experimentalV4PilotCandidate, cw, ch int, anchor [4]ImagePoint, input experimentalV4PhoneHypothesis) ([]experimentalV4PhoneHypothesis, int) {
 	outputs := make([]experimentalV4PhoneHypothesis, 0, 8)
 	evals := 0
 	se2, si2 := experimentalV4PhoneBuild53SingleProbe(plane, pilot, cw, ch, anchor, input, 0)
@@ -337,8 +324,8 @@ func experimentalV4PhoneBuild81Generation2(plane *pixelPlane, pilot experimental
 	return outputs, evals
 }
 
-func experimentalV4PhoneBuild81BlindBank(work image.Image, boundary PrintBoundaryEstimate, cw, ch int) ([]experimentalV4PhoneHypothesis, int, int, int, experimentalV4PhoneBuild81GeometryTelemetry, experimentalV4PhoneBuild75FreezeTelemetry) {
-	var profile experimentalV4PhoneBuild81GeometryTelemetry
+func experimentalV4PhoneBuild82BlindBank(work image.Image, boundary PrintBoundaryEstimate, cw, ch int) ([]experimentalV4PhoneHypothesis, int, int, int, experimentalV4PhoneBuild82GeometryTelemetry, experimentalV4PhoneBuild75FreezeTelemetry) {
+	var profile experimentalV4PhoneBuild82GeometryTelemetry
 	var freezeProfile experimentalV4PhoneBuild75FreezeTelemetry
 	if !experimentalV4PhoneBuild41BoundarySaneForImage(work, boundary) {
 		return nil, 0, 0, 0, profile, freezeProfile
@@ -364,7 +351,7 @@ func experimentalV4PhoneBuild81BlindBank(work image.Image, boundary PrintBoundar
 		workers = len(seeds)
 	}
 	profile.Prefix1Workers = workers
-	prefixes := make([]experimentalV4PhoneBuild81Prefix1Result, len(seeds))
+	prefixes := make([]experimentalV4PhoneBuild82Prefix1Result, len(seeds))
 	jobs := make(chan int)
 	var wg sync.WaitGroup
 	wg.Add(workers)
@@ -374,8 +361,8 @@ func experimentalV4PhoneBuild81BlindBank(work image.Image, boundary PrintBoundar
 			defer wg.Done()
 			for i := range jobs {
 				s := time.Now()
-				inputs, n := experimentalV4PhoneBuild81SeedPrefix1(plane, pilot, cw, ch, anchor, seeds[i])
-				prefixes[i] = experimentalV4PhoneBuild81Prefix1Result{inputs: inputs, evals: n, elapsed: time.Since(s)}
+				inputs, n := experimentalV4PhoneBuild82SeedPrefix1(plane, pilot, cw, ch, anchor, seeds[i])
+				prefixes[i] = experimentalV4PhoneBuild82Prefix1Result{inputs: inputs, evals: n, elapsed: time.Since(s)}
 			}
 		}()
 	}
@@ -408,7 +395,7 @@ func experimentalV4PhoneBuild81BlindBank(work image.Image, boundary PrintBoundar
 		gen2Workers = len(flat2)
 	}
 	profile.Gen2Workers = gen2Workers
-	gen2Results := make([]experimentalV4PhoneBuild81Gen2Result, len(flat2))
+	gen2Results := make([]experimentalV4PhoneBuild82Gen2Result, len(flat2))
 	gen2Jobs := make(chan int)
 	wg = sync.WaitGroup{}
 	wg.Add(gen2Workers)
@@ -418,8 +405,8 @@ func experimentalV4PhoneBuild81BlindBank(work image.Image, boundary PrintBoundar
 			defer wg.Done()
 			for i := range gen2Jobs {
 				s := time.Now()
-				outputs, n := experimentalV4PhoneBuild81Generation2(plane, pilot, cw, ch, anchor, flat2[i])
-				gen2Results[i] = experimentalV4PhoneBuild81Gen2Result{outputs: outputs, evals: n, elapsed: time.Since(s)}
+				outputs, n := experimentalV4PhoneBuild82Generation2(plane, pilot, cw, ch, anchor, flat2[i])
+				gen2Results[i] = experimentalV4PhoneBuild82Gen2Result{outputs: outputs, evals: n, elapsed: time.Since(s)}
 			}
 		}()
 	}
@@ -544,7 +531,7 @@ func experimentalV4PhoneBuild81BlindBank(work image.Image, boundary PrintBoundar
 		gen4Workers = len(flat4)
 	}
 	profile.Gen4Workers = gen4Workers
-	gen4Results := make([]experimentalV4PhoneBuild81Gen4Result, len(flat4))
+	gen4Results := make([]experimentalV4PhoneBuild82Gen4Result, len(flat4))
 	gen4Jobs := make(chan int)
 	wg = sync.WaitGroup{}
 	wg.Add(gen4Workers)
@@ -554,8 +541,8 @@ func experimentalV4PhoneBuild81BlindBank(work image.Image, boundary PrintBoundar
 			defer wg.Done()
 			for i := range gen4Jobs {
 				s := time.Now()
-				bank, n, lp := experimentalV4PhoneBuild81Generation4LUT(plane, pilot, cw, ch, anchor, flat4[i])
-				gen4Results[i] = experimentalV4PhoneBuild81Gen4Result{bank: bank, evals: n, elapsed: time.Since(s), lut: lp}
+				bank, n, lp := experimentalV4PhoneBuild82Generation4Inline(plane, pilot, cw, ch, anchor, flat4[i])
+				gen4Results[i] = experimentalV4PhoneBuild82Gen4Result{bank: bank, evals: n, elapsed: time.Since(s), inline: lp}
 			}
 		}()
 	}
@@ -571,10 +558,10 @@ func experimentalV4PhoneBuild81BlindBank(work image.Image, boundary PrintBoundar
 		evals += r.evals
 		bank = append(bank, r.bank...)
 		profile.Gen4WorkerElapsed += r.elapsed
-		profile.LUTFoldScores += r.lut.FoldScores
-		profile.LUTBlockReads += r.lut.BlockReads
-		profile.LUTBlockSuccess += r.lut.BlockSuccess
-		profile.LUTBlockFailed += r.lut.BlockFailed
+		profile.InlineFoldScores += r.inline.FoldScores
+		profile.InlineBlockReads += r.inline.BlockReads
+		profile.InlineBlockSuccess += r.inline.BlockSuccess
+		profile.InlineBlockFailed += r.inline.BlockFailed
 		gen4Durations = append(gen4Durations, r.elapsed)
 		if i == 0 || r.elapsed < profile.Gen4MinElapsed {
 			profile.Gen4MinElapsed = r.elapsed
@@ -602,20 +589,20 @@ func experimentalV4PhoneBuild81BlindBank(work image.Image, boundary PrintBoundar
 	return bank, evals, len(seeds), workers, profile, freezeProfile
 }
 
-type experimentalV4PhoneBuild81RecoveryTelemetry struct {
+type experimentalV4PhoneBuild82RecoveryTelemetry struct {
 	experimentalV4PhoneBuild75RecoveryTelemetry
-	Build81GeometryProfile experimentalV4PhoneBuild81GeometryTelemetry
+	Build82GeometryProfile experimentalV4PhoneBuild82GeometryTelemetry
 }
 
-func experimentalV4PhoneBuild81Recover(work image.Image, boundary PrintBoundaryEstimate, key []byte, cw, ch int) ([]byte, ExperimentalV4ExtractInfo, experimentalV4PhoneBuild81RecoveryTelemetry, error) {
-	telemetry := experimentalV4PhoneBuild81RecoveryTelemetry{}
+func experimentalV4PhoneBuild82Recover(work image.Image, boundary PrintBoundaryEstimate, key []byte, cw, ch int) ([]byte, ExperimentalV4ExtractInfo, experimentalV4PhoneBuild82RecoveryTelemetry, error) {
+	telemetry := experimentalV4PhoneBuild82RecoveryTelemetry{}
 	telemetry.Attempted = true
 	totalStarted := time.Now()
 	finish := func() { telemetry.TotalElapsed = time.Since(totalStarted) }
 	geometryStarted := time.Now()
-	bank, evals, seeds, prefixWorkers, gp, fp := experimentalV4PhoneBuild81BlindBank(work, boundary, cw, ch)
+	bank, evals, seeds, prefixWorkers, gp, fp := experimentalV4PhoneBuild82BlindBank(work, boundary, cw, ch)
 	telemetry.GeometryElapsed = time.Since(geometryStarted)
-	telemetry.Build81GeometryProfile = gp
+	telemetry.Build82GeometryProfile = gp
 	telemetry.FreezeProfile = fp
 	telemetry.GeometryEvaluations = evals
 	telemetry.SeedsSelected = seeds
@@ -653,7 +640,7 @@ func experimentalV4PhoneBuild81Recover(work image.Image, boundary PrintBoundaryE
 	compat.Gen4MaxBank = gp.Gen4MaxBank
 	if len(bank) == 0 {
 		finish()
-		return nil, ExperimentalV4ExtractInfo{}, telemetry, errors.New("experimental v4 Build81 recovery bank empty")
+		return nil, ExperimentalV4ExtractInfo{}, telemetry, errors.New("experimental v4 Build82 recovery bank empty")
 	}
 	planeStarted := time.Now()
 	plane := newPixelPlane(work)
@@ -673,7 +660,7 @@ func experimentalV4PhoneBuild81Recover(work image.Image, boundary PrintBoundaryE
 	telemetry.DecodeWorkers = experimentalV4PhoneBuild66DecodeWorkerCount(len(qualified))
 	if len(qualified) == 0 {
 		finish()
-		return nil, ExperimentalV4ExtractInfo{}, telemetry, errors.New("experimental v4 Build81 recovery authentication failed")
+		return nil, ExperimentalV4ExtractInfo{}, telemetry, errors.New("experimental v4 Build82 recovery authentication failed")
 	}
 	workers := telemetry.DecodeWorkers
 	decodeStarted := time.Now()
@@ -706,12 +693,12 @@ func experimentalV4PhoneBuild81Recover(work image.Image, boundary PrintBoundaryE
 	}
 	telemetry.DecodeWallElapsed = time.Since(decodeStarted)
 	finish()
-	return nil, ExperimentalV4ExtractInfo{}, telemetry, errors.New("experimental v4 Build81 recovery authentication failed")
+	return nil, ExperimentalV4ExtractInfo{}, telemetry, errors.New("experimental v4 Build82 recovery authentication failed")
 }
 
-func experimentalV4PhoneBuild81ApplyTelemetry(public *ExperimentalV4PhoneInfo, recovery experimentalV4PhoneBuild81RecoveryTelemetry) {
+func experimentalV4PhoneBuild82ApplyTelemetry(public *ExperimentalV4PhoneInfo, recovery experimentalV4PhoneBuild82RecoveryTelemetry) {
 	experimentalV4PhoneBuild75ApplyTelemetry(public, recovery.experimentalV4PhoneBuild75RecoveryTelemetry)
-	p := recovery.Build81GeometryProfile
+	p := recovery.Build82GeometryProfile
 	// Preserve the qualified Build76 public view exactly so existing physical
 	// gates and downstream tooling continue to see the same scheduler semantics.
 	public.Build76Attempted = recovery.Attempted
@@ -739,9 +726,9 @@ func experimentalV4PhoneBuild81ApplyTelemetry(public *ExperimentalV4PhoneInfo, r
 	public.Build76Gen2MaxEvals = p.Gen2MaxEvaluations
 	public.Build76Gen2MinOutputs = p.Gen2MinOutputs
 	public.Build76Gen2MaxOutputs = p.Gen2MaxOutputs
-	public.Build81Attempted = recovery.Attempted
-	public.Build81LUTFoldScores = p.LUTFoldScores
-	public.Build81LUTBlockReads = p.LUTBlockReads
-	public.Build81LUTBlockSuccess = p.LUTBlockSuccess
-	public.Build81LUTBlockFailed = p.LUTBlockFailed
+	public.Build82Attempted = recovery.Attempted
+	public.Build82InlineFoldScores = p.InlineFoldScores
+	public.Build82InlineBlockReads = p.InlineBlockReads
+	public.Build82InlineBlockSuccess = p.InlineBlockSuccess
+	public.Build82InlineBlockFailed = p.InlineBlockFailed
 }
