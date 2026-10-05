@@ -1,3 +1,9 @@
+## Build83 profiling result / Build84 selection
+
+Build83 completed on the qualified Go 1.26.0 i3-13100T host. Repeated historical angle-like block reads were 1688 / 1676 / 1678 / 1768 / 1699 ns/op, with a separate 1710 ns/op long profile run. The Build82 exact-inline comparator was 1677 / 1663 / 1660 / 1660 / 1659 ns/op. Stage measurements were 241.7–243.6 ns/block for 64 `mapPoint` calls, 1090–1140 ns/block for 64 `samplePlaneLuminance` calls, and 71.88–72.22 ns/block for DCT accumulation. All reported benchmarks were 0 B/op and 0 allocs/op.
+
+CPU pprof attributed 72.33% cumulative CPU to `samplePlaneLuminance`, only 5.65% cumulative to `homography.mapPoint`, and 21.15% flat to the surrounding projective-reader loop. Build84 is therefore selected as an exact RGB address/bounds-check experiment rather than a mapPoint or DCT optimization. No Build84 physical result exists yet.
+
 ## v0.3.0-build83 projective sampler profiling — measurement pending
 
 Build82 is closed as **semantic PASS x2 / non-promoted**. The two physical matrices were 933,537 and 729,213 ms (831,375 ms mean) versus 758,102 ms for qualified Build76. B/mild generation four was 24,305 / 19,991 ms versus 18,473 ms Build76 mean; B/angle generation four was 136,040 / 107,359 ms versus 110,830 ms. Exact deep counters and workload were preserved in both runs, so the negative decision is performance-only.

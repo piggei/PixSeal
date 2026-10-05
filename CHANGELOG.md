@@ -1,3 +1,12 @@
+## v0.3.0-build84 — exact RGB fetch / bounds-check reduction candidate
+
+- Record the qualified-host Build83 profile: historical angle reader about 1.70 us/block, `samplePlaneLuminance` 72.33% cumulative CPU, `homography.mapPoint` 5.65%, and DCT accumulation about 72 ns/block.
+- Add an exact continuation4 RGB-fetch candidate that hoists row/x byte offsets and uses one three-byte slice per bilinear source pixel, reducing the explicit bounds-check shape without `unsafe` or arithmetic changes.
+- Preserve exact `float64` luminance, bilinear interpolation, DCT accumulation, `mapPoint`, geometry ordering, qualification, protected-data decode and HMAC semantics.
+- Add Build84 block/FoldScore/continuation/bank bit-exact regressions, public deterministic Build76/Build82/Build84 microbenchmarks, and compiler `check_bce` evidence capture.
+- Add `make v4-build84-phone-rgb-fetch-test`, `make v4-build84-phone-rgb-fetch-benchmark`, and a retained physical gate that should be run only after the Go 1.26.0 benchmark justifies it.
+- Keep Build76 as the qualified smartphone baseline until two independent physical Build84 runs demonstrate exact semantics and a material repeatable speedup.
+
 ## v0.3.0-build83 — projective sampler CPU profiling
 
 - Close Build82 as **semantic PASS x2 / non-promoted**: two Go 1.26.0 9/9 physical runs preserved exact workload but averaged 831,375 ms versus the 758,102 ms qualified Build76 matrix mean.

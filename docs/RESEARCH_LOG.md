@@ -1,3 +1,11 @@
+## Build83 profile result and Build84 RGB-fetch hypothesis — 2026-10-05
+
+Build83 completed on the qualified Go 1.26.0 host (`13th Gen Intel(R) Core(TM) i3-13100T`). Repeated historical front/mild/angle block reads were about 1.64–1.77 us/block; the long angle profile run was 1.710 us/block. The closed Build82 inline comparator was around 1.66–1.68 us/block, confirming that helper-call removal alone is only a small microbenchmark win.
+
+The stage benchmark measured `mapPoint` at about 241.7–243.6 ns per 64 calls, `samplePlaneLuminance` at about 1090–1140 ns per 64 samples, and DCT accumulation at about 71.9–72.2 ns per block. CPU pprof is the stronger attribution: `samplePlaneLuminance.func1` is 43.93% flat, `samplePlaneLuminance` another 28.36% flat / 72.33% cumulative, `readProjectiveBlockValue` 21.15% flat, and `homography.mapPoint` only 4.35% flat / 5.65% cumulative. Therefore the next experiment should not be mapPoint or DCT.
+
+Build84 tests only the RGB fetch/bounds-check shape while preserving the exact Build82 continuation4 arithmetic. It hoists row/x byte offsets and uses four three-byte pixel slices, allowing one slice bounds check per RGB triplet and statically bounded `[0..2]` component loads. No `unsafe`, LUT, cache, luminance plane, coordinate recurrence or floating-point reordering is allowed. The Go 1.26.0 public microbenchmark and compiler `check_bce` evidence must be reviewed before any physical matrix is run.
+
 ## Build82 closure and Build83 profiling checkpoint — 2026-10-05
 
 Build82 passed the complete physical semantic matrix twice with exact B/mild `79259 / 937 / 935 / 691 / 2120047` and B/angle `334857 / 6198 / 0`, plus exact FoldScore/block-read workload. Timing was not repeatable: the full matrices were 933,537 and 729,213 ms (831,375 ms mean) against the 758,102 ms Build76 mean. Build82 is therefore exact but non-promoted.

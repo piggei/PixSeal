@@ -80,3 +80,17 @@ Do not choose Build84 from microbenchmark ranking alone. Use Build83 to answer w
 4. If no component has a material isolated share or microbenchmarks are unstable, stop micro-optimizing and preserve Build76.
 
 Any later performance candidate must again pass two independent physical semantic gates before promotion.
+
+## Qualified-host result — Build83 closed
+
+Build83 was executed on the qualified Go 1.26.0 host with a 13th Gen Intel Core i3-13100T and passed its profiling gate. Historical angle-reader repetitions were `1688 / 1676 / 1678 / 1768 / 1699 ns/op`; a separate long CPU-profile run measured `1710 ns/op`. The Build82 exact-inline comparator measured `1677 / 1663 / 1660 / 1660 / 1659 ns/op`.
+
+Component measurements at one complete 8x8 block of work were:
+
+- `homography.mapPoint`: `241.7–243.6 ns/op` for 64 calls;
+- `samplePlaneLuminance`: `1090–1140 ns/op` for 64 samples;
+- DCT accumulation: `71.88–72.22 ns/op`.
+
+CPU pprof attributed `43.93%` flat to the inlined luminance RGB closure, `28.36%` additional flat / `72.33%` cumulative to `samplePlaneLuminance`, `21.15%` flat to `readProjectiveBlockValue`, and only `4.35%` flat / `5.65%` cumulative to `homography.mapPoint`.
+
+**Decision:** Build83 is complete. The evidence selects Build84 as an exact RGB-fetch/bounds-check-reduction candidate. `mapPoint` and DCT are not the next targets. Build76 remains the qualified baseline.

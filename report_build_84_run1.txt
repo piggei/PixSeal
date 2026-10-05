@@ -3,6 +3,6 @@ Building PixSeal with go1.26.0...
 Created dist/pixseal
 Build84 staged result: controls=3/3 A/front=1/1 A/mild=1/1 A/angle=1/1 B/front=1/1 B/mild=1/1 B/angle-reject=1/1
 Build84 exact RGB-fetch sampler matrix written to:
-  v4-phone private/build84-diagnostics2/build84-phone-rgb-fetch.tsv
-  v4-phone private/build84-diagnostics2/build84-phone-rgb-fetch.md
+  v4-phone private/build84-diagnostics1/build84-phone-rgb-fetch.tsv
+  v4-phone private/build84-diagnostics1/build84-phone-rgb-fetch.md
 Build84 semantic-equivalence physical gate: PASS

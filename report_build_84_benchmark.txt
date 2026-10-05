@@ -1,0 +1,47 @@
+ok  	github.com/pj/pixseal/watermark	0.010s
+goos: linux
+goarch: amd64
+pkg: github.com/pj/pixseal/watermark
+cpu: 13th Gen Intel(R) Core(TM) i3-13100T
+BenchmarkExperimentalV4Build84HistoricalBlockReaderFront-8   	 1563661	      1526 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderFront-8   	 1578734	      1516 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderFront-8   	 1600501	      1490 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderFront-8   	 1609992	      1487 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderFront-8   	 1613718	      1483 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderMild-8    	 1601702	      1508 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderMild-8    	 1611795	      1495 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderMild-8    	 1602723	      1494 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderMild-8    	 1607196	      1547 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderMild-8    	 1533627	      1526 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderAngle-8   	 1556994	      1533 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderAngle-8   	 1574145	      1524 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderAngle-8   	 1564291	      1519 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderAngle-8   	 1575488	      1516 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84HistoricalBlockReaderAngle-8   	 1580743	      1519 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84Build82BlockReaderAngle-8      	 1600076	      1534 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84Build82BlockReaderAngle-8      	 1601539	      1545 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84Build82BlockReaderAngle-8      	 1558220	      1531 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84Build82BlockReaderAngle-8      	 1576996	      1551 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84Build82BlockReaderAngle-8      	 1588302	      1508 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderFront-8     	 1722964	      1431 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderFront-8     	 1725394	      1389 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderFront-8     	 1719072	      1403 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderFront-8     	 1715787	      1435 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderFront-8     	 1723574	      1408 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderMild-8      	 1666246	      1435 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderMild-8      	 1694018	      1408 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderMild-8      	 1705290	      1401 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderMild-8      	 1714356	      1401 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderMild-8      	 1699662	      1395 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderAngle-8     	 1701627	      1412 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderAngle-8     	 1699052	      1409 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderAngle-8     	 1703756	      1415 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderAngle-8     	 1701190	      1407 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build84RGBFetchBlockReaderAngle-8     	 1704523	      1407 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/pj/pixseal/watermark	138.514s
+Build84 RGB-fetch benchmark written to:
+  v4-phone private/build84-benchmark/build84-benchmark.txt
+  v4-phone private/build84-benchmark/build84-bce-reader.txt
+  v4-phone private/build84-benchmark/build84-bce-inlining.txt
+Build84 benchmark gate: PASS (correctness only; review speed before physical testing)

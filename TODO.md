@@ -1,12 +1,24 @@
-## Build83 checkpoint
+## Build84 checkpoint
+
+- [x] Close Build83 profiling on the qualified Go 1.26.0 i3-13100T host and select the next hypothesis from CPU flat/cumulative evidence.
+- [x] Keep Build76 immutable as the current qualified smartphone baseline.
+- [x] Implement one narrow candidate: exact continuation4 RGB row/x address hoisting plus one three-byte slice per bilinear source pixel; no `unsafe`, LUT, cache, mapPoint change or floating-point reordering.
+- [x] Add projective-block bit equality, Build41 FoldScore equality, Build55 continuation equality and complete Build84-vs-Build76 bank equality regressions.
+- [x] Add a public deterministic Build76/Build82/Build84 benchmark and Go compiler bounds-check/inliner evidence capture.
+- [ ] Run `make v4-build84-phone-rgb-fetch-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build84-phone-rgb-fetch-benchmark` on an otherwise idle qualified host and review repeated reader speed plus `build84-bce-reader.txt`.
+- [ ] Run the physical 9-photo gate only if the Go 1.26.0 benchmark shows a stable useful gain; if run 1 is exact and materially faster, archive it and perform a second independent confirmation before promotion.
+- [ ] Do not alter Format-v4 wire format, locked pilot, strength 48, ECC/Hamming, whitening/HMAC domains or qualified thresholds without new evidence.
+
+## Build83 checkpoint — closed
 
 - [x] Close Build82 as **semantic PASS x2 / non-promoted** and restore active deep smartphone recovery to qualified Build76.
 - [x] Add a public deterministic projective-sampler benchmark fixture with no key/payload/HMAC/private-corpus dependency.
 - [x] Add repeated benchmarks for historical block read, Build82 exact-inline comparator, `mapPoint`, luminance sampling and DCT accumulation.
 - [x] Add atomic CPU-profile/pprof tooling and preserve the Go 1.26.0 inliner report.
-- [ ] Run `make v4-build83-projective-sampler-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build83-projective-sampler-profile` on an otherwise idle qualified host and return the complete `build83-profile` directory.
-- [ ] Use flat/cumulative profile evidence, not one microbenchmark number, to define or reject Build84.
+- [x] Run `make v4-build83-projective-sampler-test` on the qualified Go 1.26.0 host.
+- [x] Run `make v4-build83-projective-sampler-profile` on an otherwise idle qualified host and archive the complete `build83-profile` directory.
+- [x] Use flat/cumulative profile evidence to define Build84: `samplePlaneLuminance` is 72.33% cumulative CPU; `mapPoint` is only 5.65%; DCT is small.
 
 ## Build82 checkpoint
 
@@ -20,7 +32,7 @@
 - [x] Add low-overhead Build82 counters and an atomic nine-photo gate with explicit TSV header/row field-count validation.
 - [x] Run `make v4-build82-phone-inline-sampler-test` on the qualified Go 1.26.0 host.
 - [x] Run two independent `make v4-build82-phone-physical-test` gates on the complete retained 9-photo corpus; both are exact 9/9 PASS but performance is not repeatable.
-- [ ] If the first physical run is exact and materially faster than Build76, archive it and run a second independent confirmation before promotion.
+- [x] The first Build82 physical run was exact but not materially faster; a second independent run was retained to characterize host variability, not to rescue promotion.
 - [x] Close Build82 as exact but non-promoted and move to a dedicated benchmark/pprof build before considering manual `mapPoint` inlining.
 - [ ] Do not alter Format-v4 wire format, locked pilot, strength 48, ECC/Hamming, whitening/HMAC domains or qualified thresholds without new evidence.
 
@@ -76,7 +88,7 @@
 - [x] Keep pair scoring, cells, all thresholds, qualification, ECC/Hamming and HMAC semantics unchanged.
 - [x] Run `make v4-build75-phone-basin-parallel-test` on the qualified Go 1.26.0 host.
 - [x] Run `make v4-build75-phone-physical-test` twice and archive both retained results.
-- [x] Promote after exact semantic equivalence and reproducible performance improvement: Build75 is the current qualified baseline.
+- [x] Promote after exact semantic equivalence and reproducible performance improvement: Build75 became the then-current qualified baseline and was later superseded by Build76.
 
 ## v0.3.0 — geometry research
 

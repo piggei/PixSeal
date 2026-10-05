@@ -1,3 +1,9 @@
+## Build84 — exact RGB fetch / bounds-check reduction candidate
+
+Build83 completed successfully as an observability-only checkpoint on the qualified Go 1.26.0 i3-13100T host. The historical angle-like reader measured about 1.70 us/block; the stage benchmark measured about 243 ns/block for 64 mapPoint calls, about 1.09–1.14 us/block for 64 luminance samples and about 72 ns/block for DCT accumulation. CPU pprof attributed 72.33% cumulative time to `samplePlaneLuminance`, 5.65% to `homography.mapPoint` and 21.15% flat to surrounding `readProjectiveBlockValue` work. This evidence rejects mapPoint/DCT as the immediate target and motivates Build84.
+
+Build84 keeps the exact Build82 continuation4 sampler arithmetic but changes only RGB address formation and bounds-check shape: row bases and x byte offsets are computed once, then each of the four bilinear source pixels is represented by a length-three slice before evaluating the unchanged `.299*R + .587*G + .114*B - 128` expression. No `unsafe`, cache, LUT, precomputed luminance plane, geometry change or floating-point reordering is introduced. A public Go 1.26.0 microbenchmark/BCE review precedes any physical run; Build76 remains qualified.
+
 ## Build83 — projective sampler CPU profiling
 
 Build82 closed with two independent Go 1.26.0 semantic PASS runs but no repeatable performance gain: 933,537 / 729,213 ms full-matrix elapsed (831,375 ms mean) versus 758,102 ms for qualified Build76. Build83 therefore restores the active deep phone runtime to Build76 and performs no algorithmic optimization. It adds only a public deterministic benchmark/pprof harness for the historical projective reader and its mapPoint, luminance and DCT components, retaining Build82 solely as an exact comparator. Build83 timing is research evidence, never a semantic gate.
