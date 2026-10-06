@@ -1,6 +1,10 @@
-## v0.3.0-build86 exact DCT table-hoist candidate — benchmark pending
+## v0.3.0-build87 qualified RGB/luminance/bilinear profile — pending qualified-host run
 
-Build86 is selected from the completed Build85 profile and changes only DCT cosine-table load placement inside the qualified Build84 continuation4 reader. The active candidate hoists y-dependent table values once per row and x-dependent values once per sample while preserving `(l*a)*b`, c23/c32 accumulation order, RGB sampling and all recovery semantics exactly. Build84 remains the current qualified baseline. The private corpus must not be run unless the qualified-host whole-reader benchmark shows a stable useful improvement (working threshold ~5%).
+Build87 is observability-only. The active deep runtime is restored to qualified Build84. The public profile will measure the complete Build84 reader plus isolated four-pixel slice fetch, four RGB-to-luminance conversions, horizontal bilinear interpolation, vertical bilinear interpolation and their combined prepared path; it also preserves CPU pprof, BCE/inlining and objdump evidence around the exact RGB/luminance/bilinear source lines. No private corpus run is required.
+
+## v0.3.0-build86 exact DCT table hoist — closed benchmark-negative
+
+Build86 passed exactness but failed the benchmark-first performance criterion on the qualified Go 1.26.0 i3-13100T host. Five-run reader means were Build84 1348.4 / 1380.8 / 1425.4 ns/block versus Build86 1382.4 / 1513.0 / 1435.6 ns/block for front/mild/angle, i.e. Build86 was 2.5% / 9.6% / 0.7% slower. Isolated DCT accumulation also regressed from 65.588 to 71.166 ns/block (+8.5%). Build86 did not proceed to physical testing and is not promoted.
 
 ## v0.3.0-build85 qualified-sampler profile — completed 2026-10-06
 

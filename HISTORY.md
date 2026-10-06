@@ -1,6 +1,10 @@
-## Build86 — exact DCT table hoist / bounds-check candidate
+## v0.3.0-build87 — qualified RGB/luminance/bilinear profiling
 
-Build85 completed on the qualified Go 1.26.0 i3-13100T host and re-profiled the already-promoted Build84 reader. Whole-reader five-run means were 1384.6 / 1462.4 / 1441.2 ns/block for front/mild/angle-like fixtures, and the long angle CPU-profile run was 1427 ns/block. In the integrated 24.99 s CPU profile, the two DCT accumulation lines consumed 3.55 s + 1.11 s = 4.66 s (~18.6%); `homography.mapPoint` remained only 5.80% cumulative. Compiler BCE output still showed two `IsInBounds` checks on each accumulation line. Build86 therefore changes only DCT cosine-table load placement: y-dependent coefficients are hoisted once per row and x-dependent coefficients loaded once per sample, while `(l * a) * b`, c23/c32 update order, the qualified Build84 RGB sampler and all recovery semantics remain exact. Build84 remains the qualified baseline while Build86 is evaluated benchmark-first.
+Build86 closed as an exact but benchmark-negative DCT-table-hoist experiment and never reached the private physical corpus. Its qualified-host reader means were slower than Build84 on front/mild/angle, and the isolated hoisted DCT kernel itself regressed by about 8.5%. Build87 therefore restores Build84 as the active qualified runtime and performs no recovery change. It decomposes the remaining RGB fetch -> luminance -> bilinear hot path with public deterministic benchmarks, integrated pprof, BCE/inlining output and generated assembly so any later Build88 candidate is selected from fresh evidence rather than another speculative source rewrite.
+
+## Build86 — exact DCT table hoist / bounds-check experiment — closed negative
+
+Build85 selected one exact DCT cosine-table load-placement experiment. Build86 passed block/FoldScore/continuation/bank exactness on the qualified Go 1.26.0 host, but its same-session five-run reader means regressed versus Build84: front 1382.4 vs 1348.4 ns/block, mild 1513.0 vs 1380.8, angle 1435.6 vs 1425.4. The isolated DCT kernel also regressed from 65.588 to 71.166 ns/block (+8.5%). Build86 therefore stopped before the private corpus and is not promoted. Compiler evidence showed that moving/removing inner DCT bounds checks was not sufficient to improve generated-code performance.
 
 ## Build85 — qualified Build84 sampler post-promotion profiling
 

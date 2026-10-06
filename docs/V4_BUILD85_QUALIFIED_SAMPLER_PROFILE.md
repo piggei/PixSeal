@@ -86,4 +86,4 @@ After the qualified Go 1.26.0 profile:
 - any Build86 performance candidate must derive from Build84 or a path proven Build84-equivalent and must pass block/FoldScore/continuation/bank exactness before any physical timing;
 - superseding Build84 still requires two independent Go 1.26.0 9/9 physical PASS runs with a repeatable material improvement.
 
-Build85 evidence has now been reviewed. **Build84 remains the current qualified smartphone baseline; Build86 is selected as a benchmark-first exact DCT table-hoist candidate and is not yet qualified.**
+Build85 evidence selected Build86 as a benchmark-first exact DCT table-hoist experiment. Build86 subsequently passed exactness but regressed the qualified-host whole-reader and isolated DCT benchmarks, so it was closed without a physical gate. **Build84 remains the current qualified smartphone baseline; Build87 now profiles the remaining qualified RGB/luminance/bilinear path.**

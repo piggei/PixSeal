@@ -1,3 +1,12 @@
+## v0.3.0-build87 — qualified RGB/luminance/bilinear compiler profiling
+
+- Keep Build84 as the current qualified smartphone semantic/performance baseline and restore the active deep runtime to Build84 after Build86 fails its benchmark-first criterion.
+- Close Build86 as **exact / benchmark-negative / non-promoted**: qualified-host five-run means regress from Build84 1348.4 / 1380.8 / 1425.4 ns/block to Build86 1382.4 / 1513.0 / 1435.6 ns/block on front/mild/angle; isolated DCT accumulation regresses from 65.588 to 71.166 ns/block.
+- Record the compiler lesson from Build86: the candidate moved/removed the four inner DCT bounds checks but introduced checks on hoisted table loads and raised reader inline cost 562 -> 582; fewer visible BCE checks did not make the complete reader faster.
+- Add Build87 public deterministic stage benchmarks for four-pixel slice fetch, exact RGB-to-luminance arithmetic, horizontal bilinear interpolation, vertical bilinear interpolation, combined prepared fetch+luminance+bilinear, and the complete qualified Build84 reader.
+- Add a long CPU pprof, line-level reader pprof, Go 1.26.0 BCE/inlining capture, complete reader objdump and an RGB/luminance/bilinear assembly subset.
+- Add `make v4-build87-rgb-luma-bilinear-test` and `make v4-build87-rgb-luma-bilinear-profile`. Build87 is observability-only and requires no private physical gate.
+
 ## v0.3.0-build86 — exact DCT table hoist / BCE candidate
 
 - Keep Build84 as the current qualified smartphone semantic/performance baseline; Build86 is candidate-only until exactness and repeatable speedup are proven.

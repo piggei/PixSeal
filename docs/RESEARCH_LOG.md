@@ -1,3 +1,11 @@
+## Build86 closure and Build87 RGB/luminance/bilinear profiling — 2026-10-06
+
+Build86 passed its exactness gates but failed the benchmark-first performance gate on the qualified Go 1.26.0 i3-13100T host. Same-session five-run means were Build84 1348.4 / 1380.8 / 1425.4 ns/block and Build86 1382.4 / 1513.0 / 1435.6 ns/block for front/mild/angle. The isolated DCT shape also moved the wrong way: 65.588 ns/block baseline versus 71.166 ns/block hoisted (+8.5%). No private physical run is justified.
+
+Compiler evidence is instructive: Build84 retained four `IsInBounds` checks on the DCT accumulation lines; Build86 removed those inner checks but introduced checks on the hoisted table loads, and the complete-reader inline cost increased from 562 to 582. The negative result therefore warns against using BCE-count reduction as a performance proxy.
+
+Build87 restores the active deep runtime to qualified Build84 and is observability-only. It decomposes the remaining exact RGB fetch -> RGB-to-luminance -> horizontal bilinear -> vertical bilinear path on the public deterministic fixture, while also collecting integrated CPU pprof, source-line attribution, Go BCE/inlining output and generated assembly for the qualified reader. A later Build88 should be opened only if this evidence identifies one narrow exact-portable transformation with a plausible complete-reader benefit.
+
 ## Build86 selection from completed Build85 profile — 2026-10-06
 
 Build85 completed on the qualified Go 1.26.0 i3-13100T host. Whole-reader means were 1384.6 / 1462.4 / 1441.2 ns/block (front/mild/angle); a long angle run measured 1427 ns/block. Integrated pprof attributed 4.66 s of 24.99 s total samples (~18.6%) to the two DCT accumulation lines, while `homography.mapPoint` remained only 5.80% cumulative. Compiler BCE diagnostics showed four `IsInBounds` checks on the cosine-table accesses at those two lines.

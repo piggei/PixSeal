@@ -1,14 +1,23 @@
-## Build86 checkpoint — active benchmark-first candidate
+## Build87 checkpoint — active observability-only profiling
+
+- [x] Keep Build84 as the current qualified smartphone baseline and restore the active deep runtime to Build84.
+- [x] Close Build86 as exact / benchmark-negative / non-promoted; do not run a private physical gate.
+- [x] Add public deterministic bit-exact prepared samples for the qualified Build84 RGB/luminance/bilinear path.
+- [x] Add repeated block-granularity benchmarks for qualified reader, four-pixel slice fetch, four RGB-to-luminance conversions, horizontal bilinear, vertical bilinear and combined prepared fetch+luminance+bilinear.
+- [x] Add atomic CPU pprof, line-level reader attribution, BCE/inlining capture and generated assembly around Build84 lines 140-150.
+- [ ] Run `make v4-build87-rgb-luma-bilinear-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build87-rgb-luma-bilinear-profile` on an otherwise idle qualified host and archive `build87-profile`.
+- [ ] Select Build88 only if Build87 exposes one narrow exact-portable source/assembly opportunity with plausible whole-reader benefit.
+- [ ] If no credible target emerges, keep Build84 qualified rather than forcing another micro-optimization.
+
+## Build86 checkpoint — closed exact / benchmark-negative
 
 - [x] Keep Build84 as the current qualified smartphone baseline.
-- [x] Select one Build86 hypothesis from completed Build85 evidence: exact DCT table-load hoist/BCE reduction only.
-- [x] Preserve Build84 RGB fetch, mapPoint, float64 arithmetic order, geometry/order, qualification and protected-data semantics; no precomputed DCT products or reassociation.
-- [x] Add Build84-vs-Build86 block/FoldScore/continuation/bank exactness regressions and Build86 candidate telemetry.
-- [x] Add public repeated whole-reader/DCT benchmarks plus Go compiler BCE evidence capture.
-- [ ] Run `make v4-build86-dct-hoist-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build86-dct-hoist-benchmark` on an otherwise idle qualified host and archive `build86-benchmark`.
-- [ ] Proceed to the private physical gate only if the complete reader shows a stable useful improvement (working threshold ~5%); isolated DCT speedup alone is insufficient.
-- [ ] If benchmark-positive, run two independent 9-photo physical gates and promote only for exact semantics plus repeatable material speedup over Build84.
+- [x] Preserve exact `(l*a)*b` arithmetic and c23/c32 accumulation order while hoisting DCT table loads.
+- [x] Pass Build84-vs-Build86 block/FoldScore/continuation/bank exactness on the qualified Go 1.26.0 host.
+- [x] Run the public Build84/Build86 reader + DCT benchmark and archive compiler BCE evidence.
+- [x] Reject Build86 on performance: front +2.5%, mild +9.6%, angle +0.7% slower; isolated DCT +8.5% slower.
+- [x] Do not run the private nine-photo physical gate because the benchmark-first criterion failed.
 
 ## Build85 checkpoint — closed profiling PASS
 

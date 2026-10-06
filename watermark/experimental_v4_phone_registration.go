@@ -1417,12 +1417,11 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
-		// Build86 is an equivalence-preserving performance candidate over the
-		// qualified Build84 smartphone baseline. Only continuation4 FoldScore DCT
-		// table loads use the exact row-hoist/BCE candidate selected from Build85
-		// profiling evidence; the qualified Build84 RGB sampler remains unchanged.
-		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild86Recover(work, boundary, key, cw, ch)
-		experimentalV4PhoneBuild86ApplyTelemetry(&public, recovery64)
+		// Build87 is observability-only. Build86 was exact but benchmark-negative,
+		// so the active deep recovery path is restored to the current qualified
+		// Build84 sampler. No Build87 profiling result can alter geometry or decode.
+		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild84Recover(work, boundary, key, cw, ch)
+		experimentalV4PhoneBuild84ApplyTelemetry(&public, recovery64)
 		if err64 == nil {
 			public.ProjectiveBasinFound = true
 			public.Accepted = true

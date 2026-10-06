@@ -1,0 +1,63 @@
+ok  	github.com/pj/pixseal/watermark	0.010s
+goos: linux
+goarch: amd64
+pkg: github.com/pj/pixseal/watermark
+cpu: 13th Gen Intel(R) Core(TM) i3-13100T
+BenchmarkExperimentalV4Build87QualifiedBlockReaderFront-8         	 1752297	      1401 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderFront-8         	 1554213	      1385 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderFront-8         	 1752030	      1380 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderFront-8         	 1741275	      1419 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderFront-8         	 1721977	      1389 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderMild-8          	 1727253	      1381 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderMild-8          	 1656524	      1377 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderMild-8          	 1746025	      1373 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderMild-8          	 1749234	      1371 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderMild-8          	 1750424	      1372 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderAngle-8         	 1723153	      1389 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderAngle-8         	 1729218	      1398 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderAngle-8         	 1685362	      1414 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderAngle-8         	 1701186	      1415 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87QualifiedBlockReaderAngle-8         	 1706892	      1397 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedPixelSliceFetchAngle-8      	10182411	       236.8 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedPixelSliceFetchAngle-8      	10072004	       236.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedPixelSliceFetchAngle-8      	10121402	       236.0 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedPixelSliceFetchAngle-8      	10103224	       237.9 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedPixelSliceFetchAngle-8      	10129134	       237.2 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedRGBToLuminanceAngle-8       	 7198972	       333.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedRGBToLuminanceAngle-8       	 7193995	       336.4 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedRGBToLuminanceAngle-8       	 7218330	       341.6 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedRGBToLuminanceAngle-8       	 7064762	       337.8 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedRGBToLuminanceAngle-8       	 7046659	       336.9 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedHorizontalBilinearAngle-8   	15415136	       148.9 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedHorizontalBilinearAngle-8   	16846622	       144.2 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedHorizontalBilinearAngle-8   	16799180	       143.4 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedHorizontalBilinearAngle-8   	16682827	       143.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedHorizontalBilinearAngle-8   	16680433	       144.1 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedVerticalBilinearAngle-8     	18372211	       131.1 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedVerticalBilinearAngle-8     	18322011	       130.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedVerticalBilinearAngle-8     	18361509	       130.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedVerticalBilinearAngle-8     	18234236	       131.1 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedVerticalBilinearAngle-8     	17931462	       133.2 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedFetchLumaBilinearAngle-8    	 4643258	       520.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedFetchLumaBilinearAngle-8    	 4662480	       514.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedFetchLumaBilinearAngle-8    	 4662604	       515.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedFetchLumaBilinearAngle-8    	 4626795	       511.0 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build87PreparedFetchLumaBilinearAngle-8    	 4693519	       511.1 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/pj/pixseal/watermark	127.651s
+goos: linux
+goarch: amd64
+pkg: github.com/pj/pixseal/watermark
+cpu: 13th Gen Intel(R) Core(TM) i3-13100T
+BenchmarkExperimentalV4Build87QualifiedBlockReaderAngle-8   	17207676	      1407 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/pj/pixseal/watermark	25.689s
+Build87 qualified RGB/luminance/bilinear profile written to:
+  v4-phone private/build87-profile/build87-benchmark.txt
+  v4-phone private/build87-profile/build87-cpu.pprof
+  v4-phone private/build87-profile/build87-pprof-top.txt
+  v4-phone private/build87-profile/build87-pprof-reader-list.txt
+  v4-phone private/build87-profile/build87-compiler-reader.txt
+  v4-phone private/build87-profile/build87-bce-rgb.txt
+  v4-phone private/build87-profile/build87-reader-asm-rgb.txt
+Build87 profiling gate: PASS
