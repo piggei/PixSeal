@@ -1,3 +1,11 @@
+## Build87 result and Build88 direct-RGB hypothesis — 2026-10-06
+
+Build87 completed on the qualified Go 1.26.0 i3-13100T host. The qualified Build84 reader five-run means were 1394.8 / 1374.8 / 1402.6 ns/block for front/mild/angle. Prepared angle-like stage means were 236.9 ns/block for four three-byte pixel-slice fetches, 337.3 ns/block for four RGB-to-luminance conversions, 144.8 ns/block for horizontal bilinear, 131.3 ns/block for vertical bilinear, and 514.6 ns/block for the combined prepared fetch+luminance+bilinear path. The long angle run measured 1407 ns/block.
+
+Compiler BCE evidence is the actionable result: Build84 still has eight `IsSliceInBounds` checks, exactly two on each of the four `rgb[index:index+3]` expressions. The next and likely final exact-portable reader experiment is therefore Build88: replace each slice with one explicit `rgb[index+2]` dominating proof followed by direct scalar loads of `rgb[index]`, `rgb[index+1]`, and `rgb[index+2]`. No `unsafe`, LUT, cache, FMA, arithmetic reassociation, DCT rewrite, mapPoint rewrite or geometry/decode change is permitted.
+
+Build88 is benchmark-first. Because the targeted slice/check region is only a small fraction of complete-reader CPU, the private corpus is justified only if same-session Go 1.26.0 measurements show a stable useful complete-reader gain, approximately 2% or better across front/mild/angle with no regression, and BCE/objdump evidence confirms that generated code actually improved. Otherwise Build84 remains qualified and this micro-optimization line closes.
+
 ## Build86 closure and Build87 RGB/luminance/bilinear profiling — 2026-10-06
 
 Build86 passed its exactness gates but failed the benchmark-first performance gate on the qualified Go 1.26.0 i3-13100T host. Same-session five-run means were Build84 1348.4 / 1380.8 / 1425.4 ns/block and Build86 1382.4 / 1513.0 / 1435.6 ns/block for front/mild/angle. The isolated DCT shape also moved the wrong way: 65.588 ns/block baseline versus 71.166 ns/block hoisted (+8.5%). No private physical run is justified.

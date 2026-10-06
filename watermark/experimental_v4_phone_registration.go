@@ -465,6 +465,11 @@ type ExperimentalV4PhoneInfo struct {
 	Build86DCTBlockReads                      int
 	Build86DCTBlockSuccess                    int
 	Build86DCTBlockFailed                     int
+	Build88Attempted                          bool
+	Build88DirectFoldScores                   int
+	Build88DirectBlockReads                   int
+	Build88DirectBlockSuccess                 int
+	Build88DirectBlockFailed                  int
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -1417,11 +1422,12 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
-		// Build87 is observability-only. Build86 was exact but benchmark-negative,
-		// so the active deep recovery path is restored to the current qualified
-		// Build84 sampler. No Build87 profiling result can alter geometry or decode.
-		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild84Recover(work, boundary, key, cw, ch)
-		experimentalV4PhoneBuild84ApplyTelemetry(&public, recovery64)
+		// Build88 is an exact performance candidate over the current qualified
+		// Build84 deep runtime. It changes only RGB byte access shape inside the
+		// continuation4 projective reader; geometry and protected decode remain
+		// identical and Build84 stays the qualification authority until promotion.
+		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild88Recover(work, boundary, key, cw, ch)
+		experimentalV4PhoneBuild88ApplyTelemetry(&public, recovery64)
 		if err64 == nil {
 			public.ProjectiveBasinFound = true
 			public.Accepted = true

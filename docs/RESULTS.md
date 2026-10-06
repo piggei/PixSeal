@@ -1,6 +1,10 @@
-## v0.3.0-build87 qualified RGB/luminance/bilinear profile — pending qualified-host run
+## v0.3.0-build88 exact direct RGB/BCE candidate — pending qualified-host benchmark
 
-Build87 is observability-only. The active deep runtime is restored to qualified Build84. The public profile will measure the complete Build84 reader plus isolated four-pixel slice fetch, four RGB-to-luminance conversions, horizontal bilinear interpolation, vertical bilinear interpolation and their combined prepared path; it also preserves CPU pprof, BCE/inlining and objdump evidence around the exact RGB/luminance/bilinear source lines. No private corpus run is required.
+Build87 completed as profiling PASS over the qualified Build84 runtime. Five-run Build84 reader means were about 1394.8 / 1374.8 / 1402.6 ns/block for front/mild/angle. The prepared angle-like RGB slice-fetch stage averaged about 236.9 ns/block, and Go 1.26.0 reported eight `IsSliceInBounds` checks across the four three-byte pixel slices. Build88 changes only those accesses to direct scalar RGB byte loads guarded by one explicit highest-index proof per pixel. Exactness tests and same-session Build84-vs-Build88 benchmarks must pass before any physical run.
+
+## v0.3.0-build87 qualified RGB/luminance/bilinear profile — completed 2026-10-06
+
+Build87 completed as observability-only PASS; the runtime stayed exactly Build84. Five-run complete-reader means were 1394.8 / 1374.8 / 1402.6 ns/block for front/mild/angle, with a 1407 ns/block long angle profile run and 0 B/op / 0 allocs/op. Prepared angle-like means were 236.9 ns/block for four RGB pixel slices, 337.3 ns/block for four RGB-to-luminance conversions, 144.8 ns/block for horizontal bilinear, 131.3 ns/block for vertical bilinear and 514.6 ns/block for the combined prepared fetch+luminance+bilinear path. Go 1.26.0 BCE evidence retained eight `IsSliceInBounds` checks across the four qualified Build84 `rgb[index:index+3]` expressions. This selected Build88. No private Build87 gate was required.
 
 ## v0.3.0-build86 exact DCT table hoist — closed benchmark-negative
 

@@ -36,7 +36,7 @@ Commands:
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
-  v4-extract-phone EXPERIMENTAL: Build84-qualified phone path + authenticated v4 decode; Build87 profiling is observability-only
+  v4-extract-phone EXPERIMENTAL: Build88 direct-RGB BCE candidate over Build84-qualified phone path + authenticated v4 decode
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
   v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
@@ -994,6 +994,9 @@ func printV4PhoneDiagnostics(w io.Writer, decoderID string, info watermark.Exper
 	}
 	if p.Build86Attempted {
 		fmt.Fprintf(w, "build86-dct-hoist: attempted=true fold-scores=%d block-reads=%d block-success=%d block-failed=%d\n", p.Build86DCTFoldScores, p.Build86DCTBlockReads, p.Build86DCTBlockSuccess, p.Build86DCTBlockFailed)
+	}
+	if p.Build88Attempted {
+		fmt.Fprintf(w, "build88-direct-rgb: attempted=true fold-scores=%d block-reads=%d block-success=%d block-failed=%d\n", p.Build88DirectFoldScores, p.Build88DirectBlockReads, p.Build88DirectBlockSuccess, p.Build88DirectBlockFailed)
 	}
 	fmt.Fprintf(w, "hmac: authenticated=%t fallback-attempted=%t fallback-authenticated=%t\n", p.HMACAuthenticated, p.FallbackAttempted, p.FallbackAuthenticated)
 	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)

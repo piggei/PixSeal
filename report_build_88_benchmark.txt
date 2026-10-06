@@ -1,0 +1,54 @@
+ok  	github.com/pj/pixseal/watermark	0.010s
+goos: linux
+goarch: amd64
+pkg: github.com/pj/pixseal/watermark
+cpu: 13th Gen Intel(R) Core(TM) i3-13100T
+BenchmarkExperimentalV4Build88Build84BlockReaderFront-8     	 1743145	      1384 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderFront-8     	 1707198	      1396 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderFront-8     	 1692750	      1417 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderFront-8     	 1686580	      1434 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderFront-8     	 1647788	      1446 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderMild-8      	 1685762	      1471 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderMild-8      	 1673276	      1449 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderMild-8      	 1686860	      1419 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderMild-8      	 1648856	      1422 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderMild-8      	 1707812	      1409 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderAngle-8     	 1678766	      1430 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderAngle-8     	 1684476	      1448 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderAngle-8     	 1579158	      1480 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderAngle-8     	 1641978	      1455 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88Build84BlockReaderAngle-8     	 1663656	      1441 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderFront-8   	 1563734	      1529 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderFront-8   	 1563871	      1525 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderFront-8   	 1567413	      1521 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderFront-8   	 1577172	      1519 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderFront-8   	 1575249	      1552 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderMild-8    	 1552418	      1583 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderMild-8    	 1539800	      1552 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderMild-8    	 1551016	      1588 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderMild-8    	 1491872	      1611 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderMild-8    	 1469230	      1635 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderAngle-8   	 1477269	      1677 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderAngle-8   	 1447693	      1594 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderAngle-8   	 1538578	      1556 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderAngle-8   	 1503405	      1631 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88DirectRGBBlockReaderAngle-8   	 1509247	      1601 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88PreparedSliceFetchAngle-8     	 9723877	       253.5 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88PreparedSliceFetchAngle-8     	 9754174	       259.4 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88PreparedSliceFetchAngle-8     	 9556424	       253.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88PreparedSliceFetchAngle-8     	 9382048	       257.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88PreparedSliceFetchAngle-8     	 9699255	       254.5 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88PreparedDirectFetchAngle-8    	 9035796	       257.5 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88PreparedDirectFetchAngle-8    	 8573004	       259.4 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88PreparedDirectFetchAngle-8    	 9502420	       254.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88PreparedDirectFetchAngle-8    	 9552962	       254.2 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build88PreparedDirectFetchAngle-8    	 9207958	       261.9 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/pj/pixseal/watermark	146.839s
+Build88 direct-RGB benchmark written to:
+  v4-phone private/build88-benchmark/build88-benchmark.txt
+  v4-phone private/build88-benchmark/build88-bce-reader.txt
+  v4-phone private/build88-benchmark/build88-bce-inlining.txt
+  v4-phone private/build88-benchmark/build88-build84-reader-asm.txt
+  v4-phone private/build88-benchmark/build88-candidate-reader-asm.txt
+Build88 benchmark gate: PASS (correctness only; review whole-reader speed and BCE before physical testing)

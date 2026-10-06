@@ -1,14 +1,25 @@
-## Build87 checkpoint — active observability-only profiling
+## Build88 checkpoint — active benchmark-first exact candidate
+
+- [x] Close Build87 profiling on the qualified Go 1.26.0 host and identify the eight RGB slice bounds checks.
+- [x] Implement Build88 direct RGB loads with explicit dominating `index+2` bounds proofs and no floating-point change.
+- [x] Add block-reader, FoldScore, continuation4 and blind-bank exactness regressions against Build84.
+- [x] Add same-session Build84-vs-Build88 reader benchmarks, prepared fetch microbenchmarks, BCE/inliner output and objdump evidence.
+- [ ] Run `make v4-build88-direct-rgb-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build88-direct-rgb-benchmark` on an otherwise idle qualified host and archive `build88-benchmark`.
+- [ ] Run the private nine-photo gate only if Build88 shows a stable useful complete-reader gain (roughly 2% or better on front/mild/angle, with no regression) and BCE/assembly evidence supports the change.
+- [ ] If the benchmark gate fails, close the exact-portable projective-reader micro-optimization line and keep Build84 qualified.
+
+## Build87 checkpoint — closed profiling PASS
 
 - [x] Keep Build84 as the current qualified smartphone baseline and restore the active deep runtime to Build84.
 - [x] Close Build86 as exact / benchmark-negative / non-promoted; do not run a private physical gate.
 - [x] Add public deterministic bit-exact prepared samples for the qualified Build84 RGB/luminance/bilinear path.
 - [x] Add repeated block-granularity benchmarks for qualified reader, four-pixel slice fetch, four RGB-to-luminance conversions, horizontal bilinear, vertical bilinear and combined prepared fetch+luminance+bilinear.
 - [x] Add atomic CPU pprof, line-level reader attribution, BCE/inlining capture and generated assembly around Build84 lines 140-150.
-- [ ] Run `make v4-build87-rgb-luma-bilinear-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build87-rgb-luma-bilinear-profile` on an otherwise idle qualified host and archive `build87-profile`.
-- [ ] Select Build88 only if Build87 exposes one narrow exact-portable source/assembly opportunity with plausible whole-reader benefit.
-- [ ] If no credible target emerges, keep Build84 qualified rather than forcing another micro-optimization.
+- [x] Run `make v4-build87-rgb-luma-bilinear-test` on the qualified Go 1.26.0 host: PASS.
+- [x] Run `make v4-build87-rgb-luma-bilinear-profile` on an otherwise idle qualified host and archive `build87-profile`: PASS.
+- [x] Select Build88 from the eight retained RGB-slice `IsSliceInBounds` checks.
+- [x] Keep Build84 qualified while Build88 remains benchmark-first and unqualified.
 
 ## Build86 checkpoint — closed exact / benchmark-negative
 

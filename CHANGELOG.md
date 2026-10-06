@@ -1,3 +1,10 @@
+## v0.3.0-build88 — exact direct RGB loads / dominating BCE candidate
+
+- Close Build87 as an observability-only PASS on the qualified Go 1.26.0 host. Build87 measured the qualified Build84 reader at approximately 1394.8 / 1374.8 / 1402.6 ns/block for front/mild/angle and confirmed eight `IsSliceInBounds` checks around the four three-byte RGB slices.
+- Add Build88, which replaces only those four slice constructions with one explicit `index+2` dominating bounds proof plus direct scalar R/G/B byte loads per pixel. RGB-to-luminance, bilinear interpolation, DCT multiplication/accumulation order and all geometry/decode semantics remain exact.
+- Add Build84-vs-Build88 public same-session reader benchmarks, prepared slice-vs-direct fetch benchmarks, Go BCE/inlining evidence and objdump artifacts.
+- Add `make v4-build88-direct-rgb-test`, `make v4-build88-direct-rgb-benchmark`, and a deferred `make v4-build88-phone-physical-test`. Build84 remains qualified until benchmark review and, if justified, two independent physical PASS runs.
+
 ## v0.3.0-build87 — qualified RGB/luminance/bilinear compiler profiling
 
 - Keep Build84 as the current qualified smartphone semantic/performance baseline and restore the active deep runtime to Build84 after Build86 fails its benchmark-first criterion.

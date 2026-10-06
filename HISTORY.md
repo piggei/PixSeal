@@ -1,3 +1,7 @@
+## v0.3.0-build88 — direct RGB bounds-check candidate
+
+Build87 completed the qualified RGB/luminance/bilinear compiler profile without changing runtime semantics. The key actionable compiler result is eight `IsSliceInBounds` checks on Build84's four `rgb[index:index+3]` expressions. Build88 therefore tests one final narrow exact-portable reader rewrite: one dominating `rgb[index+2]` proof per pixel followed by direct scalar R/G/B loads. All floating-point expressions and DCT order remain Build84-exact. The candidate is benchmark-first and Build84 remains the current qualified smartphone baseline.
+
 ## v0.3.0-build87 — qualified RGB/luminance/bilinear profiling
 
 Build86 closed as an exact but benchmark-negative DCT-table-hoist experiment and never reached the private physical corpus. Its qualified-host reader means were slower than Build84 on front/mild/angle, and the isolated hoisted DCT kernel itself regressed by about 8.5%. Build87 therefore restores Build84 as the active qualified runtime and performs no recovery change. It decomposes the remaining RGB fetch -> luminance -> bilinear hot path with public deterministic benchmarks, integrated pprof, BCE/inlining output and generated assembly so any later Build88 candidate is selected from fresh evidence rather than another speculative source rewrite.

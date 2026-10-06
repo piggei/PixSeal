@@ -90,3 +90,9 @@ Out of scope unless new evidence explicitly justifies a separate research branch
 - any secret/payload/ECC/HMAC-guided workload selection.
 
 If Build87 exposes no credible exact-portable target, Build84 should remain the qualified performance baseline rather than forcing another micro-optimization.
+
+## Qualified-host result and Build88 selection
+
+Build87 completed with profiling gate PASS on Go 1.26.0 / i3-13100T. Five-run qualified Build84 reader means were approximately **1394.8 / 1374.8 / 1402.6 ns/block** for front/mild/angle; the long angle run was **1407 ns/block**. Prepared angle-like means were **236.9 ns/block** for four pixel slices, **337.3 ns/block** for four RGB-to-luminance conversions, **144.8 ns/block** for horizontal bilinear, **131.3 ns/block** for vertical bilinear, and **514.6 ns/block** for combined prepared fetch+luminance+bilinear.
+
+The Go 1.26.0 BCE report retained exactly eight `IsSliceInBounds` checks across Build84 lines 140-143, two on each `rgb[index:index+3]` expression. This is the one remaining narrow exact-portable source-shape opportunity selected for Build88. See [`V4_BUILD88_DIRECT_RGB_BCE.md`](V4_BUILD88_DIRECT_RGB_BCE.md).
