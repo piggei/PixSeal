@@ -1,6 +1,6 @@
 # Format-v4 Build78 — continuation4 internal profiling
 
-Build78 is **observability-only** over the qualified Build76 smartphone baseline. Build76 remains authoritative. Build78 preserves the exact Build76/Build75 recovery bank, task scheduling, ordered commits, qualification and protected-data semantics while instrumenting the existing fourth-generation continuation loop.
+Build78 is **observability-only** over the qualified Build76 smartphone baseline. Build76 was authoritative at that historical checkpoint; Build84 is the current qualified baseline. Build78 preserves the exact Build76/Build75 recovery bank, task scheduling, ordered commits, qualification and protected-data semantics while instrumenting the existing fourth-generation continuation loop.
 
 ## Why Build78 exists
 

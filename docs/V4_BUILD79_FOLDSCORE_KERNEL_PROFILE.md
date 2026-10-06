@@ -1,6 +1,6 @@
 # Format-v4 Build79 — FoldScore kernel profiling
 
-Build79 is **observability-only** over the qualified Build76 smartphone baseline. Build76 remains authoritative. Build79 preserves the exact Build75 freeze, Build76 prefix1/gen2 scheduling, Build73 generation-three pool, Build71 generation-four task order/commit, Build68 qualification-plane reuse and Build66 ordered protected-data decode. It instruments only the `experimentalV4PhoneBuild41FoldScore` kernel when invoked by generation-four continuation work.
+Build79 is **observability-only** over the qualified Build76 smartphone baseline. Build76 was authoritative at that historical checkpoint; Build84 is the current qualified baseline. Build79 preserves the exact Build75 freeze, Build76 prefix1/gen2 scheduling, Build73 generation-three pool, Build71 generation-four task order/commit, Build68 qualification-plane reuse and Build66 ordered protected-data decode. It instruments only the `experimentalV4PhoneBuild41FoldScore` kernel when invoked by generation-four continuation work.
 
 ## Why Build79 exists
 

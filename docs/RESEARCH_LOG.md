@@ -1,12 +1,18 @@
+## Build86 selection from completed Build85 profile — 2026-10-06
+
+Build85 completed on the qualified Go 1.26.0 i3-13100T host. Whole-reader means were 1384.6 / 1462.4 / 1441.2 ns/block (front/mild/angle); a long angle run measured 1427 ns/block. Integrated pprof attributed 4.66 s of 24.99 s total samples (~18.6%) to the two DCT accumulation lines, while `homography.mapPoint` remained only 5.80% cumulative. Compiler BCE diagnostics showed four `IsInBounds` checks on the cosine-table accesses at those two lines.
+
+This evidence selects one narrow Build86 hypothesis: hoist `table2[y]`/`table3[y]` once per row and load `table2[x]`/`table3[x]` once per sample, but keep the exact historical `(l * a) * b` multiplication order and c23/c32 accumulation order. Precomputing `a*b`, changing the RGB/luminance path, manual mapPoint inlining, unsafe access, cache/LUT layers, or any geometry/pruning change remain out of scope. Build84 stays qualified. Build86 is benchmark-first and reaches the private corpus only if complete-reader speedup is stable and useful.
+
 ## Build85 — post-promotion qualified-sampler profiling
 
-**Status:** observability-only; Build84 remains the current qualified smartphone baseline.
+**Status:** completed observability-only PASS; Build84 remains the current qualified smartphone baseline.
 
 **Question:** after the successful Build84 RGB-fetch/address change, what now dominates the qualified projective block reader?
 
 **Method:** reuse the public deterministic Build83 fixture; verify Build84/historical bit equality; benchmark the complete Build84 reader on front/mild/angle-like homographies; separately measure 64 mapPoint calls, projected-sample floor/clamp/address formation, prepared RGB+luminance+bilinear work, and DCT accumulation; then capture a long CPU pprof, line-level reader attribution, and Go compiler BCE/inlining evidence. No private image, payload, key, ECC/HMAC result or oracle geometry selects work.
 
-**Decision discipline:** no Build86 optimization is chosen before the qualified Go 1.26.0 Build85 profile is reviewed. Any later candidate must start from Build84 and prove exact block/FoldScore/continuation/bank equivalence before physical timing.
+**Result:** front/mild/angle means 1384.6 / 1462.4 / 1441.2 ns/block; DCT lines ~18.6% integrated CPU; mapPoint 5.80% cumulative; four DCT-table `IsInBounds` checks retained. Build86 selected as described above. No Build85 physical gate is needed.
 
 ## Build84 qualification and promotion — 2026-10-05
 

@@ -1,13 +1,25 @@
-## Build85 checkpoint — active observability
+## Build86 checkpoint — active benchmark-first candidate
+
+- [x] Keep Build84 as the current qualified smartphone baseline.
+- [x] Select one Build86 hypothesis from completed Build85 evidence: exact DCT table-load hoist/BCE reduction only.
+- [x] Preserve Build84 RGB fetch, mapPoint, float64 arithmetic order, geometry/order, qualification and protected-data semantics; no precomputed DCT products or reassociation.
+- [x] Add Build84-vs-Build86 block/FoldScore/continuation/bank exactness regressions and Build86 candidate telemetry.
+- [x] Add public repeated whole-reader/DCT benchmarks plus Go compiler BCE evidence capture.
+- [ ] Run `make v4-build86-dct-hoist-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build86-dct-hoist-benchmark` on an otherwise idle qualified host and archive `build86-benchmark`.
+- [ ] Proceed to the private physical gate only if the complete reader shows a stable useful improvement (working threshold ~5%); isolated DCT speedup alone is insufficient.
+- [ ] If benchmark-positive, run two independent 9-photo physical gates and promote only for exact semantics plus repeatable material speedup over Build84.
+
+## Build85 checkpoint — closed profiling PASS
 
 - [x] Keep Build84 as the current qualified smartphone baseline; make no Build85 runtime algorithm change.
 - [x] Add public deterministic post-promotion benchmarks for the qualified Build84 reader and major exact subcomponents.
 - [x] Add atomic CPU pprof, line-level reader attribution and compiler BCE/inlining capture.
 - [x] Add fixture checks proving Build84/historical block equality and prepared sample/luminance bit equality.
-- [ ] Run `make v4-build85-qualified-sampler-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build85-qualified-sampler-profile` on an otherwise idle qualified host and archive `build85-profile`.
-- [ ] Select at most one Build86 hypothesis from Build85 flat/cumulative/line-level evidence.
-- [ ] Do not run a Build85 physical corpus gate: Build85 changes observability only.
+- [x] Run `make v4-build85-qualified-sampler-test` on the qualified Go 1.26.0 host: PASS.
+- [x] Run `make v4-build85-qualified-sampler-profile` on an otherwise idle qualified host and archive `build85-profile`: PASS.
+- [x] Select one Build86 hypothesis from Build85 flat/cumulative/line-level evidence: exact DCT table hoist/BCE reduction.
+- [x] Do not run a Build85 physical corpus gate: Build85 changes observability only.
 
 ## Build84 checkpoint — closed / promoted
 

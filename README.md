@@ -26,7 +26,7 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build85**, an **observability-only post-promotion profile** over the **Build84 current qualified smartphone baseline**. Build85 does not change the recovery algorithm. It re-profiles the promoted Build84 projective sampler with a public deterministic fixture, repeated `testing.B`, CPU `pprof`, line-level reader attribution and compiler BCE/inlining evidence so the next optimization is selected from the new baseline rather than from pre-Build84 measurements.
+Current development snapshot: **v0.3.0-build86**, an **exact DCT table-hoist / bounds-check performance candidate** over the **Build84 current qualified smartphone baseline**. Build85 completed on the qualified Go 1.26.0 host and re-profiled the promoted Build84 reader: DCT accumulation accounted for about 18.6% of integrated CPU samples and Go still emitted four cosine-table bounds checks at the two accumulation lines. Build86 changes only those table loads while preserving the exact Build84 RGB sampler and floating-point multiplication/accumulation order. Build84 remains qualified until benchmark and, conditionally, two physical runs justify promotion.
 
 Two independent retained Go 1.26.0 Build76 physical runs passed exact 9/9 semantic equivalence. Full-matrix elapsed was 764,104 and 752,100 ms (758,102 ms mean). `B/mild` remains 79,259 / 937 / 935 / 691 / 2,120,047 with physical decode 696, five speculative candidates and HMAC/payload PASS; `B/angle` remains 334,857 / 6,198 / 0 and REJECT. The finalized Build76 physical gate stages diagnostics and publishes them only after a complete PASS.
 

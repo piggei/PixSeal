@@ -1,6 +1,6 @@
 # Format-v4 Build82 — specialized exact inline block sampler
 
-Build82 is a **closed equivalence-preserving performance experiment** over the qualified Build76 smartphone baseline. Build76 remains authoritative. Two independent Go 1.26.0 physical runs passed the complete 9/9 semantic matrix and preserved the deep workload exactly, but the performance benefit was not repeatable; Build82 is therefore **semantic PASS x2 / non-promoted**.
+Build82 is a **closed equivalence-preserving performance experiment** over the qualified Build76 smartphone baseline. Build76 was authoritative at that historical checkpoint; Build84 is the current qualified baseline. Two independent Go 1.26.0 physical runs passed the complete 9/9 semantic matrix and preserved the deep workload exactly, but the performance benefit was not repeatable; Build82 is therefore **semantic PASS x2 / non-promoted**.
 
 ## Why Build82 exists
 

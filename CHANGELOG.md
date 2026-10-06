@@ -1,3 +1,14 @@
+## v0.3.0-build86 — exact DCT table hoist / BCE candidate
+
+- Keep Build84 as the current qualified smartphone semantic/performance baseline; Build86 is candidate-only until exactness and repeatable speedup are proven.
+- Close Build85 profiling on the qualified Go 1.26.0 i3-13100T host: the promoted Build84 reader averaged 1384.6 / 1462.4 / 1441.2 ns/block on front/mild/angle-like fixtures, with the long angle profile at 1427 ns/block.
+- Record Build85 line-level pprof evidence: the two DCT accumulation statements account for 4.66 s of 24.99 s total CPU samples (~18.6%), while `homography.mapPoint` is 5.80% cumulative.
+- Record Go 1.26.0 BCE evidence showing four `IsInBounds` checks on the qualified Build84 cosine-table accesses.
+- Add an exact Build86 reader that hoists `table2[y]`/`table3[y]` once per row and loads `table2[x]`/`table3[x]` once per sample without reassociating `(l*a)*b` or changing c23/c32 accumulation order.
+- Preserve the qualified Build84 RGB fetch, mapPoint, bilinear interpolation, geometry search/order, qualification, protected-data decode, ECC/Hamming and HMAC semantics.
+- Add Build84-vs-Build86 block/FoldScore/continuation/bank exactness regressions, candidate telemetry, public repeated Build84/Build86 reader + DCT microbenchmarks, compiler BCE capture and an atomic conditional nine-photo gate.
+- Add `make v4-build86-dct-hoist-test`, `make v4-build86-dct-hoist-benchmark`, and `make v4-build86-phone-physical-test`; do not run the physical gate unless the whole-reader benchmark shows a stable useful improvement (working threshold ~5%).
+
 ## v0.3.0-build85 — qualified Build84 sampler post-promotion profiling
 
 - Keep Build84 as the current qualified smartphone semantic/performance baseline; Build85 changes no runtime recovery algorithm.
@@ -6,7 +17,7 @@
 - Add a longer CPU pprof of the qualified angle-like reader, line-level `pprof -list` output for `experimentalV4PhoneBuild84ReadProjectiveBlockValue`, and Go compiler BCE/inlining evidence.
 - Add `make v4-build85-qualified-sampler-test` and `make v4-build85-qualified-sampler-profile` with atomic profile publication.
 - Build85 is observability-only: no private acquisition, key, payload, ECC/HMAC result or expected message selects benchmark work, and no physical qualification is required.
-- Do not select Build86 until the qualified Go 1.26.0 Build85 profile is reviewed.
+- Qualified-host result: Build85 profiling PASS; line-level evidence selected the narrow Build86 DCT table-hoist candidate described above.
 
 ## v0.3.0-build84 — qualified exact RGB fetch / bounds-check baseline
 

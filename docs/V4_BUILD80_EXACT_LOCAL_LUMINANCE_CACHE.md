@@ -1,6 +1,6 @@
 # Format-v4 Build80 — exact local luminance cache
 
-Build80 is an **equivalence-preserving performance candidate** over the qualified Build76 smartphone baseline. Build76 remains authoritative until Build80 reproduces the retained nine-photo semantic matrix and a material speedup on the qualified Go 1.26.0 host.
+Build80 is a **closed equivalence-preserving performance experiment** over the then-qualified Build76 smartphone baseline. It reproduced semantic equivalence but regressed physically and was rejected. Build84 is the current qualified baseline.
 
 ## Why Build80 exists
 

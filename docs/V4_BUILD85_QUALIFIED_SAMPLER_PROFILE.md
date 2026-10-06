@@ -49,6 +49,10 @@ The profile target also runs a longer CPU pprof on `BenchmarkExperimentalV4Build
 
 The next performance candidate must be selected from this evidence. Build85 itself is never promotable from timing because it changes no runtime algorithm.
 
+### Qualified-host result
+
+The Go 1.26.0 i3-13100T profile completed successfully. Whole-reader means were **1384.6 / 1462.4 / 1441.2 ns/block** for front/mild/angle-like fixtures and the long angle profile run was **1427 ns/block**. The integrated 24.99 s CPU profile attributed **3.55 s + 1.11 s = 4.66 s (~18.6%)** to the two DCT accumulation lines; `homography.mapPoint` was **5.80% cumulative**. Compiler BCE diagnostics showed four remaining `IsInBounds` checks across the two cosine-table accumulation lines. This evidence selects Build86: exact DCT table-value hoisting only, with no floating-point reassociation.
+
 ## Commands
 
 Source/fixture gate:
@@ -82,4 +86,4 @@ After the qualified Go 1.26.0 profile:
 - any Build86 performance candidate must derive from Build84 or a path proven Build84-equivalent and must pass block/FoldScore/continuation/bank exactness before any physical timing;
 - superseding Build84 still requires two independent Go 1.26.0 9/9 physical PASS runs with a repeatable material improvement.
 
-Until Build85 evidence is reviewed, **Build84 remains the current qualified smartphone baseline and no Build86 optimization is selected**.
+Build85 evidence has now been reviewed. **Build84 remains the current qualified smartphone baseline; Build86 is selected as a benchmark-first exact DCT table-hoist candidate and is not yet qualified.**

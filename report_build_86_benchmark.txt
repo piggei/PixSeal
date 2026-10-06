@@ -1,0 +1,52 @@
+ok  	github.com/pj/pixseal/watermark	0.011s
+goos: linux
+goarch: amd64
+pkg: github.com/pj/pixseal/watermark
+cpu: 13th Gen Intel(R) Core(TM) i3-13100T
+BenchmarkExperimentalV4Build86Build84BlockReaderFront-8    	 1756207	      1390 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderFront-8    	 1779033	      1345 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderFront-8    	 1788943	      1337 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderFront-8    	 1752087	      1342 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderFront-8    	 1808253	      1328 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderMild-8     	 1801946	      1332 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderMild-8     	 1794020	      1354 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderMild-8     	 1769547	      1368 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderMild-8     	 1687279	      1477 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderMild-8     	 1742359	      1373 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderAngle-8    	 1703151	      1435 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderAngle-8    	 1736845	      1409 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderAngle-8    	 1722236	      1440 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderAngle-8    	 1725249	      1432 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84BlockReaderAngle-8    	 1739137	      1411 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderFront-8   	 1785295	      1388 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderFront-8   	 1703709	      1347 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderFront-8   	 1818550	      1331 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderFront-8   	 1771072	      1356 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderFront-8   	 1782738	      1490 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderMild-8    	 1539661	      1495 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderMild-8    	 1349329	      1505 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderMild-8    	 1537602	      1474 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderMild-8    	 1508846	      1573 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderMild-8    	 1524115	      1518 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderAngle-8   	 1506217	      1628 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderAngle-8   	 1609611	      1362 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderAngle-8   	 1710640	      1361 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderAngle-8   	 1714539	      1442 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86DCTHoistBlockReaderAngle-8   	 1698936	      1385 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84DCTAccumulation-8     	38392752	        65.15 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84DCTAccumulation-8     	38818104	        65.87 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84DCTAccumulation-8     	34138863	        63.35 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84DCTAccumulation-8     	37748276	        69.47 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86Build84DCTAccumulation-8     	34008502	        64.10 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86HoistedDCTAccumulation-8     	33539547	        72.22 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86HoistedDCTAccumulation-8     	33358870	        71.25 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86HoistedDCTAccumulation-8     	33835771	        70.07 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86HoistedDCTAccumulation-8     	34939550	        72.20 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build86HoistedDCTAccumulation-8     	35069901	        70.09 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/pj/pixseal/watermark	142.140s
+Build86 DCT-hoist benchmark written to:
+  v4-phone private/build86-benchmark/build86-benchmark.txt
+  v4-phone private/build86-benchmark/build86-bce-reader.txt
+  v4-phone private/build86-benchmark/build86-bce-inlining.txt
+Build86 benchmark gate: PASS (correctness only; review whole-reader speed before physical testing)

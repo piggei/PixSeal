@@ -460,6 +460,11 @@ type ExperimentalV4PhoneInfo struct {
 	Build84FetchBlockReads                    int
 	Build84FetchBlockSuccess                  int
 	Build84FetchBlockFailed                   int
+	Build86Attempted                          bool
+	Build86DCTFoldScores                      int
+	Build86DCTBlockReads                      int
+	Build86DCTBlockSuccess                    int
+	Build86DCTBlockFailed                     int
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -1412,11 +1417,12 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
-		// Build84 is an equivalence-preserving performance candidate over Build76.
-		// Only continuation4 FoldScore projective block reads use the exact RGB-fetch
-		// bounds-check-reduction reader selected from Build83 profiling evidence.
-		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild84Recover(work, boundary, key, cw, ch)
-		experimentalV4PhoneBuild84ApplyTelemetry(&public, recovery64)
+		// Build86 is an equivalence-preserving performance candidate over the
+		// qualified Build84 smartphone baseline. Only continuation4 FoldScore DCT
+		// table loads use the exact row-hoist/BCE candidate selected from Build85
+		// profiling evidence; the qualified Build84 RGB sampler remains unchanged.
+		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild86Recover(work, boundary, key, cw, ch)
+		experimentalV4PhoneBuild86ApplyTelemetry(&public, recovery64)
 		if err64 == nil {
 			public.ProjectiveBasinFound = true
 			public.Accepted = true

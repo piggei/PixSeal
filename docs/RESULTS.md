@@ -1,8 +1,12 @@
-## v0.3.0-build85 qualified-sampler profile — pending qualified-host measurement
+## v0.3.0-build86 exact DCT table-hoist candidate — benchmark pending
 
-Build85 is observability-only. The active smartphone runtime remains the qualified Build84 path. The source adds a public deterministic post-promotion benchmark/pprof harness for the Build84 projective reader and does not change recovery semantics.
+Build86 is selected from the completed Build85 profile and changes only DCT cosine-table load placement inside the qualified Build84 continuation4 reader. The active candidate hoists y-dependent table values once per row and x-dependent values once per sample while preserving `(l*a)*b`, c23/c32 accumulation order, RGB sampling and all recovery semantics exactly. Build84 remains the current qualified baseline. The private corpus must not be run unless the qualified-host whole-reader benchmark shows a stable useful improvement (working threshold ~5%).
 
-No Build85 performance conclusion is recorded until `make v4-build85-qualified-sampler-profile` is executed on the qualified Go 1.26.0 host. No physical corpus run is required for Build85 itself.
+## v0.3.0-build85 qualified-sampler profile — completed 2026-10-06
+
+Build85 is observability-only; the runtime stayed exactly Build84. On the qualified Go 1.26.0 i3-13100T host, five-run whole-reader means were 1384.6 / 1462.4 / 1441.2 ns/block for front/mild/angle-like fixtures. The long angle profile run measured 1427 ns/block, 0 B/op, 0 allocs/op.
+
+The isolated angle decomposition measured 211.68 ns/block for 64 mapPoint calls, 251.2 ns for address/floor/clamp, 491.68 ns for prepared RGB+luminance+bilinear, and 64.53 ns for DCT accumulation. Integrated pprof is the candidate-selection evidence: the two DCT accumulation lines consumed 3.55 s and 1.11 s (4.66 s / ~18.6% of 24.99 s total samples), while `homography.mapPoint` was only 5.80% cumulative. Go 1.26.0 BCE diagnostics reported four `IsInBounds` checks across the two DCT lines. This selected Build86. No physical Build85 gate is required.
 
 ## v0.3.0-build84 qualified RGB-fetch baseline — 2026-10-05
 

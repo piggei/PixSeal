@@ -1,6 +1,6 @@
 # Format-v4 Build81 — exact luminance LUT
 
-Build81 is a **closed equivalence-preserving performance experiment** over the qualified Build76 smartphone baseline. It passed semantic qualification twice but did not demonstrate a material, repeatable speedup and therefore was **not promoted**. Build76 remains authoritative.
+Build81 is a **closed equivalence-preserving performance experiment** over the qualified Build76 smartphone baseline. It passed semantic qualification twice but did not demonstrate a material, repeatable speedup and therefore was **not promoted**. Build76 was authoritative at that historical checkpoint; Build84 is the current qualified baseline.
 
 ## Optimization tested
 
