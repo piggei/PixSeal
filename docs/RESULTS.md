@@ -1,10 +1,44 @@
+## v0.3.0-build85 qualified-sampler profile — pending qualified-host measurement
+
+Build85 is observability-only. The active smartphone runtime remains the qualified Build84 path. The source adds a public deterministic post-promotion benchmark/pprof harness for the Build84 projective reader and does not change recovery semantics.
+
+No Build85 performance conclusion is recorded until `make v4-build85-qualified-sampler-profile` is executed on the qualified Go 1.26.0 host. No physical corpus run is required for Build85 itself.
+
+## v0.3.0-build84 qualified RGB-fetch baseline — 2026-10-05
+
+Build84 is the **current qualified smartphone baseline**. It changes only continuation4 FoldScore projective block RGB address/bounds-check shape and preserves exact Build76 geometry, bank/order, qualification and protected-data semantics.
+
+The public Go 1.26.0 benchmark on the qualified 13th Gen Intel Core i3-13100T host produced these five-run means:
+
+| reader fixture | Build76 historical | Build84 | improvement |
+|---|---:|---:|---:|
+| front | 1500.4 ns/block | 1413.2 | 5.81% |
+| mild | 1514.0 ns/block | 1408.0 | 7.00% |
+| angle | 1522.2 ns/block | 1410.0 | 7.37% |
+
+Compiler `check_bce` still reports `IsSliceInBounds` in the Build84 reader, so the measured gain is attributed to the changed RGB address/slice shape rather than claimed full bounds-check elimination.
+
+Two independent Go 1.26.0 physical gates then passed the complete nine-photo matrix with exact semantic/workload telemetry:
+
+| metric | Build76 mean | Build84 run 1 | Build84 run 2 | Build84 mean | improvement |
+|---|---:|---:|---:|---:|---:|
+| full matrix | 758,102 ms | 748,902 | 746,902 | 747,902 | 1.35% |
+| B/mild elapsed | 188,750.5 | 186,961 | 183,780 | 185,370.5 | 1.79% |
+| B/mild geometry | 60,351.5 | 59,360 | 58,987 | 59,173.5 | 1.95% |
+| B/mild gen4 | 18,473 | 18,181 | 17,869 | 18,025 | 2.43% |
+| B/angle elapsed | 226,813 | 225,207 | 222,634 | 223,920.5 | 1.28% |
+| B/angle geometry | 183,806.5 | 182,485 | 181,789 | 182,137 | 0.91% |
+| B/angle gen4 | 110,829.5 | 109,647 | 109,745 | 109,696 | 1.02% |
+
+Both runs preserve B/mild `79259 / 937 / 935 / 691 / 2120047` with HMAC/payload PASS and B/angle `334857 / 6198 / 0` with REJECT. **Build84 supersedes Build76 as the qualified smartphone baseline.**
+
 ## Build83 profiling result / Build84 selection
 
 Build83 completed on the qualified Go 1.26.0 i3-13100T host. Repeated historical angle-like block reads were 1688 / 1676 / 1678 / 1768 / 1699 ns/op, with a separate 1710 ns/op long profile run. The Build82 exact-inline comparator was 1677 / 1663 / 1660 / 1660 / 1659 ns/op. Stage measurements were 241.7–243.6 ns/block for 64 `mapPoint` calls, 1090–1140 ns/block for 64 `samplePlaneLuminance` calls, and 71.88–72.22 ns/block for DCT accumulation. All reported benchmarks were 0 B/op and 0 allocs/op.
 
-CPU pprof attributed 72.33% cumulative CPU to `samplePlaneLuminance`, only 5.65% cumulative to `homography.mapPoint`, and 21.15% flat to the surrounding projective-reader loop. Build84 is therefore selected as an exact RGB address/bounds-check experiment rather than a mapPoint or DCT optimization. No Build84 physical result exists yet.
+CPU pprof attributed 72.33% cumulative CPU to `samplePlaneLuminance`, only 5.65% cumulative to `homography.mapPoint`, and 21.15% flat to the surrounding projective-reader loop. Build84 was therefore selected as an exact RGB address/bounds-check experiment rather than a mapPoint or DCT optimization. At the Build83 checkpoint no Build84 physical result existed; the completed Build84 qualification is recorded above.
 
-## v0.3.0-build83 projective sampler profiling — measurement pending
+## v0.3.0-build83 projective sampler profiling — closed observability-only
 
 Build82 is closed as **semantic PASS x2 / non-promoted**. The two physical matrices were 933,537 and 729,213 ms (831,375 ms mean) versus 758,102 ms for qualified Build76. B/mild generation four was 24,305 / 19,991 ms versus 18,473 ms Build76 mean; B/angle generation four was 136,040 / 107,359 ms versus 110,830 ms. Exact deep counters and workload were preserved in both runs, so the negative decision is performance-only.
 

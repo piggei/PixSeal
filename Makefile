@@ -166,8 +166,12 @@ V4_PHONE_BUILD84_TIMEOUT ?= 86400
 V4_BUILD84_BENCH_DIR ?= v4-phone private/build84-benchmark
 V4_BUILD84_BENCHTIME ?= 2s
 V4_BUILD84_COUNT ?= 5
+V4_BUILD85_PROFILE_DIR ?= v4-phone private/build85-profile
+V4_BUILD85_BENCHTIME ?= 2s
+V4_BUILD85_COUNT ?= 5
+V4_BUILD85_PPROF_TIME ?= 20s
 V4_PHONE_BUILD75_BASELINE_TSV ?= v4-phone private/build75-diagnostics/build75-phone-basin-parallel.tsv
-V4_PHONE_BUILD76_BASELINE_TSV ?= v4-phone private/build76-diagnostics/build76-phone-gen2-parallel.tsv
+V4_PHONE_BUILD76_BASELINE_TSV ?= docs/qualified-baselines/build76-phone-performance.tsv
 V4_PHONE_BUILD73_BASELINE_TSV ?= v4-phone private/build73-diagnostics/build73-phone-gen3-parallel.tsv
 V4_PHONE_BUILD74_BASELINE_TSV ?= v4-phone private/build74-diagnostics/build74-phone-freeze-profile.tsv
 V4_PHONE_BUILD71_BASELINE_TSV ?= v4-phone private/build71-diagnostics/build71-phone-gen4-parallel.tsv
@@ -180,7 +184,7 @@ ALL_TEST_TARGETS ?=
 ALL_TEST_STRICT ?=1
 GO_SOURCES := $(shell find cmd internal watermark -type f -name '*.go')
 
-.PHONY: toolchain-check test-list corpus-manifest-check private-corpus-manifest v4-physical-fixtures v4-physical-qualification v4-phone-fixtures v4-build40-phone-corpus-diagnostic v4-build41-phone-physical-test v4-build42-phone-physical-test print-scan-test build test test-unit release-unit v3-freeze-check v4-pilot-lock-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build42-phone-data-test v4-build43-phone-side-pair-test v4-build43-phone-physical-test v4-build44-jpeg-compat-test v4-build44-go126-jpeg-compat-test v4-build44-phone-physical-test v4-build44-go126-phone-physical-test v4-build45-phone-diagnostic-test v4-build45-phone-diagnostic v4-build45-phone-oracle-diagnostic v4-build45-phone-study v4-build46-phone-handoff-test v4-build46-phone-handoff-diagnostic v4-build47-phone-frozen-bank-test v4-build47-phone-frozen-bank-diagnostic v4-build48-phone-local-refine-test v4-build48-phone-local-refine-diagnostic v4-build49-phone-proposal-ranking-test v4-build49-phone-proposal-ranking-diagnostic v4-build50-phone-top4-refine-test v4-build50-phone-top4-refine-diagnostic v4-build51-phone-surface-test v4-build51-phone-surface-diagnostic v4-build52-phone-optimizer-test v4-build52-phone-optimizer-diagnostic v4-build53-phone-pair-escape-test v4-build53-phone-pair-escape-diagnostic v4-build54-phone-pair-continuation-test v4-build54-phone-pair-continuation-diagnostic v4-build55-phone-sibling-stencil-test v4-build55-phone-sibling-stencil-diagnostic v4-build56-phone-sibling-pair-escape-test v4-build56-phone-sibling-pair-escape-diagnostic v4-build57-phone-sibling-pair-continuation-test v4-build57-phone-sibling-pair-continuation-diagnostic v4-build58-phone-second-pair-sibling-stencil-test v4-build58-phone-second-pair-sibling-stencil-diagnostic v4-build59-phone-third-pair-escape-test v4-build59-phone-third-pair-escape-diagnostic v4-build60-phone-third-pair-continuation-test v4-build60-phone-third-pair-continuation-diagnostic v4-build61-phone-third-pair-sibling-stencil-test v4-build61-phone-third-pair-sibling-stencil-diagnostic v4-build62-phone-fourth-pair-escape-test v4-build62-phone-fourth-pair-escape-diagnostic v4-build63-phone-fourth-pair-continuation-test v4-build63-phone-fourth-pair-continuation-diagnostic v4-build64-phone-recovery-test v4-build64-phone-physical-test v4-build65-phone-parallel-test v4-build65-phone-physical-test v4-build66-phone-parallel-decode-test v4-build66-phone-physical-test v4-build67-phone-profile-test v4-build67-phone-physical-test v4-build68-phone-plane-reuse-test v4-build68-phone-physical-test v4-build69-phone-geometry-profile-test v4-build69-phone-physical-test v4-build70-phone-seed-genealogy-test v4-build70-phone-physical-test v4-build71-phone-gen4-parallel-test v4-build71-phone-physical-test v4-build72-phone-prefix-profile-test v4-build72-phone-physical-test v4-build73-phone-gen3-parallel-test v4-build73-phone-physical-test v4-build74-phone-freeze-profile-test v4-build74-phone-physical-test v4-build75-phone-basin-parallel-test v4-build75-phone-physical-test v4-build76-phone-gen2-parallel-test v4-build76-phone-physical-test v4-build77-phone-gen4-profile-test v4-build77-phone-physical-test v4-build78-phone-continuation4-profile-test v4-build78-phone-physical-test v4-build79-phone-foldscore-profile-test v4-build79-phone-physical-test v4-build80-phone-luminance-cache-test v4-build80-phone-physical-test v4-build81-phone-luminance-lut-test v4-build81-phone-physical-test v4-build82-phone-inline-sampler-test v4-build82-phone-physical-test v4-build83-projective-sampler-test v4-build83-projective-sampler-profile v4-build84-phone-rgb-fetch-test v4-build84-phone-rgb-fetch-benchmark v4-build84-phone-physical-test v4-build37-physical-scanner-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
+.PHONY: toolchain-check test-list corpus-manifest-check private-corpus-manifest v4-physical-fixtures v4-physical-qualification v4-phone-fixtures v4-build40-phone-corpus-diagnostic v4-build41-phone-physical-test v4-build42-phone-physical-test print-scan-test build test test-unit release-unit v3-freeze-check v4-pilot-lock-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build42-phone-data-test v4-build43-phone-side-pair-test v4-build43-phone-physical-test v4-build44-jpeg-compat-test v4-build44-go126-jpeg-compat-test v4-build44-phone-physical-test v4-build44-go126-phone-physical-test v4-build45-phone-diagnostic-test v4-build45-phone-diagnostic v4-build45-phone-oracle-diagnostic v4-build45-phone-study v4-build46-phone-handoff-test v4-build46-phone-handoff-diagnostic v4-build47-phone-frozen-bank-test v4-build47-phone-frozen-bank-diagnostic v4-build48-phone-local-refine-test v4-build48-phone-local-refine-diagnostic v4-build49-phone-proposal-ranking-test v4-build49-phone-proposal-ranking-diagnostic v4-build50-phone-top4-refine-test v4-build50-phone-top4-refine-diagnostic v4-build51-phone-surface-test v4-build51-phone-surface-diagnostic v4-build52-phone-optimizer-test v4-build52-phone-optimizer-diagnostic v4-build53-phone-pair-escape-test v4-build53-phone-pair-escape-diagnostic v4-build54-phone-pair-continuation-test v4-build54-phone-pair-continuation-diagnostic v4-build55-phone-sibling-stencil-test v4-build55-phone-sibling-stencil-diagnostic v4-build56-phone-sibling-pair-escape-test v4-build56-phone-sibling-pair-escape-diagnostic v4-build57-phone-sibling-pair-continuation-test v4-build57-phone-sibling-pair-continuation-diagnostic v4-build58-phone-second-pair-sibling-stencil-test v4-build58-phone-second-pair-sibling-stencil-diagnostic v4-build59-phone-third-pair-escape-test v4-build59-phone-third-pair-escape-diagnostic v4-build60-phone-third-pair-continuation-test v4-build60-phone-third-pair-continuation-diagnostic v4-build61-phone-third-pair-sibling-stencil-test v4-build61-phone-third-pair-sibling-stencil-diagnostic v4-build62-phone-fourth-pair-escape-test v4-build62-phone-fourth-pair-escape-diagnostic v4-build63-phone-fourth-pair-continuation-test v4-build63-phone-fourth-pair-continuation-diagnostic v4-build64-phone-recovery-test v4-build64-phone-physical-test v4-build65-phone-parallel-test v4-build65-phone-physical-test v4-build66-phone-parallel-decode-test v4-build66-phone-physical-test v4-build67-phone-profile-test v4-build67-phone-physical-test v4-build68-phone-plane-reuse-test v4-build68-phone-physical-test v4-build69-phone-geometry-profile-test v4-build69-phone-physical-test v4-build70-phone-seed-genealogy-test v4-build70-phone-physical-test v4-build71-phone-gen4-parallel-test v4-build71-phone-physical-test v4-build72-phone-prefix-profile-test v4-build72-phone-physical-test v4-build73-phone-gen3-parallel-test v4-build73-phone-physical-test v4-build74-phone-freeze-profile-test v4-build74-phone-physical-test v4-build75-phone-basin-parallel-test v4-build75-phone-physical-test v4-build76-phone-gen2-parallel-test v4-build76-phone-physical-test v4-build77-phone-gen4-profile-test v4-build77-phone-physical-test v4-build78-phone-continuation4-profile-test v4-build78-phone-physical-test v4-build79-phone-foldscore-profile-test v4-build79-phone-physical-test v4-build80-phone-luminance-cache-test v4-build80-phone-physical-test v4-build81-phone-luminance-lut-test v4-build81-phone-physical-test v4-build82-phone-inline-sampler-test v4-build82-phone-physical-test v4-build83-projective-sampler-test v4-build83-projective-sampler-profile v4-build84-phone-rgb-fetch-test v4-build84-phone-rgb-fetch-benchmark v4-build84-phone-physical-test v4-build85-qualified-sampler-test v4-build85-qualified-sampler-profile v4-build37-physical-scanner-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
 
 # Print a categorized index of all test/check targets without running them.
 test-list:
@@ -1576,7 +1580,7 @@ v4-build83-projective-sampler-profile:
 	bash ./scripts/profile-v4-build83-projective-sampler.sh
 
 
-# Build84 is the first post-Build83 performance candidate. It changes only
+# Build84 is the current qualified smartphone baseline. It changes only
 # continuation4 RGB address/bounds-check shape; all arithmetic and semantics are exact.
 v4-build84-phone-rgb-fetch-test:
 	@echo "Running Build84 exact RGB-fetch regressions..."
@@ -1594,8 +1598,8 @@ v4-build84-phone-rgb-fetch-benchmark:
 	V4_BUILD84_COUNT="$(V4_BUILD84_COUNT)" \
 	bash ./scripts/benchmark-v4-build84-rgb-fetch.sh
 
-# Nine-photo semantic-equivalence/performance gate for Build84. Run only after
-# the Go 1.26.0 Build84 microbenchmark is reviewed and justifies physical testing.
+# Nine-photo semantic-equivalence/performance requalification gate for Build84.
+# The original promotion used two independent Go 1.26.0 runs; reruns remain diagnostic.
 v4-build84-phone-physical-test: build
 	@PIXSEAL="$(abspath $(PIXSEAL))" \
 	V4_PHONE_ACQUISITION_DIR="$(V4_PHONE_ACQUISITION_DIR)" \
@@ -1608,6 +1612,26 @@ v4-build84-phone-physical-test: build
 	V4_PHONE_MESSAGE_A="$(V4_PHONE_MESSAGE_A)" \
 	V4_PHONE_MESSAGE_B="$(V4_PHONE_MESSAGE_B)" \
 	bash ./scripts/test-v4-build84-phone-corpus.sh
+
+# Build85 is observability-only over the qualified Build84 runtime. It does not
+# change recovery behavior; it re-profiles the promoted sampler before any new
+# performance candidate is selected.
+v4-build85-qualified-sampler-test:
+	@echo "Running Build85 qualified-sampler public profiling regressions..."
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build(47|68|71|73|75|76|82|83|84|85)' -count=1
+	@$(GO) test ./cmd/pixseal -run '^TestSubcommandHelpReturnsFlagErrHelp$$' -count=1
+	@$(MAKE) --no-print-directory version-check
+	@$(GO) vet ./...
+
+# Public deterministic repeated benchmarks + CPU pprof of the current Build84
+# qualified block reader. Timing is observability evidence only.
+v4-build85-qualified-sampler-profile:
+	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" \
+	V4_BUILD85_PROFILE_DIR="$(V4_BUILD85_PROFILE_DIR)" \
+	V4_BUILD85_BENCHTIME="$(V4_BUILD85_BENCHTIME)" \
+	V4_BUILD85_COUNT="$(V4_BUILD85_COUNT)" \
+	V4_BUILD85_PPROF_TIME="$(V4_BUILD85_PPROF_TIME)" \
+	bash ./scripts/profile-v4-build85-qualified-sampler.sh
 
 print-scan-test: build
 	@PIXSEAL="$(abspath $(PIXSEAL))" \

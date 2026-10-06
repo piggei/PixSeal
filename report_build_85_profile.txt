@@ -1,0 +1,56 @@
+ok  	github.com/pj/pixseal/watermark	0.011s
+goos: linux
+goarch: amd64
+pkg: github.com/pj/pixseal/watermark
+cpu: 13th Gen Intel(R) Core(TM) i3-13100T
+BenchmarkExperimentalV4Build85QualifiedBlockReaderFront-8        	 1697964	      1435 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderFront-8        	 1757698	      1366 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderFront-8        	 1755865	      1366 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderFront-8        	 1748966	      1383 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderFront-8        	 1743553	      1373 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderMild-8         	 1748292	      1451 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderMild-8         	 1609431	      1463 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderMild-8         	 1642496	      1538 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderMild-8         	 1702303	      1386 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderMild-8         	 1627089	      1474 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderAngle-8        	 1627440	      1460 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderAngle-8        	 1680493	      1533 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderAngle-8        	 1511217	      1415 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderAngle-8        	 1720944	      1408 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85QualifiedBlockReaderAngle-8        	 1720848	      1390 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85MapPointAngle-8                    	11577061	       209.0 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85MapPointAngle-8                    	11659609	       220.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85MapPointAngle-8                    	11576748	       208.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85MapPointAngle-8                    	11627977	       206.3 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85MapPointAngle-8                    	11252500	       214.1 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85AddressFloorClampAngle-8           	 8204808	       253.1 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85AddressFloorClampAngle-8           	 9658506	       251.1 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85AddressFloorClampAngle-8           	 9693915	       250.5 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85AddressFloorClampAngle-8           	 9486274	       251.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85AddressFloorClampAngle-8           	 9623418	       249.6 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85PreparedFetchLumaBilinearAngle-8   	 4958805	       496.9 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85PreparedFetchLumaBilinearAngle-8   	 4953818	       487.7 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85PreparedFetchLumaBilinearAngle-8   	 4956356	       484.2 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85PreparedFetchLumaBilinearAngle-8   	 4977708	       497.0 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85PreparedFetchLumaBilinearAngle-8   	 4897512	       492.6 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85DCTAccumulationAngle-8             	38007526	        62.67 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85DCTAccumulationAngle-8             	37479486	        63.44 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85DCTAccumulationAngle-8             	38830458	        64.73 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85DCTAccumulationAngle-8             	34661072	        64.94 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build85DCTAccumulationAngle-8             	32210718	        66.86 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/pj/pixseal/watermark	112.387s
+goos: linux
+goarch: amd64
+pkg: github.com/pj/pixseal/watermark
+cpu: 13th Gen Intel(R) Core(TM) i3-13100T
+BenchmarkExperimentalV4Build85QualifiedBlockReaderAngle-8   	16401662	      1427 ns/op	       0 B/op	       0 allocs/op
+PASS
+ok  	github.com/pj/pixseal/watermark	24.962s
+Build85 qualified-sampler profile written to:
+  v4-phone private/build85-profile/build85-benchmark.txt
+  v4-phone private/build85-profile/build85-cpu.pprof
+  v4-phone private/build85-profile/build85-pprof-top.txt
+  v4-phone private/build85-profile/build85-pprof-reader-list.txt
+  v4-phone private/build85-profile/build85-compiler-reader.txt
+Build85 profiling gate: PASS

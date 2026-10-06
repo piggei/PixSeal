@@ -93,4 +93,4 @@ Component measurements at one complete 8x8 block of work were:
 
 CPU pprof attributed `43.93%` flat to the inlined luminance RGB closure, `28.36%` additional flat / `72.33%` cumulative to `samplePlaneLuminance`, `21.15%` flat to `readProjectiveBlockValue`, and only `4.35%` flat / `5.65%` cumulative to `homography.mapPoint`.
 
-**Decision:** Build83 is complete. The evidence selects Build84 as an exact RGB-fetch/bounds-check-reduction candidate. `mapPoint` and DCT are not the next targets. Build76 remains the qualified baseline.
+**Decision at Build83:** the evidence selected Build84 as an exact RGB-fetch/bounds-check-reduction candidate; `mapPoint` and DCT were not the next targets. Build76 remained the qualified baseline at this checkpoint. Build84 was subsequently qualified on two independent physical runs and superseded Build76; see `V4_BUILD84_EXACT_RGB_FETCH.md`.

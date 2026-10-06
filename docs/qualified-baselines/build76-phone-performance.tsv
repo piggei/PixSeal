@@ -1,0 +1,4 @@
+image	elapsed_ms	geometry_ms	gen4_ms	note
+__matrix__	758102	-	-	qualified two-run mean; historical Build76 baseline
+phone-b-mild.jpg	188751	60352	18473	qualified two-run mean rounded to nearest ms
+phone-b-angle.jpg	226813	183807	110830	qualified two-run mean rounded to nearest ms

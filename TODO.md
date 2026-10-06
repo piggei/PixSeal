@@ -1,14 +1,32 @@
-## Build84 checkpoint
+## Build85 checkpoint — active observability
+
+- [x] Keep Build84 as the current qualified smartphone baseline; make no Build85 runtime algorithm change.
+- [x] Add public deterministic post-promotion benchmarks for the qualified Build84 reader and major exact subcomponents.
+- [x] Add atomic CPU pprof, line-level reader attribution and compiler BCE/inlining capture.
+- [x] Add fixture checks proving Build84/historical block equality and prepared sample/luminance bit equality.
+- [ ] Run `make v4-build85-qualified-sampler-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build85-qualified-sampler-profile` on an otherwise idle qualified host and archive `build85-profile`.
+- [ ] Select at most one Build86 hypothesis from Build85 flat/cumulative/line-level evidence.
+- [ ] Do not run a Build85 physical corpus gate: Build85 changes observability only.
+
+## Build84 checkpoint — closed / promoted
 
 - [x] Close Build83 profiling on the qualified Go 1.26.0 i3-13100T host and select the next hypothesis from CPU flat/cumulative evidence.
-- [x] Keep Build76 immutable as the current qualified smartphone baseline.
-- [x] Implement one narrow candidate: exact continuation4 RGB row/x address hoisting plus one three-byte slice per bilinear source pixel; no `unsafe`, LUT, cache, mapPoint change or floating-point reordering.
+- [x] Implement one narrow exact continuation4 RGB row/x address-hoisting + three-byte-slice change; no `unsafe`, LUT, cache, mapPoint change or floating-point reordering.
 - [x] Add projective-block bit equality, Build41 FoldScore equality, Build55 continuation equality and complete Build84-vs-Build76 bank equality regressions.
-- [x] Add a public deterministic Build76/Build82/Build84 benchmark and Go compiler bounds-check/inliner evidence capture.
-- [ ] Run `make v4-build84-phone-rgb-fetch-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build84-phone-rgb-fetch-benchmark` on an otherwise idle qualified host and review repeated reader speed plus `build84-bce-reader.txt`.
-- [ ] Run the physical 9-photo gate only if the Go 1.26.0 benchmark shows a stable useful gain; if run 1 is exact and materially faster, archive it and perform a second independent confirmation before promotion.
-- [ ] Do not alter Format-v4 wire format, locked pilot, strength 48, ECC/Hamming, whitening/HMAC domains or qualified thresholds without new evidence.
+- [x] Run `make v4-build84-phone-rgb-fetch-test` on the qualified Go 1.26.0 host.
+- [x] Run `make v4-build84-phone-rgb-fetch-benchmark` and archive repeated reader/BCE evidence. Build84 improved 5.81% front, 7.00% mild and 7.37% angle at reader level.
+- [x] Run two independent complete 9-photo physical gates. Both are exact 9/9 PASS and preserve the qualified B/mild/B/angle workload.
+- [x] Promote Build84 after 748,902 / 746,902 ms full-matrix runs (747,902 ms mean) versus the 758,102 ms Build76 qualified mean.
+- [x] Freeze source-controlled Build76 and Build84 performance-reference TSVs so future candidates do not depend on mutable/private diagnostic directories.
+- [x] Keep Format-v4 wire format, locked pilot, strength 48, ECC/Hamming, whitening/HMAC domains and qualified thresholds unchanged.
+
+## Next performance work
+
+- [ ] Treat Build84, not Build76, as the performance and semantic baseline for any later smartphone candidate.
+- [ ] Measure first before changing another hot component; do not stack speculative caches/LUTs or combine unrelated optimizations.
+- [ ] Require bit-exact block/FoldScore/continuation/bank equivalence before any future physical timing.
+- [ ] Require two independent Go 1.26.0 9/9 physical PASS runs with a repeatable material improvement before superseding Build84.
 
 ## Build83 checkpoint — closed
 

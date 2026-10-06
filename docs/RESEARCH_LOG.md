@@ -1,3 +1,21 @@
+## Build85 — post-promotion qualified-sampler profiling
+
+**Status:** observability-only; Build84 remains the current qualified smartphone baseline.
+
+**Question:** after the successful Build84 RGB-fetch/address change, what now dominates the qualified projective block reader?
+
+**Method:** reuse the public deterministic Build83 fixture; verify Build84/historical bit equality; benchmark the complete Build84 reader on front/mild/angle-like homographies; separately measure 64 mapPoint calls, projected-sample floor/clamp/address formation, prepared RGB+luminance+bilinear work, and DCT accumulation; then capture a long CPU pprof, line-level reader attribution, and Go compiler BCE/inlining evidence. No private image, payload, key, ECC/HMAC result or oracle geometry selects work.
+
+**Decision discipline:** no Build86 optimization is chosen before the qualified Go 1.26.0 Build85 profile is reviewed. Any later candidate must start from Build84 and prove exact block/FoldScore/continuation/bank equivalence before physical timing.
+
+## Build84 qualification and promotion — 2026-10-05
+
+Build84 closed the Build83-selected RGB-fetch hypothesis successfully. On the qualified Go 1.26.0 i3-13100T host, five-run means for the historical reader were 1500.4 / 1514.0 / 1522.2 ns/block on front/mild/angle-like fixtures; Build84 measured 1413.2 / 1408.0 / 1410.0 ns/block, corresponding to 5.81% / 7.00% / 7.37% reader-level improvements. The compiler still reports `IsSliceInBounds` for the exact three-byte pixel slices, so this is not evidence of complete BCE; it is evidence that the new address/slice shape is cheaper on the qualified toolchain.
+
+The first physical run passed exact 9/9 semantics at 748,902 ms full-matrix; the independent second run passed at 746,902 ms. Both preserve the authoritative deep workload exactly. Their 747,902 ms mean is 1.35% below the 758,102 ms Build76 mean; the gain is smaller end-to-end than at reader level, as expected because only continuation4 FoldScore block reads changed. B/mild gen4 improves by 2.43% on the two-run mean; B/angle gen4 by 1.02%.
+
+Decision: **promote Build84 as the current qualified smartphone baseline**. Build76 becomes the previous qualified reference. Future performance work must start from Build84 and must remain measurement-first; no additional cache/LUT or combined optimization is justified by this promotion alone.
+
 ## Build83 profile result and Build84 RGB-fetch hypothesis — 2026-10-05
 
 Build83 completed on the qualified Go 1.26.0 host (`13th Gen Intel(R) Core(TM) i3-13100T`). Repeated historical front/mild/angle block reads were about 1.64–1.77 us/block; the long angle profile run was 1.710 us/block. The closed Build82 inline comparator was around 1.66–1.68 us/block, confirming that helper-call removal alone is only a small microbenchmark win.

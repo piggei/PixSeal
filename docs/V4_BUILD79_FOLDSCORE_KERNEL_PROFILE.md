@@ -93,4 +93,4 @@ v4-phone private/build79-diagnostics/build79-phone-foldscore-profile.tsv
 v4-phone private/build79-diagnostics/build79-phone-foldscore-profile.md
 ```
 
-Build79 is not promotable from timing. Build76 remains the current qualified smartphone baseline. Build79 exists only to select a later implementation experiment from measured FoldScore kernel cost.
+Build79 is not promotable from timing. At the Build79 checkpoint, Build76 remained the qualified smartphone baseline; Build84 later superseded it. Build79 exists only to select a later implementation experiment from measured FoldScore kernel cost.

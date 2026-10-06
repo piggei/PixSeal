@@ -10,7 +10,7 @@ CANONICAL_HEIGHT="${V4_PHONE_CANONICAL_HEIGHT:-1632}"
 MESSAGE_A="${V4_PHONE_MESSAGE_A:-v4-b38-phone-a}"
 MESSAGE_B="${V4_PHONE_MESSAGE_B:-v4-b38-phone-b}"
 PHONE_TIMEOUT="${V4_PHONE_BUILD84_TIMEOUT:-86400}"
-BUILD76_BASELINE_TSV="${V4_PHONE_BUILD76_BASELINE_TSV:-v4-phone private/build76-diagnostics/build76-phone-gen2-parallel.tsv}"
+BUILD76_BASELINE_TSV="${V4_PHONE_BUILD76_BASELINE_TSV:-docs/qualified-baselines/build76-phone-performance.tsv}"
 
 [[ -x "$PIXSEAL" ]] || { echo "error: PIXSEAL is not executable: $PIXSEAL" >&2; exit 1; }
 command -v timeout >/dev/null 2>&1 || { echo "error: GNU timeout is required" >&2; exit 1; }
@@ -171,16 +171,16 @@ done
 
 {
   echo '# PixSeal Build84 exact RGB-fetch sampler matrix'; echo
-  echo 'Build84 is an equivalence-preserving performance candidate over qualified Build76. Only continuation4 FoldScore projective block reads use the exact Build84 RGB-fetch reader: row/column RGB offsets are hoisted and each three-byte source pixel is represented by one bounded slice. homography.mapPoint, float64 formulas/order, geometry, bank/order and protected-data semantics remain authoritative.'; echo
+  echo 'Build84 is the current qualified smartphone baseline. Only continuation4 FoldScore projective block reads use the exact Build84 RGB-fetch reader: row/column RGB offsets are hoisted and each three-byte source pixel is represented by one bounded slice. homography.mapPoint, float64 formulas/order, geometry, bank/order and protected-data semantics remain authoritative.'; echo
   echo '| image | role | evals | bank | qual | fetch folds | block reads | success | failed | geometry | B76 geom | geom speedup | elapsed | B76 elapsed | speedup | HMAC | telemetry eq | gate |'
   echo '|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|'
   tail -n +2 "$tsv" | awk -F '\t' '{printf "| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |\n",$1,$3,$4,$5,$6,$27,$28,$29,$30,$39,$40,$41,$36,$37,$38,$31,$33,$34}'
   echo
-  echo 'Build76 remains the qualified baseline. Build84 can be promoted only after two independent physical runs preserve exact semantics and show a material, repeatable speedup; Build81 and Build82 remain semantic PASS but non-promoted experiments.'
+  echo 'Build84 is the qualified baseline after two independent Go 1.26.0 physical PASS runs. Build76 is retained as the historical timing/semantic reference; Build81 and Build82 remain semantic PASS but non-promoted experiments.'
   if awk -F '\t' 'NR>1{found=1;exit} END{exit !found}' "$BUILD76_BASELINE_TSV" 2>/dev/null; then
-    echo "Build76 timing baseline: $BUILD76_BASELINE_TSV"
+    echo "Build76 historical timing reference: $BUILD76_BASELINE_TSV"
   else
-    echo 'Build76 timing baseline: unavailable or header-only'
+    echo 'Build76 historical timing reference: unavailable or header-only'
   fi
 } > "$md"
 rm -f "$stage_dir/logs/"*.payload.bin

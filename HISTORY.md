@@ -1,8 +1,18 @@
-## Build84 — exact RGB fetch / bounds-check reduction candidate
+## Build85 — qualified Build84 sampler post-promotion profiling
 
-Build83 completed successfully as an observability-only checkpoint on the qualified Go 1.26.0 i3-13100T host. The historical angle-like reader measured about 1.70 us/block; the stage benchmark measured about 243 ns/block for 64 mapPoint calls, about 1.09–1.14 us/block for 64 luminance samples and about 72 ns/block for DCT accumulation. CPU pprof attributed 72.33% cumulative time to `samplePlaneLuminance`, 5.65% to `homography.mapPoint` and 21.15% flat to surrounding `readProjectiveBlockValue` work. This evidence rejects mapPoint/DCT as the immediate target and motivates Build84.
+After Build84 became the current qualified smartphone baseline, Build85 deliberately makes no decoder optimization. It reuses the public deterministic sampler fixture and profiles the **qualified Build84 reader** with repeated whole-reader/stage benchmarks, CPU pprof, line-level reader attribution and compiler BCE/inlining evidence. The goal is to select the next single optimization from the new baseline rather than continuing from Build83 measurements taken before the Build84 RGB-fetch improvement. Build84 remains qualified; Build85 requires no physical corpus gate unless a later candidate changes runtime behavior.
 
-Build84 keeps the exact Build82 continuation4 sampler arithmetic but changes only RGB address formation and bounds-check shape: row bases and x byte offsets are computed once, then each of the four bilinear source pixels is represented by a length-three slice before evaluating the unchanged `.299*R + .587*G + .114*B - 128` expression. No `unsafe`, cache, LUT, precomputed luminance plane, geometry change or floating-point reordering is introduced. A public Go 1.26.0 microbenchmark/BCE review precedes any physical run; Build76 remains qualified.
+## Build84 — qualified exact RGB fetch / bounds-check baseline
+
+Build83 completed successfully as an observability-only checkpoint on the qualified Go 1.26.0 i3-13100T host. CPU pprof attributed 72.33% cumulative time to `samplePlaneLuminance`, 5.65% to `homography.mapPoint` and 21.15% flat to surrounding `readProjectiveBlockValue` work. This evidence rejected mapPoint/DCT as the immediate target and selected RGB fetch/addressing for Build84.
+
+Build84 keeps the exact Build82 continuation4 sampler arithmetic but changes only RGB address formation and bounds-check shape: row bases and x byte offsets are computed once, then each of the four bilinear source pixels is represented by a length-three slice before evaluating the unchanged `.299*R + .587*G + .114*B - 128` expression. No `unsafe`, cache, LUT, precomputed luminance plane, geometry change or floating-point reordering is introduced.
+
+The qualified Go 1.26.0 public benchmark measured Build84 at 1413.2 / 1408.0 / 1410.0 ns/block mean for front/mild/angle-like fixtures versus 1500.4 / 1514.0 / 1522.2 ns/block for the historical reader: 5.81%, 7.00% and 7.37% reader-level improvements. Compiler BCE evidence still reports `IsSliceInBounds`, so the result is documented as a favorable address/bounds-check shape, not as complete bounds-check elimination.
+
+Two independent retained physical runs then passed the complete 9/9 semantic gate with exact workload. Full-matrix elapsed was 748,902 / 746,902 ms (747,902 ms mean) versus the 758,102 ms Build76 mean. B/mild elapsed/geometry/gen4 means were 185,370.5 / 59,173.5 / 18,025 ms; B/angle were 223,920.5 / 182,137 / 109,696 ms. Both runs preserved B/mild `79259 / 937 / 935 / 691 / 2120047` with HMAC/payload PASS and B/angle `334857 / 6198 / 0` with REJECT.
+
+**Decision: Build84 is promoted as the current qualified smartphone baseline.** Build76 remains the previous qualified scheduler/runtime reference. Source-controlled timing reference files under `docs/qualified-baselines/` freeze the Build76 historical mean and the Build84 two-run qualified baseline without shipping private images or diagnostic logs.
 
 ## Build83 — projective sampler CPU profiling
 

@@ -1,5 +1,5 @@
 Running Build85 qualified-sampler public profiling regressions...
-ok  	github.com/pj/pixseal/watermark	34.376s
+ok  	github.com/pj/pixseal/watermark	33.476s
 ok  	github.com/pj/pixseal/cmd/pixseal	0.003s
 Checking VERSION/buildinfo consistency...
 ok  	github.com/pj/pixseal/internal/buildinfo	0.002s

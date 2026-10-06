@@ -24,10 +24,11 @@ GO=(env "GOTOOLCHAIN=$TOOLCHAIN" go)
   "${GO[@]}" version
   echo "bench_time=$BENCHTIME"
   echo "count=$COUNT"
-  echo "runtime_candidate=Build84"
-  echo "qualified_baseline=Build76"
+  echo "runtime_under_test=Build84-qualified"
+  echo "historical_comparison_baseline=Build76"
+  echo "current_qualified_baseline=Build84"
   echo "benchmark_workload=public-deterministic-no-key-no-payload"
-  echo "physical_gate_rule=run only after benchmark review; performance is not a correctness gate"
+  echo "qualification_status=Build84 promoted after two independent 9/9 physical PASS runs; benchmark performance is not a correctness gate"
 } > "$stage_dir/build84-metadata.txt"
 
 "${GO[@]}" test ./watermark -run '^TestExperimentalV4Build84PublicBenchmarkFixture$' -count=1 \

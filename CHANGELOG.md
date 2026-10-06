@@ -1,11 +1,24 @@
-## v0.3.0-build84 — exact RGB fetch / bounds-check reduction candidate
+## v0.3.0-build85 — qualified Build84 sampler post-promotion profiling
 
-- Record the qualified-host Build83 profile: historical angle reader about 1.70 us/block, `samplePlaneLuminance` 72.33% cumulative CPU, `homography.mapPoint` 5.65%, and DCT accumulation about 72 ns/block.
-- Add an exact continuation4 RGB-fetch candidate that hoists row/x byte offsets and uses one three-byte slice per bilinear source pixel, reducing the explicit bounds-check shape without `unsafe` or arithmetic changes.
+- Keep Build84 as the current qualified smartphone semantic/performance baseline; Build85 changes no runtime recovery algorithm.
+- Reuse the public deterministic Build83 fixture to profile the **promoted Build84 reader** rather than extrapolating from the historical Build76 pprof.
+- Add repeated front/mild/angle Build84 reader benchmarks plus diagnostic stage measurements for mapPoint, floor/clamp/address formation, prepared RGB+luminance+bilinear work, and DCT accumulation.
+- Add a longer CPU pprof of the qualified angle-like reader, line-level `pprof -list` output for `experimentalV4PhoneBuild84ReadProjectiveBlockValue`, and Go compiler BCE/inlining evidence.
+- Add `make v4-build85-qualified-sampler-test` and `make v4-build85-qualified-sampler-profile` with atomic profile publication.
+- Build85 is observability-only: no private acquisition, key, payload, ECC/HMAC result or expected message selects benchmark work, and no physical qualification is required.
+- Do not select Build86 until the qualified Go 1.26.0 Build85 profile is reviewed.
+
+## v0.3.0-build84 — qualified exact RGB fetch / bounds-check baseline
+
+- Record the qualified-host Build83 profile that selected RGB/luminance access as the next measured target: `samplePlaneLuminance` 72.33% cumulative CPU, `homography.mapPoint` 5.65%, DCT about 72 ns/block.
+- Add the exact continuation4 RGB-fetch implementation that hoists row/x byte offsets and uses one three-byte slice per bilinear source pixel, without `unsafe`, caches, LUTs or arithmetic changes.
 - Preserve exact `float64` luminance, bilinear interpolation, DCT accumulation, `mapPoint`, geometry ordering, qualification, protected-data decode and HMAC semantics.
-- Add Build84 block/FoldScore/continuation/bank bit-exact regressions, public deterministic Build76/Build82/Build84 microbenchmarks, and compiler `check_bce` evidence capture.
-- Add `make v4-build84-phone-rgb-fetch-test`, `make v4-build84-phone-rgb-fetch-benchmark`, and a retained physical gate that should be run only after the Go 1.26.0 benchmark justifies it.
-- Keep Build76 as the qualified smartphone baseline until two independent physical Build84 runs demonstrate exact semantics and a material repeatable speedup.
+- Add block/FoldScore/continuation/bank bit-exact regressions, public deterministic Build76/Build82/Build84 microbenchmarks, and Go compiler `check_bce` evidence capture.
+- Qualified Go 1.26.0 benchmark result: Build84 mean 1413.2 / 1408.0 / 1410.0 ns/block for front/mild/angle versus historical 1500.4 / 1514.0 / 1522.2 ns/block, a 5.81% / 7.00% / 7.37% reader-level improvement.
+- Record that Go 1.26.0 still emits `IsSliceInBounds` for the Build84 pixel slices; the optimization is therefore described as a better RGB address/bounds-check shape, not complete BCE.
+- Promote Build84 after two independent 9/9 physical semantic-equivalence PASS runs: 748,902 / 746,902 ms full matrices, 747,902 ms mean versus Build76 758,102 ms mean, with exact B/mild/B/angle deep counters and workload.
+- Add source-controlled qualified timing references under `docs/qualified-baselines/`; the Build84 physical harness now uses the valid Build76 reference instead of depending on the historically truncated private Build76 TSV.
+- Build84 supersedes Build76 as the **current qualified smartphone baseline**. Build76 remains the previous qualified reference; Build80/81/82 remain closed negative/non-promoted experiments and Build83 remains observability-only.
 
 ## v0.3.0-build83 — projective sampler CPU profiling
 

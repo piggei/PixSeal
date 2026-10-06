@@ -1,0 +1,4 @@
+image	elapsed_ms	geometry_ms	gen4_ms	run1_elapsed_ms	run2_elapsed_ms	run1_geometry_ms	run2_geometry_ms	run1_gen4_ms	run2_gen4_ms	note
+__matrix__	747902	-	-	748902	746902	-	-	-	-	qualified two-run mean
+phone-b-mild.jpg	185371	59174	18025	186961	183780	59360	58987	18181	17869	qualified two-run mean rounded to nearest ms where needed
+phone-b-angle.jpg	223921	182137	109696	225207	222634	182485	181789	109647	109745	qualified two-run mean rounded to nearest ms where needed
