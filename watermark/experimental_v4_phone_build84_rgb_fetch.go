@@ -10,8 +10,8 @@ import (
 	"time"
 )
 
-// Build84 is an equivalence-preserving performance candidate over the qualified
-// Build76 smartphone baseline, selected from Build83 CPU profiling. Build83
+// Build84 is the current qualified smartphone baseline, originally selected as
+// an equivalence-preserving performance candidate from Build83 CPU profiling. Build83
 // measured the historical projective reader at about 1.70 us/block on the
 // qualified host and attributed about 72% cumulative CPU to
 // samplePlaneLuminance; mapPoint was about 5.7% cumulative and DCT accumulation
@@ -21,8 +21,8 @@ import (
 // indexes inside each pixel are statically bounded and the compiler sees a different
 // slice-bounds shape. No unsafe, LUT, cache, precomputed luminance plane, mapPoint change,
 // floating-point reordering, geometry change, or protected-data change is used.
-// Build76 remains qualified until two physical runs prove exact semantics and a
-// material repeatable speedup.
+// Two independent Go 1.26.0 physical runs later proved exact semantics and a
+// repeatable speedup, promoting Build84 over the previous Build76 baseline.
 
 type experimentalV4PhoneBuild84Prefix1Result struct {
 	inputs  []experimentalV4PhoneHypothesis

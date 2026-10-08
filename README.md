@@ -26,7 +26,7 @@ rights granted with those copies; the licensing change is prospective.
 
 ## Project status and development
 
-Current development snapshot: **v0.3.0-build88**, an **exact direct-RGB / dominating-bounds-check performance candidate** over the **Build84 current qualified smartphone baseline**. Build87 completed as observability-only profiling on the qualified Go 1.26.0 i3-13100T host: the Build84 reader averaged about 1394.8 / 1374.8 / 1402.6 ns/block on front/mild/angle, and compiler evidence retained eight `IsSliceInBounds` checks across the four three-byte RGB slices. Build88 changes only those four pixel accesses to one explicit `index+2` dominating proof plus direct scalar RGB byte loads, while preserving every floating-point operation and all recovery semantics. It is benchmark-first; no private physical gate is justified unless same-session Go 1.26.0 reader measurements show a stable useful gain over Build84.
+Current development snapshot: **v0.3.0-build90**, an **ordered-parallel qualification performance candidate over the qualified Build84 smartphone baseline**. Build89 has completed its retained nine-photo full-pipeline profile with a 9/9 semantic PASS. On `B/mild`, qualification is now the largest single deep stage: 61,193 ms of 149,504 ms (40.93%), versus 58,976 ms geometry and 29,119 ms ordered decode. Build90 therefore changes only scheduling of public-pilot qualification after the geometry bank is fully frozen: bounded workers evaluate independent candidates, results are stored by original bank index, and a serial ordered commit reconstructs the exact Build84 qualified sequence before unchanged protected-data decode. Physical testing is deferred until public Go 1.26.0 high-pass/early-reject benchmarks and a targeted race gate are reviewed.
 
 Two independent retained Go 1.26.0 Build76 physical runs passed exact 9/9 semantic equivalence. Full-matrix elapsed was 764,104 and 752,100 ms (758,102 ms mean). `B/mild` remains 79,259 / 937 / 935 / 691 / 2,120,047 with physical decode 696, five speculative candidates and HMAC/payload PASS; `B/angle` remains 334,857 / 6,198 / 0 and REJECT. The finalized Build76 physical gate stages diagnostics and publishes them only after a complete PASS.
 
@@ -76,6 +76,16 @@ The append-only research notebook in [`docs/RESEARCH_LOG.md`](docs/RESEARCH_LOG.
 records hypotheses, rejected variants, threshold decisions and negative results so
 future builds do not silently repeat abandoned experiments.
 
+
+## What v0.3.0-build90 adds
+
+Build90 is the first pipeline-level performance candidate selected from Build89 profiling evidence. It leaves Build84 geometry, qualification arithmetic and protected-data decode semantics unchanged, but evaluates the already-frozen qualification bank with a bounded `GOMAXPROCS` worker pool. Results are committed strictly in original bank order, so evaluation counts, accepted hypotheses and downstream candidate order remain serial-Build84-identical.
+
+A public deterministic benchmark separates a **high-pass** workload, where every candidate reaches the expensive full public-pilot detector, from an **early-reject** workload that exposes scheduling overhead. The source gate also runs a targeted race detector over the shared read-only `pixelPlane`. No private image, key, payload, ECC outcome or HMAC result participates in benchmark workload construction. See [`docs/V4_BUILD90_ORDERED_PARALLEL_QUALIFICATION.md`](docs/V4_BUILD90_ORDERED_PARALLEL_QUALIFICATION.md).
+
+## What v0.3.0-build89 adds
+
+Build89 closes the exact-portable projective-reader micro-optimization branch after Build88 and performs no decoder optimization. `v4-extract-phone` deep recovery delegates to qualified Build84, then exposes derived wall-clock accounting for geometry plane preparation, Build47 freeze, prefix1, generations 2/3/4, post-geometry plane preparation, held-out qualification and ordered protected-data decode. The retained nine-photo profile remains semantically gated but is profiling evidence only, not a new qualification. See [`docs/V4_BUILD89_FULL_PIPELINE_PROFILE.md`](docs/V4_BUILD89_FULL_PIPELINE_PROFILE.md).
 
 ## What v0.3.0-build84 adds
 

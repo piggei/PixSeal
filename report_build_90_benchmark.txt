@@ -1,0 +1,34 @@
+ok  	github.com/pj/pixseal/watermark	0.194s
+goos: linux
+goarch: amd64
+pkg: github.com/pj/pixseal/watermark
+cpu: 13th Gen Intel(R) Core(TM) i3-13100T
+BenchmarkExperimentalV4Build90SerialHighPass-8        	      10	 211322403 ns/op	   18944 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build90SerialHighPass-8        	      10	 210393163 ns/op	   18944 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build90SerialHighPass-8        	      10	 206944702 ns/op	   18944 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build90SerialHighPass-8        	      10	 204026495 ns/op	   18944 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build90SerialHighPass-8        	      10	 204379107 ns/op	   18944 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build90ParallelHighPass-8      	      51	  48500207 ns/op	   22519 B/op	      18 allocs/op
+BenchmarkExperimentalV4Build90ParallelHighPass-8      	      50	  48645834 ns/op	   21068 B/op	      14 allocs/op
+BenchmarkExperimentalV4Build90ParallelHighPass-8      	      46	  48354704 ns/op	   21285 B/op	      15 allocs/op
+BenchmarkExperimentalV4Build90ParallelHighPass-8      	      52	  47660558 ns/op	   20724 B/op	      13 allocs/op
+BenchmarkExperimentalV4Build90ParallelHighPass-8      	      49	  48983427 ns/op	   21065 B/op	      14 allocs/op
+BenchmarkExperimentalV4Build90SerialEarlyReject-8     	      21	 112332119 ns/op	  385024 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build90SerialEarlyReject-8     	      20	 111019986 ns/op	  385024 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build90SerialEarlyReject-8     	      21	 110726970 ns/op	  385024 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build90SerialEarlyReject-8     	      21	 110505799 ns/op	  385024 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build90SerialEarlyReject-8     	      20	 115091328 ns/op	  385024 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build90ParallelEarlyReject-8   	      87	  27646571 ns/op	  386857 B/op	      13 allocs/op
+BenchmarkExperimentalV4Build90ParallelEarlyReject-8   	      88	  28397058 ns/op	  386784 B/op	      13 allocs/op
+BenchmarkExperimentalV4Build90ParallelEarlyReject-8   	      80	  28466594 ns/op	  386739 B/op	      13 allocs/op
+BenchmarkExperimentalV4Build90ParallelEarlyReject-8   	      86	  28020214 ns/op	  386717 B/op	      13 allocs/op
+BenchmarkExperimentalV4Build90ParallelEarlyReject-8   	      88	  28070251 ns/op	  386709 B/op	      13 allocs/op
+PASS
+ok  	github.com/pj/pixseal/watermark	52.030s
+ok  	github.com/pj/pixseal/watermark	5.299s
+Build90 ordered-parallel qualification benchmark written to:
+  v4-phone private/build90-benchmark/build90-benchmark.txt
+  v4-phone private/build90-benchmark/build90-fixture-test.txt
+  v4-phone private/build90-benchmark/build90-race-test.txt
+  v4-phone private/build90-benchmark/build90-metadata.txt
+Build90 benchmark gate: PASS (correctness/race only; review high-pass speedup and early-reject overhead before physical testing)

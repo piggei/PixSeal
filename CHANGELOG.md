@@ -1,3 +1,20 @@
+## v0.3.0-build90 — ordered-parallel qualification candidate
+
+- Close Build89 as **profiling PASS** on the retained Go 1.26.0 nine-photo matrix. `B/mild` deep recovery measured 149,504 ms: geometry 58,976 ms, qualification 61,193 ms and decode 29,119 ms. `B/angle` remains geometry-dominated at 186,352/193,441 ms with qualification only 6,867 ms.
+- Keep Build84 as the current qualified smartphone baseline. Build89 remains observability-only; Build86 and Build88 remain exact but benchmark-negative/non-promoted.
+- Add Build90 ordered-parallel qualification. The complete Build84 geometry bank is frozen first; a bounded worker pool runs the unchanged public-pilot `experimentalV4PhoneBuild68Qualify` independently per candidate; results are stored by bank index and committed serially in original order.
+- Add low-overhead telemetry for qualification workers, tasks and evaluation count. No per-candidate timer is added.
+- Add exact public fixture tests, ordered-commit checks, targeted `go test -race`, high-pass and early-reject public benchmarks, and a deferred nine-photo physical gate.
+- Add `make v4-build90-qualification-parallel-test`, `make v4-build90-qualification-benchmark` and deferred `make v4-build90-phone-physical-test`.
+
+## v0.3.0-build89 — full qualified Build84 deep-pipeline profiling
+
+- Close Build88 as **exact / benchmark-strongly-negative / non-promoted**: same-session qualified-host reader means regress from Build84 1415.4 / 1434.0 / 1450.8 ns/block to Build88 1529.2 / 1593.8 / 1611.8 ns/block on front/mild/angle.
+- Restore the active deep runtime to qualified Build84; Build86 and Build88 remain reproducibility-only negative experiments.
+- Add Build89 observability-only phase accounting derived after Build84 recovery from timers already present in the qualified path; no new timing probe is inserted inside hot geometry/qualification/decode loops.
+- Add retained nine-photo full deep-pipeline profiling for freeze, prefix1, gen2, gen3, gen4, qualification, ordered decode and residual accounting.
+- Add `make v4-build89-full-pipeline-test` and `make v4-build89-full-pipeline-profile`. Build89 is never promotable from timing because runtime behavior is unchanged.
+
 ## v0.3.0-build88 — exact direct RGB loads / dominating BCE candidate
 
 - Close Build87 as an observability-only PASS on the qualified Go 1.26.0 host. Build87 measured the qualified Build84 reader at approximately 1394.8 / 1374.8 / 1402.6 ns/block for front/mild/angle and confirmed eight `IsSliceInBounds` checks around the four three-byte RGB slices.

@@ -1,4 +1,14 @@
-## v0.3.0-build88 — direct RGB bounds-check candidate
+## v0.3.0-build90 — qualification parallelism selected from full-pipeline evidence
+
+Build89 completed the full qualified Build84 pipeline profile with 9/9 retained semantic equivalence. It changed the optimization priority: on `B/mild`, serial public-pilot qualification consumed 61,193 ms (40.93% of deep recovery), exceeding both geometry and ordered protected-data decode. The frozen bank has 937 candidates and 935 qualify, making the stage highly parallel without altering the bank or protected-data semantics.
+
+Build90 therefore parallelizes only qualification execution. It preserves the Build84 freeze barrier, writes one result per original bank index, waits for all tasks, then commits evaluation counts and qualified hypotheses serially in bank order. Build84 remains qualified pending benchmark review and, only if justified, two independent physical Build90 runs.
+
+## v0.3.0-build89 — qualified Build84 full-pipeline profiling
+
+Build88 passed exactness but regressed the qualified Build84 reader by roughly 8–11% and therefore never reached the private physical gate. Build89 restores Build84 as the active deep runtime and moves observability back to the complete retained workload. It derives stage accounting from the qualified timers already present in Build84 and profiles freeze, prefix1, gen2, gen3, gen4, qualification and ordered decode before any Build90 optimization is chosen.
+
+## v0.3.0-build88 — direct RGB bounds-check experiment, closed negative
 
 Build87 completed the qualified RGB/luminance/bilinear compiler profile without changing runtime semantics. The key actionable compiler result is eight `IsSliceInBounds` checks on Build84's four `rgb[index:index+3]` expressions. Build88 therefore tests one final narrow exact-portable reader rewrite: one dominating `rgb[index+2]` proof per pixel followed by direct scalar R/G/B loads. All floating-point expressions and DCT order remain Build84-exact. The candidate is benchmark-first and Build84 remains the current qualified smartphone baseline.
 

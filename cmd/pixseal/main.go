@@ -36,7 +36,7 @@ Commands:
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
-  v4-extract-phone EXPERIMENTAL: Build88 direct-RGB BCE candidate over Build84-qualified phone path + authenticated v4 decode
+  v4-extract-phone EXPERIMENTAL: Build90 ordered-parallel qualification candidate over Build84-qualified phone path + authenticated v4 decode
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
   v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
@@ -997,6 +997,12 @@ func printV4PhoneDiagnostics(w io.Writer, decoderID string, info watermark.Exper
 	}
 	if p.Build88Attempted {
 		fmt.Fprintf(w, "build88-direct-rgb: attempted=true fold-scores=%d block-reads=%d block-success=%d block-failed=%d\n", p.Build88DirectFoldScores, p.Build88DirectBlockReads, p.Build88DirectBlockSuccess, p.Build88DirectBlockFailed)
+	}
+	if p.Build89Attempted {
+		fmt.Fprintf(w, "build89-pipeline-profile: attempted=true total-ms=%d geometry-ms=%d geometry-plane-prep-ms=%d freeze-ms=%d prefix1-ms=%d gen2-ms=%d gen3-ms=%d gen4-ms=%d geometry-accounted-ms=%d geometry-unaccounted-ms=%d post-plane-prep-ms=%d qualification-ms=%d decode-wall-ms=%d post-accounted-ms=%d total-accounted-ms=%d total-unaccounted-ms=%d\n", p.Build89TotalMs, p.Build89GeometryMs, p.Build89GeometryPlanePrepMs, p.Build89FreezeMs, p.Build89Prefix1Ms, p.Build89Gen2Ms, p.Build89Gen3Ms, p.Build89Gen4Ms, p.Build89GeometryAccountedMs, p.Build89GeometryUnaccountedMs, p.Build89PostPlanePrepMs, p.Build89QualificationMs, p.Build89DecodeWallMs, p.Build89PostGeometryAccountedMs, p.Build89TotalAccountedMs, p.Build89TotalUnaccountedMs)
+	}
+	if p.Build90Attempted {
+		fmt.Fprintf(w, "build90-qualification-parallel: attempted=true workers=%d tasks=%d evaluations=%d\n", p.Build90QualificationWorkers, p.Build90QualificationTasks, p.Build90QualificationEvaluations)
 	}
 	fmt.Fprintf(w, "hmac: authenticated=%t fallback-attempted=%t fallback-authenticated=%t\n", p.HMACAuthenticated, p.FallbackAttempted, p.FallbackAuthenticated)
 	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)

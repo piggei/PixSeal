@@ -1,3 +1,9 @@
+## Build88 closure and Build89 full-pipeline profile — 2026-10-06
+
+Build88 passed all exactness checks but failed the benchmark-first criterion decisively. Same-session Go 1.26.0 means were Build84 1415.4 / 1434.0 / 1450.8 ns/block and Build88 1529.2 / 1593.8 / 1611.8 on front/mild/angle, so the candidate regressed by about 8.0% / 11.1% / 11.1%. The prepared fetch microbenchmark also failed to improve (255.68 ns slice form versus 257.46 ns direct form). Build88 is non-promoted and receives no physical run.
+
+This closes the current exact-portable projective-reader rewrite branch. Build89 restores qualified Build84 and performs observability-only stage accounting on the retained workload. The next optimization, if any, must be selected from measured freeze/prefix/gen2/gen3/gen4/qualification/decode wall shares rather than from another speculative reader rewrite.
+
 ## Build87 result and Build88 direct-RGB hypothesis — 2026-10-06
 
 Build87 completed on the qualified Go 1.26.0 i3-13100T host. The qualified Build84 reader five-run means were 1394.8 / 1374.8 / 1402.6 ns/block for front/mild/angle. Prepared angle-like stage means were 236.9 ns/block for four three-byte pixel-slice fetches, 337.3 ns/block for four RGB-to-luminance conversions, 144.8 ns/block for horizontal bilinear, 131.3 ns/block for vertical bilinear, and 514.6 ns/block for the combined prepared fetch+luminance+bilinear path. The long angle run measured 1407 ns/block.
@@ -70,6 +76,14 @@ Rules for future entries:
   deliberately *not* relaxed after a promising result;
 - private print-camera/scanner images are referenced by regression-case name only and
   are never copied into source archives.
+
+## Build89 closure and Build90 ordered-parallel qualification hypothesis — 2026-10-08
+
+Build89 completed the retained full-pipeline profile with 9/9 semantic equivalence while executing the unchanged qualified Build84 path. The measurement changes the optimization target: `B/mild` spends 61,193 ms in serial qualification (40.93% of 149,504 ms deep recovery), versus 58,976 ms geometry and 29,119 ms ordered decode. Its frozen bank is 937 candidates with 935 accepted. `B/angle`, by contrast, spends only 6,867 ms in qualification and remains geometry/gen4 dominated.
+
+This supports one scheduling-only Build90 experiment. Qualification tasks are independent after the bank freeze and consume only public pilot/structure plus the immutable pixel plane. Build90 may execute them concurrently but must store every result by original bank index and reconstruct evaluation counts and the accepted list in a serial ordered commit. No protected data may affect scheduling, pruning or completion.
+
+The decision gate is benchmark-first: public high-pass and early-reject workloads plus a targeted race detector. The retained physical matrix is deferred until the high-pass wall-time gain is large and stable. Build84 remains the qualified baseline.
 
 ## Build81 closure and Build82 exact-inline hypothesis — 2026-10-05
 

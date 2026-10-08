@@ -1,6 +1,6 @@
 # Format-v4 Build88 — exact direct RGB loads / dominating BCE
 
-Build88 is a **benchmark-first performance candidate** over the current qualified Build84 smartphone baseline. It is selected from the completed Build87 compiler/profile evidence and changes only the four RGB pixel accesses inside continuation4 FoldScore projective block reads.
+Build88 is a **closed exact / benchmark-strongly-negative / non-promoted experiment** over the current qualified Build84 smartphone baseline. It is selected from the completed Build87 compiler/profile evidence and changes only the four RGB pixel accesses inside continuation4 FoldScore projective block reads.
 
 ## Evidence selecting the experiment
 
@@ -41,6 +41,12 @@ Build88 does **not** change:
 - pilot, strength 48, ECC/Hamming, whitening/HMAC domains, thresholds or Format-v4 wire format.
 
 There is no `unsafe`, LUT, cache, precomputed luminance plane, FMA, arithmetic reassociation or coordinate recurrence.
+
+## Qualified-host result
+
+The Go 1.26.0 i3-13100T exactness gate passed, but the same-session performance gate failed decisively. Five-run Build84/Build88 means were **1415.4/1529.2 ns** front, **1434.0/1593.8 ns** mild and **1450.8/1611.8 ns** angle. Build88 is therefore about **8.0% / 11.1% / 11.1% slower**. The isolated prepared fetch also failed to improve: 255.68 ns for the Build84 slice form versus 257.46 ns for direct scalar loads. No private physical Build88 run is justified.
+
+**Decision:** keep Build84 qualified, close Build88, and move to Build89 full-pipeline profiling.
 
 ## Gates
 

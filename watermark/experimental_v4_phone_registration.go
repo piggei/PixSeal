@@ -470,6 +470,27 @@ type ExperimentalV4PhoneInfo struct {
 	Build88DirectBlockReads                   int
 	Build88DirectBlockSuccess                 int
 	Build88DirectBlockFailed                  int
+	Build89Attempted                          bool
+	Build89TotalMs                            int64
+	Build89GeometryMs                         int64
+	Build89GeometryPlanePrepMs                int64
+	Build89FreezeMs                           int64
+	Build89Prefix1Ms                          int64
+	Build89Gen2Ms                             int64
+	Build89Gen3Ms                             int64
+	Build89Gen4Ms                             int64
+	Build89GeometryAccountedMs                int64
+	Build89GeometryUnaccountedMs              int64
+	Build89PostPlanePrepMs                    int64
+	Build89QualificationMs                    int64
+	Build89DecodeWallMs                       int64
+	Build89PostGeometryAccountedMs            int64
+	Build89TotalAccountedMs                   int64
+	Build89TotalUnaccountedMs                 int64
+	Build90Attempted                          bool
+	Build90QualificationWorkers               int
+	Build90QualificationTasks                 int
+	Build90QualificationEvaluations           int
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -1353,11 +1374,12 @@ func experimentalV4PhoneDecodeEnsemble(src image.Image, key []byte, cw, ch int, 
 	return nil, info, telemetry, errors.New("experimental v4 phone payload authentication failed")
 }
 
-// ExperimentalV4ExtractPhone preserves the Build44-qualified smartphone path:
-// Build41/43 geometry, Build42 post-geometry data recovery and Build40 residual
-// warp remain first and unchanged. Build64 adds only a final bounded deep
-// recovery candidate. Its geometry bank is generated from public proposal
-// evidence and frozen before held-out qualification or HMAC are consulted.
+// ExperimentalV4ExtractPhone preserves the qualified smartphone path. The
+// historical Build41/43 direct geometry, Build42 post-geometry data recovery and
+// Build40 residual warp remain first and unchanged. The final deep fallback uses
+// the current qualified Build84 semantics; Build89 adds observability only after
+// those authoritative stages have measured their timings. The deep geometry bank
+// remains public-proposal-only and frozen before held-out qualification or HMAC.
 func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte, ExperimentalV4ExtractInfo, ExperimentalV4PhoneInfo, error) {
 	if src == nil {
 		return nil, ExperimentalV4ExtractInfo{}, ExperimentalV4PhoneInfo{}, errors.New("nil image")
@@ -1422,12 +1444,12 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
-		// Build88 is an exact performance candidate over the current qualified
-		// Build84 deep runtime. It changes only RGB byte access shape inside the
-		// continuation4 projective reader; geometry and protected decode remain
-		// identical and Build84 stays the qualification authority until promotion.
-		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild88Recover(work, boundary, key, cw, ch)
-		experimentalV4PhoneBuild88ApplyTelemetry(&public, recovery64)
+		// Build90 is a scheduling-only candidate over qualified Build84. The blind
+		// geometry bank is fully frozen before qualification; only independent
+		// public-pilot qualification evaluations are scheduled in parallel, with
+		// authoritative results committed strictly in original bank order.
+		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild90Recover(work, boundary, key, cw, ch)
+		experimentalV4PhoneBuild90ApplyTelemetry(&public, recovery64)
 		if err64 == nil {
 			public.ProjectiveBasinFound = true
 			public.Accepted = true

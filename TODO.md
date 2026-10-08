@@ -1,13 +1,30 @@
-## Build88 checkpoint — active benchmark-first exact candidate
+## Build90 active — ordered-parallel qualification candidate
+
+- [ ] Run `make v4-build90-qualification-parallel-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build90-qualification-benchmark` with the host otherwise idle and review five-run serial/parallel means for both high-pass and early-reject workloads.
+- [ ] Do **not** run the private physical gate unless the high-pass benchmark shows a large stable gain and early-reject overhead is acceptable.
+- [ ] If benchmark-positive, run `make v4-build90-phone-physical-test` twice independently and compare raw milliseconds/means against the source-controlled Build84 qualified baseline before any promotion.
+- [ ] If benchmark-negative or physically non-repeatable, close Build90 without changing Build84 and profile/select a different pipeline stage rather than tuning qualification thresholds.
+- [x] Select Build90 from Build89 full-pipeline evidence: B/mild qualification is 61,193 ms / 40.93% of deep recovery, larger than geometry or ordered decode.
+- [x] Keep Build84 as the current qualified smartphone baseline while Build90 remains benchmark-first and unqualified.
+
+## Build89 checkpoint — closed profiling PASS
+
+- [x] Profile the complete unchanged qualified Build84 deep pipeline across the retained nine-photo matrix.
+- [x] Preserve 9/9 semantic behavior and derive accounting from existing qualified timers rather than adding hot-loop probes.
+- [x] Measure B/mild: 149,504 ms deep total, 58,976 ms geometry, 61,193 ms qualification, 29,119 ms ordered decode.
+- [x] Measure B/angle: 193,441 ms deep total, 186,352 ms geometry, 6,867 ms qualification, 0 ms decode; gen4 remains the dominant geometry stage.
+- [x] Select ordered-parallel qualification as the next single-change hypothesis.
+
+## Build88 checkpoint — closed exact / benchmark-strongly-negative
 
 - [x] Close Build87 profiling on the qualified Go 1.26.0 host and identify the eight RGB slice bounds checks.
 - [x] Implement Build88 direct RGB loads with explicit dominating `index+2` bounds proofs and no floating-point change.
 - [x] Add block-reader, FoldScore, continuation4 and blind-bank exactness regressions against Build84.
 - [x] Add same-session Build84-vs-Build88 reader benchmarks, prepared fetch microbenchmarks, BCE/inliner output and objdump evidence.
-- [ ] Run `make v4-build88-direct-rgb-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build88-direct-rgb-benchmark` on an otherwise idle qualified host and archive `build88-benchmark`.
-- [ ] Run the private nine-photo gate only if Build88 shows a stable useful complete-reader gain (roughly 2% or better on front/mild/angle, with no regression) and BCE/assembly evidence supports the change.
-- [ ] If the benchmark gate fails, close the exact-portable projective-reader micro-optimization line and keep Build84 qualified.
+- [x] Run `make v4-build88-direct-rgb-test` on the qualified Go 1.26.0 host: PASS.
+- [x] Run `make v4-build88-direct-rgb-benchmark`: correctness PASS, performance strongly negative (~8.0% front and ~11.1% mild/angle slower at reader level).
+- [x] Do not run the private nine-photo gate; keep Build84 qualified and close the exact-portable projective-reader micro-optimization line.
 
 ## Build87 checkpoint — closed profiling PASS
 

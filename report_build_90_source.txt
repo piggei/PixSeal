@@ -1,0 +1,6 @@
+Running Build90 ordered-parallel qualification regressions...
+ok  	github.com/pj/pixseal/watermark	52.873s
+ok  	github.com/pj/pixseal/watermark	5.315s
+ok  	github.com/pj/pixseal/cmd/pixseal	0.004s
+Checking VERSION/buildinfo consistency...
+ok  	github.com/pj/pixseal/internal/buildinfo	0.002s

@@ -1,6 +1,19 @@
-## v0.3.0-build88 exact direct RGB/BCE candidate — pending qualified-host benchmark
+## v0.3.0-build90 candidate selected from Build89 full-pipeline profile
 
-Build87 completed as profiling PASS over the qualified Build84 runtime. Five-run Build84 reader means were about 1394.8 / 1374.8 / 1402.6 ns/block for front/mild/angle. The prepared angle-like RGB slice-fetch stage averaged about 236.9 ns/block, and Go 1.26.0 reported eight `IsSliceInBounds` checks across the four three-byte pixel slices. Build88 changes only those accesses to direct scalar RGB byte loads guarded by one explicit highest-index proof per pixel. Exactness tests and same-session Build84-vs-Build88 benchmarks must pass before any physical run.
+Build89 completed the retained nine-photo matrix on Go 1.26.0 with a 9/9 semantic PASS and the unchanged qualified Build84 runtime. Full command-matrix elapsed was 745,821 ms, close to the 747,902 ms two-run Build84 reference mean.
+
+The decisive deep-stage measurements are:
+
+| Case | Deep total | Geometry | Qualification | Decode | Bank | Qualified |
+|---|---:|---:|---:|---:|---:|---:|
+| B/mild | 149,504 ms | 58,976 ms | **61,193 ms** | 29,119 ms | 937 | 935 |
+| B/angle | 193,441 ms | 186,352 ms | 6,867 ms | 0 ms | 6,198 | 0 |
+
+`B/mild` qualification is 40.93% of deep wall time and is now the largest single stage. Build90 is therefore an ordered-parallel scheduling candidate over the already-frozen bank. It changes no qualification arithmetic or protected-data semantics. Public high-pass/early-reject benchmark and race evidence are required before the private physical matrix. Build84 remains the qualified baseline.
+
+## v0.3.0-build88 exact direct RGB/BCE — closed benchmark-negative
+
+Build88 passed exactness but failed the same-session qualified-host performance gate. Build84/Build88 five-run means were 1415.4/1529.2 ns/block front, 1434.0/1593.8 mild and 1450.8/1611.8 angle, making Build88 about 8.0% / 11.1% / 11.1% slower. The prepared slice/direct fetch comparison also failed to improve (255.68 vs 257.46 ns/block). Build88 did not proceed to the private physical gate and is non-promoted; Build84 remains qualified.
 
 ## v0.3.0-build87 qualified RGB/luminance/bilinear profile — completed 2026-10-06
 

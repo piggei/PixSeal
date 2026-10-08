@@ -1,0 +1,9 @@
+Selected Go toolchain: go1.26.0
+Building PixSeal with go1.26.0...
+Created dist/pixseal
+Build89 staged result: controls=3/3 A/front=1/1 A/mild=1/1 A/angle=1/1 B/front=1/1 B/mild=1/1 B/angle-reject=1/1
+Build89 full qualified Build84 pipeline profile written to:
+  v4-phone private/build89-profile/build89-full-pipeline.tsv
+  v4-phone private/build89-profile/build89-full-pipeline.md
+  v4-phone private/build89-profile/build89-metadata.txt
+Build89 profiling gate: PASS
