@@ -1,6 +1,6 @@
 # Format-v4 Build91 — contemporaneous Build84 / Build90 paired physical profiling
 
-Build91 is a **completed observability-only decision build**. It adds no recovery algorithm. Its contemporaneous AB/BA evidence resolved the cross-day timing ambiguity and **promoted the unchanged Build90 implementation as the current qualified smartphone baseline**. Build84 is now the previous qualified baseline; Build91 itself is not a runtime baseline.
+Build91 is a **completed observability-only decision build**. It adds no recovery algorithm. Its contemporaneous AB/BA evidence resolved the cross-day timing ambiguity and **promoted the unchanged Build90 implementation at that checkpoint**. Build93 later superseded Build90; Build91 itself is not a runtime baseline.
 
 ## Why Build91 exists
 
@@ -138,7 +138,7 @@ Paired means are B/mild 168,444.5 -> 118,104 ms (**-29.89%**) with qualification
 
 The AB/BA reversal reproduces the speedup while unchanged geometry and decode remain comparable within contemporaneous pairs. The prior cross-day geometry slowdown is therefore attributed to host drift rather than to ordered-parallel qualification. Together with the public benchmark/race PASS and three independent full nine-photo semantic PASS runs, this evidence satisfies the promotion discipline.
 
-**Final decision: Build90 is promoted as the current qualified smartphone baseline. Build84 becomes the previous qualified baseline. Build91 remains observability-only and is closed as paired profiling PASS.**
+**Final decision at this checkpoint: Build90 was promoted over Build84. Build93 later superseded Build90. Build91 remains observability-only and is closed as paired profiling PASS.**
 
 The exact authoritative paired rows are frozen source-side as `docs/qualified-baselines/build91-build84-build90-paired.tsv`; summarized Build90 qualification/performance evidence is frozen in `docs/qualified-baselines/build90-phone-performance.tsv`.
 

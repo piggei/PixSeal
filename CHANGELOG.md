@@ -1,3 +1,15 @@
+## v0.3.0-build93 — qualified exact protected-residue reuse baseline
+
+- Close Build92 as observability-only PASS and retain its Build90 timing/CPU evidence that selected protected residue reuse.
+- Add exact candidate-local protected residue reuse after Build90's frozen bank and ordered-parallel public-pilot qualification; Robust/Balanced/Capacity derivation order and first-logical-HMAC behavior remain unchanged.
+- Qualified-host Go 1.26.0 source/exactness/race PASS.
+- Qualified-host public benchmark PASS: single Capacity candidate 44.439 -> 10.236 ms/op mean (**4.341x, -76.97%**); batch8 49.443 -> 22.324 ms/op (**2.215x, -54.85%**), with effectively unchanged allocations.
+- Complete two independent retained 9/9 physical semantic PASS runs. Both preserve B/mild `79,259/937/935/691/2,120,047`, physical/speculative `696/5`, HMAC/payload PASS, and B/angle `334,857/6,198/0` REJECT.
+- Confirm the new physical invariant in both runs: B/mild `696` protected sampling passes for `2,086` profile derivations; B/angle performs zero protected sampling because no candidate qualifies.
+- Record B/mild physical run1/run2 deep totals 97,913 / 75,704 ms and decode 12,878 / 9,879 ms. Two-run mean deep time is 86,808.5 ms (**-26.50%, 1.361x** versus Build90 paired 118,104 ms); mean decode is 11,378.5 ms (**-65.99%, 2.941x** versus Build92 Build90 33,460 ms).
+- **Promote Build93 as the current qualified smartphone baseline; Build90 becomes the previous qualified baseline.** Switch normal `v4-extract-phone` to Build93 while retaining `v4-extract-phone-build93` as a pinned regression/requalification alias.
+- Freeze Build93 promotion evidence in `docs/qualified-baselines/build93-phone-performance.tsv`; private images, keys, payload files and raw diagnostics remain excluded from source archives.
+
 ## v0.3.0-build92 — qualified Build90 post-promotion pipeline profiling
 
 - Keep Build90 unchanged as the current qualified smartphone baseline; Build92 is observability-only and cannot become a runtime baseline.

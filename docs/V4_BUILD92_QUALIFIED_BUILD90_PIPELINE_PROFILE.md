@@ -1,6 +1,6 @@
 # Format-v4 Build92 — qualified Build90 post-promotion pipeline profiling
 
-Build92 is an **observability-only post-promotion checkpoint** over the current qualified Build90 smartphone runtime. It introduces no recovery algorithm and cannot become a runtime baseline by itself.
+Build92 is an **observability-only post-promotion checkpoint** over the then-current qualified Build90 smartphone runtime; Build93 later superseded Build90. It introduces no recovery algorithm and cannot become a runtime baseline by itself.
 
 ## Why Build92
 
@@ -10,7 +10,7 @@ That promotion changes the cost distribution enough that pre-Build90 profiling i
 
 ## Runtime semantics
 
-The production smartphone path remains Build90. Build92 adds only test/profile harness code and documentation. `ExperimentalV4ExtractPhone` still executes the unchanged Build90 deep fallback, including:
+At the Build92 checkpoint the smartphone path remained Build90. Build92 adds only test/profile harness code and documentation; Build93 later superseded it. `ExperimentalV4ExtractPhone` still executes the unchanged Build90 deep fallback, including:
 
 - the Build84 exact RGB-fetch geometry path;
 - the complete freeze barrier before qualification;
@@ -138,9 +138,22 @@ v4-phone private/build92-profile/
 
 If a profile fails, the staged evidence is preserved under `build92-profile-failed`.
 
+## Qualified-host result
+
+Build92 completed on Go 1.26.0 with profiling gate PASS and exact frozen semantics. The low-overhead timing pass measured:
+
+| case | deep total | geometry | qualification | decode | gen4 |
+|---|---:|---:|---:|---:|---:|
+| B/mild | 109,620 ms | 59,290 | 16,644 | 33,460 | 18,429 |
+| B/angle | 193,565 ms | 191,762 | 1,431 | 0 | 117,376 |
+
+The separate B/mild CPU profile attributed 235.96 CPU-s cumulatively to `experimentalV4PhoneBuild67DecodeSingle`; `experimentalV4ReadProtectedProjectiveMargins` accounted for 230.14 CPU-s and `readProjectiveBlockValue` 228.66 CPU-s, while Build42 list decode accounted for only 5.81 CPU-s.
+
+**Decision:** close Build92 as observability PASS. Select Build93 exact protected-residue reuse. B/angle remains a geometry/gen4 problem but is not reopened while the B/mild decode path offers a lower-risk structural reuse opportunity.
+
 ## Decision rule
 
-Build92 does **not** select a Build93 in advance. After the qualified-host profile:
+Build92 did **not** select a Build93 in advance. The qualified-host profile was reviewed using this rule:
 
 1. compare timing-stage shares first;
 2. use flat/cumulative and phase-focused CPU reports to identify the dominant code inside the largest stage;

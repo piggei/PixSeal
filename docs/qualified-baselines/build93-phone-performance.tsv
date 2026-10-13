@@ -1,0 +1,10 @@
+scope	run	image	elapsed_ms	deep_total_ms	geometry_ms	qualification_ms	decode_ms	protected_sampling_passes	protected_profile_derivations	build90_reference_deep_ms	deep_speedup_vs_build90	build90_reference_decode_ms	decode_speedup_vs_build90	note
+full_physical	run1	__matrix__	839352	-	-	-	-	-	-	-	-	-	-	9/9 semantic PASS; host geometry slower; retained without cherry-picking
+full_physical	run1	phone-b-mild.jpg	147212	97913	70435	14344	12878	696	2086	118104	1.206x	33460	2.598x	authenticated PASS; exact qualified workload
+full_physical	run1	phone-b-angle.jpg	291451	248022	245801	1962	0	0	0	212025.5	0.855x	0	-	expected REJECT; unchanged geometry host drift retained
+full_physical	run2	__matrix__	649960	-	-	-	-	-	-	-	-	-	-	9/9 semantic PASS; independent run
+full_physical	run2	phone-b-mild.jpg	112988	75704	53836	11797	9879	696	2086	118104	1.560x	33460	3.387x	authenticated PASS; exact qualified workload
+full_physical	run2	phone-b-angle.jpg	204628	164681	163253	1226	0	0	0	212025.5	1.287x	0	-	expected REJECT; no Build93 protected sampling
+mean	run1+run2	__matrix__	744656	-	-	-	-	-	-	-	-	-	-	cross-run absolute timing retained for completeness only
+mean	run1+run2	phone-b-mild.jpg	130100	86808.5	62135.5	13070.5	11378.5	696	2086	118104	1.361x	33460	2.941x	deep -26.50%; decode -65.99%; promotion performance evidence
+mean	run1+run2	phone-b-angle.jpg	248039.5	206351.5	204527	1594	0	0	0	212025.5	1.027x	0	-	unchanged path; timing not used to attribute Build93 speedup

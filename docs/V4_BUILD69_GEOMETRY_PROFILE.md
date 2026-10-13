@@ -1,6 +1,6 @@
 # Build69 geometry-generation profiling
 
-Build69 is a **completed observability-only research snapshot** over the qualified Build68 smartphone baseline. Its Go 1.26.0 retained-corpus gate passed exact semantic equivalence and identified strong single-seed load imbalance. Build68 remains the current qualified smartphone baseline.
+Build69 is a **completed observability-only research snapshot** over the qualified Build68 smartphone baseline. Its Go 1.26.0 retained-corpus gate passed exact semantic equivalence and identified strong single-seed load imbalance. At this historical checkpoint Build68 remained the qualified smartphone baseline; later baselines superseded it and Build93 is current.
 
 ## Why this build exists
 

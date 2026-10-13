@@ -50,4 +50,4 @@ This is a useful negative result: reducing the visible number/location of bounds
 
 ## Decision
 
-**Do not promote Build86. Do not run a physical gate.** Build84 remained the qualified smartphone baseline at that checkpoint; Build90 is now the current qualified smartphone baseline. Build87 restores Build84 as the active deep runtime and profiles the remaining RGB/luminance/bilinear path before any further candidate is selected.
+**Do not promote Build86. Do not run a physical gate.** Build84 remained the qualified smartphone baseline at that checkpoint; Build93 is now the current qualified smartphone baseline; Build90 is previous. Build87 restores Build84 as the active deep runtime and profiles the remaining RGB/luminance/bilinear path before any further candidate is selected.

@@ -22,7 +22,7 @@ import (
 
 func TestSubcommandHelpReturnsFlagErrHelp(t *testing.T) {
 	for name, fn := range map[string]func([]string) error{
-		"embed": embed, "extract": extract, "v4-embed": v4Embed, "v4-extract": v4Extract, "v4-extract-projective": v4ExtractProjective, "v4-extract-scanner": v4ExtractScanner, "v4-extract-phone": v4ExtractPhone, "v4-diagnose-phone": v4DiagnosePhone, "v4-diagnose-phone-handoff": v4DiagnosePhoneHandoff, "v4-diagnose-phone-frozen": v4DiagnosePhoneFrozen, "v4-diagnose-phone-refine": v4DiagnosePhoneRefine, "v4-diagnose-phone-ranking": v4DiagnosePhoneRanking, "v4-diagnose-phone-refine4": v4DiagnosePhoneRefine4, "v4-diagnose-phone-surface": v4DiagnosePhoneSurface, "v4-diagnose-phone-restart": v4DiagnosePhoneRestart, "v4-diagnose-phone-pair-escape": v4DiagnosePhonePairEscape, "v4-diagnose-phone-pair-continue": v4DiagnosePhonePairContinue, "v4-diagnose-phone-sibling-stencil": v4DiagnosePhoneSiblingStencil, "v4-diagnose-phone-sibling-pair-escape": v4DiagnosePhoneSiblingPairEscape, "v4-diagnose-phone-sibling-pair-continue": v4DiagnosePhoneSiblingPairContinue, "v4-diagnose-phone-second-pair-sibling": v4DiagnosePhoneSecondPairSibling, "v4-diagnose-phone-third-pair-escape": v4DiagnosePhoneThirdPairEscape, "v4-diagnose-phone-third-pair-continue": v4DiagnosePhoneThirdPairContinue, "v4-diagnose-phone-third-pair-sibling": v4DiagnosePhoneThirdPairSibling, "v4-diagnose-phone-fourth-pair-escape": v4DiagnosePhoneFourthPairEscape, "v4-diagnose-phone-fourth-pair-continue": v4DiagnosePhoneFourthPairContinue, "capacity": capacity, "analyze": analyze, "diagnose": diagnose,
+		"embed": embed, "extract": extract, "v4-embed": v4Embed, "v4-extract": v4Extract, "v4-extract-projective": v4ExtractProjective, "v4-extract-scanner": v4ExtractScanner, "v4-extract-phone": v4ExtractPhone, "v4-extract-phone-build93": v4ExtractPhoneBuild93, "v4-diagnose-phone": v4DiagnosePhone, "v4-diagnose-phone-handoff": v4DiagnosePhoneHandoff, "v4-diagnose-phone-frozen": v4DiagnosePhoneFrozen, "v4-diagnose-phone-refine": v4DiagnosePhoneRefine, "v4-diagnose-phone-ranking": v4DiagnosePhoneRanking, "v4-diagnose-phone-refine4": v4DiagnosePhoneRefine4, "v4-diagnose-phone-surface": v4DiagnosePhoneSurface, "v4-diagnose-phone-restart": v4DiagnosePhoneRestart, "v4-diagnose-phone-pair-escape": v4DiagnosePhonePairEscape, "v4-diagnose-phone-pair-continue": v4DiagnosePhonePairContinue, "v4-diagnose-phone-sibling-stencil": v4DiagnosePhoneSiblingStencil, "v4-diagnose-phone-sibling-pair-escape": v4DiagnosePhoneSiblingPairEscape, "v4-diagnose-phone-sibling-pair-continue": v4DiagnosePhoneSiblingPairContinue, "v4-diagnose-phone-second-pair-sibling": v4DiagnosePhoneSecondPairSibling, "v4-diagnose-phone-third-pair-escape": v4DiagnosePhoneThirdPairEscape, "v4-diagnose-phone-third-pair-continue": v4DiagnosePhoneThirdPairContinue, "v4-diagnose-phone-third-pair-sibling": v4DiagnosePhoneThirdPairSibling, "v4-diagnose-phone-fourth-pair-escape": v4DiagnosePhoneFourthPairEscape, "v4-diagnose-phone-fourth-pair-continue": v4DiagnosePhoneFourthPairContinue, "capacity": capacity, "analyze": analyze, "diagnose": diagnose,
 	} {
 		t.Run(name, func(t *testing.T) {
 			if err := fn([]string{"-help"}); !errors.Is(err, flag.ErrHelp) {
@@ -69,6 +69,15 @@ func TestV4ExtractPhoneRequiresCanonicalBlockDimensions(t *testing.T) {
 		err := v4ExtractPhone([]string{"-in", "does-not-matter.jpg", "-key", "12345678", "-width", tc.w, "-height", tc.h})
 		if err == nil || !strings.Contains(err.Error(), "divisible by 8") {
 			t.Fatalf("dimensions %sx%s error=%v", tc.w, tc.h, err)
+		}
+	}
+}
+
+func TestV4ExtractPhoneBuild93RequiresCanonicalBlockDimensions(t *testing.T) {
+	for _, tc := range []struct{ w, h string }{{"1635", "1632"}, {"1632", "1635"}, {"288", "1632"}, {"1632", "248"}} {
+		err := v4ExtractPhoneBuild93([]string{"-in", "does-not-matter.jpg", "-key", "12345678", "-width", tc.w, "-height", tc.h})
+		if err == nil || !strings.Contains(err.Error(), "divisible by 8") {
+			t.Fatalf("Build93 dimensions %sx%s error=%v", tc.w, tc.h, err)
 		}
 	}
 }

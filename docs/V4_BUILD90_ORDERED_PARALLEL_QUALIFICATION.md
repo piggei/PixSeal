@@ -1,6 +1,6 @@
 # Format-v4 Build90 — ordered-parallel qualification
 
-Build90 is the **current qualified smartphone baseline**. It is the scheduling-only performance successor selected from the full-pipeline Build89 retained-corpus profile and promoted after public benchmark/race evidence, three independent full physical semantic PASS runs, and the contemporaneous Build91 AB/BA paired physical decision.
+Build90 is the **previous qualified smartphone baseline**; Build93 now supersedes it. It is the scheduling-only performance successor selected from the full-pipeline Build89 retained-corpus profile and promoted after public benchmark/race evidence, three independent full physical semantic PASS runs, and the contemporaneous Build91 AB/BA paired physical decision.
 
 ## Why Build90
 
@@ -152,4 +152,4 @@ Run 2 is a broad host-degraded execution: unchanged geometry/decode work slows b
 | B/mild | 168,444.5 ms | **118,104 ms** | **29.89%** | 64,185.5 | **14,975** | **4.286x** |
 | B/angle | 220,870 ms | **212,025.5 ms** | **4.00%** | 7,602.5 | **1,562.5** | **4.866x** |
 
-Geometry/decode remained comparable within the same pairs and the order reversal reproduced the result. **Decision: PROMOTED. Build90 is the current qualified smartphone baseline; Build84 is the previous qualified baseline.** Build91 itself remains observability-only evidence. See [`V4_BUILD91_PAIRED_PHYSICAL_AB.md`](V4_BUILD91_PAIRED_PHYSICAL_AB.md) and the frozen TSVs under `docs/qualified-baselines/`.
+Geometry/decode remained comparable within the same pairs and the order reversal reproduced the result. **Decision at this checkpoint: PROMOTED. Build90 became the current qualified smartphone baseline and Build84 the previous baseline. Build93 later superseded Build90 after exact protected-residue reuse qualification.** Build91 itself remains observability-only evidence. See [`V4_BUILD91_PAIRED_PHYSICAL_AB.md`](V4_BUILD91_PAIRED_PHYSICAL_AB.md) and the frozen TSVs under `docs/qualified-baselines/`.

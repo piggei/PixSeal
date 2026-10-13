@@ -1,8 +1,27 @@
-## v0.3.0-build92 post-promotion Build90 pipeline profile — prepared / awaiting qualified-host run
+# Build93 qualified result — 2026-10-13
 
-Build90 is the current qualified smartphone baseline after the Build91 paired A/B decision. Build92 changes no runtime behavior. It separates an unprofiled retained B/mild/B/angle timing pass from later CPU-profile passes so stage shares remain comparable while `pprof` is used only for code attribution. The semantic gate reuses the exact Build91 deep expectations and the Build90 qualification race regression.
+Build93 is the current qualified smartphone baseline. Qualified Go 1.26.0 source/exactness/race gates passed; the public benchmark measured 44.439 -> 10.236 ms/op for one Capacity candidate (**4.341x, -76.97%**) and 49.443 -> 22.324 ms/op for batch8 (**2.215x, -54.85%**). Two independent retained physical matrices then passed exact 9/9 semantics. B/mild stayed `79,259 / 937 / 935 / 691 / 2,120,047`, physical/speculative `696/5`, HMAC/payload PASS, with `696` protected sampling passes and `2,086` derivations in each run. Run1/run2 deep totals were 97,913 / 75,704 ms and decode 12,878 / 9,879 ms; the two-run mean is 86,808.5 ms deep (**-26.50%, 1.361x** versus Build90 paired 118,104 ms) and 11,378.5 ms decode (**-65.99%, 2.941x** versus Build92 Build90 33,460 ms). B/angle remains `334,857 / 6,198 / 0` and REJECT with zero protected sampling. Build90 is now the previous qualified baseline.
 
-No Build93 target is preselected. The qualified-host result must first show the new Build90 stage distribution, then flat/cumulative and phase-focused CPU evidence will determine whether one narrow later optimization is justified.
+## v0.3.0-build93 qualified-host benchmark and physical-gate decision
+
+Go 1.26.0 exactness/race gates passed. Five-sample public benchmark means on the i3-13100T were 44.439 -> 10.236 ms/op for one Capacity candidate (**4.341x**, **-76.97%**) and 49.443 -> 22.324 ms/op for an eight-way batch (**2.215x**, **-54.85%**). Allocation counts were effectively unchanged. At that benchmark checkpoint Build93 advanced to retained private physical qualification while Build90 remained current; the two required independent 9/9 PASS runs later completed and promoted Build93.
+
+## v0.3.0-build93 selection from completed Build92 profile
+
+Build92 completed on the qualified Go 1.26.0 host with exact Build90 semantics. The authoritative low-overhead timing rows were:
+
+| case | deep total | geometry | freeze | gen3 | gen4 | qualification | decode |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| B/mild | 109,620 ms | 59,290 | 22,445 | 10,023 | 18,429 | 16,644 | 33,460 |
+| B/angle | 193,565 ms | 191,762 | 21,652 | 38,183 | 117,376 | 1,431 | 0 |
+
+B/mild preserved `79,259 / 937 / 1,872 / 935 / 691 / 2,120,047 / 696 / 5` and authenticated the expected payload; B/angle preserved `334,857 / 6,198 / 6,198 / 0` and rejected as expected.
+
+The separate B/mild CPU profile measured 235.96 CPU-s cumulative in `experimentalV4PhoneBuild67DecodeSingle`, of which 230.14 CPU-s were in `experimentalV4ReadProtectedProjectiveMargins`, 228.66 CPU-s in `readProjectiveBlockValue`, and only 5.81 CPU-s in `experimentalV4PhoneBuild42ListDecode`. This selected Build93 exact protected-residue reuse: one protected-grid sampling pass per physical candidate, with profile-specific margins derived from the same immutable residue sums/counts. Build90 remained qualified at that selection checkpoint; Build93 later passed benchmark and physical gates and superseded it.
+
+## v0.3.0-build92 post-promotion Build90 pipeline profile — completed PASS
+
+Build92 changed no runtime behavior and completed on the qualified Go 1.26.0 host with the frozen Build91/Build90 semantic gate intact. Its low-overhead timing pass and separate CPU profiles are the authoritative selection evidence summarized above. Build92 is closed observability-only PASS and cannot be promoted as a runtime baseline.
 
 ## v0.3.0-build91 paired physical A/B decision — completed; Build90 promoted
 
@@ -15,7 +34,7 @@ The paired semantic gate passed in both cycles with exact B/mild `79,259 / 937 /
 | B/mild | 168,444.5 ms | **118,104 ms** | **29.89%** | 69,545.5 | 69,006 | 64,185.5 | **14,975** | **4.286x** | 34,465.5 | 33,871.5 |
 | B/angle | 220,870 ms | **212,025.5 ms** | **4.00%** | 212,971 | 210,225.5 | 7,602.5 | **1,562.5** | **4.866x** | 0 | 0 |
 
-Across all four paired deep executions Build84 accumulated 778,629 ms and Build90 660,259 ms, a **15.20% reduction**. The order reversal reproduces the result, while unchanged geometry/decode remain comparable within pairs. **Build90 is promoted as the current qualified smartphone baseline; Build84 becomes the previous qualified baseline.** Build91 remains observability-only evidence.
+Across all four paired deep executions Build84 accumulated 778,629 ms and Build90 660,259 ms, a **15.20% reduction**. The order reversal reproduces the result, while unchanged geometry/decode remain comparable within pairs. **At the Build91 checkpoint Build90 was promoted as the current qualified smartphone baseline and Build84 became previous; Build93 later superseded Build90.** Build91 remains observability-only evidence.
 
 Source-controlled qualification references now include `docs/qualified-baselines/build90-phone-performance.tsv` and the exact paired rows in `docs/qualified-baselines/build91-build84-build90-paired.tsv`.
 

@@ -2,7 +2,7 @@
 
 ## Status
 
-Build72 is **observability-only**. Build71 remains the current qualified smartphone baseline. Build72 must not be promoted: its fine-grained timers intentionally perturb runtime and exist only to select a later equivalence-preserving optimization target.
+Build72 is **observability-only**. At this historical checkpoint Build71 remained the qualified smartphone baseline; later baselines superseded it and Build93 is current. Build72 must not be promoted: its fine-grained timers intentionally perturb runtime and exist only to select a later equivalence-preserving optimization target.
 
 ## Why this profile is needed
 

@@ -47,7 +47,7 @@ meta="$stage_dir/build91-metadata.txt"
   echo "canonical=${CANONICAL_WIDTH}x${CANONICAL_HEIGHT}"
   echo "cooldown_ms=$COOLDOWN_MS"
   echo "sequence=cycle1 B/mild 84->90; cycle1 B/angle 84->90; cycle2 B/angle 90->84; cycle2 B/mild 90->84"
-  echo "purpose=paired physical promotion evidence; Build90 is current qualified baseline and Build84 is previous qualified baseline"
+  echo "purpose=historical paired physical promotion evidence; Build90 is now previous qualified baseline, Build84 an earlier qualified baseline, Build93 current"
 } > "$meta"
 
 set +e

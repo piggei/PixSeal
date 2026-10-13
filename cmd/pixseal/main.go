@@ -36,7 +36,8 @@ Commands:
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
-  v4-extract-phone EXPERIMENTAL: Build90 qualified ordered-parallel qualification over the Build84 RGB-fetch phone lineage; Build91/92 are profiling evidence only + authenticated v4 decode
+  v4-extract-phone EXPERIMENTAL: Build93 qualified exact protected-residue reuse over Build90 ordered-parallel qualification + authenticated v4 decode
+  v4-extract-phone-build93 EXPERIMENTAL QUALIFIED ALIAS: explicit Build93 path for regression/requalification
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
   v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
@@ -84,6 +85,7 @@ Experimental v4 options:
   v4-extract-projective accepts -in/-key/-raw plus canonical -width/-height from the pre-print carrier.
   v4-extract-scanner accepts the same dimensions but expects a full-page scan with visible paper/artwork boundary.
   v4-extract-phone accepts the same dimensions and expects a smartphone photo with visible paper around the complete artwork.
+  v4-extract-phone-build93 accepts the same options and pins the qualified Build93 path for regression/requalification.
   v4-diagnose-phone accepts the same input/key/dimensions and reports Build45 stage diagnostics; -oracle-quad-json is lab-only.
   v4-diagnose-phone-handoff inspects already-qualified Build43 candidates; optional oracle geometry is comparison-only.
   v4-diagnose-phone-frozen expands only the diagnostic frozen bank to 128 candidates; production remains capped at 32.
@@ -168,6 +170,8 @@ func main() {
 		err = v4ExtractScanner(os.Args[2:])
 	case "v4-extract-phone":
 		err = v4ExtractPhone(os.Args[2:])
+	case "v4-extract-phone-build93":
+		err = v4ExtractPhoneBuild93(os.Args[2:])
 	case "v4-diagnose-phone":
 		err = v4DiagnosePhone(os.Args[2:])
 	case "v4-diagnose-phone-handoff":
@@ -861,7 +865,7 @@ func printV4ScannerDiagnostics(w io.Writer, info watermark.ExperimentalV4Extract
 }
 
 func v4ExtractPhone(args []string) error {
-	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build90 qualified ordered-parallel qualification baseline; Build84 exact RGB-fetch geometry/reader behavior and protected-data semantics remain unchanged.")
+	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build93 qualified exact protected-residue reuse baseline over Build90 ordered-parallel qualification; geometry/reader and protected-data semantics remain exact.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
@@ -887,6 +891,49 @@ func v4ExtractPhone(args []string) error {
 	}
 	decoderID := inputDecoderID(format)
 	payload, info, phone, err := watermark.ExperimentalV4ExtractPhone(img, []byte(*key), *width, *height)
+	if err != nil {
+		printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
+		return err
+	}
+	if *raw {
+		if _, err := os.Stdout.Write(payload); err != nil {
+			return err
+		}
+		printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
+		return nil
+	}
+	fmt.Printf("%s\n", payload)
+	printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
+	return nil
+}
+
+func v4ExtractPhoneBuild93(args []string) error {
+	fs := newFlagSet("v4-extract-phone-build93", "EXPERIMENTAL QUALIFIED ALIAS: Build93 exact protected-residue reuse over Build90 ordered-parallel qualification. Retained for regression/requalification; normal v4-extract-phone now uses Build93.")
+	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
+	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	raw := fs.Bool("raw", false, "write only the authenticated payload bytes to stdout")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	if *width < 296 || *height < 256 || *width%8 != 0 || *height%8 != 0 {
+		return fmt.Errorf("canonical -width/-height must be divisible by 8 and at least 296x256")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	decoderID := inputDecoderID(format)
+	payload, info, phone, err := watermark.ExperimentalV4ExtractPhoneBuild93Candidate(img, []byte(*key), *width, *height)
 	if err != nil {
 		printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
 		return err
@@ -1003,6 +1050,9 @@ func printV4PhoneDiagnostics(w io.Writer, decoderID string, info watermark.Exper
 	}
 	if p.Build90Attempted {
 		fmt.Fprintf(w, "build90-qualification-parallel: attempted=true workers=%d tasks=%d evaluations=%d\n", p.Build90QualificationWorkers, p.Build90QualificationTasks, p.Build90QualificationEvaluations)
+	}
+	if p.Build93Attempted {
+		fmt.Fprintf(w, "build93-residue-reuse: attempted=true sampling-passes=%d profile-derivations=%d\n", p.Build93ProtectedSamplingPasses, p.Build93ProtectedProfileDerivations)
 	}
 	fmt.Fprintf(w, "hmac: authenticated=%t fallback-attempted=%t fallback-authenticated=%t\n", p.HMACAuthenticated, p.FallbackAttempted, p.FallbackAuthenticated)
 	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)

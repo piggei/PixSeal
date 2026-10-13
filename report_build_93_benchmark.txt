@@ -1,0 +1,34 @@
+ok  	github.com/pj/pixseal/watermark	0.138s
+goos: linux
+goarch: amd64
+pkg: github.com/pj/pixseal/watermark
+cpu: 13th Gen Intel(R) Core(TM) i3-13100T
+BenchmarkExperimentalV4Build93HistoricalSingleCapacity-8   	      98	  44382695 ns/op	 1791088 B/op	   22836 allocs/op
+BenchmarkExperimentalV4Build93HistoricalSingleCapacity-8   	      69	  45059297 ns/op	 1791061 B/op	   22836 allocs/op
+BenchmarkExperimentalV4Build93HistoricalSingleCapacity-8   	      70	  45992949 ns/op	 1791080 B/op	   22836 allocs/op
+BenchmarkExperimentalV4Build93HistoricalSingleCapacity-8   	      98	  46214659 ns/op	 1791076 B/op	   22836 allocs/op
+BenchmarkExperimentalV4Build93HistoricalSingleCapacity-8   	      96	  40546684 ns/op	 1791086 B/op	   22836 allocs/op
+BenchmarkExperimentalV4Build93ReuseSingleCapacity-8        	     238	   9974342 ns/op	 1791041 B/op	   22836 allocs/op
+BenchmarkExperimentalV4Build93ReuseSingleCapacity-8        	     241	  10615745 ns/op	 1791046 B/op	   22836 allocs/op
+BenchmarkExperimentalV4Build93ReuseSingleCapacity-8        	     232	  10284586 ns/op	 1791060 B/op	   22836 allocs/op
+BenchmarkExperimentalV4Build93ReuseSingleCapacity-8        	     212	  10209533 ns/op	 1791037 B/op	   22836 allocs/op
+BenchmarkExperimentalV4Build93ReuseSingleCapacity-8        	     237	  10097764 ns/op	 1791051 B/op	   22836 allocs/op
+BenchmarkExperimentalV4Build93HistoricalBatch8Capacity-8   	      46	  49353151 ns/op	14325911 B/op	  182712 allocs/op
+BenchmarkExperimentalV4Build93HistoricalBatch8Capacity-8   	      45	  48079224 ns/op	14325447 B/op	  182711 allocs/op
+BenchmarkExperimentalV4Build93HistoricalBatch8Capacity-8   	      48	  48426808 ns/op	14324819 B/op	  182709 allocs/op
+BenchmarkExperimentalV4Build93HistoricalBatch8Capacity-8   	      51	  49291426 ns/op	14324961 B/op	  182711 allocs/op
+BenchmarkExperimentalV4Build93HistoricalBatch8Capacity-8   	      52	  52065412 ns/op	14325232 B/op	  182711 allocs/op
+BenchmarkExperimentalV4Build93ReuseBatch8Capacity-8        	     100	  22586393 ns/op	14324897 B/op	  182710 allocs/op
+BenchmarkExperimentalV4Build93ReuseBatch8Capacity-8        	     100	  22109057 ns/op	14324771 B/op	  182710 allocs/op
+BenchmarkExperimentalV4Build93ReuseBatch8Capacity-8        	     100	  22313346 ns/op	14325023 B/op	  182711 allocs/op
+BenchmarkExperimentalV4Build93ReuseBatch8Capacity-8        	     100	  21986506 ns/op	14324827 B/op	  182709 allocs/op
+BenchmarkExperimentalV4Build93ReuseBatch8Capacity-8        	     100	  22624833 ns/op	14324738 B/op	  182709 allocs/op
+PASS
+ok  	github.com/pj/pixseal/watermark	64.401s
+ok  	github.com/pj/pixseal/watermark	2.427s
+Build93 exact protected-residue reuse benchmark written to:
+  v4-phone private/build93-benchmark/build93-benchmark.txt
+  v4-phone private/build93-benchmark/build93-fixture-test.txt
+  v4-phone private/build93-benchmark/build93-race-test.txt
+  v4-phone private/build93-benchmark/build93-metadata.txt
+Build93 benchmark gate: PASS (correctness/race only; review single-candidate and batch speedups before any physical gate)

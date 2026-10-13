@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// Build90 is the current qualified smartphone baseline. It is a scheduling-only
+// Build90 is the previous qualified smartphone baseline and remains the qualification layer used by Build93. It is a scheduling-only
 // performance successor over the Build84 geometry/reader/decode baseline. Build89 full-pipeline profiling showed that qualification
 // dominates B/mild wall time (~61.2 s of ~149.5 s deep recovery) while the
 // complete frozen bank is already available before qualification begins.

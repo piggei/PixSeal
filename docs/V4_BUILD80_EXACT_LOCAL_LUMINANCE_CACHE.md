@@ -1,6 +1,6 @@
 # Format-v4 Build80 — exact local luminance cache
 
-Build80 is a **closed equivalence-preserving performance experiment** over the then-qualified Build76 smartphone baseline. It reproduced semantic equivalence but regressed physically and was rejected. Build84 was the qualified baseline at that checkpoint; Build90 is now current.
+Build80 is a **closed equivalence-preserving performance experiment** over the then-qualified Build76 smartphone baseline. It reproduced semantic equivalence but regressed physically and was rejected. Build84 was the qualified baseline at that checkpoint; Build90 was later qualified and is now the previous baseline; Build93 is current.
 
 ## Why Build80 exists
 

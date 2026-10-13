@@ -1,14 +1,27 @@
-## Build92 checkpoint — active qualified Build90 post-promotion profiling
+## Build93 checkpoint — qualified exact protected-residue reuse baseline
+
+- [x] Close Build92 qualified-host source/profile gate as PASS and select protected residue reuse from measured decode CPU cost.
+- [x] Sample each physical decode candidate's protected projective grid once and derive profiles in unchanged Robust -> Balanced -> Capacity order.
+- [x] Preserve historical residue accumulation order and margin/confidence arithmetic bit-exactly.
+- [x] Add candidate-local `ProtectedSamplingPasses` and `ProtectedProfileDerivations` diagnostics without changing qualified semantic telemetry.
+- [x] Pass qualified Go 1.26.0 source/exactness and targeted race gates.
+- [x] Pass the public benchmark: 4.341x single Capacity candidate and 2.215x batch8.
+- [x] Complete physical run1: retained 9/9 semantic PASS; B/mild sampling/derivations `696/2086`, deep 97,913 ms, decode 12,878 ms.
+- [x] Complete independent physical run2: retained 9/9 semantic PASS; B/mild sampling/derivations `696/2086`, deep 75,704 ms, decode 9,879 ms.
+- [x] Confirm two-run B/mild mean 86,808.5 ms deep (-26.50% vs Build90 paired reference) and 11,378.5 ms decode (-65.99% vs Build92 Build90 decode).
+- [x] Promote Build93 as the current qualified smartphone baseline; Build90 becomes the previous qualified baseline.
+- [x] Switch normal `v4-extract-phone` to Build93 and retain the explicit Build93 command for regression/requalification.
+- [x] Freeze promotion evidence under `docs/qualified-baselines/` without including the private corpus.
+
+## Build92 checkpoint — closed profiling PASS
 
 - [x] Keep Build90 unchanged as the current qualified smartphone baseline; make no Build92 runtime algorithm change.
-- [x] Add separate retained B/mild/B/angle timing and CPU-profile passes so profiler overhead cannot contaminate stage-share timing.
-- [x] Reuse frozen Build91 semantic expectations and the targeted Build90 qualification race regression.
-- [x] Capture geometry/freeze/prefix1/gen2/gen3/gen4, qualification, decode, worker/task counts, residual accounting and exact Build84 sampler workload.
-- [x] Add flat/cumulative pprof, geometry/qualification/decode-focused reports and source listings for the main Build90/Build84 functions.
-- [ ] Run `make v4-build92-qualified-pipeline-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build92-qualified-pipeline-profile` on an otherwise idle qualified host and archive `v4-phone private/build92-profile`.
-- [ ] Select at most one Build93 hypothesis from the resulting Build90-qualified timing and CPU evidence; if no material target remains, close performance work instead of forcing a candidate.
-- [ ] Require exact equivalence and two independent 9/9 physical PASS runs before any later candidate can supersede Build90.
+- [x] Run `make v4-build92-qualified-pipeline-test` on the qualified Go 1.26.0 host: PASS.
+- [x] Run `make v4-build92-qualified-pipeline-profile` and archive the complete profile: PASS.
+- [x] Measure B/mild 109,620 ms deep total: geometry 59,290 ms, qualification 16,644 ms, decode 33,460 ms.
+- [x] Measure B/angle 193,565 ms deep total: geometry 191,762 ms, gen4 117,376 ms, qualification 1,431 ms, decode 0.
+- [x] Attribute B/mild decode CPU primarily to repeated protected projective sampling (`experimentalV4ReadProtectedProjectiveMargins` 230.14 CPU-s cumulative vs Build42 list decode 5.81 CPU-s).
+- [x] Select Build93 exact protected-residue reuse; do not reopen the closed reader micro-optimization branch.
 
 ## Build91 checkpoint — closed paired profiling PASS / Build90 promoted
 
@@ -22,12 +35,13 @@
 - [x] Freeze exact paired evidence and Build90 promotion reference under `docs/qualified-baselines/`.
 - [x] Keep Build91 observability-only; it cannot become the runtime baseline.
 
-## Build93+ next work
+## Build94+ next work
 
-- [ ] Start every future smartphone optimization from Build90, including its ordered-parallel qualification and Build84 exact RGB reader.
-- [ ] Use Build92 qualified-host timing/pprof evidence before selecting any Build93; do not reuse pre-Build90 bottleneck assumptions.
-- [ ] Preserve the full geometry freeze barrier and ordered qualification commit; do not let secret key, payload, ECC or HMAC guide geometry/qualification scheduling.
-- [ ] Require exact semantic equivalence plus at least two independent Go 1.26.0 physical PASS runs for any candidate that would supersede Build90.
+- [ ] Start every future smartphone optimization from **qualified Build93**, including Build90 ordered-parallel qualification, Build84 exact RGB reader behavior and Build93 protected-residue reuse.
+- [ ] Re-profile qualified Build93 before selecting Build94; Build92 timing predates the Build93 decode reduction and must not be reused as the new priority map.
+- [ ] Keep B/angle geometry/gen4 as a measured concern, but do not reopen the exhausted Build80-88 reader micro-optimization line without new evidence.
+- [ ] Preserve the complete geometry freeze barrier and ordered qualification/decode commit; secret key, payload, ECC and HMAC must not guide geometry or scheduling.
+- [ ] Require exact semantic equivalence plus at least two independent Go 1.26.0 physical PASS runs for any runtime candidate that would supersede Build93.
 
 ## Build89 checkpoint — closed profiling PASS
 

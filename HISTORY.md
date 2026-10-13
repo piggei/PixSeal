@@ -1,3 +1,13 @@
+## v0.3.0-build93 — qualified exact protected-residue reuse baseline
+
+Build92 profiled the promoted Build90 pipeline and found B/mild protected decode dominated by repeated projective sampling: 33,460 ms decode wall time, 230.14 CPU-s cumulative in `experimentalV4ReadProtectedProjectiveMargins`, and only 5.81 CPU-s in Build42 list decode. Build93 therefore makes one narrow post-freeze change: each already-qualified candidate samples the protected projective grid once into the exact historical residue sums/counts, then derives Robust, Balanced and Capacity margins from those immutable residues in unchanged logical order. Geometry, Build90 ordered-parallel qualification, candidate ordering, list/HMAC ordering and wire/security semantics remain unchanged.
+
+The qualified Go 1.26.0 public benchmark passed with exactness/race clean: single Capacity candidate 44.439 -> 10.236 ms/op (**4.341x, -76.97%**) and batch8 49.443 -> 22.324 ms/op (**2.215x, -54.85%**), with effectively unchanged allocations.
+
+Two independent retained physical matrices then passed the complete 9/9 semantic gate. B/mild remained exactly `79,259 / 937 / 935 / 691 / 2,120,047`, physical decode `696`, speculative `5`, HMAC/payload PASS, with `696` protected sampling passes and `2,086` profile derivations in both runs. Run1/run2 B/mild deep totals were 97,913 / 75,704 ms and decode 12,878 / 9,879 ms. Their means are 86,808.5 ms deep (**-26.50%, 1.361x** versus the Build90 paired reference 118,104 ms) and 11,378.5 ms decode (**-65.99%, 2.941x** versus the Build92 Build90 measurement 33,460 ms). B/angle remained `334,857 / 6,198 / 0`, REJECT, with zero protected sampling; its large cross-run geometry variation is retained as host-drift evidence and is not attributed to Build93.
+
+**Decision: PROMOTED. Build93 is the current qualified smartphone baseline; Build90 becomes the previous qualified baseline.** Normal `v4-extract-phone` now uses Build93. The explicit `v4-extract-phone-build93` entry point is retained as a pinned regression/requalification alias.
+
 ## v0.3.0-build92 — post-promotion Build90 pipeline observability
 
 Build91 closed the promotion decision and made Build90 the current qualified smartphone baseline. Because ordered-parallel qualification removed the former B/mild bottleneck, Build92 deliberately makes no recovery change and re-measures the promoted pipeline before any new optimization is selected.
@@ -14,7 +24,7 @@ Build91 changes no recovery algorithm. Its AB/BA paired profile decodes each ret
 
 Build89 completed the full qualified Build84 pipeline profile with 9/9 retained semantic equivalence. It changed the optimization priority: on `B/mild`, serial public-pilot qualification consumed 61,193 ms (40.93% of deep recovery), exceeding both geometry and ordered protected-data decode. The frozen bank has 937 candidates and 935 qualify, making the stage highly parallel without altering the bank or protected-data semantics.
 
-Build90 therefore parallelizes only qualification execution. It preserves the Build84 freeze barrier, writes one result per original bank index, waits for all tasks, then commits evaluation counts and qualified hypotheses serially in bank order. Public benchmark/race, three full physical semantic gates, and the Build91 contemporaneous paired profile subsequently qualified this unchanged implementation; Build90 is now current and Build84 is the previous qualified baseline.
+Build90 therefore parallelizes only qualification execution. It preserves the Build84 freeze barrier, writes one result per original bank index, waits for all tasks, then commits evaluation counts and qualified hypotheses serially in bank order. Public benchmark/race, three full physical semantic gates, and the Build91 contemporaneous paired profile subsequently qualified this unchanged implementation. Build90 became the current qualified baseline at that checkpoint and was later superseded by Build93; Build84 remains an earlier qualified baseline.
 
 ## v0.3.0-build89 — qualified Build84 full-pipeline profiling
 
@@ -22,7 +32,7 @@ Build88 passed exactness but regressed the qualified Build84 reader by roughly 8
 
 ## v0.3.0-build88 — direct RGB bounds-check experiment, closed negative
 
-Build87 completed the qualified RGB/luminance/bilinear compiler profile without changing runtime semantics. The key actionable compiler result is eight `IsSliceInBounds` checks on Build84's four `rgb[index:index+3]` expressions. Build88 therefore tests one final narrow exact-portable reader rewrite: one dominating `rgb[index+2]` proof per pixel followed by direct scalar R/G/B loads. All floating-point expressions and DCT order remain Build84-exact. The candidate is benchmark-first and Build84 remained the qualified smartphone baseline at that checkpoint; Build90 is now the current qualified smartphone baseline.
+Build87 completed the qualified RGB/luminance/bilinear compiler profile without changing runtime semantics. The key actionable compiler result is eight `IsSliceInBounds` checks on Build84's four `rgb[index:index+3]` expressions. Build88 therefore tests one final narrow exact-portable reader rewrite: one dominating `rgb[index+2]` proof per pixel followed by direct scalar R/G/B loads. All floating-point expressions and DCT order remain Build84-exact. The candidate is benchmark-first and Build84 remained the qualified smartphone baseline at that checkpoint; Build90 later superseded it, and Build93 is now current.
 
 ## v0.3.0-build87 — qualified RGB/luminance/bilinear profiling
 
@@ -97,7 +107,7 @@ The completed Build72 physical profile preserved Build71 semantics and localized
 
 ## v0.3.0-build72 — prefix-stage observability snapshot
 
-Build71 qualification leaves the prefix through `sibling3` as the measured geometry critical path, especially on `B/angle`. Build72 makes no scheduling or algorithm change. It times the exact fourteen public-only prefix stages, aggregates stage evaluations/worker time across all seeds, and records the deterministic maximum-evaluation prefix seed plus its per-stage genealogy. Build71 remains the current qualified smartphone baseline.
+Build71 qualification leaves the prefix through `sibling3` as the measured geometry critical path, especially on `B/angle`. Build72 makes no scheduling or algorithm change. It times the exact fourteen public-only prefix stages, aggregates stage evaluations/worker time across all seeds, and records the deterministic maximum-evaluation prefix seed plus its per-stage genealogy. Build71 remained the qualified smartphone baseline at that checkpoint; later baselines superseded it and Build93 is current.
 
 ## v0.3.0-build71 — qualified smartphone baseline
 
@@ -109,7 +119,7 @@ Build70 physical profiling passed the complete retained nine-photo semantic-equi
 
 ## v0.3.0-build70 — dominant-seed genealogy profiling snapshot
 
-The qualified Go 1.26.0 Build69 physical gate reproduced Build68 semantics exactly and established that the remaining geometry runtime is dominated by one seed branch, not by broadly distributed work. `B/mild` measured 168398 ms for the slowest seed inside a 169014 ms seed wall region; `B/angle` measured 693395/695422 ms; `control/mild` measured 358584/360285 ms. Build70 deliberately makes no geometry optimization. It reproduces the same search while recording freeze-vs-seed evaluation counts, the dominant seed identity, and per-stage evaluation/state genealogy. Build68 remains the current qualified smartphone baseline.
+The qualified Go 1.26.0 Build69 physical gate reproduced Build68 semantics exactly and established that the remaining geometry runtime is dominated by one seed branch, not by broadly distributed work. `B/mild` measured 168398 ms for the slowest seed inside a 169014 ms seed wall region; `B/angle` measured 693395/695422 ms; `control/mild` measured 358584/360285 ms. Build70 deliberately makes no geometry optimization. It reproduces the same search while recording freeze-vs-seed evaluation counts, the dominant seed identity, and per-stage evaluation/state genealogy. Build68 remained the qualified smartphone baseline at that checkpoint; later baselines superseded it and Build93 is current.
 
 ## v0.3.0-build69 — geometry-generation profiling result
 

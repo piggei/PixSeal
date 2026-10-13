@@ -62,7 +62,7 @@ Before any private physical run, Build88 must pass:
 
 Because Build87 attributes only a small single-digit percentage of the reader to the slice construction/check region, a 5% whole-reader threshold is unrealistic. The candidate should reach the private corpus only if the complete-reader benchmark shows a **stable useful improvement, approximately 2% or better on all three geometries, with no regression**, and compiler evidence confirms a simpler bounds-check shape.
 
-At the Build88 candidate checkpoint, Build84 remained the qualified smartphone baseline until any successor proved exact semantics and repeatable end-to-end improvement. Build88 failed its benchmark-first performance gate and was not promoted; Build90 is now current.
+At the Build88 candidate checkpoint, Build84 remained the qualified smartphone baseline until any successor proved exact semantics and repeatable end-to-end improvement. Build88 failed its benchmark-first performance gate and was not promoted; Build90 was later qualified and is now the previous baseline; Build93 is current.
 
 ## Commands
 

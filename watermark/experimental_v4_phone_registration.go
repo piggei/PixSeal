@@ -491,6 +491,9 @@ type ExperimentalV4PhoneInfo struct {
 	Build90QualificationWorkers               int
 	Build90QualificationTasks                 int
 	Build90QualificationEvaluations           int
+	Build93Attempted                          bool
+	Build93ProtectedSamplingPasses            int
+	Build93ProtectedProfileDerivations        int
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -1376,10 +1379,10 @@ func experimentalV4PhoneDecodeEnsemble(src image.Image, key []byte, cw, ch int, 
 
 // ExperimentalV4ExtractPhone preserves the qualified smartphone path. The
 // historical Build41/43 direct geometry, Build42 post-geometry data recovery and
-// Build40 residual warp remain first and unchanged. The final deep fallback currently evaluates the Build90 ordered-parallel qualification
-// candidate over qualified Build84 semantics. Build91 adds paired physical
-// promotion evidence and Build92 adds post-promotion pipeline profiling only;
-// neither alters this runtime path. The deep geometry bank
+// Build40 residual warp remain first and unchanged. The final deep fallback is
+// qualified Build93: Build90 ordered-parallel public-pilot qualification followed
+// by exact candidate-local protected-residue reuse during protected-data decode.
+// Build91/92 remain promotion/profiling evidence only. The deep geometry bank
 // remains public-proposal-only and frozen before held-out qualification or HMAC.
 func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte, ExperimentalV4ExtractInfo, ExperimentalV4PhoneInfo, error) {
 	if src == nil {
@@ -1445,12 +1448,12 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
-		// Build90 is the current qualified scheduling-only successor to Build84. The blind
-		// geometry bank is fully frozen before qualification; only independent
-		// public-pilot qualification evaluations are scheduled in parallel, with
-		// authoritative results committed strictly in original bank order.
-		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild90Recover(work, boundary, key, cw, ch)
-		experimentalV4PhoneBuild90ApplyTelemetry(&public, recovery64)
+		// Build93 is the current qualified successor to Build90. The blind geometry
+		// bank is fully frozen before ordered-parallel public-pilot qualification;
+		// protected-grid residues are then sampled exactly once per physical decode
+		// candidate and reused only across that candidate's profile derivations.
+		payload64, info64, recovery64, err64 := experimentalV4PhoneBuild93Recover(work, boundary, key, cw, ch)
+		experimentalV4PhoneBuild93ApplyTelemetry(&public, recovery64)
 		if err64 == nil {
 			public.ProjectiveBasinFound = true
 			public.Accepted = true

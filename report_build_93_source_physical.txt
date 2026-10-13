@@ -1,0 +1,6 @@
+Running Build93 exact protected-residue reuse regressions...
+ok  	github.com/pj/pixseal/watermark	60.627s
+ok  	github.com/pj/pixseal/watermark	2.362s
+ok  	github.com/pj/pixseal/cmd/pixseal	0.003s
+Checking VERSION/buildinfo consistency...
+ok  	github.com/pj/pixseal/internal/buildinfo	0.002s

@@ -1,3 +1,21 @@
+## Build93 qualification and promotion — 2026-10-13
+
+Build93 closed the Build92-selected protected-residue reuse hypothesis successfully. Qualified Go 1.26.0 source/exactness/race gates passed; the public Capacity benchmark improved 4.341x single-candidate and 2.215x batch8. Two independent retained nine-photo matrices then passed exact semantic equivalence. B/mild retained the complete `79,259 / 937 / 935 / 691 / 2,120,047` workload, physical/speculative decode `696/5`, HMAC/payload PASS, and in both runs executed exactly 696 protected sampling passes for 2,086 profile derivations. Deep totals were 97,913 / 75,704 ms and decode 12,878 / 9,879 ms. Their mean decode is 11,378.5 ms, 2.941x faster than the Build92 Build90 33,460 ms measurement; mean deep total is 86,808.5 ms, 26.50% below the Build90 paired 118,104 ms reference. B/angle remained reject with zero Build93 sampling; its large cross-run geometry timing variation is retained as host drift rather than attributed to the candidate.
+
+Decision: **promote Build93 unchanged as the current qualified smartphone baseline** and move Build90 to previous-qualified status. Future Build94 work must start with a fresh profile of Build93 rather than reuse Build92 priorities.
+
+## Build93 benchmark PASS and physical-gate opening — 2026-10-13
+
+The qualified Go 1.26.0 host confirmed the Build93 residue-reuse hypothesis. Single-candidate Capacity decode improved 4.341x (44.439 -> 10.236 ms/op mean) and the eight-way batch improved 2.215x (49.443 -> 22.324 ms/op mean), with exactness and race gates PASS and effectively unchanged allocations. At that checkpoint the private physical gate became justified and the dedicated candidate command kept `v4-extract-phone` pinned to Build90 until promotion evidence existed; the later two-run gate promoted Build93.
+
+## Build92 result and Build93 protected-residue reuse hypothesis — 2026-10-13
+
+Build92 completed on the qualified Go 1.26.0 host. B/mild is no longer qualification-dominated: 109,620 ms deep total split into 59,290 ms geometry, 16,644 ms qualification and 33,460 ms decode. B/angle remains almost entirely geometry (191,762/193,565 ms) with gen4 at 117,376 ms. Exact deep counters remained frozen.
+
+The separate B/mild CPU profile localizes decode cost: `experimentalV4PhoneBuild67DecodeSingle` 235.96 CPU-s cumulative; `experimentalV4ReadProtectedProjectiveMargins` 230.14; `readProjectiveBlockValue` 228.66; Build42 list decode only 5.81. Inspection confirms that the protected grid is sampled again for each Robust/Balanced/Capacity attempt even though residue sums/counts depend only on the candidate homography and pixel plane.
+
+Build93 therefore tests one narrow hypothesis: sample those residues once per already-qualified physical candidate and derive all attempted profile margins from the same residues. It must keep residue accumulation order, margin arithmetic, profile order, list-frame order and first-logical-HMAC behavior exact. At selection time it was benchmark-first; the later public single-candidate and eight-way batch measurements showed a clear gain and opened the physical gate.
+
 ## Build92 qualified Build90 post-promotion profiling plan — 2026-10-13
 
 Build90 is now the qualified baseline, so Build89's pre-promotion stage shares are no longer sufficient to choose another optimization. Build92 is observability-only and keeps the exact Build90 runtime. It performs one low-overhead retained timing pass on B/mild/B/angle and separate later CPU-profile passes around deep recovery, preserving stage timing from profiler overhead. The profile records geometry/freeze/prefix1/gen2/gen3/gen4, qualification, decode, worker/task counts, residual timing and exact sampler workload, then emits flat/cumulative and phase-focused pprof reports. No Build93 hypothesis is selected until this evidence exists.
@@ -20,7 +38,7 @@ Build87 completed on the qualified Go 1.26.0 i3-13100T host. The qualified Build
 
 Compiler BCE evidence is the actionable result: Build84 still has eight `IsSliceInBounds` checks, exactly two on each of the four `rgb[index:index+3]` expressions. The next and likely final exact-portable reader experiment is therefore Build88: replace each slice with one explicit `rgb[index+2]` dominating proof followed by direct scalar loads of `rgb[index]`, `rgb[index+1]`, and `rgb[index+2]`. No `unsafe`, LUT, cache, FMA, arithmetic reassociation, DCT rewrite, mapPoint rewrite or geometry/decode change is permitted.
 
-Build88 is benchmark-first. Because the targeted slice/check region is only a small fraction of complete-reader CPU, the private corpus is justified only if same-session Go 1.26.0 measurements show a stable useful complete-reader gain, approximately 2% or better across front/mild/angle with no regression, and BCE/objdump evidence confirms that generated code actually improved. At that checkpoint, failure of the threshold meant Build84 remained qualified and the micro-optimization line closed; Build90 is now current.
+Build88 is benchmark-first. Because the targeted slice/check region is only a small fraction of complete-reader CPU, the private corpus is justified only if same-session Go 1.26.0 measurements show a stable useful complete-reader gain, approximately 2% or better across front/mild/angle with no regression, and BCE/objdump evidence confirms that generated code actually improved. At that checkpoint, failure of the threshold meant Build84 remained qualified and the micro-optimization line closed; Build90 was later qualified and is now the previous baseline; Build93 is current.
 
 ## Build86 closure and Build87 RGB/luminance/bilinear profiling — 2026-10-06
 
@@ -38,7 +56,7 @@ This evidence selects one narrow Build86 hypothesis: hoist `table2[y]`/`table3[y
 
 ## Build85 — post-promotion qualified-sampler profiling
 
-**Status:** completed observability-only PASS; Build84 remained the qualified smartphone baseline at that checkpoint; Build90 is now the current qualified smartphone baseline.
+**Status:** completed observability-only PASS; Build84 remained the qualified smartphone baseline at that checkpoint; Build90 later superseded it, and Build93 is now current.
 
 **Question:** after the successful Build84 RGB-fetch/address change, what now dominates the qualified projective block reader?
 
