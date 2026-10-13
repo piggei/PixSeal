@@ -1,0 +1,6 @@
+Running Build91 paired Build84/Build90 profiling regressions...
+ok  	github.com/pj/pixseal/watermark	49.440s
+ok  	github.com/pj/pixseal/watermark	4.874s
+ok  	github.com/pj/pixseal/cmd/pixseal	0.003s
+Checking VERSION/buildinfo consistency...
+ok  	github.com/pj/pixseal/internal/buildinfo	0.016s

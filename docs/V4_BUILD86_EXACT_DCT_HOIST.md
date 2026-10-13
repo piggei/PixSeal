@@ -1,6 +1,6 @@
 # Format-v4 Build86 — exact DCT table hoist / bounds-check experiment
 
-Build86 is a **closed exact / benchmark-negative / non-promoted** experiment over the current qualified Build84 smartphone baseline. It was selected from Build85 CPU/BCE evidence and changed only DCT cosine-table load placement inside continuation4 projective block reads.
+Build86 is a **closed exact / benchmark-negative / non-promoted** experiment over the then-current qualified Build84 smartphone baseline. It was selected from Build85 CPU/BCE evidence and changed only DCT cosine-table load placement inside continuation4 projective block reads.
 
 ## Exact candidate change
 
@@ -50,4 +50,4 @@ This is a useful negative result: reducing the visible number/location of bounds
 
 ## Decision
 
-**Do not promote Build86. Do not run a physical gate.** Build84 remains the current qualified smartphone baseline. Build87 restores Build84 as the active deep runtime and profiles the remaining RGB/luminance/bilinear path before any further candidate is selected.
+**Do not promote Build86. Do not run a physical gate.** Build84 remained the qualified smartphone baseline at that checkpoint; Build90 is now the current qualified smartphone baseline. Build87 restores Build84 as the active deep runtime and profiles the remaining RGB/luminance/bilinear path before any further candidate is selected.

@@ -1,0 +1,8 @@
+Selected Go toolchain: go1.26.0
+Building PixSeal with go1.26.0...
+Created dist/pixseal
+Build90 staged result: controls=3/3 A/front=1/1 A/mild=1/1 A/angle=1/1 B/front=1/1 B/mild=1/1 B/angle-reject=1/1
+Build90 ordered-parallel qualification matrix written to:
+  v4-phone private/build90-diagnostics/build90-phone-qualification-parallel.tsv
+  v4-phone private/build90-diagnostics/build90-phone-qualification-parallel.md
+Build90 semantic-equivalence physical gate: PASS

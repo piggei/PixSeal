@@ -1,0 +1,13 @@
+scope	run	image	total_ms	geometry_ms	qualification_ms	decode_ms	qualification_workers	build84_paired_total_ms	total_reduction_vs_build84	qualification_speedup_vs_build84	note
+full_physical	run1	__matrix__	741008	-	-	-	-	-	-	-	9/9 semantic PASS; cross-day command-matrix timing
+full_physical	run1	phone-b-mild.jpg	155665	68973	14013	-	8	-	-	-	exact semantic workload; authenticated PASS
+full_physical	run1	phone-b-angle.jpg	245758	205178	1515	0	8	-	-	-	exact semantic workload; expected REJECT
+full_physical	run2	__matrix__	1103068	-	-	-	-	-	-	-	9/9 semantic PASS; broad host-degraded run retained, not discarded
+full_physical	run2	phone-b-mild.jpg	231582	93577	27985	-	8	-	-	-	exact semantic workload; authenticated PASS; host-degraded
+full_physical	run2	phone-b-angle.jpg	533422	440043	3336	0	8	-	-	-	exact semantic workload; expected REJECT; host-degraded
+full_physical	run3	__matrix__	779553	-	-	-	-	-	-	-	9/9 semantic PASS; cross-day command-matrix timing
+full_physical	run3	phone-b-mild.jpg	155578	66989	14314	-	8	-	-	-	exact semantic workload; authenticated PASS
+full_physical	run3	phone-b-angle.jpg	262345	217206	1569	0	8	-	-	-	exact semantic workload; expected REJECT
+paired_mean	ABBA	phone-b-mild.jpg	118104	69006	14975	33871.5	8	168444.5	29.89%	4.286x	qualified contemporaneous deep-performance reference
+paired_mean	ABBA	phone-b-angle.jpg	212025.5	210225.5	1562.5	0	8	220870	4.00%	4.866x	qualified contemporaneous deep-performance reference
+paired_combined	ABBA	B-mild+B-angle x2	660259	-	-	-	8	778629	15.20%	-	Build90 vs Build84 total across all four paired deep executions

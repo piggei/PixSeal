@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-// Build84 is the current qualified smartphone baseline, originally selected as
+// Build84 is the previous qualified RGB-fetch baseline, originally selected as
 // an equivalence-preserving performance candidate from Build83 CPU profiling. Build83
 // measured the historical projective reader at about 1.70 us/block on the
 // qualified host and attributed about 72% cumulative CPU to

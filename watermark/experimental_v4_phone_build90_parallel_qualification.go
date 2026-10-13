@@ -8,8 +8,8 @@ import (
 	"time"
 )
 
-// Build90 is a scheduling-only performance candidate over the qualified Build84
-// smartphone baseline. Build89 full-pipeline profiling showed that qualification
+// Build90 is the current qualified smartphone baseline. It is a scheduling-only
+// performance successor over the Build84 geometry/reader/decode baseline. Build89 full-pipeline profiling showed that qualification
 // dominates B/mild wall time (~61.2 s of ~149.5 s deep recovery) while the
 // complete frozen bank is already available before qualification begins.
 //
@@ -98,7 +98,7 @@ func experimentalV4PhoneBuild90QualifyBank(plane *pixelPlane, pilot experimental
 	return qualified, evals, workers
 }
 
-// experimentalV4PhoneBuild90Recover is Build84 with one scheduling change: the
+// experimentalV4PhoneBuild90Recover is the qualified Build84-derived runtime with one scheduling change: the
 // already-frozen qualification bank is evaluated by the ordered worker pool
 // above. Geometry and protected-data decode continue to use the qualified Build84
 // implementation and telemetry semantics.

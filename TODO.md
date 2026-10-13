@@ -1,12 +1,33 @@
-## Build90 active — ordered-parallel qualification candidate
+## Build92 checkpoint — active qualified Build90 post-promotion profiling
 
-- [ ] Run `make v4-build90-qualification-parallel-test` on the qualified Go 1.26.0 host.
-- [ ] Run `make v4-build90-qualification-benchmark` with the host otherwise idle and review five-run serial/parallel means for both high-pass and early-reject workloads.
-- [ ] Do **not** run the private physical gate unless the high-pass benchmark shows a large stable gain and early-reject overhead is acceptable.
-- [ ] If benchmark-positive, run `make v4-build90-phone-physical-test` twice independently and compare raw milliseconds/means against the source-controlled Build84 qualified baseline before any promotion.
-- [ ] If benchmark-negative or physically non-repeatable, close Build90 without changing Build84 and profile/select a different pipeline stage rather than tuning qualification thresholds.
-- [x] Select Build90 from Build89 full-pipeline evidence: B/mild qualification is 61,193 ms / 40.93% of deep recovery, larger than geometry or ordered decode.
-- [x] Keep Build84 as the current qualified smartphone baseline while Build90 remains benchmark-first and unqualified.
+- [x] Keep Build90 unchanged as the current qualified smartphone baseline; make no Build92 runtime algorithm change.
+- [x] Add separate retained B/mild/B/angle timing and CPU-profile passes so profiler overhead cannot contaminate stage-share timing.
+- [x] Reuse frozen Build91 semantic expectations and the targeted Build90 qualification race regression.
+- [x] Capture geometry/freeze/prefix1/gen2/gen3/gen4, qualification, decode, worker/task counts, residual accounting and exact Build84 sampler workload.
+- [x] Add flat/cumulative pprof, geometry/qualification/decode-focused reports and source listings for the main Build90/Build84 functions.
+- [ ] Run `make v4-build92-qualified-pipeline-test` on the qualified Go 1.26.0 host.
+- [ ] Run `make v4-build92-qualified-pipeline-profile` on an otherwise idle qualified host and archive `v4-phone private/build92-profile`.
+- [ ] Select at most one Build93 hypothesis from the resulting Build90-qualified timing and CPU evidence; if no material target remains, close performance work instead of forcing a candidate.
+- [ ] Require exact equivalence and two independent 9/9 physical PASS runs before any later candidate can supersede Build90.
+
+## Build91 checkpoint — closed paired profiling PASS / Build90 promoted
+
+- [x] Run `make v4-build91-paired-test` on the qualified Go 1.26.0 host: PASS.
+- [x] Run `make v4-build91-paired-physical-profile` with the host otherwise idle and archive `v4-phone private/build91-paired-profile`: PASS.
+- [x] Confirm exact Build84/Build90 pairwise semantics for B/mild and B/angle in both AB and BA cycles.
+- [x] Confirm no systematic paired regression outside qualification: geometry/decode remain comparable within both orderings.
+- [x] Confirm Build90 qualification speedup: 4.286x B/mild and 4.866x B/angle paired means.
+- [x] Confirm deep-total improvement: 29.89% B/mild and 4.00% B/angle paired means.
+- [x] Promote unchanged Build90 as the current qualified smartphone baseline; Build84 becomes the previous qualified baseline.
+- [x] Freeze exact paired evidence and Build90 promotion reference under `docs/qualified-baselines/`.
+- [x] Keep Build91 observability-only; it cannot become the runtime baseline.
+
+## Build93+ next work
+
+- [ ] Start every future smartphone optimization from Build90, including its ordered-parallel qualification and Build84 exact RGB reader.
+- [ ] Use Build92 qualified-host timing/pprof evidence before selecting any Build93; do not reuse pre-Build90 bottleneck assumptions.
+- [ ] Preserve the full geometry freeze barrier and ordered qualification commit; do not let secret key, payload, ECC or HMAC guide geometry/qualification scheduling.
+- [ ] Require exact semantic equivalence plus at least two independent Go 1.26.0 physical PASS runs for any candidate that would supersede Build90.
 
 ## Build89 checkpoint — closed profiling PASS
 
@@ -72,10 +93,11 @@
 
 ## Next performance work
 
-- [ ] Treat Build84, not Build76, as the performance and semantic baseline for any later smartphone candidate.
+- [ ] Treat Build90, not Build84/Build76, as the performance and semantic baseline for any later smartphone candidate.
+- [ ] Re-profile the Build90-qualified pipeline before selecting a new optimization; qualification is no longer serial.
 - [ ] Measure first before changing another hot component; do not stack speculative caches/LUTs or combine unrelated optimizations.
-- [ ] Require bit-exact block/FoldScore/continuation/bank equivalence before any future physical timing.
-- [ ] Require two independent Go 1.26.0 9/9 physical PASS runs with a repeatable material improvement before superseding Build84.
+- [ ] Require bit-exact/telemetry-exact equivalence before any future physical timing.
+- [ ] Require two independent Go 1.26.0 9/9 physical PASS runs with a repeatable material improvement before superseding Build90.
 
 ## Build83 checkpoint — closed
 

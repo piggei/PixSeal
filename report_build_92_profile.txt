@@ -1,0 +1,24 @@
+=== RUN   TestExperimentalV4Build92RetainedTimingProfile
+build92-prepare	phone-b-mild.jpg	10060
+build92-row	phone-b-mild.jpg	accept	10060	109620	109620	59290	216	22445	3743	4430	10023	18429	19760	26980	78622	146329	59289	0	225	16644	33460	50330	109620	0	79259	937	1872	935	691	2120047	696	5	true	8	8	8	8	93	275	593	8	937	8	16496	21114880	21114880	0
+build92-prepare	phone-b-angle.jpg	12002
+build92-row	phone-b-angle.jpg	reject	12002	193565	193565	191762	228	21652	5431	8886	38183	117376	24797	62170	298077	937517	191758	3	372	1431	0	1803	193565	0	334857	6198	6198	0	0	0	0	0	false	8	8	8	8	106	542	1902	8	6198	0	118004	151045120	149370664	1674456
+--- PASS: TestExperimentalV4Build92RetainedTimingProfile (338.59s)
+PASS
+=== RUN   TestExperimentalV4Build92CPUProfile
+build92-cpu-row	phone-b-mild.jpg	10903	112989	112989	65953	14770	32010	/home/pj/repo/pixseal/v4-phone private/.build92-profile.build92.DGsfZO/build92-b-mild.pprof
+--- PASS: TestExperimentalV4Build92CPUProfile (130.48s)
+PASS
+=== RUN   TestExperimentalV4Build92CPUProfile
+build92-cpu-row	phone-b-angle.jpg	12633	245374	245374	243700	1445	0	/home/pj/repo/pixseal/v4-phone private/.build92-profile.build92.DGsfZO/build92-b-angle.pprof
+--- PASS: TestExperimentalV4Build92CPUProfile (264.84s)
+PASS
+Build92 qualified Build90 post-promotion profile written to:
+  v4-phone private/build92-profile/build92-pipeline.tsv
+  v4-phone private/build92-profile/build92-pipeline.md
+  v4-phone private/build92-profile/build92-b-mild.pprof
+  v4-phone private/build92-profile/build92-b-angle.pprof
+  v4-phone private/build92-profile/build92-b-mild-pprof-top.txt / -cum.txt / phase-focused reports / -list.txt
+  v4-phone private/build92-profile/build92-b-angle-pprof-top.txt / -cum.txt / phase-focused reports / -list.txt
+  v4-phone private/build92-profile/build92-metadata.txt
+Build92 profiling gate: PASS

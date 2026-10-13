@@ -178,7 +178,7 @@ done
   echo '|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|'
   tail -n +2 "$tsv" | awk -F '\t' '{printf "| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |\n",$1,$3,$4,$5,$6,$27,$28,$29,$30,$39,$40,$41,$36,$37,$38,$31,$33,$34}'
   echo
-  echo 'Build84 remains the current qualified smartphone baseline. Build88 must pass exact semantic equivalence and two independent Go 1.26.0 physical runs with a repeatable material speedup before promotion.'
+  echo 'Build90 is the current qualified smartphone baseline; Build84 is the previous qualified baseline. Build88 must pass exact semantic equivalence and two independent Go 1.26.0 physical runs with a repeatable material speedup before promotion.'
   if awk -F '\t' 'NR>1{found=1;exit} END{exit !found}' "$BUILD84_BASELINE_TSV" 2>/dev/null; then
     echo "Build84 qualified timing reference: $BUILD84_BASELINE_TSV"
   else

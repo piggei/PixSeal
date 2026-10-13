@@ -1376,9 +1376,10 @@ func experimentalV4PhoneDecodeEnsemble(src image.Image, key []byte, cw, ch int, 
 
 // ExperimentalV4ExtractPhone preserves the qualified smartphone path. The
 // historical Build41/43 direct geometry, Build42 post-geometry data recovery and
-// Build40 residual warp remain first and unchanged. The final deep fallback uses
-// the current qualified Build84 semantics; Build89 adds observability only after
-// those authoritative stages have measured their timings. The deep geometry bank
+// Build40 residual warp remain first and unchanged. The final deep fallback currently evaluates the Build90 ordered-parallel qualification
+// candidate over qualified Build84 semantics. Build91 adds paired physical
+// promotion evidence and Build92 adds post-promotion pipeline profiling only;
+// neither alters this runtime path. The deep geometry bank
 // remains public-proposal-only and frozen before held-out qualification or HMAC.
 func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte, ExperimentalV4ExtractInfo, ExperimentalV4PhoneInfo, error) {
 	if src == nil {
@@ -1444,7 +1445,7 @@ func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte
 		}
 	}
 	if !public.Accepted {
-		// Build90 is a scheduling-only candidate over qualified Build84. The blind
+		// Build90 is the current qualified scheduling-only successor to Build84. The blind
 		// geometry bank is fully frozen before qualification; only independent
 		// public-pilot qualification evaluations are scheduled in parallel, with
 		// authoritative results committed strictly in original bank order.

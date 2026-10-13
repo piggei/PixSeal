@@ -171,7 +171,7 @@ done
 
 {
   echo '# PixSeal Build84 exact RGB-fetch sampler matrix'; echo
-  echo 'Build84 is the current qualified smartphone baseline. Only continuation4 FoldScore projective block reads use the exact Build84 RGB-fetch reader: row/column RGB offsets are hoisted and each three-byte source pixel is represented by one bounded slice. homography.mapPoint, float64 formulas/order, geometry, bank/order and protected-data semantics remain authoritative.'; echo
+  echo 'Build84 is the previous qualified smartphone baseline; Build90 is current. Only continuation4 FoldScore projective block reads use the exact Build84 RGB-fetch reader: row/column RGB offsets are hoisted and each three-byte source pixel is represented by one bounded slice. homography.mapPoint, float64 formulas/order, geometry, bank/order and protected-data semantics remain authoritative.'; echo
   echo '| image | role | evals | bank | qual | fetch folds | block reads | success | failed | geometry | B76 geom | geom speedup | elapsed | B76 elapsed | speedup | HMAC | telemetry eq | gate |'
   echo '|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|'
   tail -n +2 "$tsv" | awk -F '\t' '{printf "| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |\n",$1,$3,$4,$5,$6,$27,$28,$29,$30,$39,$40,$41,$36,$37,$38,$31,$33,$34}'

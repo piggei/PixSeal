@@ -1,6 +1,6 @@
 # Format-v4 Build87 — qualified RGB/luminance/bilinear compiler profiling
 
-Build87 is an **observability-only** checkpoint over the current qualified Build84 smartphone baseline. It is selected after Build86 closed as exact but benchmark-negative. Build87 restores the active deep runtime to Build84 and changes no recovery algorithm, geometry search, ordering, thresholds, qualification, protected-data decode, ECC/Hamming, whitening/HMAC domain, strength, pilot, or Format-v4 wire format.
+Build87 is an **observability-only** checkpoint over the then-current qualified Build84 smartphone baseline. It is selected after Build86 closed as exact but benchmark-negative. Build87 restores the active deep runtime to Build84 and changes no recovery algorithm, geometry search, ordering, thresholds, qualification, protected-data decode, ECC/Hamming, whitening/HMAC domain, strength, pilot, or Format-v4 wire format.
 
 ## Why Build87 exists
 

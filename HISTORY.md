@@ -1,8 +1,20 @@
-## v0.3.0-build90 — qualification parallelism selected from full-pipeline evidence
+## v0.3.0-build92 — post-promotion Build90 pipeline observability
+
+Build91 closed the promotion decision and made Build90 the current qualified smartphone baseline. Because ordered-parallel qualification removed the former B/mild bottleneck, Build92 deliberately makes no recovery change and re-measures the promoted pipeline before any new optimization is selected.
+
+The profile separates timing from instrumentation: one retained B/mild/B/angle pass runs unchanged Build90 with only its existing telemetry, while separate later passes collect CPU `pprof` around deep recovery and generate flat/cumulative, phase-focused and source-list reports. Build92 reuses the frozen Build91 semantic expectations and Build90 race regression. Its result can select a later Build93 hypothesis, but Build92 itself is observability-only and cannot supersede Build90.
+
+## v0.3.0-build91 — paired physical decision checkpoint closes Build90 promotion
+
+Build90 produced the first large post-Build84 pipeline-level speed signal: public qualification benchmarks on the qualified i3-13100T/Go 1.26.0 host improved by 4.283x on a high-pass workload and 3.981x on an early-reject workload, with the targeted race gate clean. Three retained nine-photo runs were semantically exact. Cross-day absolute timing still drifted materially, including one broad host-degraded run, so Build91 was created to measure Build84 and Build90 contemporaneously rather than cherry-pick historical baselines.
+
+Build91 changes no recovery algorithm. Its AB/BA paired profile decodes each retained deep image once and runs Build84/Build90 on the same in-memory work image, reversing variant and case order in cycle 2. The paired semantic gate passed. B/mild paired deep total improved from 168,444.5 ms to 118,104 ms (-29.89%) and qualification from 64,185.5 to 14,975 ms (4.286x). B/angle improved from 220,870 to 212,025.5 ms (-4.00%) and qualification from 7,602.5 to 1,562.5 ms (4.866x). Geometry/decode stayed comparable within pairs. **Build90 is therefore promoted as the current qualified smartphone baseline; Build84 becomes the previous qualified baseline.** Build91 remains observability-only evidence. The harness-only absolute-path correction is retained for reproducible package-test execution.
+
+## v0.3.0-build90 — qualified ordered-parallel qualification baseline selected from full-pipeline evidence
 
 Build89 completed the full qualified Build84 pipeline profile with 9/9 retained semantic equivalence. It changed the optimization priority: on `B/mild`, serial public-pilot qualification consumed 61,193 ms (40.93% of deep recovery), exceeding both geometry and ordered protected-data decode. The frozen bank has 937 candidates and 935 qualify, making the stage highly parallel without altering the bank or protected-data semantics.
 
-Build90 therefore parallelizes only qualification execution. It preserves the Build84 freeze barrier, writes one result per original bank index, waits for all tasks, then commits evaluation counts and qualified hypotheses serially in bank order. Build84 remains qualified pending benchmark review and, only if justified, two independent physical Build90 runs.
+Build90 therefore parallelizes only qualification execution. It preserves the Build84 freeze barrier, writes one result per original bank index, waits for all tasks, then commits evaluation counts and qualified hypotheses serially in bank order. Public benchmark/race, three full physical semantic gates, and the Build91 contemporaneous paired profile subsequently qualified this unchanged implementation; Build90 is now current and Build84 is the previous qualified baseline.
 
 ## v0.3.0-build89 — qualified Build84 full-pipeline profiling
 
@@ -10,7 +22,7 @@ Build88 passed exactness but regressed the qualified Build84 reader by roughly 8
 
 ## v0.3.0-build88 — direct RGB bounds-check experiment, closed negative
 
-Build87 completed the qualified RGB/luminance/bilinear compiler profile without changing runtime semantics. The key actionable compiler result is eight `IsSliceInBounds` checks on Build84's four `rgb[index:index+3]` expressions. Build88 therefore tests one final narrow exact-portable reader rewrite: one dominating `rgb[index+2]` proof per pixel followed by direct scalar R/G/B loads. All floating-point expressions and DCT order remain Build84-exact. The candidate is benchmark-first and Build84 remains the current qualified smartphone baseline.
+Build87 completed the qualified RGB/luminance/bilinear compiler profile without changing runtime semantics. The key actionable compiler result is eight `IsSliceInBounds` checks on Build84's four `rgb[index:index+3]` expressions. Build88 therefore tests one final narrow exact-portable reader rewrite: one dominating `rgb[index+2]` proof per pixel followed by direct scalar R/G/B loads. All floating-point expressions and DCT order remain Build84-exact. The candidate is benchmark-first and Build84 remained the qualified smartphone baseline at that checkpoint; Build90 is now the current qualified smartphone baseline.
 
 ## v0.3.0-build87 — qualified RGB/luminance/bilinear profiling
 

@@ -195,7 +195,7 @@ done
   awk -F '\t' 'NR==1{for(i=1;i<=NF;i++)c[$i]=i;next}$c["build89_attempted"]=="true"&&$c["total_ms"]+0>0{t=$c["total_ms"]+0;printf "| %s | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% | %.2f%% |\n",$c["image"],100*$c["geometry_ms"]/t,100*$c["freeze_ms"]/t,100*$c["prefix1_ms"]/t,100*$c["gen2_ms"]/t,100*$c["gen3_ms"]/t,100*$c["gen4_ms"]/t,100*$c["qualification_ms"]/t,100*$c["decode_wall_ms"]/t}' "$tsv"
   echo
   echo 'Worker-time counters for decode sampling/list work are preserved in the TSV but are intentionally not treated as wall-clock shares because parallel worker sums can exceed decode wall time.'
-  echo 'Build84 remains the current qualified smartphone baseline. Build89 timing is profiling evidence only and cannot itself promote a new runtime.'
+  echo 'Build90 is the current qualified smartphone baseline; Build84 is the previous qualified baseline. Build89 timing is profiling evidence only and cannot itself promote a new runtime.'
 } > "$md"
 
 rm -f "$stage_dir/logs/"*.payload.bin

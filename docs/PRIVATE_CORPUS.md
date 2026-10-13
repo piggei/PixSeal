@@ -224,3 +224,9 @@ Build65 reuses the complete retained Build38 nine-photo smartphone corpus and wr
 ## Build66 private equivalence/performance matrix
 
 Build66 reuses the same retained nine-photo Build38 smartphone corpus. Its gate writes only private logs/telemetry under `v4-phone private/build66-diagnostics/`. Correctness still requires exact Build64 semantic counts and outcomes; when the retained Build65 matrix is available the report also includes same-host Build65 timing and per-image speedup. No acquisition image, private timing matrix or Build66 diagnostic log belongs in source/release archives.
+
+## Build90/91 private qualification evidence
+
+Build90 reuses the retained Build38 nine-photo strength-48 smartphone corpus. Full physical gate output belongs under `v4-phone private/build90-diagnostics/`; Build91 contemporaneous AB/BA output belongs under `v4-phone private/build91-paired-profile/`. Acquisition images, secret keys, payload dumps, stderr logs and raw private diagnostic directories remain excluded from source/release archives.
+
+After promotion, only non-sensitive numeric summaries are frozen in the public source tree under `docs/qualified-baselines/`: `build90-phone-performance.tsv` records the three full semantic runs plus paired means, while `build91-build84-build90-paired.tsv` freezes the exact paired telemetry/timing rows. These summaries contain no image bytes, secret key or payload content and exist so future performance candidates do not depend on mutable private diagnostic directories.

@@ -157,7 +157,7 @@ done
   echo '|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|'
   awk -F '\t' 'NR==1{for(i=1;i<=NF;i++)c[$i]=i;next}{printf "| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |\n",$c["image"],$c["role"],$c["build64_bank"],$c["build64_qualified"],$c["qualification_workers"],$c["qualification_tasks"],$c["qualification_evaluations"],$c["qualification_ms"],$c["geometry_ms"],$c["elapsed_ms"],$c["build84_elapsed_ms"],$c["speedup_vs_build84"],$c["hmac"],$c["telemetry_equivalent"],$c["qualification"]}' "$tsv"
   echo
-  echo 'Build84 remains qualified until Build90 passes two independent physical runs with exact semantic telemetry and a material repeatable speedup.'
+  echo 'Build90 is the current qualified smartphone baseline. This retained gate preserves the exact promotion semantics and telemetry; Build84 is the previous qualified baseline.'
 } > "$md"
 rm -f "$stage_dir/logs/"*.payload.bin
 

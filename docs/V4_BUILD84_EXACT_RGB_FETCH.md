@@ -1,6 +1,6 @@
 # Format-v4 Build84 — qualified exact RGB fetch / bounds-check baseline
 
-Build84 is the **current qualified smartphone baseline**, superseding Build76 after a public Go 1.26.0 benchmark/BCE gate and two independent retained physical 9/9 semantic-equivalence runs. The change is intentionally narrow: only the RGB fetch/address/bounds-check shape inside continuation4 FoldScore projective block reads changes. Geometry search, candidate ordering, qualification, protected-data decode and authentication semantics remain those qualified by Build76.
+Build84 is the **previous qualified smartphone baseline**. It superseded Build76 after a public Go 1.26.0 benchmark/BCE gate and two independent retained physical 9/9 semantic-equivalence runs, then was superseded by Build90 after Build91 contemporaneous paired evidence. The change is intentionally narrow: only the RGB fetch/address/bounds-check shape inside continuation4 FoldScore projective block reads changes. Geometry search, candidate ordering, qualification, protected-data decode and authentication semantics remain those qualified by Build76.
 
 ## Evidence from Build83
 
@@ -110,7 +110,7 @@ The end-to-end gain is intentionally smaller than the isolated reader gain becau
 
 ## Promotion decision
 
-**PROMOTED. Build84 is the current qualified smartphone baseline.**
+**PROMOTED at its checkpoint. Build84 is now the previous qualified smartphone baseline; Build90 superseded it after Build91 contemporaneous paired evidence.**
 
 The promotion is based on correctness first and performance second:
 

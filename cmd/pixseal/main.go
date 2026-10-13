@@ -36,7 +36,7 @@ Commands:
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
-  v4-extract-phone EXPERIMENTAL: Build90 ordered-parallel qualification candidate over Build84-qualified phone path + authenticated v4 decode
+  v4-extract-phone EXPERIMENTAL: Build90 qualified ordered-parallel qualification over the Build84 RGB-fetch phone lineage; Build91/92 are profiling evidence only + authenticated v4 decode
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
   v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
@@ -861,7 +861,7 @@ func printV4ScannerDiagnostics(w io.Writer, info watermark.ExperimentalV4Extract
 }
 
 func v4ExtractPhone(args []string) error {
-	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build84 qualified exact RGB-fetch/bounds-check phone baseline; geometry bank/order and protected-data semantics remain unchanged from the qualified Build76 lineage.")
+	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build90 qualified ordered-parallel qualification baseline; Build84 exact RGB-fetch geometry/reader behavior and protected-data semantics remain unchanged.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")

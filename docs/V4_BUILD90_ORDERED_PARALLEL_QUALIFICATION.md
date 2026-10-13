@@ -1,6 +1,6 @@
 # Format-v4 Build90 — ordered-parallel qualification
 
-Build90 is a **performance candidate over the current qualified Build84 smartphone baseline**. It is the first optimization selected from the full-pipeline Build89 retained-corpus profile rather than from the projective-reader microbenchmark line.
+Build90 is the **current qualified smartphone baseline**. It is the scheduling-only performance successor selected from the full-pipeline Build89 retained-corpus profile and promoted after public benchmark/race evidence, three independent full physical semantic PASS runs, and the contemporaneous Build91 AB/BA paired physical decision.
 
 ## Why Build90
 
@@ -11,7 +11,7 @@ Build89 ran the unchanged qualified Build84 runtime over the retained nine-photo
 
 The `B/mild` frozen bank contains 937 candidates and 935 qualify. Build84 evaluates those candidates serially even though the bank is already frozen and each qualification uses only the shared read-only pixel plane, public pilot structure and the candidate's own geometry. This creates a high-value scheduling opportunity without changing any numerical computation or security boundary.
 
-Build89 itself remains observability-only and is not a baseline. Build84 remains the current qualified smartphone baseline.
+Build89 itself remains observability-only and is not a baseline. Build84 was the qualified baseline when Build90 was selected and is now the previous qualified baseline.
 
 ## Exact change
 
@@ -107,9 +107,9 @@ v4-phone private/build90-benchmark/
 └── build90-race-test.txt
 ```
 
-## Deferred physical gate
+## Physical qualification gate — completed
 
-Only after the Go 1.26.0 benchmark is reviewed should the retained private matrix be run:
+After the Go 1.26.0 benchmark/race gate passed, the retained private matrix was run:
 
 ```bash
 make v4-build90-phone-physical-test
@@ -117,7 +117,7 @@ make v4-build90-phone-physical-test
 
 The physical gate keeps the complete nine-case semantic matrix, exact historical deep counters, Build84 continuation4 workload counters, HMAC/payload expectations and the Build84 timing reference. It additionally requires the qualification worker/task telemetry to be structurally valid.
 
-Promotion still requires **two independent physical PASS runs** with identical semantics and a material repeatable speedup. Build84 remains qualified until that evidence exists.
+Build90 passed the complete retained 9/9 semantic matrix three times. Because cross-day host drift contaminated absolute timing, the promotion decision was intentionally deferred to Build91 contemporaneous AB/BA evidence rather than selecting favorable runs.
 
 ## Build89 retained evidence used to select Build90
 
@@ -126,4 +126,30 @@ Promotion still requires **two independent physical PASS runs** with identical s
 | B/mild | 149,504 | 58,976 | **61,193** | 29,119 | 937 | 935 |
 | B/angle | 193,441 | 186,352 | 6,867 | 0 | 6,198 | 0 |
 
-The complete Build89 command matrix was 745,821 ms and preserved the expected 9/9 behavior. These timings are profiling evidence only; they do not change the Build84 qualification status.
+The complete Build89 command matrix was 745,821 ms and preserved the expected 9/9 behavior. These timings were profiling evidence only and selected Build90; Build84 remained qualified at that stage.
+
+## Qualified-host benchmark and physical evidence — 2026-10-08
+
+The public Go 1.26.0 benchmark/race gate completed successfully on the i3-13100T qualification host.
+
+| workload | serial mean | parallel mean | speedup | wall-time reduction |
+|---|---:|---:|---:|---:|
+| high-pass | 207.413 ms | 48.429 ms | **4.283x** | **76.65%** |
+| early-reject | 111.935 ms | 28.120 ms | **3.981x** | **74.88%** |
+
+The targeted race test passed. Build90 then passed the complete retained 9/9 physical semantic gate three times. Deep semantic counters were exact in every run.
+
+| physical run | full matrix | B/mild elapsed | B/mild geometry | B/mild qualification | B/angle elapsed | B/angle geometry | B/angle qualification |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| run 1 | 741,008 ms | 155,665 | 68,973 | **14,013** | 245,758 | 205,178 | **1,515** |
+| run 2 | 1,103,068 ms | 231,582 | 93,577 | 27,985 | 533,422 | 440,043 | 3,336 |
+| run 3 | 779,553 ms | 155,578 | 66,989 | **14,314** | 262,345 | 217,206 | **1,569** |
+
+Run 2 is a broad host-degraded execution: unchanged geometry/decode work slows by approximately the same factor as qualification. Runs 1 and 3 strongly reproduce the Build90 qualification gain and nearly identical B/mild end-to-end elapsed, but unchanged geometry timing remains slower than the older Build84 qualification reference. Because promotion requires a repeatable code-specific speedup rather than selecting favorable cross-day runs, the decision moved to Build91 contemporaneous AB/BA profiling. That profile passed semantically and produced the following paired means:
+
+| case | Build84 deep total | Build90 deep total | total reduction | Build84 qualification | Build90 qualification | qualification speedup |
+|---|---:|---:|---:|---:|---:|---:|
+| B/mild | 168,444.5 ms | **118,104 ms** | **29.89%** | 64,185.5 | **14,975** | **4.286x** |
+| B/angle | 220,870 ms | **212,025.5 ms** | **4.00%** | 7,602.5 | **1,562.5** | **4.866x** |
+
+Geometry/decode remained comparable within the same pairs and the order reversal reproduced the result. **Decision: PROMOTED. Build90 is the current qualified smartphone baseline; Build84 is the previous qualified baseline.** Build91 itself remains observability-only evidence. See [`V4_BUILD91_PAIRED_PHYSICAL_AB.md`](V4_BUILD91_PAIRED_PHYSICAL_AB.md) and the frozen TSVs under `docs/qualified-baselines/`.

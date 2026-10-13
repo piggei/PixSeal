@@ -1,6 +1,6 @@
 # Format-v4 Build88 — exact direct RGB loads / dominating BCE
 
-Build88 is a **closed exact / benchmark-strongly-negative / non-promoted experiment** over the current qualified Build84 smartphone baseline. It is selected from the completed Build87 compiler/profile evidence and changes only the four RGB pixel accesses inside continuation4 FoldScore projective block reads.
+Build88 is a **closed exact / benchmark-strongly-negative / non-promoted experiment** over the then-current qualified Build84 smartphone baseline. It is selected from the completed Build87 compiler/profile evidence and changes only the four RGB pixel accesses inside continuation4 FoldScore projective block reads.
 
 ## Evidence selecting the experiment
 
@@ -62,7 +62,7 @@ Before any private physical run, Build88 must pass:
 
 Because Build87 attributes only a small single-digit percentage of the reader to the slice construction/check region, a 5% whole-reader threshold is unrealistic. The candidate should reach the private corpus only if the complete-reader benchmark shows a **stable useful improvement, approximately 2% or better on all three geometries, with no regression**, and compiler evidence confirms a simpler bounds-check shape.
 
-Build84 remains the current qualified smartphone baseline until two independent physical 9/9 runs prove exact semantics and a repeatable worthwhile end-to-end improvement.
+At the Build88 candidate checkpoint, Build84 remained the qualified smartphone baseline until any successor proved exact semantics and repeatable end-to-end improvement. Build88 failed its benchmark-first performance gate and was not promoted; Build90 is now current.
 
 ## Commands
 

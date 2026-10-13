@@ -1,4 +1,25 @@
-## v0.3.0-build90 candidate selected from Build89 full-pipeline profile
+## v0.3.0-build92 post-promotion Build90 pipeline profile — prepared / awaiting qualified-host run
+
+Build90 is the current qualified smartphone baseline after the Build91 paired A/B decision. Build92 changes no runtime behavior. It separates an unprofiled retained B/mild/B/angle timing pass from later CPU-profile passes so stage shares remain comparable while `pprof` is used only for code attribution. The semantic gate reuses the exact Build91 deep expectations and the Build90 qualification race regression.
+
+No Build93 target is preselected. The qualified-host result must first show the new Build90 stage distribution, then flat/cumulative and phase-focused CPU evidence will determine whether one narrow later optimization is justified.
+
+## v0.3.0-build91 paired physical A/B decision — completed; Build90 promoted
+
+Build90 had already passed its public Go 1.26.0 benchmark/race gate and three independent retained 9/9 physical semantic gates. Public qualification means were 207.413 ms serial vs 48.429 ms parallel on the high-pass workload (**4.283x**) and 111.935 vs 28.120 ms on early-reject (**3.981x**). Cross-day full-matrix timing was too host-sensitive for a clean promotion decision, so Build91 compared Build84 and Build90 contemporaneously on the same prepared deep inputs in AB then BA order.
+
+The paired semantic gate passed in both cycles with exact B/mild `79,259 / 937 / 1,872 / 935 / 691 / 2,120,047 / 696 / 5`, HMAC/payload PASS, and exact B/angle `334,857 / 6,198 / 6,198 / 0`, REJECT. Paired means were:
+
+| case | Build84 deep total | Build90 deep total | total reduction | Build84 geometry | Build90 geometry | Build84 qualification | Build90 qualification | qualification speedup | Build84 decode | Build90 decode |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| B/mild | 168,444.5 ms | **118,104 ms** | **29.89%** | 69,545.5 | 69,006 | 64,185.5 | **14,975** | **4.286x** | 34,465.5 | 33,871.5 |
+| B/angle | 220,870 ms | **212,025.5 ms** | **4.00%** | 212,971 | 210,225.5 | 7,602.5 | **1,562.5** | **4.866x** | 0 | 0 |
+
+Across all four paired deep executions Build84 accumulated 778,629 ms and Build90 660,259 ms, a **15.20% reduction**. The order reversal reproduces the result, while unchanged geometry/decode remain comparable within pairs. **Build90 is promoted as the current qualified smartphone baseline; Build84 becomes the previous qualified baseline.** Build91 remains observability-only evidence.
+
+Source-controlled qualification references now include `docs/qualified-baselines/build90-phone-performance.tsv` and the exact paired rows in `docs/qualified-baselines/build91-build84-build90-paired.tsv`.
+
+## v0.3.0-build90 qualified baseline selected from Build89 full-pipeline profile
 
 Build89 completed the retained nine-photo matrix on Go 1.26.0 with a 9/9 semantic PASS and the unchanged qualified Build84 runtime. Full command-matrix elapsed was 745,821 ms, close to the 747,902 ms two-run Build84 reference mean.
 
@@ -9,11 +30,11 @@ The decisive deep-stage measurements are:
 | B/mild | 149,504 ms | 58,976 ms | **61,193 ms** | 29,119 ms | 937 | 935 |
 | B/angle | 193,441 ms | 186,352 ms | 6,867 ms | 0 ms | 6,198 | 0 |
 
-`B/mild` qualification is 40.93% of deep wall time and is now the largest single stage. Build90 is therefore an ordered-parallel scheduling candidate over the already-frozen bank. It changes no qualification arithmetic or protected-data semantics. Public high-pass/early-reject benchmark and race evidence are required before the private physical matrix. Build84 remains the qualified baseline.
+`B/mild` qualification was 40.93% of deep wall time and selected the ordered-parallel Build90 scheduling change over the already-frozen bank. Build90 changes no qualification arithmetic or protected-data semantics. The public benchmark/race gate, three full physical semantic gates and Build91 paired A/B evidence subsequently passed; Build90 is now the qualified baseline.
 
 ## v0.3.0-build88 exact direct RGB/BCE — closed benchmark-negative
 
-Build88 passed exactness but failed the same-session qualified-host performance gate. Build84/Build88 five-run means were 1415.4/1529.2 ns/block front, 1434.0/1593.8 mild and 1450.8/1611.8 angle, making Build88 about 8.0% / 11.1% / 11.1% slower. The prepared slice/direct fetch comparison also failed to improve (255.68 vs 257.46 ns/block). Build88 did not proceed to the private physical gate and is non-promoted; Build84 remains qualified.
+Build88 passed exactness but failed the same-session qualified-host performance gate. Build84/Build88 five-run means were 1415.4/1529.2 ns/block front, 1434.0/1593.8 mild and 1450.8/1611.8 angle, making Build88 about 8.0% / 11.1% / 11.1% slower. The prepared slice/direct fetch comparison also failed to improve (255.68 vs 257.46 ns/block). Build88 did not proceed to the private physical gate and is non-promoted; Build84 remained qualified at that checkpoint and was later superseded by Build90.
 
 ## v0.3.0-build87 qualified RGB/luminance/bilinear profile — completed 2026-10-06
 
@@ -31,7 +52,7 @@ The isolated angle decomposition measured 211.68 ns/block for 64 mapPoint calls,
 
 ## v0.3.0-build84 qualified RGB-fetch baseline — 2026-10-05
 
-Build84 is the **current qualified smartphone baseline**. It changes only continuation4 FoldScore projective block RGB address/bounds-check shape and preserves exact Build76 geometry, bank/order, qualification and protected-data semantics.
+Build84 was the **qualified smartphone baseline from 2026-10-05 until Build90 promotion** and is now the previous qualified baseline. It changes only continuation4 FoldScore projective block RGB address/bounds-check shape and preserves exact Build76 geometry, bank/order, qualification and protected-data semantics.
 
 The public Go 1.26.0 benchmark on the qualified 13th Gen Intel Core i3-13100T host produced these five-run means:
 
@@ -55,7 +76,7 @@ Two independent Go 1.26.0 physical gates then passed the complete nine-photo mat
 | B/angle geometry | 183,806.5 | 182,485 | 181,789 | 182,137 | 0.91% |
 | B/angle gen4 | 110,829.5 | 109,647 | 109,745 | 109,696 | 1.02% |
 
-Both runs preserve B/mild `79259 / 937 / 935 / 691 / 2120047` with HMAC/payload PASS and B/angle `334857 / 6198 / 0` with REJECT. **Build84 supersedes Build76 as the qualified smartphone baseline.**
+Both runs preserve B/mild `79259 / 937 / 935 / 691 / 2120047` with HMAC/payload PASS and B/angle `334857 / 6198 / 0` with REJECT. **Build84 superseded Build76 at that checkpoint; Build90 later superseded Build84 after the Build91 paired A/B decision.**
 
 ## Build83 profiling result / Build84 selection
 

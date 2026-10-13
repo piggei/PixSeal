@@ -1,11 +1,32 @@
-## v0.3.0-build90 — ordered-parallel qualification candidate
+## v0.3.0-build92 — qualified Build90 post-promotion pipeline profiling
+
+- Keep Build90 unchanged as the current qualified smartphone baseline; Build92 is observability-only and cannot become a runtime baseline.
+- Add a retained B/mild/B/angle timing pass that derives complete stage accounting from timers already present in Build90/Build84 telemetry, with no CPU profiler active.
+- Add separate later CPU-profile passes around unchanged Build90 deep recovery so `pprof` overhead cannot contaminate the authoritative stage-share timing rows.
+- Add flat/cumulative pprof reports plus geometry-, qualification- and decode-focused views and source listings for Build90 recovery, blind-bank geometry, qualification, decode, batch consumption and the qualified Build84 reader.
+- Reuse the frozen Build91 deep semantic expectations and rerun the targeted Build90 qualification race gate.
+- Retain one stable `watermark` test binary beside the private `.pprof` files for future symbolization; no profile/test binary is included in source release archives beyond the script that creates it.
+- Add `make v4-build92-qualified-pipeline-test` and `make v4-build92-qualified-pipeline-profile`. No Build92 physical promotion gate exists.
+
+## v0.3.0-build91 — contemporaneous Build84/Build90 paired physical profiling and Build90 promotion decision
+
+- Complete the observability-only AB/BA retained-corpus profiler for `B/mild` and `B/angle`; Build91 itself remains non-runtime evidence.
+- Decode/prepare each physical image once per pair, then run Build84 and Build90 deep recovery against the same in-memory `work` image and boundary. Reverse both variant order and case order in cycle 2 to reduce host-drift bias.
+- Enforce exact retained semantics independently for both variants (`79,259/937/935/691/2,120,047` plus 696/5 and authenticated B/mild; `334,857/6,198/0` and reject B/angle) and require pairwise equality of semantic telemetry/payload/outcome.
+- Retain the Build91 harness-only absolute-path correction for `V4_PHONE_ACQUISITION_DIR`; it affects only test path resolution.
+- Record contemporaneous paired means: B/mild deep total Build84 168,444.5 ms vs Build90 118,104 ms (**-29.89%**), qualification 64,185.5 vs 14,975 ms (**4.286x**); B/angle deep total 220,870 vs 212,025.5 ms (**-4.00%**), qualification 7,602.5 vs 1,562.5 ms (**4.866x**). Geometry and decode remain comparable within pairs.
+- **Promote Build90 as the current qualified smartphone baseline.** Build84 becomes the previous qualified baseline; Build91 remains observability-only evidence.
+- Freeze source-controlled Build90 performance/promotion evidence under `docs/qualified-baselines/`, including the exact Build91 paired TSV. Private images, keys, payload files and raw diagnostic logs remain excluded.
+
+## v0.3.0-build90 — qualified ordered-parallel qualification baseline
 
 - Close Build89 as **profiling PASS** on the retained Go 1.26.0 nine-photo matrix. `B/mild` deep recovery measured 149,504 ms: geometry 58,976 ms, qualification 61,193 ms and decode 29,119 ms. `B/angle` remains geometry-dominated at 186,352/193,441 ms with qualification only 6,867 ms.
-- Keep Build84 as the current qualified smartphone baseline. Build89 remains observability-only; Build86 and Build88 remain exact but benchmark-negative/non-promoted.
+- Build84 was the qualified baseline when Build90 was selected. Build89 remains observability-only; Build86 and Build88 remain exact but benchmark-negative/non-promoted.
 - Add Build90 ordered-parallel qualification. The complete Build84 geometry bank is frozen first; a bounded worker pool runs the unchanged public-pilot `experimentalV4PhoneBuild68Qualify` independently per candidate; results are stored by bank index and committed serially in original order.
 - Add low-overhead telemetry for qualification workers, tasks and evaluation count. No per-candidate timer is added.
 - Add exact public fixture tests, ordered-commit checks, targeted `go test -race`, high-pass and early-reject public benchmarks, and a deferred nine-photo physical gate.
 - Add `make v4-build90-qualification-parallel-test`, `make v4-build90-qualification-benchmark` and deferred `make v4-build90-phone-physical-test`.
+- Qualified-host benchmark/race evidence measured 4.283x high-pass and 3.981x early-reject speedup; three full nine-photo physical gates were semantic PASS. Build91 then resolved cross-day timing ambiguity with contemporaneous AB/BA pairs and promoted Build90 without changing its implementation.
 
 ## v0.3.0-build89 — full qualified Build84 deep-pipeline profiling
 

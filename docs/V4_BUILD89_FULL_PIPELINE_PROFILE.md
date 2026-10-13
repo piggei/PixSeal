@@ -1,6 +1,6 @@
 # Format-v4 Build89 — full qualified Build84 deep-pipeline profiling
 
-Build89 is an **observability-only** checkpoint over the current qualified Build84 smartphone baseline. It closes the exact-portable reader micro-optimization branch after Build88 and restores the active deep runtime to Build84.
+Build89 is an **observability-only** checkpoint over the then-current qualified Build84 smartphone baseline. It closes the exact-portable reader micro-optimization branch after Build88 and restores the active deep runtime to Build84.
 
 ## Why Build89
 

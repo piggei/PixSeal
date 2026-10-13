@@ -1,0 +1,6 @@
+Running Build92 qualified Build90 post-promotion profiling regressions...
+ok  	github.com/pj/pixseal/watermark	48.837s
+ok  	github.com/pj/pixseal/watermark	5.186s
+ok  	github.com/pj/pixseal/cmd/pixseal	0.003s
+Checking VERSION/buildinfo consistency...
+ok  	github.com/pj/pixseal/internal/buildinfo	0.002s
