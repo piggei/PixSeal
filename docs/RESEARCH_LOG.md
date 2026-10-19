@@ -1,3 +1,11 @@
+## Build93 post-promotion integration closed — 2026-10-16
+
+The qualified Build93 algorithm remains unchanged. The normal `ExperimentalV4ExtractPhone` path and the explicit Build93 regression alias previously contained source-equivalent duplicate bodies; both now delegate to the retained qualified Build93 implementation. The retained physical harness records its selected entry point and the Makefile gate deliberately runs normal `v4-extract-phone` into a separate `build93-production-integration` artifact so neither historical promotion run is overwritten.
+
+The qualified Go 1.26.0 consolidated source gate passed. The production command then completed the full 9/9 retained matrix: three controls rejected; A/front, A/mild, A/angle and B/front authenticated on their historical paths; B/mild authenticated through Build93; B/angle rejected. Every row reported telemetry equivalence. B/mild preserved `79,259 / 937 / 1,872 / 935 / 691 / 2,120,047`, physical/speculative `696/5`, `696` protected sampling passes and `2,086` derivations. B/angle preserved `334,857 / 6,198 / 6,198 / 0` and zero protected sampling.
+
+Metadata records `entrypoint=v4-extract-phone`, `gate_purpose=production-entrypoint-integration`, `qualified_baseline=Build93`, `previous_qualified_baseline=Build90`, `toolchain=go1.26.0`, `case_count=9` and executable SHA-256 `c1b69423b692861c80e3cc34eeeaadfd5f4f02c73742599e2e1dbff09819396a`. This closes rewiring/integration risk only; the original two independent physical runs remain the algorithmic promotion evidence. Build93 integration is closed and Build94 may now begin as observability-only profiling of consolidated Build93.
+
 ## Build93 qualification and promotion — 2026-10-13
 
 Build93 closed the Build92-selected protected-residue reuse hypothesis successfully. Qualified Go 1.26.0 source/exactness/race gates passed; the public Capacity benchmark improved 4.341x single-candidate and 2.215x batch8. Two independent retained nine-photo matrices then passed exact semantic equivalence. B/mild retained the complete `79,259 / 937 / 935 / 691 / 2,120,047` workload, physical/speculative decode `696/5`, HMAC/payload PASS, and in both runs executed exactly 696 protected sampling passes for 2,086 profile derivations. Deep totals were 97,913 / 75,704 ms and decode 12,878 / 9,879 ms. Their mean decode is 11,378.5 ms, 2.941x faster than the Build92 Build90 33,460 ms measurement; mean deep total is 86,808.5 ms, 26.50% below the Build90 paired 118,104 ms reference. B/angle remained reject with zero Build93 sampling; its large cross-run geometry timing variation is retained as host drift rather than attributed to the candidate.
@@ -104,6 +112,24 @@ Rules for future entries:
   deliberately *not* relaxed after a promising result;
 - private print-camera/scanner images are referenced by regression-case name only and
   are never copied into source archives.
+
+## Build94 result and Build95 exact generation-four luminance-plane hypothesis — 2026-10-16
+
+Build94 completed with exact Build93 semantics. The low-overhead pass measured B/mild at 80,152 ms deep / 57,175 ms geometry / 17,463 ms gen4 / 12,511 ms qualification / 10,251 ms decode. B/angle measured 178,627 / 176,938 / 106,635 / 1,453 / 0 ms respectively. The separate B/angle CPU profile sampled 1,384.63 CPU-s; generation 4 was 920.46 CPU-s cumulative, continuation4 459.29 CPU-s, and the exact Build84 continuation4 reader 456.30 CPU-s. All major pools already used eight workers. This is new evidence, not a continuation by inertia from Build80-88.
+
+The selected Build95 hypothesis is intentionally structural and narrow: prepare one immutable full-work-image `float64` luminance plane immediately before generation 4, then replace only continuation4 RGB-to-luminance loads with exact plane loads. `mapPoint`, bounds rejection, floor/clamp, bilinear interpolation, DCT order, task stream, bank order, qualification and Build93 decode remain unchanged. The choice is independent of key, payload, ECC, HMAC and correctness.
+
+This does not repeat Build80's local cache. Build80 paid a mapping pre-pass per block/FoldScore and sometimes repeated work on fallback; Build95 pays one image-wide linear pass and no per-block lookup or geometry-dependent footprint. It also does not repeat Build81's product LUT, which left repeated sample work intact. The trade-off is memory: the retained 3464x4600 plane is 127,475,200 bytes (121.57 MiB). A deterministic 128 MiB public-dimension cap makes larger images use the unchanged Build84 reader.
+
+Build95 is benchmark-first. Exact source/race and repeated public reader/continuation/preparation measurements come before any private retained comparison. Only a material stable public gain permits contemporaneous Build93/Build95 AB/BA runs. Only a stable paired geometry/gen4 benefit after preparation cost permits two independent 9/9 physical gates. Otherwise the candidate is retained as exact negative evidence and Build93 remains qualified.
+
+## Build94 qualified Build93 post-promotion profile design — 2026-10-16
+
+Build93 is now qualified and integration-closed. Its residue reuse reduced B/mild protected decode enough that Build92's Build90-era stage distribution is no longer a valid basis for another optimization. Build94 therefore opens no runtime hypothesis. It reuses existing qualified timers for one low-overhead B/mild/B/angle pass, then collects separate CPU profiles around unchanged `experimentalV4PhoneBuild93Recover`.
+
+The semantic gate freezes both historical workload and the Build93-specific physical invariant: B/mild must remain 79,259 geometry evaluations, bank 937, 935 qualified, 691 logical decode candidates, 2,120,047 logical frames, 696 physical decode candidates, 2,086 physical profiles, 2,135,407 physical frames, 696 protected sampling passes and 2,086 derivations; B/angle must remain 334,857 / 6,198 / 0 and perform no protected sampling. The harness records cumulative sampling/list worker time only as diagnostic CPU-work evidence, never as wall-time share.
+
+No Build95 target is assumed. The qualified-host timing table must be read first, then the focused pprof views. A new candidate is justified only by a structural opportunity with clear invariants; the closed Build80-88 cache/LUT/inlining/BCE line is not reopened merely because projective reads remain expensive.
 
 ## Build89 closure and Build90 ordered-parallel qualification hypothesis — 2026-10-08
 

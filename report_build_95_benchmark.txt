@@ -1,0 +1,46 @@
+ok  	github.com/pj/pixseal/watermark	1.025s
+ok  	github.com/pj/pixseal/watermark	2.220s
+goos: linux
+goarch: amd64
+pkg: github.com/pj/pixseal/watermark
+cpu: 13th Gen Intel(R) Core(TM) i3-13100T
+BenchmarkExperimentalV4Build95Build84BlockReaderAngle-8                 	 1552225	      1553 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build95Build84BlockReaderAngle-8                 	 1288623	      1723 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build95Build84BlockReaderAngle-8                 	 1411356	      1631 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build95Build84BlockReaderAngle-8                 	 1246330	      1664 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build95Build84BlockReaderAngle-8                 	 1555314	      1552 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build95LuminanceBlockReaderAngle-8               	 2861650	       775.9 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build95LuminanceBlockReaderAngle-8               	 2753751	       899.8 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build95LuminanceBlockReaderAngle-8               	 3004417	       946.8 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build95LuminanceBlockReaderAngle-8               	 3027481	       787.8 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build95LuminanceBlockReaderAngle-8               	 3062496	       714.4 ns/op	       0 B/op	       0 allocs/op
+BenchmarkExperimentalV4Build95LuminancePlanePreparation-8               	     290	   8197839 ns/op	21335431 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build95LuminancePlanePreparation-8               	     289	   7933429 ns/op	21335525 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build95LuminancePlanePreparation-8               	     297	   9929626 ns/op	21334771 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build95LuminancePlanePreparation-8               	     291	  10937345 ns/op	21335336 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build95LuminancePlanePreparation-8               	     280	   9110086 ns/op	21336428 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build95RetainedSizeLuminancePlanePreparation-8   	      42	  57931331 ns/op	 825.17 MB/s	127475781 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build95RetainedSizeLuminancePlanePreparation-8   	      42	  51294223 ns/op	 931.94 MB/s	127475781 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build95RetainedSizeLuminancePlanePreparation-8   	      54	  53867963 ns/op	 887.41 MB/s	127475780 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build95RetainedSizeLuminancePlanePreparation-8   	      43	  48197507 ns/op	 991.82 MB/s	127475786 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build95RetainedSizeLuminancePlanePreparation-8   	      48	  43205165 ns/op	1106.42 MB/s	127475778 B/op	       2 allocs/op
+BenchmarkExperimentalV4Build95Build84Continuation-8                     	     855	   2834243 ns/op	   28672 B/op	       1 allocs/op
+BenchmarkExperimentalV4Build95Build84Continuation-8                     	     858	   3115973 ns/op	   28672 B/op	       1 allocs/op
+BenchmarkExperimentalV4Build95Build84Continuation-8                     	     754	   3023249 ns/op	   28672 B/op	       1 allocs/op
+BenchmarkExperimentalV4Build95Build84Continuation-8                     	     698	   3020200 ns/op	   28672 B/op	       1 allocs/op
+BenchmarkExperimentalV4Build95Build84Continuation-8                     	     789	   3391838 ns/op	   28672 B/op	       1 allocs/op
+BenchmarkExperimentalV4Build95LuminanceContinuation-8                   	    1308	   1781122 ns/op	   28672 B/op	       1 allocs/op
+BenchmarkExperimentalV4Build95LuminanceContinuation-8                   	    1687	   1641196 ns/op	   28672 B/op	       1 allocs/op
+BenchmarkExperimentalV4Build95LuminanceContinuation-8                   	    1561	   1994553 ns/op	   28672 B/op	       1 allocs/op
+BenchmarkExperimentalV4Build95LuminanceContinuation-8                   	    1527	   1727628 ns/op	   28672 B/op	       1 allocs/op
+BenchmarkExperimentalV4Build95LuminanceContinuation-8                   	    1434	   1721252 ns/op	   28672 B/op	       1 allocs/op
+PASS
+ok  	github.com/pj/pixseal/watermark	101.280s
+Build95 exact Gen4 luminance-plane benchmark written to:
+  v4-phone private/build95-benchmark/build95-benchmark.txt
+  v4-phone private/build95-benchmark/build95-benchmark.tsv
+  v4-phone private/build95-benchmark/build95-benchmark.md
+  v4-phone private/build95-benchmark/build95-fixture-test.txt
+  v4-phone private/build95-benchmark/build95-race-test.txt
+  v4-phone private/build95-benchmark/build95-metadata.txt
+Build95 benchmark gate: PASS (semantic/race correctness only; review performance before paired physical profiling)

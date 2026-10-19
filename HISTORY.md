@@ -1,3 +1,21 @@
+## v0.3.0-build95 — exact generation-four luminance-plane candidate
+
+Build94 completed the required post-promotion profile of unchanged qualified Build93. Its low-overhead pass measured B/mild at 80,152 ms deep total (57,175 ms geometry, 17,463 ms gen4, 12,511 ms qualification, 10,251 ms decode) and B/angle at 178,627 ms (176,938 ms geometry, 106,635 ms gen4, 1,453 ms qualification, no protected decode). All frozen semantic counters remained exact.
+
+The separate B/angle profile sampled 1,384.63 CPU-s. Generation 4 accounted for 920.46 CPU-s cumulative (66.48%), continuation4 for 459.29 CPU-s and the exact Build84 continuation4 reader for 456.30 CPU-s (32.95% of the complete profile). Major pools already used all eight logical CPUs, so another outer scheduling change was not justified. Qualification and protected decode were also not B/angle targets.
+
+Build95 therefore tests one bounded structural amortization. Immediately before generation 4, it computes the exact historical RGB-to-luminance expression once for every pixel in the immutable work plane. Only continuation4 FoldScore projective reads use this `float64` plane; mapping, bounds, clamping, bilinear interpolation and DCT accumulation retain their exact order. Prefix1, gen2, gen3, generation-four single/pair probes, bank order, Build90 qualification and Build93 protected decode are untouched.
+
+The additional plane is capped at 128 MiB using public dimensions only. The retained 3464x4600 work image needs 127,475,200 bytes (about 121.57 MiB); over-cap or invalid planes fall back to the unchanged Build84 reader. No secret or correctness signal can affect this choice. Build95 adds bit-exact kernel/bank tests, a targeted shared-plane race fixture, a public benchmark and a contemporaneous Build93/Build95 AB/BA retained profiler. It remains an unqualified candidate; normal `v4-extract-phone` remains Build93.
+
+## v0.3.0-build94 — completed qualified Build93 post-promotion pipeline observability
+
+Build93 is qualified and its production-entry-point integration is closed. Because protected-residue reuse materially reduced B/mild decode, the Build92 priority map taken on Build90 was no longer authoritative. Build94 deliberately changed no recovery algorithm and re-measured the current qualified Build93 deep path before selecting a later optimization.
+
+The Go 1.26.0 source and profile gates passed. B/mild measured 80,152 ms deep total: 57,175 ms geometry (71.33%), 21,768 ms freeze, 9,906 ms gen3, 17,463 ms gen4, 12,511 ms qualification and 10,251 ms decode. B/angle measured 178,627 ms: 176,938 ms geometry (99.05%), 20,536 ms freeze, 36,072 ms gen3, 106,635 ms gen4, 1,453 ms qualification and zero decode.
+
+The separate CPU profiles localized the new target without contaminating those wall-time rows. On B/angle, generation 4 was 920.46 of 1,384.63 CPU-s and the Build84 continuation4 reader was 456.30 CPU-s. On B/mild, the same reader was only 51.60 of 513.24 CPU-s, while Build93 protected sampling remained 69.82 CPU-s. The evidence selected Build95 exact generation-four luminance-plane reuse as a benchmark-first candidate. Build94 remains observability-only and Build93 remains the current qualified baseline.
+
 ## v0.3.0-build93 — qualified exact protected-residue reuse baseline
 
 Build92 profiled the promoted Build90 pipeline and found B/mild protected decode dominated by repeated projective sampling: 33,460 ms decode wall time, 230.14 CPU-s cumulative in `experimentalV4ReadProtectedProjectiveMargins`, and only 5.81 CPU-s in Build42 list decode. Build93 therefore makes one narrow post-freeze change: each already-qualified candidate samples the protected projective grid once into the exact historical residue sums/counts, then derives Robust, Balanced and Capacity margins from those immutable residues in unchanged logical order. Geometry, Build90 ordered-parallel qualification, candidate ordering, list/HMAC ordering and wire/security semantics remain unchanged.
@@ -7,6 +25,8 @@ The qualified Go 1.26.0 public benchmark passed with exactness/race clean: singl
 Two independent retained physical matrices then passed the complete 9/9 semantic gate. B/mild remained exactly `79,259 / 937 / 935 / 691 / 2,120,047`, physical decode `696`, speculative `5`, HMAC/payload PASS, with `696` protected sampling passes and `2,086` profile derivations in both runs. Run1/run2 B/mild deep totals were 97,913 / 75,704 ms and decode 12,878 / 9,879 ms. Their means are 86,808.5 ms deep (**-26.50%, 1.361x** versus the Build90 paired reference 118,104 ms) and 11,378.5 ms decode (**-65.99%, 2.941x** versus the Build92 Build90 measurement 33,460 ms). B/angle remained `334,857 / 6,198 / 0`, REJECT, with zero protected sampling; its large cross-run geometry variation is retained as host-drift evidence and is not attributed to Build93.
 
 **Decision: PROMOTED. Build93 is the current qualified smartphone baseline; Build90 becomes the previous qualified baseline.** Normal `v4-extract-phone` now uses Build93. The explicit `v4-extract-phone-build93` entry point is retained as a pinned regression/requalification alias.
+
+The post-promotion consolidation removes the duplicated normal-command decoder body: `ExperimentalV4ExtractPhone` now delegates directly to the unchanged, physically qualified `ExperimentalV4ExtractPhoneBuild93Candidate` implementation. The retained physical target runs the normal production command, writes a separate integration artifact and records the selected entry point. On 2026-10-16 the qualified Go 1.26.0 source gate passed and the normal `v4-extract-phone` command completed the full 9/9 matrix with exact semantic telemetry. Metadata confirmed `gate_purpose=production-entrypoint-integration`, `entrypoint=v4-extract-phone`, Build93/Build90 qualified/previous baselines, nine cases and the executable SHA-256. This closes only rewiring/integration risk and does not reinterpret the two-run algorithm qualification.
 
 ## v0.3.0-build92 — post-promotion Build90 pipeline observability
 

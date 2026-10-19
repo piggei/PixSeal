@@ -1,3 +1,25 @@
+## v0.3.0-build95 — exact generation-four luminance-plane candidate
+
+- Close Build94 as qualified-host observability PASS while keeping Build93 as the current qualified smartphone runtime.
+- Record Build94 low-overhead timing: B/mild `80,152` ms deep / `57,175` geometry / `17,463` gen4 / `12,511` qualification / `10,251` decode; B/angle `178,627` ms deep / `176,938` geometry / `106,635` gen4 / `1,453` qualification / `0` decode.
+- Record Build94 CPU attribution: B/angle generation 4 `920.46` CPU-s cumulative (`66.48%`) and exact Build84 continuation4 reader `456.30` CPU-s (`32.95%`); B/mild reader share is `51.60` CPU-s (`10.05%`).
+- Add Build95 exact full-work-image `float64` luminance preparation immediately before generation 4, used only by continuation4 FoldScore projective reads. Preserve the historical RGB-to-luminance expression bit-for-bit and retain mapPoint, bounds, clamp, bilinear and DCT order.
+- Add a deterministic 128 MiB additional-plane cap based only on public image dimensions. Over-cap or invalid plane inputs fall back to the unchanged Build84 continuation4 reader without changing task/order semantics.
+- Leave freeze, prefix1, gen2, gen3, generation-four single/pair probes, bank ordering, Build90 ordered qualification, Build93 protected residue reuse, ordered batch consumption and first-logical-HMAC unchanged.
+- Add bit-exact luminance, block-reader, FoldScore, continuation, generation-four and complete blind-bank equality tests plus a targeted shared-plane race fixture.
+- Add the explicit `v4-extract-phone-build95` research command and Build95-only telemetry; normal `v4-extract-phone` and the pinned Build93 alias remain on qualified Build93.
+- Add a public same-session benchmark target and a retained B/mild/B/angle contemporaneous Build93/Build95 AB/BA profiler. Build95 remains candidate-only until performance evidence is reviewed; any promotion still requires two independent complete Go 1.26.0 9/9 physical PASS runs.
+
+## v0.3.0-build94 — completed qualified Build93 post-promotion pipeline profiling
+
+- Keep Build93 unchanged as the current qualified and integration-closed smartphone runtime; Build94 introduces no recovery algorithm and is not promotable.
+- Complete the Go 1.26.0 source gate and retained profile with exact semantic counters and `Build94 profiling gate: PASS`.
+- Measure B/mild at `80,152` ms deep total: `57,175` geometry (`71.33%`), `21,768` freeze, `9,906` gen3, `17,463` gen4, `12,511` qualification and `10,251` decode.
+- Measure B/angle at `178,627` ms deep total: `176,938` geometry (`99.05%`), `20,536` freeze, `36,072` gen3, `106,635` gen4, `1,453` qualification and no decode.
+- Preserve B/mild `79,259/937/1,872/935/691/2,120,047`, physical/speculative `696/5`, `696` sampling passes and `2,086` derivations; preserve B/angle `334,857/6,198/6,198/0`, `118,004` FoldScores and `151,045,120` block reads.
+- Localize B/angle CPU to generation 4 (`920.46` of `1,384.63` CPU-s) and the Build84 continuation4 reader (`456.30` CPU-s), while qualification is only `10.06` CPU-s.
+- Freeze the non-sensitive result under `docs/qualified-baselines/build94-profile-summary.tsv` and select one bounded Build95 hypothesis: exact generation-four luminance-plane reuse. Do not reopen unrelated scheduling, qualification or protected-decode changes.
+
 ## v0.3.0-build93 — qualified exact protected-residue reuse baseline
 
 - Close Build92 as observability-only PASS and retain its Build90 timing/CPU evidence that selected protected residue reuse.
@@ -9,6 +31,8 @@
 - Record B/mild physical run1/run2 deep totals 97,913 / 75,704 ms and decode 12,878 / 9,879 ms. Two-run mean deep time is 86,808.5 ms (**-26.50%, 1.361x** versus Build90 paired 118,104 ms); mean decode is 11,378.5 ms (**-65.99%, 2.941x** versus Build92 Build90 33,460 ms).
 - **Promote Build93 as the current qualified smartphone baseline; Build90 becomes the previous qualified baseline.** Switch normal `v4-extract-phone` to Build93 while retaining `v4-extract-phone-build93` as a pinned regression/requalification alias.
 - Freeze Build93 promotion evidence in `docs/qualified-baselines/build93-phone-performance.tsv`; private images, keys, payload files and raw diagnostics remain excluded from source archives.
+- Post-promotion source consolidation: remove the duplicated normal-command decoder body and make `ExperimentalV4ExtractPhone` a narrow wrapper around the unchanged, physically qualified `ExperimentalV4ExtractPhoneBuild93Candidate` implementation. The qualified algorithm and telemetry are unchanged.
+- Change the Build93 physical target to exercise normal `v4-extract-phone`, publish into `v4-phone private/build93-production-integration/`, and record non-sensitive run metadata including entry point and executable SHA-256. The qualified Go 1.26.0 post-promotion gate completed on 2026-10-16 with source/exactness/race/CLI/version/vet PASS, production entry point 9/9 PASS, exact deep telemetry, and metadata confirming `entrypoint=v4-extract-phone`; Build93 integration is closed and Build94 observability work is unblocked.
 
 ## v0.3.0-build92 — qualified Build90 post-promotion pipeline profiling
 

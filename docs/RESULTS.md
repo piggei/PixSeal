@@ -1,6 +1,29 @@
+## Build95 candidate selected from completed Build94 profile — 2026-10-16
+
+Build94 completed on the qualified Go 1.26.0 host with source and profiling gates PASS. Its low-overhead timing rows preserved all Build93 semantic invariants:
+
+| case | deep total | geometry | geometry share | freeze | gen3 | gen4 | qualification | decode |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| B/mild | 80,152 ms | 57,175 ms | 71.33% | 21,768 | 9,906 | 17,463 | 12,511 | 10,251 |
+| B/angle | 178,627 ms | 176,938 ms | 99.05% | 20,536 | 36,072 | 106,635 | 1,453 | 0 |
+
+B/mild remained `79,259 / 937 / 1,872 / 935 / 691 / 2,120,047`, physical/speculative `696/5`, with `696` protected sampling passes, `2,086` derivations and payload/HMAC PASS. B/angle remained `334,857 / 6,198 / 6,198 / 0`, `118,004` FoldScores, `151,045,120` block reads and REJECT.
+
+The separate profiles localized the next candidate without polluting those wall times. B/angle sampled 1,384.63 CPU-s: generation 4 was 920.46 CPU-s cumulative (66.48%), continuation4 459.29 CPU-s (33.17%), and the exact Build84 continuation4 reader 456.30 CPU-s (32.95%). Qualification was only 10.06 CPU-s. B/mild sampled 513.24 CPU-s: generation 4 was 135.96 CPU-s and the Build84 reader 51.60 CPU-s (10.05%).
+
+**Decision:** select Build95 Exact Gen4 Luminance Plane as one bounded benchmark-first candidate. It precomputes the exact historical `float64` RGB-to-luminance expression once immediately before generation 4 and uses it only in continuation4 projective reads. The retained 3464x4600 work image requires 127,475,200 additional bytes (121.57 MiB); a 128 MiB public-dimension cap selects unchanged Build84 fallback above that bound. Build93 remains qualified. Public source/race and same-session benchmark evidence must be reviewed before the private paired profile is run.
+
+## Build94 qualified Build93 post-promotion profile — completed PASS
+
+Build94 is closed observability-only PASS. The source-controlled non-sensitive result is `docs/qualified-baselines/build94-profile-summary.tsv`; raw `.pprof`, test binary, private corpus and diagnostic logs remain outside source archives. The profile replaces Build92 as the current priority map but does not change the runtime baseline.
+
 # Build93 qualified result — 2026-10-13
 
 Build93 is the current qualified smartphone baseline. Qualified Go 1.26.0 source/exactness/race gates passed; the public benchmark measured 44.439 -> 10.236 ms/op for one Capacity candidate (**4.341x, -76.97%**) and 49.443 -> 22.324 ms/op for batch8 (**2.215x, -54.85%**). Two independent retained physical matrices then passed exact 9/9 semantics. B/mild stayed `79,259 / 937 / 935 / 691 / 2,120,047`, physical/speculative `696/5`, HMAC/payload PASS, with `696` protected sampling passes and `2,086` derivations in each run. Run1/run2 deep totals were 97,913 / 75,704 ms and decode 12,878 / 9,879 ms; the two-run mean is 86,808.5 ms deep (**-26.50%, 1.361x** versus Build90 paired 118,104 ms) and 11,378.5 ms decode (**-65.99%, 2.941x** versus Build92 Build90 33,460 ms). B/angle remains `334,857 / 6,198 / 0` and REJECT with zero protected sampling. Build90 is now the previous qualified baseline.
+
+Post-promotion source consolidation does not change those qualified results: the normal entry point delegates directly to the unchanged pinned Build93 implementation. The separate qualified Go 1.26.0 production-entry-point confirmation completed on 2026-10-16 with 9/9 PASS through normal `v4-extract-phone`, exact telemetry equivalence on every case, and metadata confirming `gate_purpose=production-entrypoint-integration`, `entrypoint=v4-extract-phone`, Build93 as qualified baseline, Build90 as previous baseline, and nine cases. Build93 integration is closed; this run is wiring evidence, not a third promotion-performance sample.
+
+The integration run retained B/mild `79,259 / 937 / 1,872 / 935 / 691 / 2,120,047`, physical/speculative `696/5`, `696` protected sampling passes, `2,086` derivations and HMAC/payload PASS. Its diagnostic timing was 102,586 ms deep, 74,394 ms geometry, 15,658 ms qualification and 12,249 ms decode. B/angle retained `334,857 / 6,198 / 6,198 / 0`, zero protected sampling and expected REJECT; timing was 223,318 ms deep and is not used as promotion evidence. The non-sensitive matrix is frozen in `docs/qualified-baselines/build93-production-integration.tsv`.
 
 ## v0.3.0-build93 qualified-host benchmark and physical-gate decision
 

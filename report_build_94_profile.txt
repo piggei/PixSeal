@@ -1,0 +1,25 @@
+=== RUN   TestExperimentalV4Build94RetainedTimingProfile
+build94-header	image	outcome	prepare_ms	wall_ms	total_ms	geometry_ms	geometry_plane_ms	freeze_ms	prefix1_ms	gen2_ms	gen3_ms	gen4_ms	prefix1_worker_ms	gen2_worker_ms	gen3_worker_ms	gen4_worker_ms	geometry_accounted_ms	geometry_unaccounted_ms	post_plane_ms	qualification_ms	decode_ms	post_accounted_ms	total_accounted_ms	total_unaccounted_ms	geometry_evals	bank	qualification_evals	qualified	decode_candidates	list_frames	physical_decode	speculative_decode	physical_profiles	physical_list_frames	protected_sampling_passes	protected_profile_derivations	sampling_worker_ms	list_worker_ms	authenticated	prefix1_workers	gen2_workers	gen3_workers	gen4_workers	gen2_tasks	gen3_tasks	gen4_tasks	qualification_workers	qualification_tasks	decode_workers	fold_scores	block_reads	block_success	block_failed
+build94-prepare	phone-b-mild.jpg	10072
+build94-row	phone-b-mild.jpg	accept	10072	80152	80152	57175	212	21768	3532	4290	9906	17463	19182	27154	77424	138116	57175	0	214	12511	10251	22977	80152	0	79259	937	1872	935	691	2120047	696	5	2086	2135407	696	2086	70681	4775	true	8	8	8	8	93	275	593	8	937	8	16496	21114880	21114880	0
+build94-prepare	phone-b-angle.jpg	10986
+build94-row	phone-b-angle.jpg	reject	10986	178627	178627	176938	230	20536	5132	8326	36072	106635	22767	57803	279861	851038	176934	3	236	1453	0	1689	178627	0	334857	6198	6198	0	0	0	0	0	0	0	0	0	0	0	false	8	8	8	8	106	542	1902	8	6198	0	118004	151045120	149370664	1674456
+--- PASS: TestExperimentalV4Build94RetainedTimingProfile (292.91s)
+PASS
+=== RUN   TestExperimentalV4Build94CPUProfile
+build94-cpu-row	phone-b-mild.jpg	9756	80350	80350	57284	12579	10273	70350	4778	696	2086	/home/pj/repo/pixseal/v4-phone private/.build94-profile.build94.L9lzb5/build94-b-mild.pprof
+--- PASS: TestExperimentalV4Build94CPUProfile (96.72s)
+PASS
+=== RUN   TestExperimentalV4Build94CPUProfile
+build94-cpu-row	phone-b-angle.jpg	10976	191994	191994	190372	1391	0	0	0	0	0	/home/pj/repo/pixseal/v4-phone private/.build94-profile.build94.L9lzb5/build94-b-angle.pprof
+--- PASS: TestExperimentalV4Build94CPUProfile (209.47s)
+PASS
+Build94 qualified Build93 post-promotion profile written to:
+  v4-phone private/build94-profile/build94-pipeline.tsv
+  v4-phone private/build94-profile/build94-pipeline.md
+  v4-phone private/build94-profile/build94-b-mild.pprof
+  v4-phone private/build94-profile/build94-b-angle.pprof
+  v4-phone private/build94-profile/build94-b-mild-pprof-top.txt / -cum.txt / phase-focused reports / -list.txt
+  v4-phone private/build94-profile/build94-b-angle-pprof-top.txt / -cum.txt / phase-focused reports / -list.txt
+  v4-phone private/build94-profile/build94-metadata.txt
+Build94 profiling gate: PASS

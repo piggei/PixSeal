@@ -1,0 +1,6 @@
+Running Build95 exact Gen4 luminance-plane regressions...
+ok  	github.com/pj/pixseal/watermark	61.877s
+ok  	github.com/pj/pixseal/watermark	2.036s
+ok  	github.com/pj/pixseal/cmd/pixseal	0.004s
+Checking VERSION/buildinfo consistency...
+ok  	github.com/pj/pixseal/internal/buildinfo	0.002s

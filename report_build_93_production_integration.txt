@@ -1,0 +1,9 @@
+Selected Go toolchain: go1.26.0
+Building PixSeal with go1.26.0...
+Created dist/pixseal
+Build93 staged result: controls=3/3 A/front=1/1 A/mild=1/1 A/angle=1/1 B/front=1/1 B/mild=1/1 B/angle-reject=1/1
+Build93 exact protected-residue reuse matrix written to:
+  v4-phone private/build93-production-integration/build93-phone-residue-reuse.tsv
+  v4-phone private/build93-production-integration/build93-phone-residue-reuse.md
+  v4-phone private/build93-production-integration/build93-phone-run-metadata.txt
+Build93 semantic-equivalence physical gate: PASS entrypoint=v4-extract-phone purpose=production-entrypoint-integration

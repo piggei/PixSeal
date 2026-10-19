@@ -137,7 +137,23 @@ The changed B/mild decode phase improves from the Build92 Build90 measurement 33
 
 ## Qualified runtime routing
 
-Normal `v4-extract-phone` now uses Build93 for the final deep fallback. The explicit `v4-extract-phone-build93` command is retained as a pinned Build93 regression/requalification alias. All earlier direct Build41/42/43 and residual fallback ordering remains unchanged.
+Normal `v4-extract-phone` uses Build93 for the final deep fallback. The explicit `v4-extract-phone-build93` command remains a pinned Build93 regression/requalification alias. All earlier direct Build41/42/43 and residual fallback ordering remains unchanged.
+
+Post-promotion consolidation keeps the physically qualified `ExperimentalV4ExtractPhoneBuild93Candidate` body unchanged and makes `ExperimentalV4ExtractPhone` a narrow wrapper around it. Before consolidation the two bodies were source-equivalent; the cleanup deletes only the duplicate production body and does not rewrite the algorithm.
+
+The physical harness can identify either accepted entry point, records it in `build93-phone-run-metadata.txt`, and never records key or payload values. The Makefile physical target deliberately selects normal `v4-extract-phone` and publishes into `v4-phone private/build93-production-integration/` so the two historical promotion runs are not overwritten.
+
+The historical two-run qualification remains authoritative. The additional qualified Go 1.26.0 production-command pass completed on 2026-10-16 with 9/9 PASS, exact semantic telemetry and metadata confirming normal `v4-extract-phone`. It closes post-promotion wiring/integration risk only. See [`V4_BUILD93_POST_PROMOTION_CONSOLIDATION.md`](V4_BUILD93_POST_PROMOTION_CONSOLIDATION.md).
+
+Qualified-host commands:
+
+```bash
+make clean
+GOTOOLCHAIN=go1.26.0 make v4-build93-residue-reuse-test
+GOTOOLCHAIN=go1.26.0 make v4-build93-phone-production-integration-test
+```
+
+The backward-compatible `make v4-build93-phone-physical-test` target runs the same production-entry-point integration gate.
 
 ## Promotion decision
 
@@ -152,4 +168,4 @@ Build93 satisfied every promotion requirement:
 
 **Decision: PROMOTED. Build93 is the current qualified smartphone baseline; Build90 becomes the previous qualified baseline.**
 
-Frozen numeric evidence is stored in `docs/qualified-baselines/build93-phone-performance.tsv`. Private images, keys, payload files and raw diagnostic logs are not shipped in source archives.
+Frozen promotion evidence is stored in `docs/qualified-baselines/build93-phone-performance.tsv`; the non-sensitive production-entry-point confirmation is stored separately in `docs/qualified-baselines/build93-production-integration.tsv`. Private images, keys, payload files and raw diagnostic logs are not shipped in source archives. Build93 is promoted and its post-promotion integration is closed; Build94 must begin as observability-only profiling before any new optimization is selected.

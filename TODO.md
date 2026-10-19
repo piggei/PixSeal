@@ -13,6 +13,16 @@
 - [x] Switch normal `v4-extract-phone` to Build93 and retain the explicit Build93 command for regression/requalification.
 - [x] Freeze promotion evidence under `docs/qualified-baselines/` without including the private corpus.
 
+## Build93 post-promotion consolidation
+
+- [x] Replace the duplicated production/alias decoder bodies with the retained qualified Build93 implementation.
+- [x] Keep `v4-extract-phone-build93` pinned to that implementation for historical regression/requalification.
+- [x] Make the Build93 physical target exercise normal `v4-extract-phone` and publish into a separate production-integration directory.
+- [x] Record entry point, gate purpose, requested toolchain and executable SHA-256 in the physical artifact without recording key or payload.
+- [x] Run the qualified Go 1.26.0 source gate on the consolidated package: exactness/race/CLI/version/vet target PASS.
+- [x] Complete one retained 9/9 production-entry-point integration PASS through normal `v4-extract-phone` and archive its report/diagnostics.
+- [x] Verify exact B/mild/B/angle telemetry plus integration metadata and mark Build93 integration closed on 2026-10-16.
+
 ## Build92 checkpoint — closed profiling PASS
 
 - [x] Keep Build90 unchanged as the current qualified smartphone baseline; make no Build92 runtime algorithm change.
@@ -35,13 +45,39 @@
 - [x] Freeze exact paired evidence and Build90 promotion reference under `docs/qualified-baselines/`.
 - [x] Keep Build91 observability-only; it cannot become the runtime baseline.
 
-## Build94+ next work
+## Build94 checkpoint — completed qualified Build93 post-promotion observability PASS
 
-- [ ] Start every future smartphone optimization from **qualified Build93**, including Build90 ordered-parallel qualification, Build84 exact RGB reader behavior and Build93 protected-residue reuse.
-- [ ] Re-profile qualified Build93 before selecting Build94; Build92 timing predates the Build93 decode reduction and must not be reused as the new priority map.
-- [ ] Keep B/angle geometry/gen4 as a measured concern, but do not reopen the exhausted Build80-88 reader micro-optimization line without new evidence.
-- [ ] Preserve the complete geometry freeze barrier and ordered qualification/decode commit; secret key, payload, ECC and HMAC must not guide geometry or scheduling.
-- [ ] Require exact semantic equivalence plus at least two independent Go 1.26.0 physical PASS runs for any runtime candidate that would supersede Build93.
+- [x] Start from qualified and integration-closed Build93, including Build90 ordered-parallel qualification, Build84 exact RGB reader behavior and Build93 protected-residue reuse.
+- [x] Add Build94 as observability-only; make no production/runtime algorithm change.
+- [x] Separate one low-overhead B/mild/B/angle timing pass from later CPU-profile passes.
+- [x] Hard-gate the frozen semantic telemetry plus Build93 physical profiles/list frames and `696/2086` B/mild sampling/derivation invariants.
+- [x] Add flat/cumulative and focused geometry/gen3/gen4/continuation4/FoldScore/qualification/Build93 decode/reuse/list-decode reports.
+- [x] Add atomic private staging, retained symbolizable test binary, source hashes and qualified-host commands.
+- [x] Run `make v4-build94-qualified-pipeline-test` on the qualified Go 1.26.0 host: PASS.
+- [x] Run `make v4-build94-qualified-pipeline-profile` and archive the complete profile: PASS.
+- [x] Measure B/mild `80,152` ms deep: geometry `57,175`, gen4 `17,463`, qualification `12,511`, decode `10,251`.
+- [x] Measure B/angle `178,627` ms deep: geometry `176,938`, gen4 `106,635`, qualification `1,453`, decode `0`.
+- [x] Localize B/angle CPU to generation 4 `920.46/1,384.63` CPU-s and Build84 continuation4 reader `456.30` CPU-s; all major pools already use eight workers.
+- [x] Freeze a non-sensitive summary under `docs/qualified-baselines/build94-profile-summary.tsv`.
+- [x] Select Build95 exact generation-four luminance-plane reuse; do not change qualification/protected decode or reopen unrelated reader micro-rewrites.
+- [x] Preserve the complete geometry freeze barrier and ordered qualification/decode commit; secret key, payload, ECC and HMAC do not guide geometry or scheduling.
+
+## Build95 checkpoint — exact generation-four luminance-plane candidate
+
+- [x] Start from the completed Build94 profile and keep Build93 as the current qualified smartphone baseline.
+- [x] Select one bounded structural target from new evidence: B/angle generation 4 is 106,635 ms / 66.48% sampled CPU, and the exact Build84 continuation4 reader is 456.30 CPU-s / 32.95% of the complete profile.
+- [x] Precompute the exact historical `float64` RGB-to-luminance expression once immediately before generation 4 and reuse it only in continuation4 FoldScore reads.
+- [x] Keep freeze, prefix1, gen2, gen3, generation-four single/pair probes, bank order, Build90 qualification and Build93 protected decode unchanged.
+- [x] Add a deterministic 128 MiB public-dimension cap and exact Build84 fallback; no key, payload, ECC, HMAC or correctness signal may affect the choice.
+- [x] Add bit-exact luminance, projective block, FoldScore, continuation, generation-four and complete blind-bank equivalence tests.
+- [x] Add a targeted shared immutable-plane race fixture, candidate-only telemetry and explicit `v4-extract-phone-build95`; keep normal `v4-extract-phone` on Build93.
+- [x] Add a public repeated reader/continuation/preparation benchmark and atomic artifact staging.
+- [x] Add a contemporaneous Build93/Build95 retained AB/BA profiler for B/mild and B/angle with exact pairwise semantic gates.
+- [ ] Run `make v4-build95-gen4-luminance-test` on the qualified Go 1.26.0 host and archive the report.
+- [ ] Run `make v4-build95-gen4-luminance-benchmark`, archive the complete benchmark directory and review all repeated samples.
+- [ ] Run `make v4-build95-paired-profile` only if the public benchmark shows a material stable gain that plausibly repays plane preparation and 121.57 MiB additional memory on the retained work image.
+- [ ] Open two independent complete 9/9 candidate physical gates only if both paired orderings show a directionally stable material geometry/gen4 improvement with exact semantics.
+- [ ] Do not promote or rewire the normal command before every required gate passes; close Build95 as exact/non-promoted if performance or memory trade-off is not compelling.
 
 ## Build89 checkpoint — closed profiling PASS
 

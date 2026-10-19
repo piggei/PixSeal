@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"image"
 	"math"
+	"reflect"
 	"sync"
 	"testing"
 )
@@ -65,6 +66,36 @@ func experimentalV4Build93AssertDecodeEqual(t *testing.T, want experimentalV4Pho
 	}
 	if !bytes.Equal(want.payload, g.payload) || want.info != g.info || want.profiles != g.profiles || want.frames != g.frames || math.Float64bits(want.maxConfidence) != math.Float64bits(g.maxConfidence) {
 		t.Fatalf("decode semantic mismatch\nhistorical=%+v\nbuild93=%+v", want.experimentalV4PhoneBuild66DecodeResult, g.experimentalV4PhoneBuild66DecodeResult)
+	}
+}
+
+func TestExperimentalV4Build93PublicEntrypointsShareQualifiedValidation(t *testing.T) {
+	validImage := image.NewRGBA(image.Rect(0, 0, 16, 16))
+	cases := []struct {
+		name   string
+		src    image.Image
+		key    []byte
+		width  int
+		height int
+	}{
+		{name: "nil-image", src: nil, key: []byte("Build93-Key"), width: 1632, height: 1632},
+		{name: "short-key", src: validImage, key: []byte("short"), width: 1632, height: 1632},
+		{name: "invalid-canonical", src: validImage, key: []byte("Build93-Key"), width: 288, height: 248},
+	}
+	for _, tc := range cases {
+		t.Run(tc.name, func(t *testing.T) {
+			productionPayload, productionInfo, productionPhone, productionErr := ExperimentalV4ExtractPhone(tc.src, tc.key, tc.width, tc.height)
+			aliasPayload, aliasInfo, aliasPhone, aliasErr := ExperimentalV4ExtractPhoneBuild93Candidate(tc.src, tc.key, tc.width, tc.height)
+			if !bytes.Equal(productionPayload, aliasPayload) || !reflect.DeepEqual(productionInfo, aliasInfo) || !reflect.DeepEqual(productionPhone, aliasPhone) {
+				t.Fatalf("Build93 public entry points diverged on %s", tc.name)
+			}
+			if (productionErr == nil) != (aliasErr == nil) {
+				t.Fatalf("Build93 public entry point error outcome diverged on %s: production=%v alias=%v", tc.name, productionErr, aliasErr)
+			}
+			if productionErr != nil && productionErr.Error() != aliasErr.Error() {
+				t.Fatalf("Build93 public entry point error text diverged on %s: production=%q alias=%q", tc.name, productionErr, aliasErr)
+			}
+		})
 	}
 }
 

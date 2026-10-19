@@ -11,11 +11,17 @@ MESSAGE_A="${V4_PHONE_MESSAGE_A:-v4-b38-phone-a}"
 MESSAGE_B="${V4_PHONE_MESSAGE_B:-v4-b38-phone-b}"
 PHONE_TIMEOUT="${V4_PHONE_BUILD93_TIMEOUT:-86400}"
 BUILD90_BASELINE_TSV="${V4_PHONE_BUILD90_BASELINE_TSV:-docs/qualified-baselines/build90-phone-performance.tsv}"
+ENTRYPOINT="${V4_PHONE_BUILD93_ENTRYPOINT:-v4-extract-phone}"
+TOOLCHAIN="${PIXSEAL_GO_TOOLCHAIN:-unreported}"
 
 [[ -x "$PIXSEAL" ]] || { echo "error: PIXSEAL is not executable: $PIXSEAL" >&2; exit 1; }
 command -v timeout >/dev/null 2>&1 || { echo "error: GNU timeout is required" >&2; exit 1; }
 [[ -d "$ACQUISITION_DIR" ]] || { echo "error: phone acquisition directory not found: $ACQUISITION_DIR" >&2; exit 1; }
 [[ "$PHONE_TIMEOUT" =~ ^[0-9]+$ ]] || { echo "error: V4_PHONE_BUILD93_TIMEOUT must be an integer number of seconds" >&2; exit 1; }
+case "$ENTRYPOINT" in
+  v4-extract-phone|v4-extract-phone-build93) ;;
+  *) echo "error: V4_PHONE_BUILD93_ENTRYPOINT must be v4-extract-phone or v4-extract-phone-build93" >&2; exit 1 ;;
+esac
 
 specs=(
  "phone-control-front.jpg|control|control|-"
@@ -43,7 +49,30 @@ trap cleanup_stage EXIT
 mkdir -p "$stage_dir/logs"
 tsv="$stage_dir/build93-phone-residue-reuse.tsv"
 md="$stage_dir/build93-phone-residue-reuse.md"
+metadata="$stage_dir/build93-phone-run-metadata.txt"
 failed_output_dir="${OUTPUT_DIR}-failed"
+
+if [[ "$ENTRYPOINT" == "v4-extract-phone" ]]; then
+  gate_purpose="production-entrypoint-integration"
+else
+  gate_purpose="pinned-build93-alias-requalification"
+fi
+pixseal_sha256="-"
+if command -v sha256sum >/dev/null 2>&1; then
+  pixseal_sha256="$(sha256sum "$PIXSEAL" | awk '{print $1}')"
+fi
+{
+  echo "PixSeal Build93 exact protected-residue reuse physical gate"
+  echo "created_utc=$(date -u +%Y-%m-%dT%H:%M:%SZ)"
+  echo "gate_purpose=$gate_purpose"
+  echo "entrypoint=$ENTRYPOINT"
+  echo "qualified_baseline=Build93"
+  echo "previous_qualified_baseline=Build90"
+  echo "toolchain=$TOOLCHAIN"
+  echo "pixseal_sha256=$pixseal_sha256"
+  echo "canonical=${CANONICAL_WIDTH}x${CANONICAL_HEIGHT}"
+  echo "case_count=${#specs[@]}"
+} > "$metadata"
 
 header=(image class role build64_evals build64_bank build64_qualified build64_decode build64_frames build64_authenticated build68_physical_decode build68_speculative build68_physical_profiles build68_physical_list_frames build84_attempted build90_attempted qualification_workers qualification_tasks qualification_evaluations qualification_ms build93_attempted protected_sampling_passes protected_profile_derivations fetch_fold_scores fetch_block_reads fetch_block_success fetch_block_failed hmac payload_match telemetry_equivalent qualification exit_code elapsed_ms deep_total_ms geometry_ms decode_ms build90_reference_total_ms speedup_vs_build90 gate_reason)
 (IFS=$'\t'; echo "${header[*]}") > "$tsv"
@@ -58,7 +87,7 @@ for spec in "${specs[@]}"; do
   log="$stage_dir/logs/$stem.stderr.txt"; payload_file="$stage_dir/logs/$stem.payload.bin"
   start_ns="$(date +%s%N)"
   set +e
-  timeout --foreground "${PHONE_TIMEOUT}s" "$PIXSEAL" v4-extract-phone-build93 -in "$input" -key "$KEY" -width "$CANONICAL_WIDTH" -height "$CANONICAL_HEIGHT" -raw >"$payload_file" 2>"$log"
+  timeout --foreground "${PHONE_TIMEOUT}s" "$PIXSEAL" "$ENTRYPOINT" -in "$input" -key "$KEY" -width "$CANONICAL_WIDTH" -height "$CANONICAL_HEIGHT" -raw >"$payload_file" 2>"$log"
   rc=$?
   set -e
   end_ns="$(date +%s%N)"; elapsed_ms=$(( (end_ns-start_ns)/1000000 ))
@@ -167,12 +196,13 @@ done
 
 {
   echo '# PixSeal Build93 exact protected-residue reuse physical matrix'; echo
-  echo 'Build93 changes only protected-data sampling after the Build90 frozen bank and ordered-parallel public-pilot qualification. Build93 is now qualified; this retained gate uses the dedicated Build93-pinned entry point for reproducible requalification.'; echo
+  echo "Entry point: \`$ENTRYPOINT\` (purpose: \`$gate_purpose\`)."; echo
+  echo 'Build93 changes only protected-data sampling after the Build90 frozen bank and ordered-parallel public-pilot qualification. The normal production entry point delegates to the retained qualified Build93 path; this gate runs the normal command.'; echo
   echo '| image | role | bank | qualified | physical decode | profiles | sampling passes | derivations | qualification ms | decode ms | deep total ms | Build90 paired ref | speedup | HMAC | telemetry eq | gate |'
   echo '|---|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|'
   awk -F '\t' 'NR==1{for(i=1;i<=NF;i++)c[$i]=i;next}{printf "| %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |\n",$c["image"],$c["role"],$c["build64_bank"],$c["build64_qualified"],$c["build68_physical_decode"],$c["build68_physical_profiles"],$c["protected_sampling_passes"],$c["protected_profile_derivations"],$c["qualification_ms"],$c["decode_ms"],$c["deep_total_ms"],$c["build90_reference_total_ms"],$c["speedup_vs_build90"],$c["hmac"],$c["telemetry_equivalent"],$c["qualification"]}' "$tsv"
   echo
-  echo 'Build93 is the current qualified smartphone baseline. This retained matrix is a reproducible requalification sample; promotion evidence is frozen separately under docs/qualified-baselines/.'
+  echo 'Build93 is the current qualified smartphone baseline. This matrix is an integration/requalification sample; promotion evidence is frozen separately under docs/qualified-baselines/.'
 } > "$md"
 rm -f "$stage_dir/logs/"*.payload.bin
 
@@ -204,4 +234,5 @@ published=true
 echo 'Build93 exact protected-residue reuse matrix written to:'
 echo "  $OUTPUT_DIR/build93-phone-residue-reuse.tsv"
 echo "  $OUTPUT_DIR/build93-phone-residue-reuse.md"
-echo 'Build93 semantic-equivalence physical gate: PASS'
+echo "  $OUTPUT_DIR/build93-phone-run-metadata.txt"
+echo "Build93 semantic-equivalence physical gate: PASS entrypoint=$ENTRYPOINT purpose=$gate_purpose"
