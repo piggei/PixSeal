@@ -1,3 +1,15 @@
+## Build99 qualified Build98 profile — completed PASS, 2026-10-23
+
+Build99 changes observability and version metadata only. Source/exactness/race/CLI/vet, frozen v3 and locked pilot gates passed. Retained low-overhead B/mild/B/angle timing and both separate CPU-profile passes preserved all frozen semantics, including Build98 Gen3 counters; B/mild authenticates and B/angle rejects. Timing-pass deep totals are 83,618 / 187,601 ms; geometry shares 72.51% / 99.08%; Gen4 18,907 / 113,604 ms. Source/corpus hashes were checked after the profile. Non-sensitive rows are frozen in `docs/qualified-baselines/build99-profile-summary.tsv` and full raw artifacts remain private.
+
+Gen4 is still the main B/angle cost, but the rejected Build95/97 reader branches remain closed. The new bounded hypothesis is ordered-parallel scoring of the six fixed public side pairs before unchanged stable sorting: the current serial `Build43PairRobustScore` costs 12.29 / 10.27 sampled CPU-s. Per-pair arithmetic, original-index commit, tie order, complete-bank freeze, qualification and protected decode must be exact. This is a candidate selection, not a demonstrated speedup or promotion. Build98 stays qualified, Build93 previous. See `docs/V4_BUILD99_QUALIFIED_BUILD98_PIPELINE_PROFILE.md` for attribution caveats and gates.
+
+## Build98 final documentation closure — 2026-10-23
+
+The handoff's Build90 qualification-file digest contained a transcription mismatch. The actual SHA-256 is `85593c945d4e2b9b4866a0bbed47b79896ceff19a86575bc30ab3c083e38351f`, identical to the versioned file; no repair to the qualified implementation was needed.
+
+Build98 remains the current qualified smartphone baseline, with Build93 previous. The previously archived Go 1.26.0 production integration completed **9/9 PASS** through normal `v4-extract-phone`. Inspection confirmed the report/ZIP checksums, nine semantic PASS rows, exact non-timing equivalence with both physical promotion runs, and current/previous/implementation metadata. The non-sensitive matrix is frozen in `docs/qualified-baselines/build98-production-integration.tsv`. This closes documentation and wiring evidence; it is not a new physical run or a third promotion-performance sample. No qualified runtime file was changed. A pre-existing Build96 TSV header had `outcome` split onto its own line; only that header was repaired, preserving every retained numeric row. New optimization priorities require a fresh profile of Build98.
+
 ## Build93 post-promotion integration closed — 2026-10-16
 
 The qualified Build93 algorithm remains unchanged. The normal `ExperimentalV4ExtractPhone` path and the explicit Build93 regression alias previously contained source-equivalent duplicate bodies; both now delegate to the retained qualified Build93 implementation. The retained physical harness records its selected entry point and the Makefile gate deliberately runs normal `v4-extract-phone` into a separate `build93-production-integration` artifact so neither historical promotion run is overwritten.
@@ -1329,3 +1341,49 @@ This rules out continuation bookkeeping, homography construction failure and acc
 The retained Go 1.26.0 Build79 physical gate passed the exact 9/9 semantic-equivalence matrix against qualified Build76. B/mild remains 79,259 geometry evaluations / 937 bank / 935 qualified / 691 logical decode / 2,120,047 logical list frames with HMAC/payload PASS; B/angle remains 334,857 / 6,198 / 0 and REJECT. Build79 measured 21,114,880 authoritative projective block reads on B/mild and 151,045,120 on B/angle. In the deterministic FoldScore sample, block reads consumed 1,041 / 1,071 ms (97.20%) on B/mild and 7,236 / 7,424 ms (97.47%) on B/angle. Post-result replay indicated bilinear luminance sampling is the largest subcomponent inside `readProjectiveBlockValue`, while mapping and DCT are smaller.
 
 Build80 therefore changes only continuation4 FoldScore block sampling. For mapped 8x8 blocks whose integer-source bounding rectangle is at most 196 pixels, it computes each exact float64 RGB-to-luminance value once into a FoldScore-local scratch cache, then performs the same bilinear interpolation and DCT accumulation order as the historical reader. Larger footprints fall back to the untouched historical block reader. The cache decision depends only on public geometry. Local regressions require bit-identical block values and FoldScore output, exact Build55 continuation states/evaluation counts, and exact complete Build80-vs-Build76 blind-bank equality. Build76 remains the qualified smartphone baseline until Build80 passes and reproduces the retained physical gate.
+
+## Build95 retained decision and Build96 profiling
+
+The Build95 paired retained gate preserved exact semantics but failed the promotion-performance criterion. The experiment is closed without a 9/9 physical promotion run. Build96 is intentionally non-algorithmic: it localizes the retained Gen4 bottleneck before any Build97 hypothesis is selected.
+
+## Build96 evidence and Build97 hypothesis
+
+Build96 answered the Build95 transfer question: retained eight-worker behavior does not preserve the local luminance-plane speedup. The branch is closed. The profile also reveals that Gen4 still has a separate historical generic sampling path in single/pair probes. Build97 is deliberately narrow: no new sampler, no LUT/cache/plane, only reuse of the already-qualified Build84 exact FoldScore fetch in single4/pair4. Public full-Gen4 benchmark decides whether retained profiling is warranted.
+
+## Build97 benchmark gate -> retained AB/BA authorization
+
+The qualified-host public benchmark contradicted the mixed packaging-host sanity run and showed a 6.66% five-sample mean gain on the full Generation4 decision metric (28.314 -> 26.427 ms/op), with smaller positive gains on both single4 and pair4. Since Build97 adds no image-sized memory and exactness/race are PASS, the next experiment is a same-session retained Build93/Build97 AB/BA comparison on B/mild and B/angle. No physical 9/9 promotion run is authorized yet.
+
+## Build97 first retained attempt — telemetry namespace failure, algorithm still candidate
+
+The first Go 1.26.0 retained B/mild comparison stopped before publication. Build97 authenticated the expected payload and matched geometry, bank, qualification and protected-decode semantics, but emitted `41,776 / 53,473,280` FoldScores/block reads versus the qualified continuation4 counters `16,496 / 21,114,880`. The delta is exactly the newly instrumented single4/pair4 workload. Decision: do not weaken the gate and do not post-hoc subtract counters. Preserve the historical Build84 counter family and add separate Build97 probe counters, then rerun the complete AB/BA profile. Partial timing from the failed attempt is not promotion evidence.
+
+
+## Build97 corrected retained replication — final decision
+
+The telemetry-remediated Build97 candidate completed two independent Build93/Build97 B/mild+B/angle AB/BA runs with exact semantics. The predeclared gate is applied without adjustment: the independent replication did not keep B/mild Gen4 favorable, and the four-pair B/angle Gen4 aggregate is neutral-to-regressive (0.980% slower pair-normalized; 1.268% slower pooled). The strong public full-Generation4 microbenchmark therefore does not justify a physical promotion campaign. Build97 is closed as not promoted; Build93 remains qualified.
+
+This negative result is informative: extending the Build84 reader into Gen4 probes reduces isolated and some retained Gen4 costs, but the end-to-end benefit is too small and unstable across retained order/run to justify promotion.
+
+## Build98 hypothesis — exact Generation3 fetch extension
+
+Existing Build94 pprof evidence identifies a distinct stage not covered by Build97. Generation3 is 76.56 CPU-s cumulative on B/mild and 285.63 CPU-s on B/angle; historical projective reading accounts for 76.19 and 283.69 CPU-s. Build98 changes only the FoldScore implementation used inside single3/pair3/continuation3/sibling3, routing those calls through the already-qualified Build84 exact RGB reader. There is no new sampler, cache, LUT, plane, image-sized allocation or CLI recovery path. Exactness/race precede a repeated public benchmark; no retained experiment is permitted unless the complete Generation3 metric is materially and directionally positive.
+
+## Build98 benchmark gate -> retained AB/BA authorization
+
+The qualified Go 1.26.0/i3-13100T source gate passed. The repeated public benchmark then showed a clean complete-Generation3 gain: historical mean `23.513 ms/op`, Build98 mean `21.304 ms/op`, `9.40%` reduction, unchanged `3 allocs/op`, and no overlap between the five historical and five candidate samples. The sibling diagnostic improved `9.54%`.
+
+**Decision.** Authorize only a contemporaneous Build93/Build98 retained AB/BA comparison on B/mild and B/angle. Add a research-only Build98 bank/recovery path that replaces only the Generation3 dispatch, leaves Generation4 and all downstream logic unchanged, preserves historical continuation4 `Fetch*` telemetry, and records new Generation3 fetch work separately. Build93 remains the qualified runtime and no Build98 physical gate is allowed before retained review.
+
+## Build98 retained decision -> physical candidate
+
+The exact retained AB/BA gate passed. The changed Generation3 phase improved in every contemporaneous pair: B/mild 4.45% / 23.48%; B/angle 5.19% / 16.47%. Historical continuation4, qualification, protected decode, HMAC and outcomes remained exact. End-to-end totals changed direction because unmodified stages continued to show host drift, so the decision follows the predeclared changed-phase criterion rather than absolute cross-stage totals.
+
+**Decision.** Add an explicit candidate entry point and an atomic nine-photo semantic gate. Require two independent Go 1.26.0 9/9 PASS runs before promotion. Normal `v4-extract-phone` stays on Build93 throughout.
+
+
+## Build98 physical promotion and production consolidation
+
+Both independent Go 1.26.0 nine-photo physical gates completed 9/9 PASS through the explicit Build98 entry point. B/mild authenticated the expected payload with exact frozen workload and B/angle remained REJECT; all control/direct-path roles and historical telemetry remained exact. The two runs used the same executable hash and added no image-sized memory.
+
+**Decision.** Promote Build98 as the current qualified smartphone baseline and mark Build93 previous. Rewire normal `v4-extract-phone` as a direct wrapper around the unchanged physically qualified Build98 implementation. Retain the explicit Build98 and Build93 aliases. Run one separate production-entry-point integration matrix after rewiring; do not count it as a third performance sample.

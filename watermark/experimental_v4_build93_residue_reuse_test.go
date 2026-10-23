@@ -69,7 +69,7 @@ func experimentalV4Build93AssertDecodeEqual(t *testing.T, want experimentalV4Pho
 	}
 }
 
-func TestExperimentalV4Build93PublicEntrypointsShareQualifiedValidation(t *testing.T) {
+func TestExperimentalV4Build93AndProductionShareValidationContract(t *testing.T) {
 	validImage := image.NewRGBA(image.Rect(0, 0, 16, 16))
 	cases := []struct {
 		name   string

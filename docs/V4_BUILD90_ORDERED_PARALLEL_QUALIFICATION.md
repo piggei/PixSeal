@@ -1,6 +1,6 @@
 # Format-v4 Build90 — ordered-parallel qualification
 
-Build90 is the **previous qualified smartphone baseline**; Build93 now supersedes it. It is the scheduling-only performance successor selected from the full-pipeline Build89 retained-corpus profile and promoted after public benchmark/race evidence, three independent full physical semantic PASS runs, and the contemporaneous Build91 AB/BA paired physical decision.
+Build90 is an **earlier qualified smartphone baseline**, superseded by Build93 and then Build98. It is the scheduling-only performance successor selected from the full-pipeline Build89 retained-corpus profile and promoted after public benchmark/race evidence, three independent full physical semantic PASS runs, and the contemporaneous Build91 AB/BA paired physical decision.
 
 ## Why Build90
 

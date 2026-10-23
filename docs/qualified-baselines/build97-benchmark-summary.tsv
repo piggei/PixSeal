@@ -1,0 +1,4 @@
+metric	baseline_mean_ns_op	build97_mean_ns_op	reduction_percent	baseline_allocs_op	build97_allocs_op	decision
+single_probe	3491566.4	3325382.6	4.76	0	0	context
+pair_stencil	24356793.8	22970300.0	5.69	2	2	context
+full_generation4	28314384.2	26427407.4	6.66	3	3	authorize_retained_ABBA_only

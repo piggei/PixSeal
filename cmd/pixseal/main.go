@@ -36,9 +36,10 @@ Commands:
   v4-extract EXPERIMENTAL: recover a Build31 v4 message on an aligned native 8px lattice
   v4-extract-projective EXPERIMENTAL: blind Build34 projective recovery + authenticated v4 decode
   v4-extract-scanner EXPERIMENTAL: Build37 blind paper/scanner registration + authenticated v4 decode
-  v4-extract-phone EXPERIMENTAL: Build93 qualified exact protected-residue reuse over Build90 ordered-parallel qualification + authenticated v4 decode
-  v4-extract-phone-build93 EXPERIMENTAL QUALIFIED ALIAS: explicit Build93 path for regression/requalification
-  v4-extract-phone-build95 EXPERIMENTAL CANDIDATE: exact Gen4 luminance plane selected from Build94 profiling
+  v4-extract-phone EXPERIMENTAL: Build98 qualified exact Generation3 fetch extension over Build93 + authenticated v4 decode
+  v4-extract-phone-build93 EXPERIMENTAL PREVIOUS QUALIFIED ALIAS: explicit Build93 path for regression/requalification
+  v4-extract-phone-build95 EXPERIMENTAL REJECTED: exact Gen4 luminance-plane experiment retained for reproducibility
+  v4-extract-phone-build98 EXPERIMENTAL QUALIFIED ALIAS: explicit Build98 exact Generation3 fetch path
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
   v4-diagnose-phone-frozen EXPERIMENTAL: Build47 frozen-candidate bank observability diagnostic
@@ -86,8 +87,9 @@ Experimental v4 options:
   v4-extract-projective accepts -in/-key/-raw plus canonical -width/-height from the pre-print carrier.
   v4-extract-scanner accepts the same dimensions but expects a full-page scan with visible paper/artwork boundary.
   v4-extract-phone accepts the same dimensions and expects a smartphone photo with visible paper around the complete artwork.
-  v4-extract-phone-build93 accepts the same options and pins the qualified Build93 path for regression/requalification.
-  v4-extract-phone-build95 accepts the same options and pins the Build95 benchmark candidate; normal production remains Build93.
+  v4-extract-phone-build93 accepts the same options and pins the previous qualified Build93 path for regression/requalification.
+  v4-extract-phone-build95 accepts the same options and pins the rejected Build95 experiment for reproducibility; normal production uses Build98.
+  v4-extract-phone-build98 accepts the same options and pins the qualified Build98 path for regression/requalification.
   v4-diagnose-phone accepts the same input/key/dimensions and reports Build45 stage diagnostics; -oracle-quad-json is lab-only.
   v4-diagnose-phone-handoff inspects already-qualified Build43 candidates; optional oracle geometry is comparison-only.
   v4-diagnose-phone-frozen expands only the diagnostic frozen bank to 128 candidates; production remains capped at 32.
@@ -176,6 +178,8 @@ func main() {
 		err = v4ExtractPhoneBuild93(os.Args[2:])
 	case "v4-extract-phone-build95":
 		err = v4ExtractPhoneBuild95(os.Args[2:])
+	case "v4-extract-phone-build98":
+		err = v4ExtractPhoneBuild98(os.Args[2:])
 	case "v4-diagnose-phone":
 		err = v4DiagnosePhone(os.Args[2:])
 	case "v4-diagnose-phone-handoff":
@@ -869,7 +873,7 @@ func printV4ScannerDiagnostics(w io.Writer, info watermark.ExperimentalV4Extract
 }
 
 func v4ExtractPhone(args []string) error {
-	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build93 qualified exact protected-residue reuse baseline over Build90 ordered-parallel qualification; geometry/reader and protected-data semantics remain exact.")
+	fs := newFlagSet("v4-extract-phone", "EXPERIMENTAL Build98 qualified exact Generation3 fetch extension over Build93; geometry order, qualification and protected-data semantics remain exact.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
@@ -912,7 +916,7 @@ func v4ExtractPhone(args []string) error {
 }
 
 func v4ExtractPhoneBuild93(args []string) error {
-	fs := newFlagSet("v4-extract-phone-build93", "EXPERIMENTAL QUALIFIED ALIAS: Build93 exact protected-residue reuse over Build90 ordered-parallel qualification. Retained for regression/requalification; normal v4-extract-phone now uses Build93.")
+	fs := newFlagSet("v4-extract-phone-build93", "EXPERIMENTAL PREVIOUS QUALIFIED ALIAS: Build93 exact protected-residue reuse over Build90 ordered-parallel qualification. Retained for regression/requalification; normal v4-extract-phone now uses Build98.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
@@ -966,7 +970,7 @@ func inputDecoderID(format string) string {
 }
 
 func v4ExtractPhoneBuild95(args []string) error {
-	fs := newFlagSet("v4-extract-phone-build95", "EXPERIMENTAL CANDIDATE: Build95 exact Gen4 luminance plane over the qualified Build93 runtime. Benchmark/research only; normal v4-extract-phone remains Build93.")
+	fs := newFlagSet("v4-extract-phone-build95", "EXPERIMENTAL REJECTED: Build95 exact Gen4 luminance-plane experiment over previous qualified Build93. Reproducibility/research only; normal v4-extract-phone uses Build98.")
 	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
 	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
 	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
@@ -992,6 +996,49 @@ func v4ExtractPhoneBuild95(args []string) error {
 	}
 	decoderID := inputDecoderID(format)
 	payload, info, phone, err := watermark.ExperimentalV4ExtractPhoneBuild95Candidate(img, []byte(*key), *width, *height)
+	if err != nil {
+		printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
+		return err
+	}
+	if *raw {
+		if _, err := os.Stdout.Write(payload); err != nil {
+			return err
+		}
+		printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
+		return nil
+	}
+	fmt.Printf("%s\n", payload)
+	printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
+	return nil
+}
+
+func v4ExtractPhoneBuild98(args []string) error {
+	fs := newFlagSet("v4-extract-phone-build98", "EXPERIMENTAL QUALIFIED ALIAS: Build98 exact Generation3 fetch extension over previous qualified Build93. Retained for regression/requalification; normal v4-extract-phone uses the same Build98 implementation.")
+	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
+	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	raw := fs.Bool("raw", false, "write only the authenticated payload bytes to stdout")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	if *width < 296 || *height < 256 || *width%8 != 0 || *height%8 != 0 {
+		return fmt.Errorf("canonical -width/-height must be divisible by 8 and at least 296x256")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	decoderID := inputDecoderID(format)
+	payload, info, phone, err := watermark.ExperimentalV4ExtractPhoneBuild98Candidate(img, []byte(*key), *width, *height)
 	if err != nil {
 		printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
 		return err
@@ -1103,6 +1150,9 @@ func printV4PhoneDiagnostics(w io.Writer, decoderID string, info watermark.Exper
 	}
 	if p.Build95Attempted {
 		fmt.Fprintf(w, "build95-gen4-luminance: attempted=true used=%t fallback=%t bytes=%d prep-ms=%d cap-bytes=%d\n", p.Build95LuminancePlaneUsed, p.Build95LuminancePlaneFallback, p.Build95LuminancePlaneBytes, p.Build95LuminancePlanePrepMs, int64(128<<20))
+	}
+	if p.Build98Attempted {
+		fmt.Fprintf(w, "build98-gen3-fetch: attempted=true fold-scores=%d block-reads=%d block-success=%d block-failed=%d\n", p.Build98Gen3FetchFoldScores, p.Build98Gen3FetchBlockReads, p.Build98Gen3FetchBlockSuccess, p.Build98Gen3FetchBlockFailed)
 	}
 	fmt.Fprintf(w, "hmac: authenticated=%t fallback-attempted=%t fallback-authenticated=%t\n", p.HMACAuthenticated, p.FallbackAttempted, p.FallbackAuthenticated)
 	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)

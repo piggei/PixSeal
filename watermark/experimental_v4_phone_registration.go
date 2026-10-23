@@ -499,6 +499,11 @@ type ExperimentalV4PhoneInfo struct {
 	Build95LuminancePlaneFallback             bool
 	Build95LuminancePlaneBytes                int64
 	Build95LuminancePlanePrepMs               int64
+	Build98Attempted                          bool
+	Build98Gen3FetchFoldScores                int
+	Build98Gen3FetchBlockReads                int
+	Build98Gen3FetchBlockSuccess              int
+	Build98Gen3FetchBlockFailed               int
 }
 
 type experimentalV4PhoneDecodeTelemetry struct {
@@ -1385,10 +1390,11 @@ func experimentalV4PhoneDecodeEnsemble(src image.Image, key []byte, cw, ch int, 
 // ExperimentalV4ExtractPhone preserves the qualified smartphone path. The
 // historical Build41/43 direct geometry, Build42 post-geometry data recovery and
 // Build40 residual warp remain first and unchanged. The final deep fallback is
-// qualified Build93: Build90 ordered-parallel public-pilot qualification followed
-// by exact candidate-local protected-residue reuse during protected-data decode.
-// Build91/92 remain promotion/profiling evidence only. The deep geometry bank
-// remains public-proposal-only and frozen before held-out qualification or HMAC.
+// qualified Build98: qualified Build93 protected-residue reuse and Build90
+// ordered-parallel public-pilot qualification remain unchanged, while Generation3
+// FoldScore calls use the already-qualified exact Build84 RGB reader. Build93 is
+// the previous qualified baseline. The deep geometry bank remains public-only and
+// frozen before held-out qualification or HMAC.
 func ExperimentalV4ExtractPhone(src image.Image, key []byte, cw, ch int) ([]byte, ExperimentalV4ExtractInfo, ExperimentalV4PhoneInfo, error) {
-	return ExperimentalV4ExtractPhoneBuild93Candidate(src, key, cw, ch)
+	return ExperimentalV4ExtractPhoneBuild98Candidate(src, key, cw, ch)
 }

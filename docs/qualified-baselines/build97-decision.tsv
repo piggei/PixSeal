@@ -1,0 +1,13 @@
+scope	run	cycle	image	order	build93_total_ms	build97_total_ms	total_delta_pct	build93_geometry_ms	build97_geometry_ms	geometry_delta_pct	build93_gen4_ms	build97_gen4_ms	gen4_delta_pct	semantic	decision
+pair	run1	1	phone-b-mild.jpg	93-97	99341	103277	3.962	70120	76203	8.675	22262	20190	-9.307	PASS	not-promoted
+pair	run1	2	phone-b-mild.jpg	97-93	100632	95573	-5.027	72928	68375	-6.243	22794	19959	-12.437	PASS	not-promoted
+pair	run1	1	phone-b-angle.jpg	93-97	223790	223345	-0.199	222072	220770	-0.586	134130	132081	-1.528	PASS	not-promoted
+pair	run1	2	phone-b-angle.jpg	97-93	244955	245253	0.122	243078	243087	0.004	144176	154676	7.283	PASS	not-promoted
+pair	run2	1	phone-b-mild.jpg	93-97	79790	81639	2.317	57060	58356	2.271	17159	17664	2.943	PASS	not-promoted
+pair	run2	2	phone-b-mild.jpg	97-93	87234	83647	-4.112	61678	59910	-2.867	18139	17903	-1.301	PASS	not-promoted
+pair	run2	1	phone-b-angle.jpg	93-97	177360	180365	1.694	175830	178815	1.698	105073	106507	1.365	PASS	not-promoted
+pair	run2	2	phone-b-angle.jpg	97-93	188153	182169	-3.180	186099	180561	-2.976	112460	108861	-3.200	PASS	not-promoted
+paired-normalized-mean	all	all	phone-b-mild.jpg	ABBA	91749.25	91034.00	-0.715	65446.50	65711.00	0.459	20088.50	18929.00	-5.026	PASS	not-promoted
+paired-normalized-mean	all	all	phone-b-angle.jpg	ABBA	208564.50	207783.00	-0.391	206769.75	205808.25	-0.465	123959.75	125531.25	0.980	PASS	not-promoted
+pooled-mean-ratio	all	all	phone-b-mild.jpg	ABBA	91749.25	91034.00	-0.780	65446.50	65711.00	0.404	20088.50	18929.00	-5.772	PASS	not-promoted
+pooled-mean-ratio	all	all	phone-b-angle.jpg	ABBA	208564.50	207783.00	-0.375	206769.75	205808.25	-0.465	123959.75	125531.25	1.268	PASS	not-promoted

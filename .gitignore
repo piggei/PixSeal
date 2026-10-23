@@ -37,3 +37,6 @@ Thumbs.db
 
 # Local diagnostic/report archives
 *.zip
+
+# Local raw qualification reports; publish only derived summaries under docs/.
+/report_build_*.txt

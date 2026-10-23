@@ -1,0 +1,10 @@
+scope	run	image	elapsed_ms	deep_total_ms	geometry_ms	gen3_ms	gen4_ms	qualification_ms	decode_ms	gen3_fetch_fold_scores	gen3_fetch_block_reads	build93_reference_deep_ms	deep_speedup_vs_build93	note
+full_physical	run1	__matrix__	701539	-	-	-	-	-	-	-	-	-	-	9/9 semantic PASS; explicit Build98 candidate
+full_physical	run1	phone-b-mild.jpg	120337	83123	59105	9950	18241	12929	10871	23024	29470720	86808.5	1.044x	authenticated PASS; exact frozen workload
+full_physical	run1	phone-b-angle.jpg	235330	192538	190847	39657	115655	1453	0	76817	98325760	206351.5	1.072x	expected REJECT; exact frozen workload
+full_physical	run2	__matrix__	709867	-	-	-	-	-	-	-	-	-	-	9/9 semantic PASS; independent explicit Build98 candidate run
+full_physical	run2	phone-b-mild.jpg	132584	93235	67675	10731	18372	13337	12005	23024	29470720	86808.5	0.931x	authenticated PASS; host drift retained
+full_physical	run2	phone-b-angle.jpg	239722	196668	195050	37866	116314	1393	0	76817	98325760	206351.5	1.049x	expected REJECT; exact frozen workload
+mean	run1+run2	__matrix__	705703	-	-	-	-	-	-	-	-	-	-	cross-run absolute timing retained for completeness
+mean	run1+run2	phone-b-mild.jpg	126460.5	88179	63390	10340.5	18306.5	13133	11438	23024	29470720	86808.5	0.984x	promotion rests on exact semantics plus same-session Gen3 benchmark/ABBA evidence
+mean	run1+run2	phone-b-angle.jpg	237526	194603	192948.5	38761.5	115984.5	1423	0	76817	98325760	206351.5	1.060x	changed Gen3 remained bounded; total timing includes unmodified-stage drift

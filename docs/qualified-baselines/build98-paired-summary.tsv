@@ -1,0 +1,7 @@
+scope	cycle	image	order	build93_total_ms	build98_total_ms	total_reduction_pct	build93_geometry_ms	build98_geometry_ms	geometry_reduction_pct	build93_gen3_ms	build98_gen3_ms	gen3_reduction_pct	semantic	decision
+pair	1	phone-b-mild.jpg	93-98	93916	84448	10.081	69331	60805	12.298	10391	9929	4.446	PASS	authorize-physical-x2
+pair	1	phone-b-angle.jpg	93-98	193229	209758	-8.554	191643	207744	-8.402	39788	37723	5.190	PASS	authorize-physical-x2
+pair	2	phone-b-mild.jpg	98-93	87006	87659	-0.751	64136	61770	3.689	13074	10004	23.482	PASS	authorize-physical-x2
+pair	2	phone-b-angle.jpg	98-93	198711	188910	4.932	197098	187316	4.963	43075	35981	16.469	PASS	authorize-physical-x2
+aggregate	run1	phone-b-mild.jpg	ABBA	90461.0	86053.5	4.872	66733.5	61287.5	8.161	11732.5	9966.5	15.052	PASS	authorize-physical-x2
+aggregate	run1	phone-b-angle.jpg	ABBA	195970.0	199334.0	-1.717	194370.5	197530.0	-1.626	41431.5	36852.0	11.053	PASS	authorize-physical-x2

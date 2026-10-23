@@ -22,7 +22,7 @@ import (
 
 func TestSubcommandHelpReturnsFlagErrHelp(t *testing.T) {
 	for name, fn := range map[string]func([]string) error{
-		"embed": embed, "extract": extract, "v4-embed": v4Embed, "v4-extract": v4Extract, "v4-extract-projective": v4ExtractProjective, "v4-extract-scanner": v4ExtractScanner, "v4-extract-phone": v4ExtractPhone, "v4-extract-phone-build93": v4ExtractPhoneBuild93, "v4-extract-phone-build95": v4ExtractPhoneBuild95, "v4-diagnose-phone": v4DiagnosePhone, "v4-diagnose-phone-handoff": v4DiagnosePhoneHandoff, "v4-diagnose-phone-frozen": v4DiagnosePhoneFrozen, "v4-diagnose-phone-refine": v4DiagnosePhoneRefine, "v4-diagnose-phone-ranking": v4DiagnosePhoneRanking, "v4-diagnose-phone-refine4": v4DiagnosePhoneRefine4, "v4-diagnose-phone-surface": v4DiagnosePhoneSurface, "v4-diagnose-phone-restart": v4DiagnosePhoneRestart, "v4-diagnose-phone-pair-escape": v4DiagnosePhonePairEscape, "v4-diagnose-phone-pair-continue": v4DiagnosePhonePairContinue, "v4-diagnose-phone-sibling-stencil": v4DiagnosePhoneSiblingStencil, "v4-diagnose-phone-sibling-pair-escape": v4DiagnosePhoneSiblingPairEscape, "v4-diagnose-phone-sibling-pair-continue": v4DiagnosePhoneSiblingPairContinue, "v4-diagnose-phone-second-pair-sibling": v4DiagnosePhoneSecondPairSibling, "v4-diagnose-phone-third-pair-escape": v4DiagnosePhoneThirdPairEscape, "v4-diagnose-phone-third-pair-continue": v4DiagnosePhoneThirdPairContinue, "v4-diagnose-phone-third-pair-sibling": v4DiagnosePhoneThirdPairSibling, "v4-diagnose-phone-fourth-pair-escape": v4DiagnosePhoneFourthPairEscape, "v4-diagnose-phone-fourth-pair-continue": v4DiagnosePhoneFourthPairContinue, "capacity": capacity, "analyze": analyze, "diagnose": diagnose,
+		"embed": embed, "extract": extract, "v4-embed": v4Embed, "v4-extract": v4Extract, "v4-extract-projective": v4ExtractProjective, "v4-extract-scanner": v4ExtractScanner, "v4-extract-phone": v4ExtractPhone, "v4-extract-phone-build93": v4ExtractPhoneBuild93, "v4-extract-phone-build95": v4ExtractPhoneBuild95, "v4-extract-phone-build98": v4ExtractPhoneBuild98, "v4-diagnose-phone": v4DiagnosePhone, "v4-diagnose-phone-handoff": v4DiagnosePhoneHandoff, "v4-diagnose-phone-frozen": v4DiagnosePhoneFrozen, "v4-diagnose-phone-refine": v4DiagnosePhoneRefine, "v4-diagnose-phone-ranking": v4DiagnosePhoneRanking, "v4-diagnose-phone-refine4": v4DiagnosePhoneRefine4, "v4-diagnose-phone-surface": v4DiagnosePhoneSurface, "v4-diagnose-phone-restart": v4DiagnosePhoneRestart, "v4-diagnose-phone-pair-escape": v4DiagnosePhonePairEscape, "v4-diagnose-phone-pair-continue": v4DiagnosePhonePairContinue, "v4-diagnose-phone-sibling-stencil": v4DiagnosePhoneSiblingStencil, "v4-diagnose-phone-sibling-pair-escape": v4DiagnosePhoneSiblingPairEscape, "v4-diagnose-phone-sibling-pair-continue": v4DiagnosePhoneSiblingPairContinue, "v4-diagnose-phone-second-pair-sibling": v4DiagnosePhoneSecondPairSibling, "v4-diagnose-phone-third-pair-escape": v4DiagnosePhoneThirdPairEscape, "v4-diagnose-phone-third-pair-continue": v4DiagnosePhoneThirdPairContinue, "v4-diagnose-phone-third-pair-sibling": v4DiagnosePhoneThirdPairSibling, "v4-diagnose-phone-fourth-pair-escape": v4DiagnosePhoneFourthPairEscape, "v4-diagnose-phone-fourth-pair-continue": v4DiagnosePhoneFourthPairContinue, "capacity": capacity, "analyze": analyze, "diagnose": diagnose,
 	} {
 		t.Run(name, func(t *testing.T) {
 			if err := fn([]string{"-help"}); !errors.Is(err, flag.ErrHelp) {
@@ -82,6 +82,15 @@ func TestV4ExtractPhoneBuild93RequiresCanonicalBlockDimensions(t *testing.T) {
 	}
 }
 
+func TestV4ExtractPhoneBuild98RequiresCanonicalBlockDimensions(t *testing.T) {
+	for _, tc := range []struct{ w, h string }{{"1635", "1632"}, {"1632", "1635"}, {"288", "1632"}, {"1632", "248"}} {
+		err := v4ExtractPhoneBuild98([]string{"-in", "does-not-matter.jpg", "-key", "12345678", "-width", tc.w, "-height", tc.h})
+		if err == nil || !strings.Contains(err.Error(), "divisible by 8") {
+			t.Fatalf("Build98 dimensions %sx%s error=%v", tc.w, tc.h, err)
+		}
+	}
+}
+
 func TestV4PhoneDiagnosticsExposeBuild42MatrixFields(t *testing.T) {
 	var buf bytes.Buffer
 	info := watermark.ExperimentalV4ExtractInfo{Confidence: 12.5, Profile: watermark.ProfileRobust, PilotScore: 0.3, PilotMargin: 0.08, OriginXBlocks: 0, OriginYBlocks: 0, PilotName: "pilot", PilotHash: "hash"}
@@ -94,6 +103,7 @@ func TestV4PhoneDiagnosticsExposeBuild42MatrixFields(t *testing.T) {
 		DataDecodeAttempted: true, SoftHammingProfiles: 3, MaxDataConfidence: 11.2,
 		HMACAuthenticated: false, FallbackAttempted: true, FallbackAuthenticated: false,
 		Build42DataAttempted: true, Build42BankCandidates: 5, Build42EnsemblesTried: 2, Build42ListFramesTried: 1030, Build42DataAuthenticated: true,
+		Build98Attempted: true, Build98Gen3FetchFoldScores: 23, Build98Gen3FetchBlockReads: 29, Build98Gen3FetchBlockSuccess: 27, Build98Gen3FetchBlockFailed: 2,
 	}
 	printV4PhoneDiagnostics(&buf, "pixseal-jpeg-pre-go1.26-v1", info, phone)
 	out := buf.String()
@@ -103,6 +113,7 @@ func TestV4PhoneDiagnosticsExposeBuild42MatrixFields(t *testing.T) {
 		"phone-residual: fitted=true applied=false",
 		"data-decode: attempted=true soft-hamming-profiles=3 max-confidence=11.20",
 		"build42-data: attempted=true bank=5 ensembles=2 list-frames=1030 authenticated=true",
+		"build98-gen3-fetch: attempted=true fold-scores=23 block-reads=29 block-success=27 block-failed=2",
 		"hmac: authenticated=false fallback-attempted=true fallback-authenticated=false",
 	} {
 		if !strings.Contains(out, want) {

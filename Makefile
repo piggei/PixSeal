@@ -212,6 +212,16 @@ V4_BUILD95_COUNT ?= 5
 V4_PHONE_BUILD95_PROFILE_DIR ?= v4-phone private/build95-paired-profile
 V4_PHONE_BUILD95_TIMEOUT ?= 7200
 V4_PHONE_BUILD95_COOLDOWN_MS ?= 5000
+V4_PHONE_BUILD96_PROFILE_DIR ?= v4-phone private/build96-profile
+V4_PHONE_BUILD96_TIMEOUT ?= 7200
+V4_PHONE_BUILD96_COOLDOWN_MS ?= 5000
+V4_BUILD98_BENCH_DIR ?= v4-phone private/build98-benchmark
+V4_BUILD98_BENCHTIME ?= 2s
+V4_BUILD98_COUNT ?= 5
+V4_PHONE_BUILD98_DIAGNOSTIC_DIR ?= v4-phone private/build98-diagnostics
+V4_PHONE_BUILD98_PRODUCTION_INTEGRATION_DIR ?= v4-phone private/build98-production-integration
+V4_PHONE_BUILD98_TIMEOUT ?= 86400
+V4_PHONE_BUILD93_BASELINE_TSV ?= docs/qualified-baselines/build93-phone-performance.tsv
 V4_PHONE_BUILD90_BASELINE_TSV ?= docs/qualified-baselines/build90-phone-performance.tsv
 V4_PHONE_BUILD75_BASELINE_TSV ?= v4-phone private/build75-diagnostics/build75-phone-basin-parallel.tsv
 V4_PHONE_BUILD76_BASELINE_TSV ?= docs/qualified-baselines/build76-phone-performance.tsv
@@ -228,7 +238,7 @@ ALL_TEST_TARGETS ?=
 ALL_TEST_STRICT ?=1
 GO_SOURCES := $(shell find cmd internal watermark -type f -name '*.go')
 
-.PHONY: toolchain-check test-list corpus-manifest-check private-corpus-manifest v4-physical-fixtures v4-physical-qualification v4-phone-fixtures v4-build40-phone-corpus-diagnostic v4-build41-phone-physical-test v4-build42-phone-physical-test print-scan-test build test test-unit release-unit v3-freeze-check v4-pilot-lock-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build42-phone-data-test v4-build43-phone-side-pair-test v4-build43-phone-physical-test v4-build44-jpeg-compat-test v4-build44-go126-jpeg-compat-test v4-build44-phone-physical-test v4-build44-go126-phone-physical-test v4-build45-phone-diagnostic-test v4-build45-phone-diagnostic v4-build45-phone-oracle-diagnostic v4-build45-phone-study v4-build46-phone-handoff-test v4-build46-phone-handoff-diagnostic v4-build47-phone-frozen-bank-test v4-build47-phone-frozen-bank-diagnostic v4-build48-phone-local-refine-test v4-build48-phone-local-refine-diagnostic v4-build49-phone-proposal-ranking-test v4-build49-phone-proposal-ranking-diagnostic v4-build50-phone-top4-refine-test v4-build50-phone-top4-refine-diagnostic v4-build51-phone-surface-test v4-build51-phone-surface-diagnostic v4-build52-phone-optimizer-test v4-build52-phone-optimizer-diagnostic v4-build53-phone-pair-escape-test v4-build53-phone-pair-escape-diagnostic v4-build54-phone-pair-continuation-test v4-build54-phone-pair-continuation-diagnostic v4-build55-phone-sibling-stencil-test v4-build55-phone-sibling-stencil-diagnostic v4-build56-phone-sibling-pair-escape-test v4-build56-phone-sibling-pair-escape-diagnostic v4-build57-phone-sibling-pair-continuation-test v4-build57-phone-sibling-pair-continuation-diagnostic v4-build58-phone-second-pair-sibling-stencil-test v4-build58-phone-second-pair-sibling-stencil-diagnostic v4-build59-phone-third-pair-escape-test v4-build59-phone-third-pair-escape-diagnostic v4-build60-phone-third-pair-continuation-test v4-build60-phone-third-pair-continuation-diagnostic v4-build61-phone-third-pair-sibling-stencil-test v4-build61-phone-third-pair-sibling-stencil-diagnostic v4-build62-phone-fourth-pair-escape-test v4-build62-phone-fourth-pair-escape-diagnostic v4-build63-phone-fourth-pair-continuation-test v4-build63-phone-fourth-pair-continuation-diagnostic v4-build64-phone-recovery-test v4-build64-phone-physical-test v4-build65-phone-parallel-test v4-build65-phone-physical-test v4-build66-phone-parallel-decode-test v4-build66-phone-physical-test v4-build67-phone-profile-test v4-build67-phone-physical-test v4-build68-phone-plane-reuse-test v4-build68-phone-physical-test v4-build69-phone-geometry-profile-test v4-build69-phone-physical-test v4-build70-phone-seed-genealogy-test v4-build70-phone-physical-test v4-build71-phone-gen4-parallel-test v4-build71-phone-physical-test v4-build72-phone-prefix-profile-test v4-build72-phone-physical-test v4-build73-phone-gen3-parallel-test v4-build73-phone-physical-test v4-build74-phone-freeze-profile-test v4-build74-phone-physical-test v4-build75-phone-basin-parallel-test v4-build75-phone-physical-test v4-build76-phone-gen2-parallel-test v4-build76-phone-physical-test v4-build77-phone-gen4-profile-test v4-build77-phone-physical-test v4-build78-phone-continuation4-profile-test v4-build78-phone-physical-test v4-build79-phone-foldscore-profile-test v4-build79-phone-physical-test v4-build80-phone-luminance-cache-test v4-build80-phone-physical-test v4-build81-phone-luminance-lut-test v4-build81-phone-physical-test v4-build82-phone-inline-sampler-test v4-build82-phone-physical-test v4-build83-projective-sampler-test v4-build83-projective-sampler-profile v4-build84-phone-rgb-fetch-test v4-build84-phone-rgb-fetch-benchmark v4-build84-phone-physical-test v4-build85-qualified-sampler-test v4-build85-qualified-sampler-profile v4-build86-dct-hoist-test v4-build86-dct-hoist-benchmark v4-build86-phone-physical-test v4-build87-rgb-luma-bilinear-test v4-build87-rgb-luma-bilinear-profile v4-build88-direct-rgb-test v4-build88-direct-rgb-benchmark v4-build88-phone-physical-test v4-build89-full-pipeline-test v4-build89-full-pipeline-profile v4-build90-qualification-parallel-test v4-build90-qualification-benchmark v4-build90-phone-physical-test v4-build91-paired-test v4-build91-paired-physical-profile v4-build92-qualified-pipeline-test v4-build92-qualified-pipeline-profile v4-build93-residue-reuse-test v4-build93-residue-reuse-benchmark v4-build93-phone-production-integration-test v4-build93-phone-physical-test v4-build94-qualified-pipeline-test v4-build94-qualified-pipeline-profile v4-build95-gen4-luminance-test v4-build95-gen4-luminance-benchmark v4-build95-paired-profile v4-build37-physical-scanner-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
+.PHONY: toolchain-check test-list corpus-manifest-check private-corpus-manifest v4-physical-fixtures v4-physical-qualification v4-phone-fixtures v4-build40-phone-corpus-diagnostic v4-build41-phone-physical-test v4-build42-phone-physical-test print-scan-test build test test-unit release-unit v3-freeze-check v4-pilot-lock-check research-unit lattice-estimator-test homography-test photometric-test bit-channel-test reliability-test spatial-channel-test phase-surface-test blind-phase-test lattice-phase-test global-unwrap-test crossfit-unwrap-test stability-unwrap-test cycle-anchor-test observability-audit-test physical-topology-test v4-design-study-test v4-foundation-test v4-pilot-search-test v4-pilot-channel-test v4-pilot-corpus-test v4-pilot-geometry-test v4-pilot-geometry-corpus-test v4-pilot-blind-geometry-test v4-pilot-blind-geometry-corpus-test v4-pilot-placement-test v4-pilot-placement-corpus-test v4-pilot-joint-affine-test v4-pilot-joint-affine-corpus-test v4-pilot-joint-projective-test v4-pilot-joint-projective-corpus-test v4-pilot-joint-projective-rank-diagnostic v4-build34-projective-frame-corpus-test v4-build35-projective-api-test v4-build36-soft-channel-test v4-build37-scanner-registration-test v4-build38-phone-channel-test v4-build39-phone-registration-test v4-build40-phone-residual-test v4-build41-phone-basin-test v4-build42-phone-data-test v4-build43-phone-side-pair-test v4-build43-phone-physical-test v4-build44-jpeg-compat-test v4-build44-go126-jpeg-compat-test v4-build44-phone-physical-test v4-build44-go126-phone-physical-test v4-build45-phone-diagnostic-test v4-build45-phone-diagnostic v4-build45-phone-oracle-diagnostic v4-build45-phone-study v4-build46-phone-handoff-test v4-build46-phone-handoff-diagnostic v4-build47-phone-frozen-bank-test v4-build47-phone-frozen-bank-diagnostic v4-build48-phone-local-refine-test v4-build48-phone-local-refine-diagnostic v4-build49-phone-proposal-ranking-test v4-build49-phone-proposal-ranking-diagnostic v4-build50-phone-top4-refine-test v4-build50-phone-top4-refine-diagnostic v4-build51-phone-surface-test v4-build51-phone-surface-diagnostic v4-build52-phone-optimizer-test v4-build52-phone-optimizer-diagnostic v4-build53-phone-pair-escape-test v4-build53-phone-pair-escape-diagnostic v4-build54-phone-pair-continuation-test v4-build54-phone-pair-continuation-diagnostic v4-build55-phone-sibling-stencil-test v4-build55-phone-sibling-stencil-diagnostic v4-build56-phone-sibling-pair-escape-test v4-build56-phone-sibling-pair-escape-diagnostic v4-build57-phone-sibling-pair-continuation-test v4-build57-phone-sibling-pair-continuation-diagnostic v4-build58-phone-second-pair-sibling-stencil-test v4-build58-phone-second-pair-sibling-stencil-diagnostic v4-build59-phone-third-pair-escape-test v4-build59-phone-third-pair-escape-diagnostic v4-build60-phone-third-pair-continuation-test v4-build60-phone-third-pair-continuation-diagnostic v4-build61-phone-third-pair-sibling-stencil-test v4-build61-phone-third-pair-sibling-stencil-diagnostic v4-build62-phone-fourth-pair-escape-test v4-build62-phone-fourth-pair-escape-diagnostic v4-build63-phone-fourth-pair-continuation-test v4-build63-phone-fourth-pair-continuation-diagnostic v4-build64-phone-recovery-test v4-build64-phone-physical-test v4-build65-phone-parallel-test v4-build65-phone-physical-test v4-build66-phone-parallel-decode-test v4-build66-phone-physical-test v4-build67-phone-profile-test v4-build67-phone-physical-test v4-build68-phone-plane-reuse-test v4-build68-phone-physical-test v4-build69-phone-geometry-profile-test v4-build69-phone-physical-test v4-build70-phone-seed-genealogy-test v4-build70-phone-physical-test v4-build71-phone-gen4-parallel-test v4-build71-phone-physical-test v4-build72-phone-prefix-profile-test v4-build72-phone-physical-test v4-build73-phone-gen3-parallel-test v4-build73-phone-physical-test v4-build74-phone-freeze-profile-test v4-build74-phone-physical-test v4-build75-phone-basin-parallel-test v4-build75-phone-physical-test v4-build76-phone-gen2-parallel-test v4-build76-phone-physical-test v4-build77-phone-gen4-profile-test v4-build77-phone-physical-test v4-build78-phone-continuation4-profile-test v4-build78-phone-physical-test v4-build79-phone-foldscore-profile-test v4-build79-phone-physical-test v4-build80-phone-luminance-cache-test v4-build80-phone-physical-test v4-build81-phone-luminance-lut-test v4-build81-phone-physical-test v4-build82-phone-inline-sampler-test v4-build82-phone-physical-test v4-build83-projective-sampler-test v4-build83-projective-sampler-profile v4-build84-phone-rgb-fetch-test v4-build84-phone-rgb-fetch-benchmark v4-build84-phone-physical-test v4-build85-qualified-sampler-test v4-build85-qualified-sampler-profile v4-build86-dct-hoist-test v4-build86-dct-hoist-benchmark v4-build86-phone-physical-test v4-build87-rgb-luma-bilinear-test v4-build87-rgb-luma-bilinear-profile v4-build88-direct-rgb-test v4-build88-direct-rgb-benchmark v4-build88-phone-physical-test v4-build89-full-pipeline-test v4-build89-full-pipeline-profile v4-build90-qualification-parallel-test v4-build90-qualification-benchmark v4-build90-phone-physical-test v4-build91-paired-test v4-build91-paired-physical-profile v4-build92-qualified-pipeline-test v4-build92-qualified-pipeline-profile v4-build93-residue-reuse-test v4-build93-residue-reuse-benchmark v4-build93-phone-production-integration-test v4-build93-phone-physical-test v4-build94-qualified-pipeline-test v4-build94-qualified-pipeline-profile v4-build95-gen4-luminance-test v4-build95-gen4-luminance-benchmark v4-build95-paired-profile v4-build96-gen4-retained-test v4-build96-gen4-retained-profile v4-build37-physical-scanner-test v4-pilot-lock-corpus-test v4-frame-test v4-frame-corpus-test smooth-phase-test print-camera-test test-images deep-test extreme-test geometry-test affine-test composition-test lattice-test perspective-test all-test release-check version-check all build-all core-target-check vet clean
 
 # Print a categorized index of all test/check targets without running them.
 test-list:
@@ -1989,6 +1999,28 @@ v4-build95-paired-profile:
 	V4_PHONE_MESSAGE_B="$(V4_PHONE_MESSAGE_B)" \
 	bash ./scripts/profile-v4-build95-paired-physical.sh
 
+# Build96 is observability-only. Build95 is not promoted; Build96 uses it only
+# as a contrast against qualified Build93 to localize the retained Gen4 cost.
+v4-build96-gen4-retained-test:
+	@echo "Running Build96 Gen4 retained bottleneck profiling regressions..."
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build(93|94|95|96)' -count=1
+	@$(GO) test ./cmd/pixseal -run '^TestSubcommandHelpReturnsFlagErrHelp$$' -count=1
+	@$(MAKE) --no-print-directory version-check
+	@$(GO) vet ./...
+
+# Private B/angle AB/BA CPU+memory profiling. No runtime or qualification change.
+v4-build96-gen4-retained-profile:
+	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" \
+	V4_PHONE_ACQUISITION_DIR="$(V4_PHONE_ACQUISITION_DIR)" \
+	V4_PHONE_BUILD96_PROFILE_DIR="$(V4_PHONE_BUILD96_PROFILE_DIR)" \
+	V4_PHONE_BUILD96_TIMEOUT="$(V4_PHONE_BUILD96_TIMEOUT)" \
+	V4_PHONE_BUILD96_COOLDOWN_MS="$(V4_PHONE_BUILD96_COOLDOWN_MS)" \
+	V4_PHONE_KEY="$(V4_PHONE_KEY)" \
+	V4_PHONE_CANONICAL_WIDTH="$(V4_PHONE_CANONICAL_WIDTH)" \
+	V4_PHONE_CANONICAL_HEIGHT="$(V4_PHONE_CANONICAL_HEIGHT)" \
+	V4_PHONE_MESSAGE_B="$(V4_PHONE_MESSAGE_B)" \
+	bash ./scripts/profile-v4-build96-gen4-retained.sh
+
 print-scan-test: build
 	@PIXSEAL="$(abspath $(PIXSEAL))" \
 	PRINT_CAMERA_DIR="$(PRINT_SCAN_DIR)" \
@@ -2221,3 +2253,102 @@ core-target-check:
 clean:
 	@rm -rf -- dist
 	@echo "Removed dist/"
+
+# Build97 — exact Gen4 probe-fetch extension selected from Build96 retained pprof.
+.PHONY: v4-build97-gen4-probe-fetch-test v4-build97-gen4-probe-fetch-benchmark
+v4-build97-gen4-probe-fetch-test:
+	@echo "Running Build97 exact Gen4 probe-fetch regressions..."
+	@env GOTOOLCHAIN="$${PIXSEAL_GO_TOOLCHAIN:-go1.26.0}" go test ./watermark -run '^TestExperimentalV4Build97' -count=1
+	@env GOTOOLCHAIN="$${PIXSEAL_GO_TOOLCHAIN:-go1.26.0}" go test -race ./watermark -run '^TestExperimentalV4Build97ParallelGeneration4RaceFixture$$' -count=1
+	@env GOTOOLCHAIN="$${PIXSEAL_GO_TOOLCHAIN:-go1.26.0}" go test ./cmd/pixseal -count=1
+	@echo "Checking VERSION/buildinfo consistency..."
+	@env GOTOOLCHAIN="$${PIXSEAL_GO_TOOLCHAIN:-go1.26.0}" go test ./internal/buildinfo -count=1
+	@env GOTOOLCHAIN="$${PIXSEAL_GO_TOOLCHAIN:-go1.26.0}" go vet ./...
+
+v4-build97-gen4-probe-fetch-benchmark: v4-build97-gen4-probe-fetch-test
+	@bash ./scripts/benchmark-v4-build97-gen4-probe-fetch.sh
+
+# Build97 retained paired decision gate — same-session Build93/Build97 AB/BA on B/mild and B/angle.
+.PHONY: v4-build97-gen4-probe-fetch-paired-profile
+v4-build97-gen4-probe-fetch-paired-profile: v4-build97-gen4-probe-fetch-test
+	@bash ./scripts/profile-v4-build97-paired-retained.sh
+
+
+# Build98 — exact Generation3 fetch extension selected after Build97 failed its
+# predeclared retained promotion criterion. This benchmark-first candidate reuses
+# the qualified Build84 exact RGB/FoldScore reader for generation-three
+# single/pair/continuation/sibling work only. Build93 remains qualified.
+.PHONY: v4-build98-gen3-fetch-test v4-build98-gen3-fetch-benchmark
+v4-build98-gen3-fetch-test:
+	@echo "Running Build98 exact Generation3 fetch regressions..."
+	@env GOTOOLCHAIN="$${PIXSEAL_GO_TOOLCHAIN:-go1.26.0}" go test ./watermark -run '^TestExperimentalV4Build98' -count=1
+	@env GOTOOLCHAIN="$${PIXSEAL_GO_TOOLCHAIN:-go1.26.0}" go test -race ./watermark -run '^TestExperimentalV4Build98ParallelGeneration3RaceFixture$$' -count=1
+	@env GOTOOLCHAIN="$${PIXSEAL_GO_TOOLCHAIN:-go1.26.0}" go test ./cmd/pixseal -count=1
+	@echo "Checking VERSION/buildinfo consistency..."
+	@env GOTOOLCHAIN="$${PIXSEAL_GO_TOOLCHAIN:-go1.26.0}" go test ./internal/buildinfo -count=1
+	@env GOTOOLCHAIN="$${PIXSEAL_GO_TOOLCHAIN:-go1.26.0}" go vet ./...
+
+v4-build98-gen3-fetch-benchmark: v4-build98-gen3-fetch-test
+	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" \
+	V4_BUILD98_BENCH_DIR="$(V4_BUILD98_BENCH_DIR)" \
+	V4_BUILD98_BENCHTIME="$(V4_BUILD98_BENCHTIME)" \
+	V4_BUILD98_COUNT="$(V4_BUILD98_COUNT)" \
+	bash ./scripts/benchmark-v4-build98-gen3-fetch.sh
+
+# Build98 retained paired decision gate — same-session Build93/Build98 AB/BA on B/mild and B/angle.
+.PHONY: v4-build98-gen3-fetch-paired-profile
+v4-build98-gen3-fetch-paired-profile: v4-build98-gen3-fetch-test
+	@bash ./scripts/profile-v4-build98-paired-retained.sh
+
+# Build98 explicit-alias requalification gate. Build98 is qualified after two
+# independent complete 9/9 promotion runs; this target retains the pinned alias
+# for future regression/requalification without overwriting production wiring evidence.
+.PHONY: v4-build98-phone-physical-test
+v4-build98-phone-physical-test: v4-build98-gen3-fetch-test build
+	@PIXSEAL="$(abspath $(PIXSEAL))" \
+	PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" \
+	V4_PHONE_ACQUISITION_DIR="$(V4_PHONE_ACQUISITION_DIR)" \
+	V4_PHONE_BUILD98_DIAGNOSTIC_DIR="$(V4_PHONE_BUILD98_DIAGNOSTIC_DIR)" \
+	V4_PHONE_BUILD98_TIMEOUT="$(V4_PHONE_BUILD98_TIMEOUT)" \
+	V4_PHONE_BUILD93_BASELINE_TSV="$(V4_PHONE_BUILD93_BASELINE_TSV)" \
+	V4_PHONE_BUILD98_ENTRYPOINT="v4-extract-phone-build98" \
+	V4_PHONE_BUILD98_GATE_PURPOSE="qualified-alias-requalification" \
+	V4_PHONE_BUILD98_CURRENT_BASELINE="Build98" \
+	V4_PHONE_BUILD98_PREVIOUS_BASELINE="Build93" \
+	V4_PHONE_KEY="$(V4_PHONE_KEY)" \
+	V4_PHONE_CANONICAL_WIDTH="$(V4_PHONE_CANONICAL_WIDTH)" \
+	V4_PHONE_CANONICAL_HEIGHT="$(V4_PHONE_CANONICAL_HEIGHT)" \
+	V4_PHONE_MESSAGE_A="$(V4_PHONE_MESSAGE_A)" \
+	V4_PHONE_MESSAGE_B="$(V4_PHONE_MESSAGE_B)" \
+	bash ./scripts/test-v4-build98-phone-corpus.sh
+
+# Post-promotion integration gate. This is not a third algorithmic promotion run:
+# it exercises the normal production command after rewiring and writes a separate
+# artifact so the two historical physical promotion runs remain untouched.
+.PHONY: v4-build98-phone-production-integration-test
+v4-build98-phone-production-integration-test: v4-build98-gen3-fetch-test build
+	@PIXSEAL="$(abspath $(PIXSEAL))" \
+	PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" \
+	V4_PHONE_ACQUISITION_DIR="$(V4_PHONE_ACQUISITION_DIR)" \
+	V4_PHONE_BUILD98_DIAGNOSTIC_DIR="$(V4_PHONE_BUILD98_PRODUCTION_INTEGRATION_DIR)" \
+	V4_PHONE_BUILD98_TIMEOUT="$(V4_PHONE_BUILD98_TIMEOUT)" \
+	V4_PHONE_BUILD93_BASELINE_TSV="$(V4_PHONE_BUILD93_BASELINE_TSV)" \
+	V4_PHONE_BUILD98_ENTRYPOINT="v4-extract-phone" \
+	V4_PHONE_BUILD98_GATE_PURPOSE="production-entrypoint-integration" \
+	V4_PHONE_BUILD98_CURRENT_BASELINE="Build98" \
+	V4_PHONE_BUILD98_PREVIOUS_BASELINE="Build93" \
+	V4_PHONE_KEY="$(V4_PHONE_KEY)" \
+	V4_PHONE_CANONICAL_WIDTH="$(V4_PHONE_CANONICAL_WIDTH)" \
+	V4_PHONE_CANONICAL_HEIGHT="$(V4_PHONE_CANONICAL_HEIGHT)" \
+	V4_PHONE_MESSAGE_A="$(V4_PHONE_MESSAGE_A)" \
+	V4_PHONE_MESSAGE_B="$(V4_PHONE_MESSAGE_B)" \
+	bash ./scripts/test-v4-build98-phone-corpus.sh
+
+# Build99 observes integration-closed Build98; no new runtime implementation.
+.PHONY: v4-build99-qualified-pipeline-test v4-build99-qualified-pipeline-profile
+v4-build99-qualified-pipeline-test: v4-build98-gen3-fetch-test v3-freeze-check v4-pilot-lock-check
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build(94|99)' -count=1
+	@bash -n ./scripts/profile-v4-build99-qualified-pipeline.sh
+
+v4-build99-qualified-pipeline-profile: v4-build99-qualified-pipeline-test
+	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash ./scripts/profile-v4-build99-qualified-pipeline.sh

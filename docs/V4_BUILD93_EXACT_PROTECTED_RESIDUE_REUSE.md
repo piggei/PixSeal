@@ -1,6 +1,6 @@
 # Format-v4 Build93 — exact protected-residue reuse
 
-Build93 is the **current qualified smartphone baseline**, selected from Build92 profiling and promoted after public exactness/race/benchmark gates plus two independent retained 9/9 physical semantic PASS runs. Build90 is now the previous qualified baseline.
+Build93 is the **previous qualified smartphone baseline**, superseded by Build98. It was selected from Build92 profiling and promoted after public exactness/race/benchmark gates plus two independent retained 9/9 physical semantic PASS runs. Build90 is an earlier qualified baseline.
 
 ## Build92 evidence
 

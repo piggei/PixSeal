@@ -1,3 +1,23 @@
+## Build99 — post-promotion observability of qualified Build98
+
+Build98's archived production integration is now documented as closed, with exact nine-row semantic equivalence to both promotion runs. Build99 measures unchanged Build98 using low-overhead B/mild/B/angle timing followed by separate CPU profiles. Historical Build94 preparation/accounting helpers are reused, while Build98 Generation3 telemetry is additionally frozen. The qualified algorithm and normal production dispatch remain Build98; Build93 remains previous. Source and complete retained timing/profile gates passed on 2026-10-23 with exact telemetry. B/mild deep time is 83,618 ms and B/angle 187,601 ms; Gen4 remains 60.56% of B/angle deep wall. Both CPU profiles expose serial six-pair proposal scoring (12.29 / 10.27 CPU-s), selecting ordered-parallel scoring as the next bounded candidate. Build100 is not implemented. See `docs/V4_BUILD99_QUALIFIED_BUILD98_PIPELINE_PROFILE.md` for results and reproduction commands.
+
+## Build98 — Exact Generation3 Fetch Extension (qualified)
+
+Build97 completed two corrected retained Build93/Build97 AB/BA runs with exact semantics, but failed its predeclared performance criterion. B/mild Gen4 was favorable across all four pairs only because of the first run; the independent replication was 0.76% slower on its two-row mean. B/angle Gen4 was 0.98% slower on pair-normalized percentages and 1.27% slower on pooled means, with direction changing by order. End-to-end totals were effectively neutral. Build97 is therefore closed without a physical 9/9 gate and Build93 remains qualified.
+
+Build98 targets a different stage selected from the completed Build94 CPU profiles. Generation3 consumes 76.56 CPU-s on B/mild and 285.63 CPU-s on B/angle, while its historical `readProjectiveBlockValue` path accounts for 76.19 / 283.69 CPU-s. Build98 reuses the qualified Build84 exact RGB/FoldScore reader for Generation3 single, pair, continuation and sibling scoring only, with no image-sized memory and no change to Generation4 or downstream semantics.
+
+The qualified Go 1.26.0/i3-13100T public benchmark passed cleanly: the complete Generation3 mean fell from 23.513 to 21.304 ms/op (-9.40%), sibling stencil improved 9.54%, allocations were unchanged, and every Build98 complete-stage sample beat every historical sample. The subsequent retained Build93/Build98 AB/BA semantic gate also passed. Generation3 was faster in all four paired comparisons: 4.45% and 23.48% on B/mild, 5.19% and 16.47% on B/angle. Unmodified Gen4 and downstream phases still exhibited host drift, so promotion is judged on the isolated changed phase plus complete semantics. Two independent nine-photo physical gates then passed 9/9 with exact frozen semantics. Build98 is promoted as the current qualified smartphone baseline, Build93 becomes previous, and normal `v4-extract-phone` is rewired to the unchanged qualified Build98 implementation. The separate normal-command production-entry-point matrix also completed 9/9 PASS. Its archived report, metadata, checksum and exact semantic equivalence with both promotion matrices were verified on 2026-10-23; `docs/qualified-baselines/build98-production-integration.tsv` closes wiring evidence without being counted as a third performance run.
+
+## Build97 — Exact Gen4 Probe Fetch Extension (benchmark-first candidate)
+
+Build96 retained profiling closed the Build95 luminance-plane branch and showed a second large Gen4 CPU share still flowing through historical generic luminance sampling in single4/pair4. Build97 therefore reuses the already-qualified Build84 exact RGB projective reader for those two Gen4 probe stages only, with zero image-sized memory overhead. Build93 remains qualified and Build97 cannot advance beyond public benchmark without material same-session evidence.
+
+## v0.3.0-build96 — Gen4 retained bottleneck profiling
+
+Build95 is closed as exact/race PASS but not promoted: retained AB/BA evidence did not justify the added 127,475,200-byte luminance plane. Build96 is observability-only and profiles B/angle Build93/Build95 AB/BA with per-run CPU profiles plus memory/GC accounting. Build93 remains the current qualified smartphone baseline.
+
 ## v0.3.0-build95 — exact generation-four luminance-plane candidate
 
 Build94 completed the required post-promotion profile of unchanged qualified Build93. Its low-overhead pass measured B/mild at 80,152 ms deep total (57,175 ms geometry, 17,463 ms gen4, 12,511 ms qualification, 10,251 ms decode) and B/angle at 178,627 ms (176,938 ms geometry, 106,635 ms gen4, 1,453 ms qualification, no protected decode). All frozen semantic counters remained exact.
@@ -146,3 +166,11 @@ The qualified Go 1.26.0 Build69 physical gate reproduced Build68 semantics exact
 The retained nine-photo Go 1.26.0 gate passed semantic equivalence. Deep cases showed extreme load imbalance: max-seed/seed-wall time was 96.2% (`control/front`), 99.5% (`control/mild`), 97.3% (`control/angle`), 99.6% (`B/mild`) and 99.7% (`B/angle`). The slowest seed also produced the complete final bank for `control/front`, `control/mild` and `B/mild`, and 5486/6198 states for `B/angle`. This evidence redirects Build70 from an optimization attempt to finer-grained genealogy profiling.
 
 
+
+### Build97 benchmark-review extension
+
+Qualified-host Go 1.26.0 benchmarking showed a 6.66% mean reduction for the complete Generation4 benchmark (28.314 -> 26.427 ms/op), with unchanged full-Generation4 allocation counts. This is sufficient to proceed to retained Build93/Build97 AB/BA evidence, not to promotion. Added `v4-build97-gen4-probe-fetch-paired-profile` and its exact semantic gate.
+
+### Build97 retained telemetry remediation
+
+The first retained B/mild pair authenticated correctly and preserved the complete geometry/qualification/decode workload, but the candidate reported `41,776` FoldScores and `53,473,280` reads instead of the frozen continuation4 values `16,496` and `21,114,880`. The exact delta (`25,280` and `32,358,400 = 25,280 * 1,280`) came from single4/pair4 calls newly routed through the Build84 instrumented reader. This is not a search/output mismatch, but changing a historical counter family is still disallowed. Build97 is remediated in place: Build84 `Fetch*` remains continuation4-only; new `ProbeFetch*` counters account for single4/pair4. The paired harness continues to require exact Build93 historical telemetry and must be rerun from the beginning.

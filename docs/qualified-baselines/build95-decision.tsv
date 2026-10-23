@@ -1,0 +1,5 @@
+status	current_qualified_baseline	candidate	case	cycle	order	build93_total_ms	build95_total_ms	build93_geometry_ms	build95_geometry_ms	build93_gen4_ms	build95_gen4_ms	build95_luma_prep_ms	build95_extra_bytes	decision
+rejected-not-promoted	Build93	Build95	B/mild	1	93-95	88387	87318	62542	62624	18953	18482	62	127475200	insufficient end-to-end gain
+rejected-not-promoted	Build93	Build95	B/mild	2	95-93	91651	91750	66180	65932	19472	19464	63	127475200	insufficient end-to-end gain
+rejected-not-promoted	Build93	Build95	B/angle	1	93-95	201461	187966	199842	186321	119302	110123	66	127475200	order-sensitive gain
+rejected-not-promoted	Build93	Build95	B/angle	2	95-93	196427	195336	194373	193672	119394	118287	67	127475200	order-sensitive gain

@@ -1,3 +1,5 @@
+> **Final decision (Build96 handoff): REJECTED / NOT PROMOTED.** Build95 passed exactness/race and showed strong local reader/continuation microbenchmarks, but retained AB/BA evidence was effectively neutral on B/mild and only small/order-sensitive on B/angle while requiring 127,475,200 additional bytes on the retained work image. No Build95 9/9 physical promotion gate is required. Build93 remains the current qualified baseline. See `docs/qualified-baselines/build95-decision.tsv` and `docs/V4_BUILD96_GEN4_RETAINED_BOTTLENECK_PROFILE.md`.
+
 # Format-v4 Build95 — exact generation-four luminance-plane candidate
 
 Build95 is a **benchmark-first runtime candidate** selected from the completed Build94 profile of the current qualified Build93 smartphone decoder. It is not qualified, does not replace the normal `v4-extract-phone` path, and cannot be promoted from source tests or microbenchmarks alone.

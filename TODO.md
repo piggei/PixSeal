@@ -1,3 +1,37 @@
+## Build99 checkpoint — closed observability PASS
+
+- [x] Close Build98 production-integration documentation from the existing 9/9 PASS, without repeating promotion or changing qualified runtime sources.
+- [x] Align the Wiki with current Build98 / previous Build93 and the five-authenticated / four-rejected expected matrix.
+- [x] Add separate low-overhead timing and CPU-profile passes around unchanged Build98, with inherited semantic gates plus exact `Gen3Fetch*` counters.
+- [x] Pass the Go 1.26.0 Build99 source gate, including inherited Build98 exactness/race/CLI/vet, frozen v3 and pilot checks.
+- [x] Complete the retained B/mild/B/angle timing pass and both separate CPU-profile passes: semantic PASS in all four runs on 2026-10-23; retain private artifacts and source/corpus hashes.
+- [x] Freeze `build99-profile-summary.tsv`: B/mild 83,618 ms and B/angle 187,601 ms deep; select exact ordered-parallel six-pair proposal scoring from the measured 12.29 / 10.27 CPU-s serial section.
+
+## Build98 checkpoint — qualified and integration closed
+
+- [x] Complete two independent corrected Build93/Build97 retained AB/BA runs with exact B/mild/B/angle semantics.
+- [x] Freeze the complete non-sensitive Build97 rows and aggregate decision in `docs/qualified-baselines/build97-decision.tsv`.
+- [x] Apply the predeclared promotion criterion without moving the threshold: Build97 is not promoted and no physical 9/9 gate is authorized.
+- [x] Record the final Build97 result: B/mild Gen4 improves overall but does not remain favorable in the independent replication; B/angle Gen4 is neutral-to-regressive overall and changes direction by run/order.
+- [x] Keep normal `v4-extract-phone` on qualified Build93 throughout Build97/Build98 candidate evaluation, before promotion.
+- [x] Select one new bounded hypothesis from existing Build94 CPU evidence: Generation3 spends 76.19 / 283.69 CPU-s in the historical projective reader on B/mild / B/angle.
+- [x] Add Build98 exact Generation3 fetch extension: reuse the qualified Build84 reader for single3/pair3/continuation3/sibling3 with zero image-sized memory.
+- [x] Add exactness/race and repeated public benchmark gates.
+- [x] Run `make v4-build98-gen3-fetch-test` on the qualified Go 1.26.0 host: PASS.
+- [x] Run `make v4-build98-gen3-fetch-benchmark`: complete Generation3 23.513 -> 21.304 ms/op mean (-9.40%), sibling stencil -9.54%, unchanged allocations, clean five-sample separation.
+- [x] Freeze the public result in `docs/qualified-baselines/build98-benchmark-summary.tsv` and authorize retained AB/BA only.
+- [x] Add a research-only full Build98 recovery path with Generation3-only dispatch change, Build90 qualification and Build93 protected decode unchanged.
+- [x] Preserve historical continuation4 `Fetch*` counters and add separate `Gen3Fetch*` counters for Build98 Generation3 work.
+- [x] Add `make v4-build98-gen3-fetch-paired-profile` for contemporaneous Build93/Build98 B/mild+B/angle AB/BA evidence.
+- [x] Run the retained paired gate: exact B/mild/B/angle semantics PASS; Generation3 improves in all four AB/BA comparisons.
+- [x] Freeze retained evidence in `docs/qualified-baselines/build98-paired-summary.tsv` and authorize physical qualification.
+- [x] Add explicit `v4-extract-phone-build98`, candidate telemetry and the atomic complete nine-photo physical harness.
+- [x] Run Build98 physical gate 1 with Go 1.26.0 and archive report + diagnostics: 9/9 PASS.
+- [x] Run an independent Build98 physical gate 2 and archive report + diagnostics: 9/9 PASS.
+- [x] Promote Build98 after both runs preserve complete 9/9 semantics and exact frozen counters; Build93 is previous.
+- [x] Rewire normal `v4-extract-phone` to the unchanged qualified Build98 implementation.
+- [x] Close the separate Build98 production-entry-point integration: archived normal-command 9/9 PASS verified; non-sensitive rows and metadata frozen in `docs/qualified-baselines/build98-production-integration.tsv` on 2026-10-23. This is wiring evidence, not a third promotion run.
+
 ## Build93 checkpoint — qualified exact protected-residue reuse baseline
 
 - [x] Close Build92 qualified-host source/profile gate as PASS and select protected residue reuse from measured decode CPU cost.
@@ -73,11 +107,20 @@
 - [x] Add a targeted shared immutable-plane race fixture, candidate-only telemetry and explicit `v4-extract-phone-build95`; keep normal `v4-extract-phone` on Build93.
 - [x] Add a public repeated reader/continuation/preparation benchmark and atomic artifact staging.
 - [x] Add a contemporaneous Build93/Build95 retained AB/BA profiler for B/mild and B/angle with exact pairwise semantic gates.
-- [ ] Run `make v4-build95-gen4-luminance-test` on the qualified Go 1.26.0 host and archive the report.
-- [ ] Run `make v4-build95-gen4-luminance-benchmark`, archive the complete benchmark directory and review all repeated samples.
-- [ ] Run `make v4-build95-paired-profile` only if the public benchmark shows a material stable gain that plausibly repays plane preparation and 121.57 MiB additional memory on the retained work image.
-- [ ] Open two independent complete 9/9 candidate physical gates only if both paired orderings show a directionally stable material geometry/gen4 improvement with exact semantics.
-- [ ] Do not promote or rewire the normal command before every required gate passes; close Build95 as exact/non-promoted if performance or memory trade-off is not compelling.
+- [x] Run `make v4-build95-gen4-luminance-test` on the qualified Go 1.26.0 host and archive the report: PASS.
+- [x] Run `make v4-build95-gen4-luminance-benchmark`, archive the complete benchmark directory and review all repeated samples: strong local gain.
+- [x] Run `make v4-build95-paired-profile`: semantic PASS; B/mild neutral and B/angle small/order-sensitive end-to-end gain.
+- [x] Do **not** open Build95 9/9 physical gates: paired performance criterion was not met.
+- [x] Close Build95 as exact/race-correct but **rejected / not promoted**; normal `v4-extract-phone` remains Build93.
+
+## Build96 checkpoint — Gen4 retained bottleneck profiling (completed historical checkpoint)
+
+- [x] Keep Build93 as current qualified baseline and Build95 only as a rejected experimental contrast.
+- [x] Add B/angle AB/BA per-run CPU profiles and memory/GC accounting without changing recovery runtime.
+- [x] Enforce frozen B/angle semantic telemetry before accepting any profile.
+- [x] Run `make v4-build96-gen4-retained-test` on Go 1.26.0: archived source PASS.
+- [x] Run `make v4-build96-gen4-retained-profile` and archive the complete profile directory: archived observability PASS; see `build96-retained-profile.tsv`.
+- [x] Select Build97 from the completed retained CPU/wall review; Build97 later closed without promotion.
 
 ## Build89 checkpoint — closed profiling PASS
 
@@ -141,13 +184,14 @@
 - [x] Freeze source-controlled Build76 and Build84 performance-reference TSVs so future candidates do not depend on mutable/private diagnostic directories.
 - [x] Keep Format-v4 wire format, locked pilot, strength 48, ECC/Hamming, whitening/HMAC domains and qualified thresholds unchanged.
 
-## Next performance work
+## Next performance work — Build100 candidate, not implemented
 
-- [ ] Treat Build90, not Build84/Build76, as the performance and semantic baseline for any later smartphone candidate.
-- [ ] Re-profile the Build90-qualified pipeline before selecting a new optimization; qualification is no longer serial.
-- [ ] Measure first before changing another hot component; do not stack speculative caches/LUTs or combine unrelated optimizations.
-- [ ] Require bit-exact/telemetry-exact equivalence before any future physical timing.
-- [ ] Require two independent Go 1.26.0 9/9 physical PASS runs with a repeatable material improvement before superseding Build90.
+- [x] Complete post-promotion profiling of unchanged Build98 as Build99; use `docs/qualified-baselines/build99-profile-summary.tsv` as the current stage map.
+- [ ] Implement only bounded ordered-parallel scoring of the six fixed public side pairs before unchanged stable ranking in freeze. Keep per-pair arithmetic, original pair/tie order and complete-bank semantics exact.
+- [ ] Prove exact score/order/evaluation/full-bank/recovery equivalence and pass a targeted race gate before benchmarking.
+- [ ] Require a repeated same-session complete-freeze benchmark and contemporaneous retained comparison before opening physical promotion gates.
+- [ ] Require two independent complete Go 1.26.0 9/9 semantic PASS runs before superseding qualified Build98. Keep rejected Build95/97 branches closed absent new independent evidence.
+
 
 ## Build83 checkpoint — closed
 
