@@ -1,3 +1,9 @@
+## Build100 — closed without promotion, 2026-10-23
+
+Build100 changes only the scheduling of six public side-pair scores in freeze, with original-index commit before unchanged stable ranking. Source/exactness/race/CLI/vet and the public complete-freeze benchmark passed (2,393.223 → 1,234.146 ms/op, -48.43%). Two independent complete retained AB/BA sessions preserved exact semantics in all 16 runs. Freeze improved in every pair and deep means improved on both cases: B/mild -11.45% / -15.20%, B/angle -1.31% / -4.15%.
+
+The candidate nevertheless fails its predeclared unchanged-stage guard: B/angle Gen4 mean is +3.82% slower in r1 and +1.28% in the independent r2. The guard was not relaxed. Build100 is closed / not promoted; no Build100 physical nine-photo campaign or normal-command integration was run. Production stays Build98 and previous remains Build93. The cause of the extra Gen4 cost is unproven; both the positive whole-pipeline means and the adverse stage measurement are preserved. See `V4_BUILD100_ORDERED_PARALLEL_PAIR_SCORING.md`, `qualified-baselines/build100-benchmark-summary.tsv`, `build100-paired-summary.tsv` and `build100-decision.tsv`.
+
 ## Build99 qualified Build98 profile — completed PASS, 2026-10-23
 
 Build99 changes observability and version metadata only. Source/exactness/race/CLI/vet, frozen v3 and locked pilot gates passed. Retained low-overhead B/mild/B/angle timing and both separate CPU-profile passes preserved all frozen semantics, including Build98 Gen3 counters; B/mild authenticates and B/angle rejects. Timing-pass deep totals are 83,618 / 187,601 ms; geometry shares 72.51% / 99.08%; Gen4 18,907 / 113,604 ms. Source/corpus hashes were checked after the profile. Non-sensitive rows are frozen in `docs/qualified-baselines/build99-profile-summary.tsv` and full raw artifacts remain private.

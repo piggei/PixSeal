@@ -2352,3 +2352,20 @@ v4-build99-qualified-pipeline-test: v4-build98-gen3-fetch-test v3-freeze-check v
 
 v4-build99-qualified-pipeline-profile: v4-build99-qualified-pipeline-test
 	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash ./scripts/profile-v4-build99-qualified-pipeline.sh
+
+# Build100 candidate: only six-pair proposal scoring is scheduled in parallel.
+.PHONY: v4-build100-pair-scoring-test v4-build100-pair-scoring-benchmark
+v4-build100-pair-scoring-test: v4-build98-gen3-fetch-test v3-freeze-check v4-pilot-lock-check
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build100' -count=1
+	@$(GO) test -race ./watermark -run '^TestExperimentalV4Build100ParallelPairScoreRaceFixture$$' -count=1
+
+v4-build100-pair-scoring-benchmark: v4-build100-pair-scoring-test
+	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash scripts/benchmark-v4-build100-pair-scoring.sh
+
+.PHONY: v4-build100-pair-scoring-paired-profile
+v4-build100-pair-scoring-paired-profile: v4-build100-pair-scoring-test
+	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash scripts/profile-v4-build100-paired-retained.sh
+
+.PHONY: v4-build100-phone-physical-test
+v4-build100-phone-physical-test: v4-build100-pair-scoring-test build
+	@PIXSEAL="$(abspath $(PIXSEAL))" PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash scripts/test-v4-build100-phone-corpus.sh

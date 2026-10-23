@@ -1,3 +1,11 @@
+## v0.3.0-build100 — ordered-parallel public pair scoring, closed without promotion
+
+- Compute the six fixed public pair scores in a bounded pool and restore original pair order before unchanged stable ranking. Keep normal production and the pinned Build98 implementation unchanged.
+- Add bit-exact score/order/evaluation, whole-freeze/bank/recovery equivalence and race gates, plus a candidate-only CLI and separate pair-work telemetry.
+- Pass the public complete-freeze benchmark: 2,393.223 → 1,234.146 ms/op mean (-48.43%), five-sample separation, no image-sized memory addition.
+- Complete two independent Build98/Build100 AB/BA sessions: all 16 executions preserve exact semantics; changed-phase gains are positive in every pair and deep means improve on both cases.
+- Close without promotion under the predeclared unchanged-stage guard: B/angle Gen4 mean remains slower (+3.82% / +1.28%). Freeze all paired rows and decision metrics, keep Build98 in production and do not open physical gates.
+
 ## v0.3.0-build99 — observe the qualified Build98 pipeline
 
 - Close Build98's final documentation gate from the already-completed normal-command integration 9/9 PASS; publish only non-sensitive derived rows and align the Wiki.

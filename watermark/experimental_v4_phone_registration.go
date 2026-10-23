@@ -499,6 +499,12 @@ type ExperimentalV4PhoneInfo struct {
 	Build95LuminancePlaneFallback             bool
 	Build95LuminancePlaneBytes                int64
 	Build95LuminancePlanePrepMs               int64
+	Build100Attempted                         bool
+	Build100PairWorkers                       int
+	Build100PairTasks                         int
+	Build100PairEvaluations                   int
+	Build100PairWallMs                        int
+	Build100PairWorkerMs                      int
 	Build98Attempted                          bool
 	Build98Gen3FetchFoldScores                int
 	Build98Gen3FetchBlockReads                int

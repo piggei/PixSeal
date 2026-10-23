@@ -1,3 +1,14 @@
+## Build100 checkpoint — closed, not promoted
+
+- [x] Publish verified Build99 code and Wiki (8ebdd5b / f7c1b9e).
+- [x] Implement only ordered-parallel scoring of the six fixed public side pairs; retain Build98 as qualified production.
+- [x] Pass exact score/order/evaluation, complete freeze/bank/recovery, targeted race and CLI regressions.
+- [x] Pass five-sample public complete-freeze benchmark (-48.43% mean).
+- [x] Complete two independent full retained AB/BA sessions: all 16 runs exact semantic PASS; freeze and pair scoring faster in every pair; deep means favorable on both cases.
+- [x] Apply the predeclared independent-replication guard without relaxation: unchanged B/angle Gen4 still regresses on the mean (+3.82% / +1.28%).
+- [x] Close Build100 without promotion; run no physical or production-integration gate. Keep Build98 current and Build93 previous.
+- [x] Freeze all non-sensitive rows/decisions and archive raw evidence privately.
+
 ## Build99 checkpoint — closed observability PASS
 
 - [x] Close Build98 production-integration documentation from the existing 9/9 PASS, without repeating promotion or changing qualified runtime sources.
@@ -184,13 +195,11 @@
 - [x] Freeze source-controlled Build76 and Build84 performance-reference TSVs so future candidates do not depend on mutable/private diagnostic directories.
 - [x] Keep Format-v4 wire format, locked pilot, strength 48, ECC/Hamming, whitening/HMAC domains and qualified thresholds unchanged.
 
-## Next performance work — Build100 candidate, not implemented
+## Next research work — observability before another runtime candidate
 
-- [x] Complete post-promotion profiling of unchanged Build98 as Build99; use `docs/qualified-baselines/build99-profile-summary.tsv` as the current stage map.
-- [ ] Implement only bounded ordered-parallel scoring of the six fixed public side pairs before unchanged stable ranking in freeze. Keep per-pair arithmetic, original pair/tie order and complete-bank semantics exact.
-- [ ] Prove exact score/order/evaluation/full-bank/recovery equivalence and pass a targeted race gate before benchmarking.
-- [ ] Require a repeated same-session complete-freeze benchmark and contemporaneous retained comparison before opening physical promotion gates.
-- [ ] Require two independent complete Go 1.26.0 9/9 semantic PASS runs before superseding qualified Build98. Keep rejected Build95/97 branches closed absent new independent evidence.
+- [ ] Investigate the retained B/angle Gen4 mean difference in contemporaneous baseline/candidate CPU, worker, heap/GC and scheduling evidence; timing alone does not establish its cause.
+- [ ] Keep the closed Build100 implementation/evidence available; do not silently relax its predeclared guard or describe its positive overall means as negative.
+- [ ] Start any new optimization from qualified Build98, preserve exact public-only geometry and ordered semantics, and require the complete source/race/benchmark/retained/physical discipline before promotion.
 
 
 ## Build83 checkpoint — closed

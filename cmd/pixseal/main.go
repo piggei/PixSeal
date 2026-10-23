@@ -39,6 +39,7 @@ Commands:
   v4-extract-phone EXPERIMENTAL: Build98 qualified exact Generation3 fetch extension over Build93 + authenticated v4 decode
   v4-extract-phone-build93 EXPERIMENTAL PREVIOUS QUALIFIED ALIAS: explicit Build93 path for regression/requalification
   v4-extract-phone-build95 EXPERIMENTAL REJECTED: exact Gen4 luminance-plane experiment retained for reproducibility
+  v4-extract-phone-build100 EXPERIMENTAL NOT PROMOTED: ordered-parallel public pair scoring; production remains Build98
   v4-extract-phone-build98 EXPERIMENTAL QUALIFIED ALIAS: explicit Build98 exact Generation3 fetch path
   v4-diagnose-phone EXPERIMENTAL: Build45 phone failure decomposition and optional lab-only supplied-geometry oracle
   v4-diagnose-phone-handoff EXPERIMENTAL: Build46 qualified-geometry handoff diagnostic
@@ -178,6 +179,8 @@ func main() {
 		err = v4ExtractPhoneBuild93(os.Args[2:])
 	case "v4-extract-phone-build95":
 		err = v4ExtractPhoneBuild95(os.Args[2:])
+	case "v4-extract-phone-build100":
+		err = v4ExtractPhoneBuild100(os.Args[2:])
 	case "v4-extract-phone-build98":
 		err = v4ExtractPhoneBuild98(os.Args[2:])
 	case "v4-diagnose-phone":
@@ -1055,6 +1058,49 @@ func v4ExtractPhoneBuild98(args []string) error {
 	return nil
 }
 
+func v4ExtractPhoneBuild100(args []string) error {
+	fs := newFlagSet("v4-extract-phone-build100", "EXPERIMENTAL NOT PROMOTED: Build100 ordered-parallel public pair scoring retained for reproducibility. Normal v4-extract-phone remains Build98.")
+	in := fs.String("in", "", "smartphone JPEG or PNG with the complete artwork and visible paper around it (required)")
+	key := fs.String("key", "", "secret key (required, minimum 8 bytes)")
+	width := fs.Int("width", 0, "canonical pre-print carrier width in pixels, divisible by 8 (required)")
+	height := fs.Int("height", 0, "canonical pre-print carrier height in pixels, divisible by 8 (required)")
+	raw := fs.Bool("raw", false, "write only the authenticated payload bytes to stdout")
+	if err := fs.Parse(args); err != nil {
+		return err
+	}
+	if fs.NArg() != 0 {
+		fs.Usage()
+		return fmt.Errorf("unexpected positional argument %q", fs.Arg(0))
+	}
+	if *in == "" || *key == "" || *width == 0 || *height == 0 {
+		fs.Usage()
+		return fmt.Errorf("-in, -key, -width and -height are required")
+	}
+	if *width < 296 || *height < 256 || *width%8 != 0 || *height%8 != 0 {
+		return fmt.Errorf("canonical -width/-height must be divisible by 8 and at least 296x256")
+	}
+	img, format, err := openImageWithFormat(*in)
+	if err != nil {
+		return err
+	}
+	decoderID := inputDecoderID(format)
+	payload, info, phone, err := watermark.ExperimentalV4ExtractPhoneBuild100Candidate(img, []byte(*key), *width, *height)
+	if err != nil {
+		printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
+		return err
+	}
+	if *raw {
+		if _, err := os.Stdout.Write(payload); err != nil {
+			return err
+		}
+		printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
+		return nil
+	}
+	fmt.Printf("%s\n", payload)
+	printV4PhoneDiagnostics(os.Stderr, decoderID, info, phone)
+	return nil
+}
+
 func printV4PhoneDiagnostics(w io.Writer, decoderID string, info watermark.ExperimentalV4ExtractInfo, p watermark.ExperimentalV4PhoneInfo) {
 	fmt.Fprintf(w, "EXPERIMENTAL Format-v4 phone decode\n")
 	fmt.Fprintf(w, "input-decoder: %s\n", decoderID)
@@ -1156,6 +1202,9 @@ func printV4PhoneDiagnostics(w io.Writer, decoderID string, info watermark.Exper
 	}
 	fmt.Fprintf(w, "hmac: authenticated=%t fallback-attempted=%t fallback-authenticated=%t\n", p.HMACAuthenticated, p.FallbackAttempted, p.FallbackAuthenticated)
 	fmt.Fprintf(w, "data-confidence: %.2f\nprofile: %s\n", info.Confidence, info.Profile)
+	if p.Build100Attempted {
+		fmt.Fprintf(w, "build100-pair-scoring: attempted=true workers=%d tasks=%d evaluations=%d wall-ms=%d worker-ms=%d\n", p.Build100PairWorkers, p.Build100PairTasks, p.Build100PairEvaluations, p.Build100PairWallMs, p.Build100PairWorkerMs)
+	}
 	fmt.Fprintf(w, "pilot-score: %.6f\npilot-margin: %.6f\npilot-origin: (%d,%d) blocks\n", info.PilotScore, info.PilotMargin, info.OriginXBlocks, info.OriginYBlocks)
 	fmt.Fprintf(w, "pilot: %s sha256=%s\n", info.PilotName, info.PilotHash)
 }

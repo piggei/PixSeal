@@ -21,6 +21,10 @@ These files freeze source-controlled numeric references without shipping the pri
 
 - `build99-profile-summary.tsv` — completed observability-only timing and separate CPU attribution for unchanged qualified Build98, 2026-10-23. No new baseline or cross-session speedup is claimed.
 
+- `build100-benchmark-summary.tsv` — public complete-freeze candidate samples; -48.43% mean.
+- `build100-paired-summary.tsv` — all 16 exact-semantic retained rows from two independent Build98/Build100 sessions.
+- `build100-decision.tsv` — every paired timing comparison, including favorable deep/freeze results and adverse unchanged-Gen4 values. Build100 is closed / not promoted; these are candidate evidence, not a qualified baseline.
+
 Build98 promotion is based on exact source/race equivalence, the public complete-Generation3 benchmark, contemporaneous AB/BA changed-phase evidence, and two independent retained 9/9 semantic physical gates. Build93 is the previous qualified baseline. Historical Build93 promotion was based on exact source/race equivalence, the public residue-reuse benchmark, and two independent retained 9/9 semantic physical gates with repeatable B/mild decode improvement. The later production-entry-point matrix is integration evidence only and is kept separate from promotion-performance evidence. Build90 remains an earlier qualified reference. Cross-run absolute geometry timing is retained rather than cherry-picked.
 
 ## Experimental decision evidence
