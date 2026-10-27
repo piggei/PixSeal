@@ -1,0 +1,3 @@
+session	gen4_at_least_3pct	pool_at_least_3pct	all_stage_pairs_favorable	reader_means_nonregressive	allocation_gates	authorizes_retained_comparison
+1	false	false	true	true	false	false
+2	false	true	false	true	false	false

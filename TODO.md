@@ -1,3 +1,13 @@
+## Build104 checkpoint — closed exact / public benchmark criterion not met / not promoted
+
+- [x] Publish Build103 code/wiki (4924c25 / 086df21) as explicitly requested.
+- [x] Select one fixed8 compiler-shape hypothesis from retained reader profiles; keep qualified sources and default runtime behavior unchanged.
+- [x] Predeclare two balanced public benchmark sessions, identical-code controls and the fixed performance/allocation criterion.
+- [x] Create a public semantic fixture that actually exercises continuation and returns nonempty ordered candidates; select it before timings.
+- [x] Pass reader bit/border/random, FoldScore, continuation, Gen4/pool, structural, race, CLI/vet and frozen-core/pilot gates.
+- [x] Complete all100 benchmark slots and freeze all samples/pairs/controls/session means/decision; do not relax the failed criterion.
+- [x] Update documentation/wiki and retain raw evidence, source/binary hashes and separate compiler assembly inspection; preserve benchmark integrity after the later infrastructure interruption.
+
 ## Build103 checkpoint — closed observability PASS
 
 - [x] Publish Build102 code/wiki (ffc4ba2 / 95d9f0e) as explicitly requested.

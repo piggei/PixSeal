@@ -1,3 +1,11 @@
+## v0.3.0-build104 — fixed8 reader candidate, closed without promotion
+
+- Make continuation4's fixed block size explicit with constant loops and safe array views; preserve arithmetic, RGB loads, pinned kernels and normal dispatch.
+- Add a public fixture that exercises continuation and returns nonempty Gen4 candidates; pass bit/state/bank/counter, structural, race and inherited source gates.
+- Complete both balanced public benchmark sessions, all100 slots, all40 pairs and ten identical-code controls with stable source/binary/protocol hashes.
+- Retain favorable reader means (3.68–8.87%) and full-stage changes (-2.08% / -1.93%); close under the unchanged >=3% both-session/every-pair/allocation criterion. No private/physical campaign or promotion.
+- Preserve separate compiler assembly inspection and verify the complete benchmark archive after a later infrastructure interruption. Build98 remains qualified, Build93 previous.
+
 ## v0.3.0-build103 — fresh-process preemption-attribution control
 
 - Preserve production and the Gen4 kernel; launch each default/diagnostic replay in a fresh process using one binary and identical private lossless snapshots.

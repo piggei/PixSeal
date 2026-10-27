@@ -2402,3 +2402,15 @@ v4-build103-preemption-test: v4-build102-frozen-gen4-test
 
 v4-build103-preemption-profile: v4-build103-preemption-test
 	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash scripts/profile-v4-build103-preemption-control.sh
+
+# Build104: public-only fixed8 continuation reader candidate; qualified sources pinned.
+.PHONY: v4-build104-fixed-block-test v4-build104-fixed-block-benchmark
+v4-build104-fixed-block-test: v4-build98-gen3-fetch-test v3-freeze-check v4-pilot-lock-check
+	@python3 scripts/check-v4-build104-fixed-block-copy.py
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build104' -count=1 -v
+	@$(GO) test -race ./watermark -run '^TestExperimentalV4Build104OrderedPoolRace$$' -count=1
+	@bash -n scripts/benchmark-v4-build104-fixed-block.sh scripts/test-list.sh
+	@python3 -c 'import ast,pathlib; [ast.parse(p.read_text()) for p in pathlib.Path("scripts").glob("*v4-build104*.py")]'
+
+v4-build104-fixed-block-benchmark: v4-build104-fixed-block-test
+	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash scripts/benchmark-v4-build104-fixed-block.sh
