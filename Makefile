@@ -2380,3 +2380,15 @@ v4-build101-runtime-effects-test: v4-build100-pair-scoring-test
 
 v4-build101-runtime-effects-profile: v4-build101-runtime-effects-test
 	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash scripts/profile-v4-build101-runtime-effects.sh
+
+# Build102 separates frozen Gen4 work from upstream context; A/A control only.
+.PHONY: v4-build102-frozen-gen4-test v4-build102-frozen-gen4-profile
+v4-build102-frozen-gen4-test: v4-build98-gen3-fetch-test v3-freeze-check v4-pilot-lock-check
+	@python3 scripts/check-v4-build101-observed-copies.py
+	@python3 scripts/check-v4-build102-replay-copy.py
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build102' -count=1
+	@$(GO) test -race ./watermark -run '^TestExperimentalV4Build102ReplayRaceFixture$$' -count=1
+	@bash -n scripts/profile-v4-build102-frozen-gen4-replay.sh
+
+v4-build102-frozen-gen4-profile: v4-build102-frozen-gen4-test
+	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash scripts/profile-v4-build102-frozen-gen4-replay.sh

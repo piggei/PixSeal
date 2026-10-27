@@ -1,3 +1,11 @@
+## v0.3.0-build102 — frozen Gen4 A/A replay control
+
+- Add a test-only bank split at the original Gen3→Gen4 barrier, structurally chained to pinned runtime sources.
+- Fingerprint full unexported task/bank fields and float bits, enforce raster immutability, and check a qualified complete-bank reference for each retained case.
+- Add balanced identical-code/data timing controls and separate CPU profiles with live Linux user/system CPU counters; source/exactness/race and parser/mutation gates passed.
+- Complete both qualified bank references, all four matching prefix captures and all 20 exact replays with stable source/corpus hashes. Freeze every A/A pair and separate profile row; pool range/mean 3.41% / 7.14% demonstrates within-code variation.
+- Propose a separate preemption-attribution diagnostic from the sampled asyncPreempt share; no causal claim, runtime candidate, default setting change, guard revision or physical qualification.
+
 ## v0.3.0-build101 — runtime-effects observability
 
 - Add separate pinned Build98/Build100 AB/BA timing and test-only stage CPU/heap/GC/scheduler attribution harnesses.

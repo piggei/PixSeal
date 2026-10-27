@@ -1,0 +1,13 @@
+image	metric	samples	mean	min	max	range_over_mean_pct	population_cv_pct	slot_a_mean	slot_b_mean	b_vs_a_apparent_pct	interpretation
+phone-b-mild.jpg	gen4_pool_ms	8	20616.750	20304.0	21008.0	3.414699	0.993298	20736.750	20496.750	-1.157366	AA_variation_no_candidate_or_causality
+phone-b-mild.jpg	replay_ms	8	20616.875	20304.0	21008.0	3.414679	0.993673	20737.000	20496.750	-1.158557	AA_variation_no_candidate_or_causality
+phone-b-mild.jpg	gen4_worker_ms	8	163401.000	161035.0	166417.0	3.293737	0.983982	164378.500	162423.500	-1.189328	AA_variation_no_candidate_or_causality
+phone-b-mild.jpg	process_cpu_ms	8	161777.500	159470.0	164910.0	3.362643	0.971623	162707.500	160847.500	-1.143156	AA_variation_no_candidate_or_causality
+phone-b-mild.jpg	process_user_cpu_ms	8	156062.500	153840.0	159090.0	3.364037	1.008050	157005.000	155120.000	-1.200599	AA_variation_no_candidate_or_causality
+phone-b-mild.jpg	process_system_cpu_ms	8	5715.000	5410.0	6210.0	13.998250	4.098001	5702.500	5727.500	0.438404	AA_variation_no_candidate_or_causality
+phone-b-angle.jpg	gen4_pool_ms	8	129304.875	126041.0	135269.0	7.136622	2.687507	128961.000	129648.750	0.533301	AA_variation_no_candidate_or_causality
+phone-b-angle.jpg	replay_ms	8	129309.125	126046.0	135273.0	7.135614	2.687330	128965.750	129652.500	0.532506	AA_variation_no_candidate_or_causality
+phone-b-angle.jpg	gen4_worker_ms	8	1031807.125	1005647.0	1079570.0	7.164420	2.703836	1029082.750	1034531.500	0.529476	AA_variation_no_candidate_or_causality
+phone-b-angle.jpg	process_cpu_ms	8	1019098.750	994650.0	1063490.0	6.754988	2.464126	1015722.500	1022475.000	0.664798	AA_variation_no_candidate_or_causality
+phone-b-angle.jpg	process_user_cpu_ms	8	977640.000	958770.0	1017490.0	6.006301	2.056530	973510.000	981770.000	0.848476	AA_variation_no_candidate_or_causality
+phone-b-angle.jpg	process_system_cpu_ms	8	41458.750	35880.0	54760.0	45.539241	13.796559	42212.500	40705.000	-3.571217	AA_variation_no_candidate_or_causality

@@ -1,3 +1,9 @@
+## Build102 — frozen Gen4 A/A replay observability PASS, 2026-10-27
+
+Build102 introduces a test-only split at the existing Gen3→Gen4 barrier. Qualified Build98 full-bank references and both Build98/Build100 prefix captures agree exactly; all 20 isolated replays preserve complete ordered-bank, task/raster fingerprints and non-timing counters. Source/exactness/race/CLI/vet, structural/mutation/CPU-parser and frozen-core/pilot gates passed with stable source/corpus hashes. The banks retain 937 / 6,198 candidates from 593 / 1,902 Gen4 tasks.
+
+Sixteen identical-code/data timing slots show pool range/mean 3.414699% / 7.136622% and apparent B/A mean changes -1.157366% / +0.533301% on B/mild / B/angle. All eight paired values and all four separate CPU-profile rows are retained. Live total process CPU replaces the stale CPU-class snapshots for this study. These descriptive ranges are not historical confidence bounds or causal attribution. Pprof assigns 5.39–7.66% samples to asyncPreempt; a separate research-only preemption-attribution control is proposed, without equating samples to removable cost or recommending a production debug setting. Build98 stays qualified, Build93 previous and Build100 closed / not promoted. See `V4_BUILD102_FROZEN_GEN4_REPLAY.md` and the four `qualified-baselines/build102-*.tsv` tables.
+
 ## Build101 — runtime-effects observability PASS, 2026-10-27
 
 Build101 preserves the pinned Build98/Build100 runtime sources and introduces only test-side observation and version metadata. Source/exactness/race/CLI/vet, frozen-core/pilot and structural-copy gates passed. All 12 retained executions preserve full exact telemetry, payload and successful info; all source/corpus hashes remained fixed. Eight untouched AB/BA timing runs give Build100 mean deep changes of -11.92% (B/mild) / -5.41% (B/angle), freeze -39.03% / -37.68% and Gen4 -1.35% / -2.21%, favorable in each timing pair.

@@ -1,3 +1,14 @@
+## Build102 checkpoint — closed frozen Gen4 observability PASS
+
+- [x] Publish Build101 code/wiki (9656a16 / d9a803e) as explicitly requested.
+- [x] Preserve pinned runtime sources and split Gen4 at the existing barrier in test code only.
+- [x] Predeclare 16 A/A timing replays, four separate CPU profiles, exact frozen task/raster/bank fingerprints and live process CPU boundaries.
+- [x] Pass source, structural, exactness, fingerprint-mutation, CPU-parser and race gates.
+- [x] Complete two qualified bank references, four matching prefix captures and all 20 exact replays; preserve full evidence and source/corpus hashes.
+- [x] Freeze all placebo pair/variation data, update wiki and state limits without claiming causal attribution or promotion.
+
+Next bounded proposal: a separate default/diagnostic-preemption replay control, with hard timeouts and exact bank/raster gates; no default changes or assumed speedup. Not implemented.
+
 ## Build101 checkpoint — closed observability PASS
 
 - [x] Keep qualified Build98 / previous Build93 and pinned Build100 unchanged.
