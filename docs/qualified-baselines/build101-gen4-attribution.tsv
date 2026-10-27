@@ -1,0 +1,5 @@
+run	image	variant	wall_ms	allocated_bytes	mallocs	gc_cycles	gc_pause_ns	sched_events	sched_ge1ms	sched_ge10ms	gen4_worker_ms	gen4_workers	worker_occupancy_proxy	sampled_gen4_cpu_s	sampled_cpu_per_wall_s	historical_reader_cpu_s	build84_reader_cpu_s
+9	phone-b-mild.jpg	build98	18636	17343544	1689	0	0	965	54	26	147736	8	0.990932	146.58	7.865422	90.82	54.79
+10	phone-b-mild.jpg	build100	19007	17343656	1690	0	0	969	56	23	150740	8	0.991345	149.13	7.846057	91.29	56.85
+11	phone-b-angle.jpg	build100	116977	120057848	9116	1	349053	5913	192	102	933540	8	0.997568	920.71	7.870864	458.69	455.82
+12	phone-b-angle.jpg	build98	113171	120087208	9125	1	2507698	5766	219	96	903393	8	0.997819	894.71	7.905824	449.34	439.11

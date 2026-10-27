@@ -1,0 +1,5 @@
+image	cycle	order	baseline_run	candidate_run	semantic_gate	build98_total_ms	build100_total_ms	total_ms_change_pct	build98_freeze_ms	build100_freeze_ms	freeze_ms_change_pct	build98_gen4_ms	build100_gen4_ms	gen4_ms_change_pct	build98_gen4_worker_ms	build100_gen4_worker_ms	gen4_worker_ms_change_pct
+phone-b-mild.jpg	1	98-100	1	2	PASS	82611	74226	-10.149980	22765	14474	-36.419943	18092	17820	-1.503427	143023	141370	-1.155758
+phone-b-mild.jpg	2	100-98	8	7	PASS	86522	74746	-13.610411	23890	13972	-41.515278	18368	18148	-1.197735	145663	144006	-1.137557
+phone-b-angle.jpg	1	98-100	3	4	PASS	186318	177572	-4.694125	21442	13279	-38.070143	111675	110444	-1.102306	891847	881452	-1.165559
+phone-b-angle.jpg	2	100-98	6	5	PASS	188755	177211	-6.115864	21300	13356	-37.295775	114765	110988	-3.291073	916242	886368	-3.260492

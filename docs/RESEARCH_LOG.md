@@ -1,3 +1,9 @@
+## Build101 — runtime-effects observability PASS, 2026-10-27
+
+Build101 preserves the pinned Build98/Build100 runtime sources and introduces only test-side observation and version metadata. Source/exactness/race/CLI/vet, frozen-core/pilot and structural-copy gates passed. All 12 retained executions preserve full exact telemetry, payload and successful info; all source/corpus hashes remained fixed. Eight untouched AB/BA timing runs give Build100 mean deep changes of -11.92% (B/mild) / -5.41% (B/angle), freeze -39.03% / -37.68% and Gen4 -1.35% / -2.21%, favorable in each timing pair.
+
+The separate four-run attribution pass retains the opposite Gen4 sign (+1.99% / +3.36% wall; +1.74% / +2.91% sampled CPU). Both variants spend CPU in unchanged projective readers, show nearly identical allocation counts and high worker occupancy; no unique GC/scheduler cause is established. CPU-class runtime counters have a snapshot cadence limitation and are not treated as live phase CPU. Build101 closes as observability PASS; it neither reopens Build100's historical guard nor promotes it. Build98 stays qualified and Build93 previous. The proposed next study isolates replay of a frozen Gen4 task vector from upstream context. See `V4_BUILD101_RUNTIME_EFFECTS_OBSERVABILITY.md` and the five `qualified-baselines/build101-*.tsv` tables.
+
 ## Build100 — closed without promotion, 2026-10-23
 
 Build100 changes only the scheduling of six public side-pair scores in freeze, with original-index commit before unchanged stable ranking. Source/exactness/race/CLI/vet and the public complete-freeze benchmark passed (2,393.223 → 1,234.146 ms/op, -48.43%). Two independent complete retained AB/BA sessions preserved exact semantics in all 16 runs. Freeze improved in every pair and deep means improved on both cases: B/mild -11.45% / -15.20%, B/angle -1.31% / -4.15%.

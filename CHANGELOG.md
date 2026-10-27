@@ -1,3 +1,10 @@
+## v0.3.0-build101 — runtime-effects observability
+
+- Add separate pinned Build98/Build100 AB/BA timing and test-only stage CPU/heap/GC/scheduler attribution harnesses.
+- Verify observed-copy structure, exact bank/recovery semantics and concurrency; retain qualified Build98 and historical Build100 non-promotion.
+- Source/CLI/vet, frozen-core/pilot and race gates passed; all 12 retained executions preserve exact semantics and source/corpus hashes.
+- Freeze all timing and attribution rows: deep means -11.92% / -5.41%; Gen4 timing -1.35% / -2.21% versus instrumented +1.99% / +3.36%. No unique cause is established; propose isolated frozen-Gen4 replay without promoting Build100.
+
 ## v0.3.0-build100 — ordered-parallel public pair scoring, closed without promotion
 
 - Compute the six fixed public pair scores in a bounded pool and restore original pair order before unchanged stable ranking. Keep normal production and the pinned Build98 implementation unchanged.

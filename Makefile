@@ -2369,3 +2369,14 @@ v4-build100-pair-scoring-paired-profile: v4-build100-pair-scoring-test
 .PHONY: v4-build100-phone-physical-test
 v4-build100-phone-physical-test: v4-build100-pair-scoring-test build
 	@PIXSEAL="$(abspath $(PIXSEAL))" PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash scripts/test-v4-build100-phone-corpus.sh
+
+# Build101 observes pinned Build98/100; no production implementation changes.
+.PHONY: v4-build101-runtime-effects-test v4-build101-runtime-effects-profile
+v4-build101-runtime-effects-test: v4-build100-pair-scoring-test
+	@python3 scripts/check-v4-build101-observed-copies.py
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build101' -count=1
+	@$(GO) test -race ./watermark -run '^TestExperimentalV4Build101ObservedBankExact$$' -count=1
+	@bash -n scripts/profile-v4-build101-runtime-effects.sh
+
+v4-build101-runtime-effects-profile: v4-build101-runtime-effects-test
+	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash scripts/profile-v4-build101-runtime-effects.sh

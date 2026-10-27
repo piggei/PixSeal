@@ -30,3 +30,7 @@ Build98 promotion is based on exact source/race equivalence, the public complete
 ## Experimental decision evidence
 
 `build95-decision.tsv` and `build97-decision.tsv` freeze the non-sensitive retained AB/BA rows used to reject those candidates. They are evidence about experimental candidates, **not** qualified baselines. `build98-benchmark-summary.tsv` and `build98-paired-summary.tsv` are the pre-physical decision evidence; `build98-phone-performance.tsv` records the two completed physical gates that qualify Build98.
+
+## Build101 observability closure
+
+`build101-runs.tsv` retains all 12 exact-semantic runs with separate timing/attribution labels; `build101-stages.tsv` contains all 26 observed stage rows. `build101-timing-pairs.tsv` and `build101-timing-means.tsv` use only the eight untouched-API timing runs. `build101-gen4-attribution.tsv` combines observed Gen4 CPU, worker, allocation/GC and scheduler evidence for the four separate instrumented runs. CPU values come from stage-labelled sampling; runtime CPU-class estimates can remain stale between STW updates. Worker occupancy is not itself CPU utilization. All raw profiles, logs, binary and corpus remain private; `build101-evidence.sha256` freezes the private archive and these five public tables. See `../V4_BUILD101_RUNTIME_EFFECTS_OBSERVABILITY.md` for limits and the unchanged Build100 non-promotion decision.

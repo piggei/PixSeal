@@ -1,3 +1,14 @@
+## Build101 checkpoint — closed observability PASS
+
+- [x] Keep qualified Build98 / previous Build93 and pinned Build100 unchanged.
+- [x] Predeclare separate eight-run AB/BA timing and four-run attribution protocols.
+- [x] Add test-only stage CPU labels, heap/GC/runtime scheduler snapshots and structural-copy verification.
+- [x] Pass source/exactness/race/CLI/vet and inherited frozen-core/pilot gates.
+- [x] Complete 12 retained exact-semantic runs, archive profiles and verify source/corpus hashes.
+- [x] Freeze all non-sensitive rows, distinguish timing from attribution, and document evidence limits and next bounded step.
+
+Next bounded study: replay an identical frozen Gen4 task vector in balanced orders to isolate upstream context; not implemented. Do not reopen Build100 or relax its historical guard.
+
 ## Build100 checkpoint — closed, not promoted
 
 - [x] Publish verified Build99 code and Wiki (8ebdd5b / f7c1b9e).

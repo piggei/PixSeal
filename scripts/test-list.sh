@@ -115,6 +115,8 @@ row lattice-test RESEARCH pics 'strict direct lattice-basis composition suite; c
 row perspective-test RESEARCH pics 'strict mild projective perspective suite; corpus-sensitive'
 
 
+row v4-build101-runtime-effects-test RESEARCH source 'Build101 observed-copy exactness/race, inherited gates and structural source checks'
+
 section 'Private physical-channel'
 row v4-physical-fixtures PRIVATE pics 'generate Build35 scanner-first MQ control + two authenticated v4 print carriers'
 row v4-physical-qualification PRIVATE private/v4-physical 'HMAC-qualify Build35 captures with the generic projective decoder'
@@ -149,6 +151,7 @@ row v4-build65-phone-physical-test PRIVATE private/v4-phone 'Build65 exact Build
 row v4-build66-phone-physical-test PRIVATE private/v4-phone 'Build66 exact Build64 equivalence + ordered-decode timing vs retained Build65 matrix'
 row v4-build67-phone-physical-test PRIVATE private/v4-phone 'Build67 exact Build66 semantics + deep-recovery stage/physical-work profiling'
 row v4-build68-phone-physical-test PRIVATE private/v4-phone 'Build68 exact Build66 semantics + qualification pixel-plane reuse performance gate'
+row v4-build101-runtime-effects-profile PRIVATE private/v4-phone 'Build101 unchanged Build98/100 timing plus separate CPU/heap/GC/scheduler attribution'
 row v4-build100-pair-scoring-paired-profile PRIVATE private/v4-phone 'Build100 vs Build98 retained AB/BA; closed/not promoted'
 row v4-build100-phone-physical-test PRIVATE private/v4-phone 'Build100 prepared nine-photo harness; deferred, no physical qualification claimed'
 row v4-build99-qualified-pipeline-profile PRIVATE private/v4-phone 'Build99 unchanged qualified Build98: low-overhead timing then separate CPU profiles'
