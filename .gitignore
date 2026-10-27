@@ -40,3 +40,17 @@ Thumbs.db
 
 # Local raw qualification reports; publish only derived summaries under docs/.
 /report_build_*.txt
+
+# Local GUI toolchain and generated native packages
+/.tools/
+/gui/*.apk
+/gui/*.aab
+/gui/pixseal-gui
+/gui/fyne-cross/
+
+# Private Android signing material and sidecar files
+*.keystore
+*.jks
+*.apk.idsig
+
+/gui/fyne_metadata_init.go

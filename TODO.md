@@ -1,3 +1,13 @@
+## Build105 checkpoint — native Android GUI
+
+- [x] Respect the user priority: standalone Android app in Go, without a browser or PC at runtime.
+- [x] Add separate pinned Fyne module and pure-Go service adapter; keep qualified watermark sources unchanged.
+- [x] Implement local import/create/read/export, authentication enforcement, bounded images and one-job UI behavior.
+- [x] Pass inherited source and new service/UI/race tests; capture mobile widget layouts.
+- [x] Build and verify signed ARM64 test APK, offline manifest and private-key exclusion.
+- [ ] Test installation, file dialogs, keyboard and create/read round trip on the user's Android device.
+- [ ] Establish the known physical matrix on Android; then target B/angle recovery while preserving five successes and three negative controls.
+
 ## Build104 checkpoint — closed exact / public benchmark criterion not met / not promoted
 
 - [x] Publish Build103 code/wiki (4924c25 / 086df21) as explicitly requested.

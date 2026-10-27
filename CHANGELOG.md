@@ -1,3 +1,11 @@
+## v0.3.0-build105 — native Android GUI
+
+- Add standalone Fyne Android ARM64 UI with local v4 create/read workflows, native file dialogs, progress and verified-result copy.
+- Isolate graphical dependencies from the pure-Go CLI; reuse unchanged Build98 and the pinned JPEG codec.
+- Add resource limits, authenticated post-embed verification, secret-free reports and one-job/stale-output guards with service/UI/race tests.
+- Package and verify a locally signed offline test APK with bundled notices; retain actual-device and Android photographic qualification as pending.
+- Shift the next functional milestone to B/angle recovery, preserving qualified Build98 / previous Build93 and historical candidate decisions.
+
 ## v0.3.0-build104 — fixed8 reader candidate, closed without promotion
 
 - Make continuation4's fixed block size explicit with constant loops and safe array views; preserve arithmetic, RGB loads, pinned kernels and normal dispatch.

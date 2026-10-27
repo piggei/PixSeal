@@ -118,6 +118,7 @@ row perspective-test RESEARCH pics 'strict mild projective perspective suite; co
 row v4-build102-frozen-gen4-test RESEARCH source 'Build102 frozen Gen4 split/reference equivalence, fingerprint guard and race'
 row v4-build103-preemption-test RESEARCH source 'Build103 lossless snapshot, fresh-process runtime controls and inherited exactness/race'
 row v4-build104-fixed-block-test RESEARCH source 'Build104 exact fixed8 reader, real continuation fixture, stage/pool equality and race'
+row gui-test RESEARCH source 'Build105 native GUI/service authentication, privacy, async state, race and mobile layouts'
 row v4-build101-runtime-effects-test RESEARCH source 'Build101 observed-copy exactness/race, inherited gates and structural source checks'
 
 section 'Private physical-channel'

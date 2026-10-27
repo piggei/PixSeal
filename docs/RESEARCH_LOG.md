@@ -1,3 +1,9 @@
+## Build105 — native Android GUI, 2026-10-27
+
+Add a separate Fyne Go module for a standalone Android ARM64 application and a pure-Go app-service adapter. The Italian GUI imports JPEG/PNG, creates and verifies v4 PNG carriers, reads an aligned image or printed-photo input through unchanged Build98, copies only authenticated results and exports secret-free trial reports. One background job runs at a time; previous payload output is cleared before a new trial. Android packaging is local/offline, includes licence notices, verifies ZIP/signature/permissions and keeps signing keys and generated artifacts outside Git.
+
+Service/UI/race and inherited source gates pass; the native test package is built and verified. Actual Android device/physical qualification is pending. The CLI and qualified watermark sources are unchanged apart from build metadata; Build98 remains the qualified desktop baseline and B/angle remains a known failure. Immediate priorities are Android practical trials and B/angle functional recovery, replacing the next speed microbenchmark proposal. See `V4_BUILD105_ANDROID_GUI.md` and `../gui/README.md`.
+
 ## Build104 — exact fixed8 reader / public benchmark closed, not promoted, 2026-10-27
 
 Build103 code/wiki were published (4924c25 / 086df21). Build104 tests constant eight-pixel loops and safe array views of existing cosine rows in continuation4 only. Source/exactness/race/CLI/vet, structural-copy and frozen-core/pilot gates passed. A public seed107 fixture was selected by semantic coverage before timing; it exercises 128 continuation FoldScores and returns six ordered candidates, unlike the older probe-only fixture. All100 prospectively ordered benchmark slots and source/binary hashes are complete.
