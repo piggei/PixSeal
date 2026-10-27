@@ -116,6 +116,7 @@ row perspective-test RESEARCH pics 'strict mild projective perspective suite; co
 
 
 row v4-build102-frozen-gen4-test RESEARCH source 'Build102 frozen Gen4 split/reference equivalence, fingerprint guard and race'
+row v4-build103-preemption-test RESEARCH source 'Build103 lossless snapshot, fresh-process runtime controls and inherited exactness/race'
 row v4-build101-runtime-effects-test RESEARCH source 'Build101 observed-copy exactness/race, inherited gates and structural source checks'
 
 section 'Private physical-channel'
@@ -153,6 +154,7 @@ row v4-build66-phone-physical-test PRIVATE private/v4-phone 'Build66 exact Build
 row v4-build67-phone-physical-test PRIVATE private/v4-phone 'Build67 exact Build66 semantics + deep-recovery stage/physical-work profiling'
 row v4-build68-phone-physical-test PRIVATE private/v4-phone 'Build68 exact Build66 semantics + qualification pixel-plane reuse performance gate'
 row v4-build102-frozen-gen4-profile PRIVATE private/v4-phone 'Build102 identical frozen Gen4 A/A control; 16 timing and 4 CPU-profile replays'
+row v4-build103-preemption-profile PRIVATE private/v4-phone 'Build103 fresh-process default/diagnostic preemption control; 16 timing and 4 CPU-profile replays'
 row v4-build101-runtime-effects-profile PRIVATE private/v4-phone 'Build101 unchanged Build98/100 timing plus separate CPU/heap/GC/scheduler attribution'
 row v4-build100-pair-scoring-paired-profile PRIVATE private/v4-phone 'Build100 vs Build98 retained AB/BA; closed/not promoted'
 row v4-build100-phone-physical-test PRIVATE private/v4-phone 'Build100 prepared nine-photo harness; deferred, no physical qualification claimed'

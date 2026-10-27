@@ -2392,3 +2392,13 @@ v4-build102-frozen-gen4-test: v4-build98-gen3-fetch-test v3-freeze-check v4-pilo
 
 v4-build102-frozen-gen4-profile: v4-build102-frozen-gen4-test
 	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash scripts/profile-v4-build102-frozen-gen4-replay.sh
+
+# Build103 changes only a fresh-process diagnostic condition, never production.
+.PHONY: v4-build103-preemption-test v4-build103-preemption-profile
+v4-build103-preemption-test: v4-build102-frozen-gen4-test
+	@$(GO) test ./watermark -run '^TestExperimentalV4Build103' -count=1
+	@bash -n scripts/profile-v4-build103-preemption-control.sh
+	@python3 -c 'import ast,pathlib; [ast.parse(p.read_text()) for p in pathlib.Path("scripts").glob("*v4-build103*.py")]'
+
+v4-build103-preemption-profile: v4-build103-preemption-test
+	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash scripts/profile-v4-build103-preemption-control.sh

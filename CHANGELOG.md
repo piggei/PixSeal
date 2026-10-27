@@ -1,3 +1,11 @@
+## v0.3.0-build103 — fresh-process preemption-attribution control
+
+- Preserve production and the Gen4 kernel; launch each default/diagnostic replay in a fresh process using one binary and identical private lossless snapshots.
+- Add complete private-field/IEEE-bit serialization, checksum/mutation guards and public real-subprocess tests for both runtime conditions.
+- Pass inherited exactness/race/CLI/vet, structural and frozen-core/pilot gates; complete all 20 exact retained replays and four separate profiles with stable source/corpus/snapshot hashes.
+- Freeze every timing/profile row, all eight pairs, means and prospective decision; pool changes -4.46% / -2.61%, material-effect rule MIXED/UNSUPPORTED.
+- Preserve/exclude an infrastructure-interrupted preparation. Keep qualified Build98, previous Build93, historical Build100 non-promotion and production runtime settings unchanged.
+
 ## v0.3.0-build102 — frozen Gen4 A/A replay control
 
 - Add a test-only bank split at the original Gen3→Gen4 barrier, structurally chained to pinned runtime sources.

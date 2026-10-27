@@ -1,3 +1,12 @@
+## Build103 checkpoint — closed observability PASS
+
+- [x] Publish Build102 code/wiki (ffc4ba2 / 95d9f0e) as explicitly requested.
+- [x] Predeclare fresh-process default/diagnostic ordering, exactness gates, external timeouts and attribution criterion.
+- [x] Add bit-preserving private snapshots and verify roundtrip/mutation rejection plus actual fresh-process replay in both runtime conditions.
+- [x] Pass inherited source/exactness/race/CLI/vet, frozen-core/pilot and structural checks.
+- [x] Complete and retain all 20 exact replays, four separate CPU profiles and stable source/corpus hashes; preserve and exclude the infrastructure-interrupted attempt.
+- [x] Freeze all numeric comparisons and interpretation (MIXED/UNSUPPORTED), update wiki and preserve qualified Build98 / previous Build93 / Build100 non-promotion.
+
 ## Build102 checkpoint — closed frozen Gen4 observability PASS
 
 - [x] Publish Build101 code/wiki (9656a16 / d9a803e) as explicitly requested.
@@ -7,7 +16,7 @@
 - [x] Complete two qualified bank references, four matching prefix captures and all 20 exact replays; preserve full evidence and source/corpus hashes.
 - [x] Freeze all placebo pair/variation data, update wiki and state limits without claiming causal attribution or promotion.
 
-Next bounded proposal: a separate default/diagnostic-preemption replay control, with hard timeouts and exact bank/raster gates; no default changes or assumed speedup. Not implemented.
+The next proposal at the Build102 checkpoint was a separate default/diagnostic-preemption replay control; Build103 now completes it with hard timeouts and exact bank/raster gates. Production defaults remain qualified Build98.
 
 ## Build101 checkpoint — closed observability PASS
 
@@ -18,7 +27,7 @@ Next bounded proposal: a separate default/diagnostic-preemption replay control, 
 - [x] Complete 12 retained exact-semantic runs, archive profiles and verify source/corpus hashes.
 - [x] Freeze all non-sensitive rows, distinguish timing from attribution, and document evidence limits and next bounded step.
 
-Next bounded study: replay an identical frozen Gen4 task vector in balanced orders to isolate upstream context; not implemented. Do not reopen Build100 or relax its historical guard.
+The next study proposed at the Build101 checkpoint, identical frozen Gen4 replay in balanced orders, was completed as Build102. Build100 and its historical guard remain unchanged.
 
 ## Build100 checkpoint — closed, not promoted
 

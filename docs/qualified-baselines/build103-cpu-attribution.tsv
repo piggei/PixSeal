@@ -1,0 +1,5 @@
+image	run	variant	profile_period	gen4_pool_ms	process_cpu_ms	sampled_cpu_s	async_preempt_flat_s	async_preempt_flat_pct	historical_reader_cum_s	exact_reader_cum_s	snapshot_sha256	semantic_gate
+phone-b-mild.jpg	9	default	original_session	19293	148840.000	148.460	3.040	2.047690	91.460	55.800	4d65cdc3088198b50dd1dde0f5798faf327e29bcdc5eb693846cc02cf2550fec	PASS
+phone-b-mild.jpg	10	async_off	original_session	19514	150900.000	150.610	0.000	0.000000	92.130	57.430	4d65cdc3088198b50dd1dde0f5798faf327e29bcdc5eb693846cc02cf2550fec	PASS
+phone-b-angle.jpg	19	async_off	resumed_cpu	114620	892570.000	890.400	0.000	0.000000	451.010	433.320	65b7c4a3707c1e50b7abbf9f3fc6fbd9cf7a3a3ff9f51387f7f35212a7137fd5	PASS
+phone-b-angle.jpg	20	default	resumed_cpu	114856	896220.000	894.210	21.420	2.395410	449.990	437.140	65b7c4a3707c1e50b7abbf9f3fc6fbd9cf7a3a3ff9f51387f7f35212a7137fd5	PASS
