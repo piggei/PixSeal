@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+METADATA="$(python3 "$ROOT/scripts/android_metadata.py")"
+read -r APP_VERSION APP_BUILD <<< "$METADATA"
+ARTIFACT="PixSeal-build${APP_BUILD}-android-arm64.apk"
 FYNE="${PIXSEAL_FYNE_TOOL:-$ROOT/.tools/gui/bin/fyne}"
 if [[ ! -x "$FYNE" ]];then FYNE="$(command -v fyne || true)";fi
 [[ -n "$FYNE" && -x "$FYNE" ]] || { echo 'Install the pinned Fyne tool: go install fyne.io/tools/cmd/fyne@v1.7.4' >&2;exit 1; }
@@ -11,8 +14,16 @@ export ANDROID_HOME="${ANDROID_HOME:-$HOME/Android/Sdk}"
 export ANDROID_NDK_HOME="${ANDROID_NDK_HOME:-$ANDROID_HOME/ndk/26.1.10909125}"
 [[ -d "$ANDROID_HOME/platforms" && -d "$ANDROID_NDK_HOME/toolchains" ]] || { echo 'Set ANDROID_HOME and ANDROID_NDK_HOME to the Android SDK and NDK.' >&2;exit 1; }
 export CGO_LDFLAGS="${CGO_LDFLAGS:-} -Wl,-z,max-page-size=16384"
-cd "$ROOT/gui"
-"$FYNE" package --target android/arm64 --name PixSeal --app-id io.github.piggei.pixseal --app-version 0.3.0 --app-build 105 --icon assets/Icon.png
+# Fyne increments FyneApp.toml while packaging. Build in an isolated copy so
+# both successful and failed builds leave the checked-in metadata untouched.
+mkdir -p "$ROOT/.tools/gui"
+STAGING="$(mktemp -d "$ROOT/.tools/gui/package.XXXXXX")"
+trap 'rm -rf "$STAGING"' EXIT
+cp "$ROOT"/gui/*.go "$ROOT/gui/go.mod" "$ROOT/gui/go.sum" "$ROOT/gui/FyneApp.toml" "$ROOT/gui/AndroidManifest.xml" "$STAGING/"
+cp -R "$ROOT/gui/assets" "$STAGING/assets"
+cd "$STAGING"
+go mod edit -replace "github.com/pj/pixseal=$ROOT"
+"$FYNE" package --target android/arm64 --name PixSeal --app-id io.github.piggei.pixseal --app-version "$APP_VERSION" --app-build "$APP_BUILD" --icon assets/Icon.png
 python3 - <<'PY'
 from pathlib import Path
 import zipfile
@@ -35,10 +46,9 @@ AAPT="${PIXSEAL_AAPT:-$ANDROID_HOME/build-tools/34.0.0/aapt}"
 "$SIGNER" sign --ks "$KEYSTORE" --ks-key-alias pixseal-test --ks-pass pass:android --key-pass pass:android --v1-signing-enabled true --v2-signing-enabled true --v3-signing-enabled true --v4-signing-enabled false --out PixSeal-signed.apk PixSeal-aligned.apk
 "$SIGNER" verify --verbose PixSeal-signed.apk
 "$ZIPALIGN" -c 4 PixSeal-signed.apk
-PERMISSIONS="$("$AAPT" dump permissions PixSeal-signed.apk)"
-if [[ "$PERMISSIONS" == *android.permission.INTERNET* ]];then echo 'Unexpected network permission in offline package.' >&2;exit 1;fi
+python3 "$ROOT/scripts/android_metadata.py" --apk "$STAGING/PixSeal-signed.apk" --aapt "$AAPT"
 mkdir -p "$ROOT/dist"
-cp PixSeal-signed.apk "$ROOT/dist/.PixSeal-build105-android-arm64.apk.tmp"
-mv -f "$ROOT/dist/.PixSeal-build105-android-arm64.apk.tmp" "$ROOT/dist/PixSeal-build105-android-arm64.apk"
-(cd "$ROOT/dist" && sha256sum PixSeal-build105-android-arm64.apk > PixSeal-build105-android-arm64.apk.sha256)
-echo "Verified test APK: $ROOT/dist/PixSeal-build105-android-arm64.apk"
+cp PixSeal-signed.apk "$ROOT/dist/.$ARTIFACT.tmp"
+mv -f "$ROOT/dist/.$ARTIFACT.tmp" "$ROOT/dist/$ARTIFACT"
+(cd "$ROOT/dist" && sha256sum "$ARTIFACT" > "$ARTIFACT.sha256")
+echo "Verified test APK: $ROOT/dist/$ARTIFACT"

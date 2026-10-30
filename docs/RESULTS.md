@@ -1,3 +1,7 @@
+## Build106 — maintenance verification, 2026-10-30
+
+Android source/package version checks, isolated Fyne packaging, GUI/service/race and inherited Build98/frozen-core/pilot checks pass. `make release-check` passes: two eligible images × three profiles round-trip; transformations 66 PASS, 33 expected size-bound SKIPs, zero failures/timeouts/errors; desktop/mobile core portability passes. Android ARM64 APK version106, ZIP/signature/alignment/offline identity and same certificate as Build105 verified. Interrupted-package fault injection preserves sources and verified output. Desktop builds complete. See [the complete audit](V4_BUILD106_MAINTENANCE.md). No new physical or Android device qualification.
+
 ## Build105 — native Android GUI, 2026-10-27
 
 Add a separate Fyne Go module for a standalone Android ARM64 application and a pure-Go app-service adapter. The Italian GUI imports JPEG/PNG, creates and verifies v4 PNG carriers, reads an aligned image or printed-photo input through unchanged Build98, copies only authenticated results and exports secret-free trial reports. One background job runs at a time; previous payload output is cleared before a new trial. Android packaging is local/offline, includes licence notices, verifies ZIP/signature/permissions and keeps signing keys and generated artifacts outside Git.

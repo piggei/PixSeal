@@ -1,3 +1,11 @@
+## Build106 checkpoint — maintenance audit complete
+
+- [x] Align VERSION/buildinfo, Fyne configuration and Android manifest; derive APK identity from VERSION.
+- [x] Isolate packaging, reject mismatched APKs and verify failure cleanup without corrupting existing output.
+- [x] Correct obsolete GUI claims in source documentation and Wiki.
+- [x] Pass GUI/service/race, inherited Build98/frozen/pilot and full release baseline gates; build Android/desktop artifacts.
+- [ ] Complete actual-device Android trials and physical qualification; B/angle remains unresolved (see Build105 next steps).
+
 ## Build105 checkpoint — native Android GUI
 
 - [x] Respect the user priority: standalone Android app in Go, without a browser or PC at runtime.

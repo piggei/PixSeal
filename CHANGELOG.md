@@ -1,3 +1,11 @@
+## v0.3.0-build106 — build consistency and documentation maintenance
+
+- Synchronize root/Fyne/manifest version metadata; derive Android packaging arguments and filenames from VERSION.
+- Isolate Fyne packaging to prevent source metadata mutation; check APK identity/version/ARM64 before updating dist.
+- Add metadata drift/package mismatch regressions and verify that failed packaging preserves sources and the previous valid APK.
+- Reconcile current GUI documentation in the project and Wiki; pass GUI/race and release gates and rebuild Android/desktop artifacts.
+- Preserve qualified Build98 / previous Build93; real-device qualification and B/angle recovery remain open. See [Build106](docs/V4_BUILD106_MAINTENANCE.md).
+
 ## v0.3.0-build105 — native Android GUI
 
 - Add standalone Fyne Android ARM64 UI with local v4 create/read workflows, native file dialogs, progress and verified-result copy.

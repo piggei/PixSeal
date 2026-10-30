@@ -286,9 +286,9 @@ The selected geometry then enters the Build27 split-pilot placement path. One pi
 
 This checkpoint is intentionally affine/crop-only. Projective crop is not equivalent to a constant canonical phase shift, so the affine proposal must not simply be generalized by adding perspective parameters to the same global search. Joint projective recovery, positive padded-canvas placement, shear+placement requalification and unknown physical extent remain required before pilot freeze.
 
-### Portability and planned UI
+### Portability and native UI
 
-The implementation remains in Go partly to preserve one portable algorithmic core. `core-target-check` cross-compiles that core for Linux, Windows, Android and iOS targets. A future GUI is planned, especially for mobile use, but it will be a frontend over the same qualified core rather than a separate watermark implementation.
+The implementation remains in Go partly to preserve one portable algorithmic core. `core-target-check` cross-compiles that core for Linux, Windows, Android and iOS targets. Build105 implements the separate native Go/Fyne Android frontend, maintained in Build106, over that same engine. The test APK exists; actual-device and Android photographic qualification remain pending. See [the Android guide](../gui/README.md).
 
 ## Build29 joint projective/padded qualification
 

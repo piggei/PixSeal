@@ -1343,9 +1343,9 @@ Build28 establishes joint `rotation + anisotropic scale + negative crop/translat
 
 ## 49. Implementation language, portability and frontend boundary
 
-PixSeal uses Go intentionally so the algorithmic core can remain one qualified codebase across multiple operating-system targets. The qualification harness runs `make core-target-check`, which cross-compiles the reusable `watermark` package for Linux/amd64, Windows/amd64, Android/arm64 and iOS/arm64. Desktop CLI binaries are separate from mobile application packaging; successful core cross-compilation does not claim that an Android or iOS GUI application already exists.
+PixSeal uses Go intentionally so the algorithmic core can remain one qualified codebase across multiple operating-system targets. The qualification harness runs `make core-target-check`, which cross-compiles the reusable `watermark` package for Linux/amd64, Windows/amd64, Android/arm64 and iOS/arm64. Desktop CLI binaries, mobile application packaging and physical device qualification are separate checks. Build105 adds a native Android ARM64 Go/Fyne test application, maintained in Build106; iOS application packaging remains future work.
 
-The planned product architecture keeps frontend/UI code outside the watermark core. A future graphical interface, with priority on smartphone/tablet use, can therefore call the same Go implementation used by the CLI rather than reimplementing embedding/decoding logic per platform. Camera/gallery integration, mobile bindings, permissions and UX remain future platform work.
+The `gui/` module keeps frontend/UI dependencies outside the watermark core and calls the same Go implementation used by the CLI. Android imports/exports images through document pickers. Integrated camera capture, device lifecycle verification and Android physical qualification remain pending. See [the Android guide](../gui/README.md).
 
 ## 50. v0.3.0-build29 joint projective/padded search (non-normative)
 

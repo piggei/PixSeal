@@ -1,3 +1,7 @@
+## Build106 — project audit and build maintenance, 2026-10-30
+
+Close Android metadata drift (105/107/hard-coded105), isolate the Fyne packaging work directory and verify actual APK identity against VERSION. Reconcile stale GUI descriptions across source/Wiki. GUI/race and release gates pass; rebuild APK and desktop CLIs. This is maintenance with no watermark algorithm change, physical rerun or qualification promotion. See [Build106](V4_BUILD106_MAINTENANCE.md).
+
 ## Build105 — native Android GUI, 2026-10-27
 
 Add a separate Fyne Go module for a standalone Android ARM64 application and a pure-Go app-service adapter. The Italian GUI imports JPEG/PNG, creates and verifies v4 PNG carriers, reads an aligned image or printed-photo input through unchanged Build98, copies only authenticated results and exports secret-free trial reports. One background job runs at a time; previous payload output is cleared before a new trial. Android packaging is local/offline, includes licence notices, verifies ZIP/signature/permissions and keeps signing keys and generated artifacts outside Git.

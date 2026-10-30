@@ -2416,8 +2416,11 @@ v4-build104-fixed-block-benchmark: v4-build104-fixed-block-test
 	@PIXSEAL_GO_TOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash scripts/benchmark-v4-build104-fixed-block.sh
 
 # Native Android GUI uses a separate Fyne module; the CLI remains pure Go.
-.PHONY: gui-test gui-run gui-android
-gui-test: v4-build98-gen3-fetch-test v3-freeze-check v4-pilot-lock-check
+.PHONY: gui-test gui-run gui-android gui-metadata-check
+gui-metadata-check: version-check
+	@python3 scripts/android_metadata.py
+	@python3 scripts/test_android_metadata.py
+gui-test: gui-metadata-check v4-build98-gen3-fetch-test v3-freeze-check v4-pilot-lock-check
 	@$(GO) test -race ./internal/appservice -count=1
 	@cd gui && $(GO) test -race -tags ci ./... -count=1
 	@cd gui && $(GO) vet -tags ci ./...
@@ -2426,5 +2429,5 @@ gui-test: v4-build98-gen3-fetch-test v3-freeze-check v4-pilot-lock-check
 gui-run:
 	@cd gui && $(GO) run .
 
-gui-android:
+gui-android: toolchain-check gui-metadata-check
 	@GOTOOLCHAIN="$(PIXSEAL_GO_TOOLCHAIN)" bash scripts/package-android.sh
